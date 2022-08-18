@@ -124,7 +124,7 @@
                         <a class="nav-link" data-toggle="pill" href="#tabP">Pagos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#tab_proyectos">Proyectos</a>
+                        <a class="nav-link" data-toggle="pill" href="#tab_proyectos" onclick="show_bpins()">Proyectos</a>
                     </li>
                 </ul>
                 <hr>
@@ -844,9 +844,8 @@
 
 
                     <div id="tab_proyectos" class=" tab-pane fade">
-                        <div class="table-responsive">
-                                <br><br>
-                                <table class="table table-bordered">
+                        <div class="table-responsive mt-3" id="tabla_bpins">
+                                <table class="table table-bordered" >
                                     <thead>
                                         <th>
                                             Codigo Proyecto
@@ -859,7 +858,7 @@
                                         </th>
                                     </thead>
                                     <tbody>
-                                        @foreach($bpins as $item)
+                                        @foreach($bpins->filter(function($e){ return $e->secretaria == auth()->user()->dependencia->name;})->unique('cod_proyecto') as $item)
                                             <tr>
                                                 <td>
                                                     {{$item->cod_proyecto}}
@@ -868,7 +867,7 @@
                                                     {{$item->nombre_proyecto}}
                                                 </td>
                                                 <td>
-                                                <a class="btn btn-success" href="{{route('bpin.show', $item->id)}}">
+                                                <a class="btn btn-success" onclick="show_proyecto('{{$item->cod_proyecto}}')">
                                                     Ver
                                                 </a>                                           
                                                 </td>
@@ -876,6 +875,83 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="table-responsive" id="tabla_bpin_actividades">
+                                <ul class="nav nav-tabs mt-3 mb-3">
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="modal" data-target="#myModal">Nueva Actividad</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#menu1">Adición</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#menu2">Reducción</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#menu2">Decreto</a>
+                                    </li>
+                                </ul>
+                                <table class="table table-bordered" >
+                                     <thead>
+                                        <th>
+                                            Codigo Actividad
+                                        </th>
+                                        <th>
+                                            Nombre Actividad
+                                        </th>
+                                    </thead>
+                                    <tbody id="tbody-actividades">
+                                        
+                                    </tbody>
+                                </table>
+
+                                <div class="modal" id="myModal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Nueva Actividad</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <form method="post" action="{{route('bpin.store')}}">
+                                                    <div class="row">
+                                                        {{ csrf_field() }}
+                                                        <input type="hidden" name="cod_proyecto" id="input-cod-proyecto">
+                                                        <div class="input-group my-2 col-md-12">
+                                                            <label for="" class="col-sm-5">codigo de Actividad</label>
+                                                            <input type="text" name="cod_actividad" class="form-control col-sm-7">
+                                                        </div>
+                                                        <div class="input-group my-2 col-md-12">
+                                                            <label for="" class= col-sm-5">Nombre de Actividad</label>
+                                                            <textarea name="nombre_actividad" class="form-control col-sm-7" row="3"></textarea>
+                                                        </div>
+                                                        <div class="input-group my-2 col-md-12">
+                                                            <label for="" class="col-sm-5">Propios</label>
+                                                            <input type="text" name="propios" class="form-control col-sm-7">
+                                                        </div>
+                                                        <div class="input-group my-2 col-md-12">
+                                                            <label for="" class="col-sm-5">SGP</label>
+                                                            <input type="text" name="sgp" class="form-control col-sm-7">
+                                                        </div>
+                                                        <div class="input-group my-2 col-md-12">
+                                                            <button class="btn btn-primary" type="submit">Guardar</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -888,7 +964,7 @@
                 <br><br>
                 <div class="alert alert-danger">
                     No se ha creado un presupuesto actual de egresos, para crearlo de click al siguiente link:
-                    <a href="{{ url('presupuesto/vigencia/create/0') }}" class="alert-link">Crear Presupuesto de Egresos</a>.
+                    <a href="{{ url('presupuesto/vigencia/create/0') }}" class="alert-link">Crear Presupuesto de Egresos</a>
                 </div>
             @endif
         </div>
@@ -897,4 +973,31 @@
 @section('js')
     <!-- Datatables personalizadas buttons-->
     <script src="{{ asset('/js/datatableCustom.js') }}"></script>
+    <script>
+    const bpins = @json($bpins);
+    console.log('bpins', bpins)
+
+    const show_proyecto = cod_proyecto =>{
+        $('#tabla_bpins').hide();
+        $('#tabla_bpin_actividades').show();
+        $('#tbody-actividades').empty();
+        $('#input-cod-proyecto').val(cod_proyecto);
+        bpins.filter(r => r.cod_proyecto == cod_proyecto).forEach(e =>{
+            $('#tbody-actividades').append(`
+                <tr>
+                    <td>${e.cod_actividad}</td>
+                    <td>${e.actividad}</td>
+                </tr>
+            `);
+        });
+        
+    }
+
+    const show_bpins = ()  =>{
+        $('#tabla_bpins').show();
+        $('#tabla_bpin_actividades').hide();
+    }
+
+    </script>
+
 @stop

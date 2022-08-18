@@ -36,7 +36,8 @@ class PresupuestoController extends Controller
 
 
     public function index(){
-        $bpins = BPin::where('secretaria', auth()->user()->dependencia->name)->get()->unique('cod_proyecto');
+        $bpins = BPin::all();
+
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
