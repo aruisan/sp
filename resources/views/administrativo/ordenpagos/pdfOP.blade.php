@@ -1,0 +1,235 @@
+@extends('layouts.OPPdf')
+@section('contenido')
+	<div class="col-md-12 align-self-center">
+		<div class="table-responsive br-black-1">
+			<table class="table table-borderless">
+				<tr class="text-center">
+					<td>ORDEN DE PAGO No: {{ $OrdenPago->code }}</td>
+					<td><?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y')?></td>
+				</tr>
+				<tr class="text-center">
+					<td>Beneficiario: {{$OrdenPago->registros->persona->nombre}}</td>
+					<td>Nit o Cedula: {{ $OrdenPago->registros->persona->num_dc }}</td>
+				</tr>
+				<tr class="text-center">
+					<td>Registro No: {{$R->id}}</td>
+					<td>Fecha Registro: <?=$dias[$fechaR->format('w')]." ".$fechaR->format('d')." ".$meses[$fechaR->format('n')-1]. " ".$fechaR->format('Y')?></td>
+				</tr>
+			</table>
+		</div>
+		<div class="br-black-1">
+			<center>
+				<h4>CONCEPTO</h4>
+				<p>
+					<h5>{{ $OrdenPago->nombre }}</h5>
+				</p>
+			</center>
+		</div>
+		<br>
+		<div class="table-responsive br-black-1">
+			<table class="table table-borderless">
+				<thead>
+				<tr>
+					<th class="text-center" colspan="3" style="background-color: rgba(19,165,255,0.14)">LIQUIDACIÓN</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr class="text-center">
+					<td>
+						<div class="col-md-12">
+							<div class="col-md-6">VALOR BRUTO</div>
+							<div class="col-md-6">$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></div>
+						</div>
+					</td>
+					<td>
+						<div class="col-md-12">
+							<div class="col-md-6">VALOR IVA</div>
+							<div class="col-md-6">$ <?php echo number_format($OrdenPago->iva,0);?></div>
+						</div>
+					</td>
+					<td>
+						<div class="col-md-12">
+							<div class="col-md-6">VALOR TOTAL</div>
+							<div class="col-md-6">$ <?php echo number_format($OrdenPago->valor,0);?></div>
+						</div>
+					</td>
+				</tr>
+				<tr class="text-center">
+					<td>
+						<div class="col-md-12">
+							<div class="col-md-6">ANTICIPO</div>
+							<div class="col-md-6">$ 0</div>
+						</div>
+					</td>
+					<td>
+						<div class="col-md-12">
+							<div class="col-md-6">OTROS DESCUENTOS</div>
+							<div class="col-md-6">$<?php echo number_format($OrdenPagoDescuentos->sum('valor'),0) ?></div>
+						</div>
+					</td>
+					<td>
+						<?php
+							$pay= $OrdenPago->valor - $OrdenPagoDescuentos->sum('valor');
+						?>
+						<div class="col-md-12">
+							<div class="col-md-6">A CANCELAR</div>
+							<div class="col-md-6">$<?php echo number_format($pay,0) ?></div>
+						</div>
+					</td>
+				</tr>
+				<tr class="text-center">
+					<td colspan="3">
+						SON: {{\NumerosEnLetras::convertir($pay)}} M/CTE
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="table-responsive br-black-1">
+			<table class="table-bordered" id="tablaDesc" style="width: 100%">
+				<thead>
+				<tr>
+					<th colspan="4" class="text-center" style="background-color: rgba(19,165,255,0.14)"> DESCUENTOS</th>
+				</tr>
+				<tr>
+					<th class="text-center">Codigo</th>
+					<th class="text-center">Descripcion</th>
+					<th class="text-center">Base</th>
+					<th class="text-center">Valor</th>
+				</tr>
+				</thead>
+				<tbody>
+				@foreach($OrdenPagoDescuentos as  $PagosDesc)
+					<tr class="text-center">
+						@if($PagosDesc->retencion_fuente_id == null)
+							<td>{{ $PagosDesc->descuento_mun['codigo'] }}</td>
+						@else
+							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
+						@endif
+						<td>{{ $PagosDesc->nombre }}</td>
+						@if($PagosDesc->retencion_fuente_id == null)
+							<td>$ <?php echo number_format($PagosDesc->descuento_mun['base'],0);?></td>
+						@else
+							<td>$ <?php echo number_format($PagosDesc->descuento_retencion->base,0);?></td>
+						@endif
+						<td>$ <?php echo number_format($PagosDesc['valor'],0);?></td>
+					</tr>
+				@endforeach
+				<tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
+					<td colspan="3"><b>Total Descuentos</b></td>
+					<td><b>$ <?php echo number_format($OrdenPagoDescuentos->sum('valor'),0);?></b></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<br>
+		<div class="table-responsive br-black-1">
+			<table class="table-bordered" id="tablaP" style="width: 100%">
+				<thead>
+				<tr>
+					<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO</th>
+				</tr>
+				<tr>
+					<th class="text-center">Codigo</th>
+					<th class="text-center">Descripción</th>
+					<th class="text-center">Fuente Financiación</th>
+					<th class="text-center">Registro</th>
+					<th class="text-center">Valor</th>
+				</tr>
+				</thead>
+				<tbody>
+				@for($i = 0; $i < $R->cdpRegistroValor->count(); $i++)
+					<tr class="text-center">
+						<td>
+							@for($x = 0; $x < count($infoRubro); $x++)
+								@if($infoRubro[$x]['id_rubro'] == $R->cdpRegistroValor[$i]->fontRubro->rubro->id)
+									{{ $infoRubro[$x]['codigo'] }}
+								@endif
+							@endfor
+						</td>
+						<td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
+						<td>{{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->font->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->font->name }}</td>
+						<td>{{ $OrdenPago->registros->objeto }}</td>
+						<td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+					</tr>
+				@endfor
+				</tbody>
+			</table>
+		</div>
+		<div class="table-responsive br-black-1">
+			<table class="table-bordered" id="tablaP" style="width: 100%">
+				<thead>
+				<tr>
+					<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
+				</tr>
+				<tr>
+					<th class="text-center">Codigo</th>
+					<th class="text-center">Descripción</th>
+					<th class="text-center">Tercero</th>
+					<th class="text-center">Debito</th>
+					<th class="text-center">Credito</th>
+				</tr>
+				</thead>
+				<tbody>
+				@foreach($OrdenPagoDescuentos as  $PagosDesc)
+					<tr class="text-center">
+						@if($PagosDesc->retencion_fuente_id == null)
+							<td>{{ $PagosDesc->descuento_mun['codigo'] }}</td>
+						@else
+							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
+						@endif
+						<td>{{ $PagosDesc->nombre }}</td>
+						<td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
+						<td>$0</td>
+						<td>$ <?php echo number_format($PagosDesc['valor'],0);?></td>
+					</tr>
+				@endforeach
+				@for($z = 0; $z < $OrdenPago->pucs->count(); $z++)
+					<tr class="text-center">
+						<td>{{$OrdenPago->pucs[$z]->data_puc->codigo}}</td>
+						<td>{{$OrdenPago->pucs[$z]->data_puc->nombre_cuenta}}</td>
+						<td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
+						<td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_debito,0);?></td>
+						<td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_credito,0);?></td>
+					</tr>
+				@endfor
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div style="margin-top: 50px; font-size: 13px;">
+		<div class="col-md-12 align-self-center">
+			<div class="table-borderless">
+				<table class="table table-borderless" style="border: hidden">
+					<tr class="text-center">
+						<td>
+							<center>
+								_____________________ <br>
+								<!-- Presidente 2020 Léri Aniseto Henry Taylor  -->
+								{{ $name_pres }}<br>
+								Presidente
+							</center>
+						</td>
+						<td>
+							<center>
+								_____________________ <br>
+								{{ $name_contador }}<br>
+								Contador
+							</center>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="text-center">
+				Documento Generado por el Software
+			</div>
+		</div>
+		<br>
+		<div class="text-center">
+			<img src="https://www.siex-concejoprovidenciaislas.com.co/img/logoSiex.png"  height="50">
+		</div>
+	</div>
+@stop
