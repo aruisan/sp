@@ -19,6 +19,7 @@ class CreateImpIcaRetenedorTable extends Migration
             $table->integer('añoGravable');
             $table->integer('periodo');
             $table->enum('opciondeUso', ['Declaración', 'Pago', 'Corrección']);
+            $table->bigInteger('numReferencia')->nullable();
             $table->enum('codAgente', ['1', '2', '3', '4', '5','6']);
 
             $table->bigInteger('contratosObra');

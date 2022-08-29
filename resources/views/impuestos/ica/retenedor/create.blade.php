@@ -58,7 +58,7 @@
                                             DECLARACIÓN INICIAL
                                             <input type="hidden" name="opciondeUso" value="Declaración">
                                         @else
-                                            CORRECCIÓN
+                                            <b>CORRECCIÓN - NO. FORMULARIO <br>{{ $ica->numReferencia }}</b>
                                             <input type="hidden" name="opciondeUso" value="Corrección">
                                             <input type="hidden" name="ica_id" value="{{ $ica->id }}">
                                         @endif

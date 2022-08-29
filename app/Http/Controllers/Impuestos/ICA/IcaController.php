@@ -164,6 +164,16 @@ class IcaController extends Controller
             $ICA->presentacion = Carbon::today();
             $ICA->save();
 
+            $ICAnumRef = IcaContri::find($ICA->id);
+            if (strlen($ICAnumRef->id) < 6){
+                $newValue = $ICAnumRef->id;
+                for ($i = 0; $i < 6 - strlen($ICAnumRef->id); $i++) {
+                    $newValue =  '0'.$newValue;
+                }
+            } else $newValue = $ICAnumRef->id;
+            $ICAnumRef->numReferencia = Carbon::today()->format('Ymd').$newValue;
+            $ICAnumRef->save();
+
             $pago = new Pagos();
             $pago->modulo = "ICA-Contribuyente";
             $pago->entity_id = $ICA->id;
@@ -287,6 +297,16 @@ class IcaController extends Controller
             $retenedor->nameRevFisc = $request->nameRevFisc;
             $retenedor->presentacion = Carbon::today();
             $retenedor->save();
+
+            $ICAnumRef = IcaRetenedor::find($retenedor->id);
+            if (strlen($ICAnumRef->id) < 6){
+                $newValue = $ICAnumRef->id;
+                for ($i = 0; $i < 6 - strlen($ICAnumRef->id); $i++) {
+                    $newValue =  '0'.$newValue;
+                }
+            } else $newValue = $ICAnumRef->id;
+            $ICAnumRef->numReferencia = Carbon::today()->format('Ymd').$newValue;
+            $ICAnumRef->save();
 
             $pago = new Pagos();
             $pago->modulo = "ICA-AgenteRetenedor";

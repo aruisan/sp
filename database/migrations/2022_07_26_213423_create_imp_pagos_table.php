@@ -30,6 +30,10 @@ class CreateImpPagosTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
 
+            //RELACION CON EL USUARIO
+            $table->integer('user_pago_id')->unsigned();
+            $table->foreign('user_pago_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

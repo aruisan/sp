@@ -32,6 +32,9 @@
                                 <td>Fecha Presentacion: {{ Carbon\Carbon::parse($formulario->presentacion)->Format('d-m-Y')}}</td>
                                 <td colspan="2">ARCHIPIELAGO DE SAN ANDRES, PROVIDENCIA Y SANTA CATALINA</td>
                             </tr>
+                            <tr style="background-color: #bfc3bf; color: black">
+                                <td colspan="3"><b>No. Formulario: {{$formulario->numReferencia}}</b></td>
+                            </tr>
                             </tbody>
                         </table>
                         {{-- TABLA A. INFORMACIÓN DEL CONTRIBUYENTE --}}
@@ -453,6 +456,9 @@
                                     @if($formulario->opciondeUso == "Declaración") DECLARACIÓN INICIAL
                                     @else CORRECCIÓN @endif
                                 </td>
+                            </tr>
+                            <tr style="background-color: #bfc3bf; color: black">
+                                <td colspan="3"><b>No. Formulario: {{$formulario->numReferencia}}</b></td>
                             </tr>
                             </tbody>
                         </table>

@@ -324,9 +324,12 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
             //MUELLAJE
         Route::resource('impuestos/muellaje','Administrativo\Impuestos\MuellajeController');
+        Route::post('impuestos/muellaje/pay','Administrativo\Impuestos\MuellajeController@pay');
 
             //DELINEACION Y URBANISMO
         Route::resource('impuestos/delineacion','Administrativo\Impuestos\DelineacionController');
+        Route::delete('impuestos/delineacion/vecino/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteVecino');
+        Route::delete('impuestos/delineacion/titular/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteTitular');
 
         //LIBROS
         Route::post('contabilidad/libros/rubros_puc','Administrativo\Contabilidad\LibrosController@getRubrosPUC');

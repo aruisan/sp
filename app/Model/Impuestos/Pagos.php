@@ -14,4 +14,8 @@ class Pagos extends Model implements Auditable
     public function user(){
         return $this->belongsTo('App\User','id');
     }
+
+    public function Resource(){
+        return $this->belongsTo('App\Resource','resource_id');
+    }
 }

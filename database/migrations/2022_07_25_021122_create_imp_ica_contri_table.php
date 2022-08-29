@@ -30,6 +30,7 @@ class CreateImpIcaContriTable extends Migration
 
             $table->text('añoGravable');
             $table->enum('opciondeUso', ['Declaración', 'Pago', 'Corrección']);
+            $table->bigInteger('numReferencia')->nullable();
             $table->integer('numEstableLoc');
             $table->integer('numEstableNal');
             //B.

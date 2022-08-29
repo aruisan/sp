@@ -22,6 +22,9 @@
 					<td>Teléfono Móvil: {{ $rit->movilContri }}</td>
 					<td colspan="2">Correo electrónico: {{ $rit->emailContri }}</td>
 				</tr>
+				<tr>
+					<td colspan="3"><b>No. Formulario: {{$ica->numReferencia}}</b></td>
+				</tr>
 				</tbody>
 			</table>
 			<br>
