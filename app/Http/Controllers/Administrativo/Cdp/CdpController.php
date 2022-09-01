@@ -128,6 +128,7 @@ class CdpController extends Controller
         }
         $cdp = new Cdp();
         $cdp->name = $request->name;
+        $cdp->tipo = $request->tipo;
         $cdp->code = $count + 1;
         $cdp->valor = 0;
         $cdp->fecha = $request->fecha;

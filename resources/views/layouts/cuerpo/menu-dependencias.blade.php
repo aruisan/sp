@@ -1,5 +1,10 @@
 @include('modal.updateSoftware')
 <li class="dropdown ">
+   <a class="btn btn-default btn-sm item-menu" href="{{route('estadistica.index')}}">
+   Estadisticas
+   </a>
+</li>
+<li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    SECRETARIA
    <span class="caret"></span>
