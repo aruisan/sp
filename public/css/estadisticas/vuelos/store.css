@@ -1,0 +1,31 @@
+.appbar-button{
+    background-color: transparent;
+    border: 0;
+    border-color: transparent;
+}
+
+.little-appbar-button{
+    color: brown;
+}
+
+.appbar-component{
+    height:58px;
+}
+
+.appbar-static-component{
+    border-bottom: 3px solid brown;
+}
+
+.appbar-active-component{
+    border-top: 3px solid brown;
+    border-right: 3px solid brown;
+    border-left: 3px solid brown;
+}
+
+.appbar-inactive-component{
+    border-bottom: 3px solid brown;
+}
+
+label {
+    font-size: small;
+}
