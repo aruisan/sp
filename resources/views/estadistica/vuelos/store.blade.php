@@ -3,7 +3,53 @@
     Reserva vuelo
 @stop
 @section('content')
-    <link href="{{ asset('css/estadisticas/styles.css') }}" rel="stylesheet" type="text/css" />
+<!--
+    <div class="container-fluid h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-4 bg-red">
+            <div class="h-100">
+                <div class="row justify-content-center bg-purple">
+                <div class="text-white">
+                    <div style="height:200px">ROW 1</div>
+                </div>
+                </div>
+                <div class="row justify-content-center bg-blue">
+                <div class="text-white">ROW 2</div>
+                </div>
+            </div>
+            </div>
+            <div class="col-8 bg-gray"></div>
+        </div>
+    </div>
+    -->
+    <link href="{{ asset('css/estadisticas/vuelos/store.css') }}" rel="stylesheet" type="text/css" />
+    <div class="row pb-5">
+        <div class="col-sm-4 appbar-component">
+            <div class="row">
+                <div class="col-sm-6 appbar-component appbar-active-component">
+                    <button class="btn btn-sm btn-block appbar-button">
+                        <h4>Vuelo no. {{$vuelo}}</h4>
+                    </button>
+                </div>
+                <div class="col-sm-6 appbar-component appbar-inactive-component">
+                    <button class="btn btn-sm btn-block appbar-button">
+                        <h4>Relación de vuelos</h4>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 appbar-component appbar-static-component">
+
+        </div>
+        <div class="col-sm-2 appbar-component appbar-static-component">
+            <button class="appbar-button little-appbar-button">
+                informes
+            </button>
+            <button class="appbar-button little-appbar-button">
+                Histórico
+            </button>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-2">
             <label for="tipo_pasajero">Tipo de pasajero</label>
