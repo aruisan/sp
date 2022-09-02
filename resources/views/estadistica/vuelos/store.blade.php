@@ -27,12 +27,12 @@
         <div class="col-sm-4 appbar-component">
             <div class="row">
                 <div class="col-sm-6 appbar-component appbar-active-component">
-                    <button class="btn btn-sm btn-block appbar-button">
+                    <button class="btn btn-sm btn-block appbar-button" disabled>
                         <h4>Vuelo no. {{$vuelo}}</h4>
                     </button>
                 </div>
                 <div class="col-sm-6 appbar-component appbar-inactive-component">
-                    <button class="btn btn-sm btn-block appbar-button">
+                    <button class="btn btn-sm btn-block appbar-button" disabled>
                         <h4>Relación de vuelos</h4>
                     </button>
                 </div>
