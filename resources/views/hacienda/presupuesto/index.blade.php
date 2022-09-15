@@ -370,21 +370,16 @@
                                                 <td class="text-center text-dark">$ <?php echo number_format($valorInicial['valor'],0);?>.00</td>
                                             @endif
                                         @endforeach
-
-
-
                                         @if($codigo['valor']!=null)
                                             <td class="text-center text-dark">$ <?php echo number_format($codigo['valor'],0);?>.00</td>
                                         @elseif($codigo['valor']==null)
                                             <td class="text-center text-dark"></td>
                                         @endif
-
                                         @foreach($FRubros as $FRubro)
                                             @if($FRubro['rubro_id'] == $codigo['id_rubro'])
                                                 <td class="text-center text-dark">$ <?php echo number_format($FRubro["valor"],0);?>.00</td>
                                             @endif
                                         @endforeach
-
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -476,7 +471,7 @@
                             @if(isset($cdps))
                                 <div class="row">
                                      <div style="position:left;">
-                                <a href="{{ url('administrativo/cdp/'.$V) }}" class="btn btn-primary btn-block m-b-12">CDP's</a>
+                                <a href="{{ url('administrativo/cdp/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a CDP's</a>
                                 <br><br>
                                  </div>
                                   </div>
@@ -557,7 +552,7 @@
                     <div id="tabReg" class=" tab-pane fade"><br>
                         <div class="table-responsive">
                             @if(count($registros) >= 1)
-                                <a href="{{ url('administrativo/registros/'.$V) }}" class="btn btn-primary btn-block m-b-12">Registros</a>
+                                <a href="{{ url('administrativo/registros/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a Registros</a>
                                 <br><br>
                                 <table class="table table-bordered" id="tabla_Registros">
                                     <thead>
@@ -729,7 +724,7 @@
                     <div id="tabOP" class=" tab-pane fade">
                         <div class="table-responsive">
                             @if(count($ordenPagos) >= 1)
-                                <a href="{{ url('administrativo/ordenPagos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ordenes de Pago</a>
+                                <a href="{{ url('administrativo/ordenPagos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a Ordenes de Pago</a>
                                 <br><br>
                                 <table class="table table-bordered" id="tabla_OrdenPago">
                                     <thead>
@@ -788,7 +783,7 @@
                     <div id="tabP" class=" tab-pane fade">
                         <div class="table-responsive">
                             @if(count($pagos) >= 1)
-                                <a href="{{ url('administrativo/pagos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Pagos</a>
+                                <a href="{{ url('administrativo/pagos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a Pagos</a>
                                 <br><br>
                                 <table class="table table-bordered" id="tabla_Pagos">
                                     <thead>

@@ -48,6 +48,33 @@
                             <div class="row">
                                 <div class="col-md-6 align-self-center">
                                     <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="tipo">Tipo <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <select class="form-control" name="tipoCI" id="tipoCI" onchange="cambioTipo(this.value)">
+                                                <option value="SGP Salud">SGP Salud</option>
+                                                <option value="SGP Educacion">SGP Educacion</option>
+                                                <option value="SGP Otros sectores">SGP Otros sectores</option>
+                                                <option value="Otro">Otro</option>
+                                            </select>
+                                            <span style="display: none" id="otroTipo">
+                                            <input class="form-control" type="text" name="cualOtroTipo" id="cualOtroTipo" placeholder="Cual otro?">
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="file">Fecha: </label>
+                                        <div class="col-lg-6">
+                                            <input type="date" name="fecha" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="nombre">Valor <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
                                             <input type="number" name="valor" min="0" value="0" class="form-control" required>
@@ -64,18 +91,15 @@
                                 </div>
                             </div>
                             <br>
-                            <input type="hidden" class="form-control" name="fecha" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}" min="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
                             <input type="hidden" class="form-control" name="user_id" value="{{ $user_id }}">
                             <input type="hidden" class="form-control" name="vigencia_id" value="{{ $vigencia->id }}">
                             <input type="hidden" class="form-control" name="estado" value="0">
                             <center>
-
                                 <div class="form-group row">
                                     <div class="col-lg-12 ml-auto">
                                         <button type="submit" class="btn btn-primary">Guardar</button>
                                     </div>
                                 </div>
-
                             </center>
                         </form>
                     </div>
@@ -83,5 +107,18 @@
             </div>
         </div>
   </div>
-  
+@stop
+@section('js')
+    <script>
+        function cambioTipo(value){
+            if(value == "Otro"){
+                document.getElementById("cualOtroTipo").value = null;
+                $("#otroTipo").show();
+            }
+            else {
+                document.getElementById("otroTipo").style.display = "none";
+                document.getElementById("cualOtroTipo").value = null;
+            }
+        }
+    </script>
 @stop

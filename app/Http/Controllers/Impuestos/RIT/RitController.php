@@ -5,10 +5,13 @@ use App\Http\Controllers\Controller;
 use App\Model\Impuestos\RitActividades;
 use App\Model\Impuestos\RitEstablecimientos;
 use App\Model\User;
+use App\Resource;
+use App\Traits\ResourceTraits;
 use Illuminate\Http\Request;
 use App\Model\Impuestos\RIT;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Session;
 use Carbon\Carbon;
 
@@ -91,6 +94,18 @@ class RitController extends Controller
             $RIT->emailRepLegal2 = $request->emailRepLegal2;
             $RIT->telRepLegal2 = $request->telRepLegal2;
             $RIT->radicacion = Carbon::today();
+
+            if ($request->hasFile('fileRUT')){
+                $file = new ResourceTraits;
+                $RUT = $file->resource($request->fileRUT, 'public/RIT');
+                $RIT->rut_resource_id = $RUT;
+            }
+
+            if($request->hasFile('fileCC')) {
+                $file = new ResourceTraits;
+                $CC = $file->resource($request->fileCC, 'public/RIT');
+                $RIT->cc_resource_id = $CC;
+            }
             $RIT->save();
 
             //TABLA IV. DATOS DE ESTABLECIMIENTOS DE COMERCIO UBICADOS EN PROVIDENCIA
@@ -169,6 +184,30 @@ class RitController extends Controller
             $RIT->emailRepLegal2 = $request->emailRepLegal2;
             $RIT->telRepLegal2 = $request->telRepLegal2;
             $RIT->radicacion = Carbon::today();
+
+            if ($request->hasFile('fileRUT')){
+                if ($RIT->ResourceRUT){
+                    $fileOld = Resource::find($RIT->ResourceRUT)->first();
+                    Storage::delete($fileOld->ruta);
+                    $fileOld->delete();
+                }
+
+                $file = new ResourceTraits;
+                $RUT = $file->resource($request->fileRUT, 'public/RIT');
+                $RIT->rut_resource_id = $RUT;
+            }
+
+            if($request->hasFile('fileCC')) {
+                if ($RIT->ResourceCC){
+                    $fileOld = Resource::find($RIT->ResourceCC)->first();
+                    Storage::delete($fileOld->ruta);
+                    $fileOld->delete();
+                }
+
+                $file = new ResourceTraits;
+                $CC = $file->resource($request->fileCC, 'public/RIT');
+                $RIT->cc_resource_id = $CC;
+            }
             $RIT->save();
 
             //TABLA IV. DATOS DE ESTABLECIMIENTOS DE COMERCIO UBICADOS EN PROVIDENCIA
@@ -228,6 +267,10 @@ class RitController extends Controller
         $action = "Actualización";
         $user = User::find(Auth::user()->id);
         $rit = $user->rit;
+        if ($rit->ResourceRUT) $rit->rutaFileRUT = $rit->ResourceRUT->ruta;
+        else $rit->rutaFileRUT = null;
+        if ($rit->ResourceCC)  $rit->rutaFileCC = $rit->ResourceCC->ruta;
+        else $rit->rutaFileCC = null;
         $actividades = $rit->actividades;
         $establecimientos = $rit->establecimientos;
         return view('impuestos.rit.create', compact('action','rit','actividades','establecimientos'));

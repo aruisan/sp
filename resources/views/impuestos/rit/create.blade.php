@@ -533,6 +533,32 @@
                                     </tbody>
                                 </table>
 
+                            <table id="TABLA8" class="table text-center table-bordered">
+                                <tbody>
+                                <tr style="background-color: #0e7224; color: white">
+                                    <th scope="row" colspan="2">ANEXOS</th>
+                                </tr>
+                                <tr>
+                                    <td><b>CARGAR RUT</b><br>
+                                        @if($action != "Inscripción" and $rit->rutaFileRUT != null)
+                                            <a href="{{Storage::url($rit->rutaFileRUT)}}" target="_blank" title="Ver" class="btn btn-success">RUT ALMACENADO</a>
+                                            <br>
+                                            Si desea cambiar el RUT almacenado seleccione un nuevo archivo.
+                                        @endif
+                                        <input type="file" class="form-check-input" accept=".pdf" name="fileRUT">
+                                    </td>
+                                    <td><b>CARGAR CAMARA DE COMERCIO</b><br>
+                                        @if($action != "Inscripción" and $rit->rutaFileCC != null)
+                                            <a href="{{Storage::url($rit->rutaFileCC)}}" target="_blank" title="Ver" class="btn btn-success">CAMARA DE COMERCIO ALMACENADO</a>
+                                            <br>
+                                            Si desea cambiar el RUT almacenado seleccione un nuevo archivo.
+                                        @endif
+                                        <input type="file" class="form-check-input" accept=".pdf" name="fileCC">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
                             {{-- TABLA VII. FIRMAS Y FECHA DE RECEPCIÓN --}}
                             <table id="TABLA7" class="table text-center table-bordered">
                                 <tbody>

@@ -25,9 +25,10 @@
                     <th class="text-center">Cuenta</th>
                     <th class="text-center">Modulo</th>
                     <th class="text-center">Concepto</th>
+                    <th class="text-center">Tercero</th>
                     <th class="text-center">Debito</th>
                     <th class="text-center">Credito</th>
-                    <th class="text-center">Total</th>
+                    <th class="text-center">Saldo</th>
                 </thead>
                 <tbody id="bodyTabla"></tbody>
             </table>
@@ -129,9 +130,10 @@
                         { title: "Cuenta", data: "cuenta"},
                         { title: "Modulo", data: "modulo"},
                         { title: "Concepto", data: "concepto"},
+                        { title: "Tercero", data: "tercero"},
                         { title: "Debito", data: "debito"},
                         { title: "Credito", data: "credito"},
-                        { title: "Total", data: "total"}
+                        { title: "Saldo", data: "total"}
                     ]
                 } );
             }).fail(function() {
@@ -140,7 +142,5 @@
                 toastr.warning('NO SE OBTUVIERON DATOS DE ESA CUENTA');
             });
         }
-
-
     </script>
 @stop

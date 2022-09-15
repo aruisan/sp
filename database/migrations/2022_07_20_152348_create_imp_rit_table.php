@@ -81,6 +81,14 @@ class CreateImpRitTable extends Migration
             //VII. FIRMAS Y FECHA DE RECEPCIÓN
             $table->date('radicacion');
 
+            //RELACION CON LOS RESOURCES PARA ALMACENAR EL RUT
+            $table->integer('rut_resource_id')->unsigned()->nullable();
+            $table->foreign('rut_resource_id')->references('id')->on('resources');
+
+            //RELACION CON LOS RESOURCES PARA ALMACENAR CAMARA DE COMERCIO
+            $table->integer('cc_resource_id')->unsigned()->nullable();
+            $table->foreign('cc_resource_id')->references('id')->on('resources');
+
             $table->timestamps();
         });
     }

@@ -124,7 +124,7 @@
                                                     </td>
                                                     <td class="text-center">
                                                         @if($comprobante->rubros->sum('valor') == 0)
-                                                            <button type="button" class="btn-sm btn-danger" v-on:click.prevent="eliminar({{ $rubrosData->id }})" ><i class="fa fa-trash-o"></i></button>
+                                                            <button type="button" class="btn-sm btn-danger" v-on:click.prevent="eliminarV({{ $rubrosData->id }})" ><i class="fa fa-trash-o"></i></button>
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -322,7 +322,7 @@
                     },
 
                     eliminarV: function(dato){
-                        var urlrubrosValor = '/administrativo/CIRubro/'+dato;
+                        var urlrubrosValor = '/administrativo/CIRubro/'+dato+'/delete';
                         axios.delete(urlrubrosValor).then(response => {
                             location.reload();
                         });

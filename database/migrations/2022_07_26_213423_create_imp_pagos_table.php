@@ -18,11 +18,12 @@ class CreateImpPagosTable extends Migration
 
             $table->enum('modulo', ['ICA-Contribuyente', 'ICA-AgenteRetenedor', 'PREDIAL','MUELLAJE','DELINEACIÓN']);
             $table->integer('entity_id')->unsigned();
-            $table->enum('estado', ['Generado', 'Pagado']);
+            $table->enum('estado', ['Generado', 'Pagado','Borrador']);
             $table->bigInteger('valor');
             $table->date('fechaCreacion');
             $table->date('fechaPago')->nullable();
 
+            //RELACION CON EL DOCUMENTO
             $table->integer('resource_id')->unsigned()->nullable();
             $table->foreign('resource_id')->references('id')->on('resources');
 

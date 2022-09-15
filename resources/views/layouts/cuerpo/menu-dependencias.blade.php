@@ -143,7 +143,7 @@
       <li class="dropdown-submenu">
          <a class="dropdown-item item-menu" >Balances </a>
          <ul class="dropdown-menu">
-            <li><a class="item-menu" href="{{ url('/administrativo/contabilidad/balances/prueba') }}">Prueba</a></li>
+            <li><a class="item-menu" href="#">Prueba</a></li>
             <li><a class="item-menu" href="#">Terceros</a></li>
             <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
          </ul>

@@ -87,6 +87,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //PAGOS
         Route::resource('/Pagos', 'Impuestos\Pagos\PagosController');
+        Route::post('/Pagos/Send', 'Impuestos\Pagos\PagosController@Send');
 
         //EMAIL
         Route::get('/sparkpost', function () {

@@ -37,6 +37,14 @@
 					<td>Valor Intereses Mora <br> $<?php echo number_format($ica->interesesMora,0) ?></td>
 				</tr>
 				<tr><td colspan="3">Total a Pagar <br> $<?php echo number_format($ica->totPagar,0) ?></td></tr>
+				<tr>
+					<td colspan="3">
+						{!! DNS1D::getBarcodeHTML('(415)7709998144460(8020)'.$ica->numReferencia.'(3900)'.$ica->totPagar.'(96)'. \Carbon\Carbon::parse($ica->presentacion)->format('Ymd'), 'C128',1.07,45) !!}
+						(415)7709998144460(8020){{$ica->numReferencia}}(3900){{$ica->totPagar}}(96){{ \Carbon\Carbon::parse($ica->presentacion)->format('Ymd') }}
+						<br>
+						Señor Cajero por favor no colocar el sello en el código de barras
+					</td>
+				</tr>
 			</table>
 		</div>
 	</div>

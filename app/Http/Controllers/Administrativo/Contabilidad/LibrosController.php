@@ -62,8 +62,9 @@ class LibrosController extends Controller
                             if (Carbon::parse($op_puc->created_at)->format('Y') == Carbon::today()->format('Y')) {
                                 $total = $total + $op_puc->valor_debito;
                                 $total = $total - $op_puc->valor_credito;
+                                $tercero = $op_puc->ordenPago->registros->persona->nombre;
                                 $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago', 'debito' => '$'.number_format($op_puc->valor_debito,0),
-                                    'credito' => '$'.number_format($op_puc->valor_credito,0), 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->codigo.' - '.$rubroPUC->nombre_cuenta,
+                                    'credito' => '$'.number_format($op_puc->valor_credito,0), 'tercero' => $tercero, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->codigo.' - '.$rubroPUC->nombre_cuenta,
                                     'total' => '$'.number_format($total,0)]);
                             }
                         }

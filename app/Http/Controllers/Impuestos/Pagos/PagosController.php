@@ -73,4 +73,20 @@ class PagosController extends Controller
         }
 
     }
+
+    /**
+     * Update pay with the new date and state.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function send(Request $request){
+        $pago = Pagos::find($request->pago_id);
+        $pago->estado = "Generado";
+        $pago->fechaCreacion = Carbon::today();
+        $pago->save();
+
+        Session::flash('success', 'Formulario declaración de contribuyente presentado exitosamente.');
+        return redirect('/impuestos/Pagos');
+    }
 }
