@@ -46,23 +46,39 @@
                         <form class="form-valide" action="{{url('/administrativo/cdp')}}" method="POST" enctype="multipart/form-data">
                             <hr>
                             {{ csrf_field() }}
-                            <div class="col-md-6 align-self-center">
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Objeto <span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <textarea name="name" class="form-control" required></textarea>
+                            <div class="row">
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="nombre">Objeto <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <textarea name="name" class="form-control" required></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-6 align-self-center">
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="observacion">Observación</label>
-                                    <div class="col-lg-6">
-                                        <textarea name="observacion" class="form-control"></textarea>
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="observacion">Observación</label>
+                                        <div class="col-lg-6">
+                                            <textarea name="observacion" class="form-control"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <br><br>
+                            <div class="row mt-3">
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="nombre">Tipo <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <select name="tipo" class="form-control">
+                                                <option>Funcionamiento</option>
+                                                <option>Inversion</option>  
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
 
                             <input type="hidden" class="form-control" name="fecha" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}" min="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
                             <input type="hidden" class="form-control" name="dependencia_id" value="{{ $dependencia }}">
