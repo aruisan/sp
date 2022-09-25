@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Registro;
 
+use App\BPin;
 use App\Model\Hacienda\Presupuesto\Level;
 use App\Model\Hacienda\Presupuesto\Register;
 use App\Model\Hacienda\Presupuesto\Rubro;
@@ -411,14 +412,22 @@ class RegistrosController extends Controller
             }
         }
 
-        $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->rubrosCdp->first()->rubros->name;
+        //TOCA EMPEZAR A CUADRAR LA INTERFAZ DEL PRESUPUESTO MOSTRANDO LOS CUIPO
+
+        if ($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento") {
+            $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->rubrosCdp->first()->rubros->name;
+            $bpins = [];
+        }else {
+            $bpins = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor;
+            $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor[0]->actividad->actividad;
+        }
 
         $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
         $fecha = Carbon::createFromTimeString($registro->created_at);
 
-        $pdf = \PDF::loadView('administrativo.registros.pdf', compact('registro', 'vigencia', 'dias', 'meses', 'fecha','infoRubro','rubroNameCDP'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        $pdf = \PDF::loadView('administrativo.registros.pdf', compact('registro', 'vigencia', 'dias', 'meses', 'fecha','infoRubro','rubroNameCDP','bpins'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
             return $pdf->stream();
     }
 }

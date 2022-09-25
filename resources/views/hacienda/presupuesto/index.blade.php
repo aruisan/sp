@@ -6,6 +6,7 @@
     @if($V != "Vacio")
         @include('modal.Informes.reporte')
         @include('modal.Informes.ejecucionPresupuestal')
+        @include('modal.Proyectos.asignarubro')
     @endif
     <div class="row inputCenter">
         <ul class="nav nav-pills">
@@ -137,6 +138,9 @@
                             <table id="tabla_presupuesto1" class="table table-bordered table-striped ">
                                 <thead>
                                 <tr>
+                                    <th class="text-center">Codigo BPIN</th>
+                                    <th class="text-center">Codigo Actividad</th>
+                                    <th class="text-center">Nombre Actividad</th>
                                     <th class="text-center">Rubro</th>
                                     <th class="text-center">Nombre</th>
                                     <th class="text-center">P. Inicial</th>
@@ -158,9 +162,20 @@
                                 <tbody>
                                 @foreach($codigos as $codigo)
                                     <tr>
-                                        @if($codigo['valor'])
+                                        @foreach($bpinRubro as $bpin)
+                                            @if($codigo['id_rubro'] == $bpin['rubro_id'])
+                                                <td class="text-center text-dark" style="vertical-align:middle;">{{$bpin['code_bpin']}}</td>
+                                                <td class="text-center text-dark" style="vertical-align:middle;">{{$bpin['code_actividad']}}</td>
+                                                <td class="text-center text-dark" style="vertical-align:middle;">{{$bpin['name_actividad']}}</td>
+                                            @endif
+                                        @endforeach
+                                        @if($codigo['id_rubro'])
                                             <td class="text-dark" style="vertical-align:middle;"><a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}">{{ $codigo['codigo']}}</a></td>
                                         @else
+                                            <!--  SE ENVIAN TRES CAMPOS VACIOS DEL BPIN -->
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                             <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codigo']}}</td>
                                         @endif
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['name']}}</td>
@@ -323,6 +338,9 @@
                                 </tbody>
                                 <tfoot>
                                 <tr>
+                                    <th class="text-center">Codigo BPIN</th>
+                                    <th class="text-center">Codigo Actividad</th>
+                                    <th class="text-center">Nombre Actividad</th>
                                     <th class="text-center">Rubro</th>
                                     <th class="text-center">Nombre</th>
                                     <th class="text-center">P. Inicial</th>
@@ -836,117 +854,101 @@
                             @endif
                         </div>
                     </div>
-
-
                     <div id="tab_proyectos" class=" tab-pane fade">
                         <div class="table-responsive mt-3" id="tabla_bpins">
-                                <table class="table table-bordered" >
-                                    <thead>
-                                        <th>
-                                            Codigo Proyecto
-                                        </th>
-                                        <th>
-                                            Nombre Proyecto
-                                        </th>
-                                        <th>
-                                            Ver
-                                        </th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($bpins->filter(function($e){ return $e->secretaria == auth()->user()->dependencia->name;})->unique('cod_proyecto') as $item)
-                                            <tr>
-                                                <td>
-                                                    {{$item->cod_proyecto}}
-                                                </td>
-                                                <td>
-                                                    {{$item->nombre_proyecto}}
-                                                </td>
-                                                <td>
-                                                <a class="btn btn-success" onclick="show_proyecto('{{$item->cod_proyecto}}')">
-                                                    Ver
-                                                </a>                                           
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="table-responsive" id="tabla_bpin_actividades">
-                                <ul class="nav nav-tabs mt-3 mb-3">
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="modal" data-target="#myModal">Nueva Actividad</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#menu1">Adición</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#menu2">Reducción</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#menu2">Decreto</a>
-                                    </li>
-                                </ul>
-                                <table class="table table-bordered" >
-                                     <thead>
-                                        <th>
-                                            Codigo Actividad
-                                        </th>
-                                        <th>
-                                            Nombre Actividad
-                                        </th>
-                                    </thead>
-                                    <tbody id="tbody-actividades">
-                                        
-                                    </tbody>
-                                </table>
+                            <table class="table table-bordered" id="tabla_Proy">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">Codigo Proyecto</th>
+                                    <th class="text-center">Nombre Proyecto</th>
+                                    <th class="text-center">Ver</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($bpins->filter(function($e){ return $e->secretaria == auth()->user()->dependencia->name;})->unique('cod_proyecto') as $item)
+                                    <tr>
+                                        <td>{{$item->cod_proyecto}}</td>
+                                        <td>{{$item->nombre_proyecto}}</td>
+                                        <td><a class="btn btn-success" onclick="show_proyecto('{{$item->cod_proyecto}}')">Ver</a></td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive" id="tabla_bpin_actividades">
+                            <ul class="nav nav-tabs mt-3 mb-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="modal" data-target="#myModal">Nueva Actividad</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#menu1">Adición</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#menu2">Reducción</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#menu2">Decreto</a>
+                                </li>
+                            </ul>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">Codigo Actividad</th>
+                                    <th class="text-center">Nombre Actividad</th>
+                                    <th class="text-center">Rubro</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody-actividades">
+                                </tbody>
+                            </table>
 
-                                <div class="modal" id="myModal">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
+                            <div class="modal" id="myModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
 
-                                        <!-- Modal Header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Nueva Actividad</h4>
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-
-                                            <!-- Modal body -->
-                                            <div class="modal-body">
-                                                <form method="post" action="{{route('bpin.store')}}">
-                                                    <div class="row">
-                                                        {{ csrf_field() }}
-                                                        <input type="hidden" name="cod_proyecto" id="input-cod-proyecto">
-                                                        <div class="input-group my-2 col-md-12">
-                                                            <label for="" class="col-sm-5">codigo de Actividad</label>
-                                                            <input type="text" name="cod_actividad" class="form-control col-sm-7">
-                                                        </div>
-                                                        <div class="input-group my-2 col-md-12">
-                                                            <label for="" class= col-sm-5">Nombre de Actividad</label>
-                                                            <textarea name="nombre_actividad" class="form-control col-sm-7" row="3"></textarea>
-                                                        </div>
-                                                        <div class="input-group my-2 col-md-12">
-                                                            <label for="" class="col-sm-5">Propios</label>
-                                                            <input type="text" name="propios" class="form-control col-sm-7">
-                                                        </div>
-                                                        <div class="input-group my-2 col-md-12">
-                                                            <label for="" class="col-sm-5">SGP</label>
-                                                            <input type="text" name="sgp" class="form-control col-sm-7">
-                                                        </div>
-                                                        <div class="input-group my-2 col-md-12">
-                                                            <button class="btn btn-primary" type="submit">Guardar</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-
-                                            <!-- Modal footer -->
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                            </div>
-
+                                    <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Nueva Actividad</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <form method="post" action="{{route('bpin.store')}}">
+                                                <div class="row">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="cod_proyecto" id="input-cod-proyecto">
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class="col-sm-5">codigo de Actividad</label>
+                                                        <input type="text" name="cod_actividad" class="form-control col-sm-7">
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class= col-sm-5">Nombre de Actividad</label>
+                                                        <textarea name="nombre_actividad" class="form-control col-sm-7" row="3"></textarea>
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class="col-sm-5">Propios</label>
+                                                        <input type="text" name="propios" class="form-control col-sm-7">
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class="col-sm-5">SGP</label>
+                                                        <input type="text" name="sgp" class="form-control col-sm-7">
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <button class="btn btn-primary" type="submit">Guardar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        </div>
+
                                     </div>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -970,7 +972,7 @@
     <script src="{{ asset('/js/datatableCustom.js') }}"></script>
     <script>
     const bpins = @json($bpins);
-    console.log('bpins', bpins)
+    //console.log('bpins', bpins)
 
     const show_proyecto = cod_proyecto =>{
         $('#tabla_bpins').hide();
@@ -978,14 +980,29 @@
         $('#tbody-actividades').empty();
         $('#input-cod-proyecto').val(cod_proyecto);
         bpins.filter(r => r.cod_proyecto == cod_proyecto).forEach(e =>{
+            if (e.rubro.name) var button = e.rubro.name;
+            else var button = `<button onclick="getModalAsignaRubro(${e.cod_actividad})" class="btn btn-primary">Asignar Rubro a la Actividad</button>`;
             $('#tbody-actividades').append(`
                 <tr>
                     <td>${e.cod_actividad}</td>
                     <td>${e.actividad}</td>
+                    <td>${button}</td>
                 </tr>
             `);
         });
         
+    }
+
+    function getModalAsignaRubro(code){
+        console.log(code)
+        bpins.filter(r => r.cod_actividad == code).forEach(e =>{
+            document.getElementById("nameActividad").innerHTML = e.actividad;
+            document.getElementById("codeActividad").innerHTML = code;
+            $('#actividadCode').val(code);
+            $('#vigencia_id').val(e.vigencia_id);
+            console.log(e);
+        });
+        $('#formAsignaRubro').modal('show');
     }
 
     const show_bpins = ()  =>{

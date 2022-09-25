@@ -49,6 +49,7 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Objeto</th>
+                            <th class="text-center">Tipo</th>
                             <th class="text-center">Estado Secretaria</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
@@ -65,6 +66,7 @@
                             <tr>
                                 <td class="text-center">{{ $cdp->code }}</td>
                                 <td class="text-center">{{ $cdp->name }}</td>
+                                <td class="text-center">{{ $cdp->tipo }}</td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
                                         @if($cdp->secretaria_e == "0")
@@ -129,6 +131,7 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Objeto</th>
+                            <th class="text-center">Tipo</th>
                             <th class="text-center">Estado Secretaria</th>
                             <th class="text-center">Fecha Envio Secretaria</th>
                             <th class="text-center">Estado Jefe</th>
@@ -141,6 +144,7 @@
                             <tr>
                                 <td class="text-center">{{ $cdp->code }}</td>
                                 <td class="text-center">{{ $cdp->name }}</td>
+                                <td class="text-center">{{ $cdp->tipo }}</td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
                                         @if($cdp->secretaria_e == "0")

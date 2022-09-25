@@ -24,6 +24,7 @@ use App\Http\Controllers\Controller;
 use App\BPin;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Session;
 use function Complex\add;
 
 
@@ -37,6 +38,11 @@ class PresupuestoController extends Controller
 
     public function index(){
         $bpins = BPin::all();
+        foreach ($bpins as $bpin){
+            if ($bpin->rubro_id != 0) $bpin['rubro'] = $bpin->rubro->name;
+            else $bpin['rubro'] = "No";
+        }
+        //dd($bpins);
 
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
@@ -981,10 +987,38 @@ class PresupuestoController extends Controller
         $lastDay = $day->subDay()->toDateString();
         $actuallyDay = Carbon::now()->toDateString();
 
+        //Rubros no asignados a alguna actividad
+        foreach ($Rubros as $item){
+            $bpin = BPin::where('rubro_id', $item['id_rubro'])->first();
+            if (!$bpin) $rubBPIN[] = collect($item);
+        }
+
+        if (!isset($rubBPIN)){
+            $rubBPIN[] = null;
+            unset($rubBPIN[0]);
+        }
+
+        //SE DEBE MOSTRAR CODIGO BPIN / CODIGO ACTIVIDAD / NOMBRE ACTIVIDAD
+
+        foreach ($rubros as $rubro) {
+            $bpin2 = BPin::where('rubro_id', $rubro->id)->first();
+            if ($bpin2) {
+                if ( isset($bpinRubro)){
+                    $found_key = array_search($rubro->id, array_column($bpinRubro, 'rubro_id'));
+                    if ($found_key == false) $bpinRubro[] = collect(['rubro_id' => $rubro->id, 'code_bpin' => $bpin2->cod_proyecto, 'code_actividad' => $bpin2->cod_actividad, 'name_actividad' => $bpin2->actividad]);
+                } else $bpinRubro[] = collect(['rubro_id' => $rubro->id, 'code_bpin' => $bpin2->cod_proyecto, 'code_actividad' => $bpin2->cod_actividad, 'name_actividad' => $bpin2->actividad]);
+            } else $bpinRubro[] = collect(['rubro_id' => $rubro->id, 'code_bpin' => '', 'code_actividad' => '', 'name_actividad' => '']);
+        }
+
+        if (!isset($bpinRubro)){
+            $bpinRubro[] = null;
+            unset($bpinRubro[0]);
+        }
+
         return view('hacienda.presupuesto.index', compact('codigos','V','fuentes','FRubros','fuentesRubros','valoresIniciales','cdps', 'Rubros','valoresCdp',
             'registros','valorDisp','valoresAdd','valoresRed','valoresDisp','ArrayDispon', 'saldoDisp','rol','valoresCred', 'valoresCcred','valoresCyC','ordenPagos','valoresRubro'
             ,'valorDcdp','valOP','pagos','valP','valCP','valR','codeCon','añoActual','valoresFinAdd','valoresFinRed','valoresFinCred','valoresFinCCred','valoresFinCdp','valoresFinReg'
-            ,'valorFcdp','valoresFinOp','valoresFinP','valoresFinC','valoresFinRes','mesActual','primerLevel','years','pacs','lastDay','actuallyDay', 'bpins'));
+            ,'valorFcdp','valoresFinOp','valoresFinP','valoresFinC','valoresFinRes','mesActual','primerLevel','years','pacs','lastDay','actuallyDay', 'bpins','rubBPIN', 'bpinRubro'));
     }
 
 
@@ -2665,64 +2699,19 @@ class PresupuestoController extends Controller
         return view('hacienda.presupuesto.newIndex', compact('codigos','V','fuentes','FRubros','fuentesRubros','valoresIniciales','cdps', 'Rubros','valoresCdp','registros','valorDisp','valoresAdd','valoresRed','valoresDisp','ArrayDispon', 'saldoDisp','rol','valoresCred', 'valoresCcred','valoresCyC','ordenPagos','valoresRubro','valorDcdp','valOP','pagos','valP','valCP','valR','codeCon','añoActual','valoresFinAdd','valoresFinRed','valoresFinCred','valoresFinCCred','valoresFinCdp','valoresFinReg','valorFcdp','valoresFinOp','valoresFinP','valoresFinC','valoresFinRes','mesActual','primerLevel','vigencia'));
     }
 
-    public function create()
-    {
-        //
-    }
-
     /**
-     * Store a newly created resource in storage.
+     * Assign Rubro to Actividad.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function asignaRubroProyecto(Request $request)
     {
-        //
-    }
+        $bpinFind = BPin::where('cod_actividad', $request->actividadCode)->where('vigencia_id', $request->vigencia_id)->first();
+        $bpinFind->rubro_id = $request->rubro_id;
+        $bpinFind->save();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        Session::flash('success','Se ha asignado exitosamente la actividad al rubro.');
+        return redirect('presupuesto/');
     }
 }

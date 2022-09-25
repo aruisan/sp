@@ -190,77 +190,140 @@
                                     </tr>
                                     <tr id="fuente{{$i}}" style="display: none">
                                         <td style="vertical-align: middle">
-                                            <b>Rubros del CDP</b>
+                                            @if($cdpsRegistroData->cdp->tipo == "Funcionamiento")
+                                                <b>Rubros del CDP</b>
+                                            @else
+                                                <b>Actividades del CDP</b>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="col-lg-12">
-                                                @foreach($cdpsRegistroData->cdp->rubrosCdpValor as $RCV)
-                                                    @if($RCV->valor_disp != 0)
+                                                @if($cdpsRegistroData->cdp->tipo == "Funcionamiento")
+                                                    @foreach($cdpsRegistroData->cdp->rubrosCdpValor as $RCV)
+                                                        @if($RCV->valor_disp != 0)
+                                                            <div class="col-lg-6">
+                                                                <input type="hidden" name="registro_id" value="{{ $registro->id }}">
+                                                                <input type="hidden" name="fuente_id[]" value="{{ $RCV->fontsRubro->id }}">
+                                                                <input type="hidden" name="cdp_id_s[]" value="{{ $RCV->cdp_id }}">
+                                                                <input type="hidden" name="rubro_id[]" value="{{ $RCV->fontsRubro->rubro->id }}">
+                                                                <input type="hidden" name="rubros_cdp_id[]" value="{{ $cdpsRegistroData->id }}">
+                                                                @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
+                                                                <li style="list-style-type: none;">
+                                                                    Dinero Disponible del Rubro {{ $RCV->fontsRubro->rubro->name }} :
+                                                                    $<?php echo number_format( $RCV->valor_disp,0) ?>
+                                                                </li>
+                                                            </div>
+                                                        @endif
                                                         <div class="col-lg-6">
-                                                            <input type="hidden" name="registro_id" value="{{ $registro->id }}">
-                                                            <input type="hidden" name="fuente_id[]" value="{{ $RCV->fontsRubro->id }}">
-                                                            <input type="hidden" name="cdp_id_s[]" value="{{ $RCV->cdp_id }}">
-                                                            <input type="hidden" name="rubro_id[]" value="{{ $RCV->fontsRubro->rubro->id }}">
-                                                            <input type="hidden" name="rubros_cdp_id[]" value="{{ $cdpsRegistroData->id }}">
-                                                            @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
-                                                            <li style="list-style-type: none;">
-                                                                Dinero Disponible del Rubro {{ $RCV->fontsRubro->rubro->name }} :
-                                                                $<?php echo number_format( $RCV->valor_disp,0) ?>
-                                                            </li>
-                                                        </div>
-                                                    @endif
-                                                    <div class="col-lg-6">
-                                                        @if($registro->secretaria_e == "3")
-                                                            Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
-                                                            @if($cdpsRegistroData->cdpRegistroValor->count() != 0)
-                                                                @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
-                                                                    @php($id_rubrosCdp = $cdpsRegistroData->id )
-                                                                    @if($valoresRV->registro_id == $registro->id)
-                                                                        @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro->id == $valoresRV->rubro_id)
-                                                                            <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
-                                                                            @if($registro->secretaria_e == "0")
-                                                                                <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
-                                                                            @else
-                                                                                $<?php echo number_format( $valoresRV->valor,0) ?>
+                                                            @if($registro->secretaria_e == "3")
+                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
+                                                                @if($cdpsRegistroData->cdpRegistroValor->count() != 0)
+                                                                    @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
+                                                                        @php($id_rubrosCdp = $cdpsRegistroData->id )
+                                                                        @if($valoresRV->registro_id == $registro->id)
+                                                                            @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro->id == $valoresRV->rubro_id)
+                                                                                <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
+                                                                                @if($registro->secretaria_e == "0")
+                                                                                    <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                                @else
+                                                                                    $<?php echo number_format( $valoresRV->valor,0) ?>
+                                                                                @endif
                                                                             @endif
                                                                         @endif
+                                                                    @endforeach
+                                                                    @if($registro->cdpRegistroValor->count() == 0)
+                                                                        <input type="hidden" name="rubros_cdp_valor_id[]" value="">
+                                                                        <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
                                                                     @endif
-                                                                @endforeach
-                                                                @if($registro->cdpRegistroValor->count() == 0)
+                                                                @else
                                                                     <input type="hidden" name="rubros_cdp_valor_id[]" value="">
-                                                                    <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                    <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{  $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
                                                                 @endif
-                                                            @else
-                                                                <input type="hidden" name="rubros_cdp_valor_id[]" value="">
-                                                                <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{  $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
-                                                            @endif
-                                                        @elseif($RCV->valor_disp > 0)
-                                                            Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
-                                                            @if($cdpsRegistroData->cdpRegistroValor->count() != 0 )
-                                                                @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
-                                                                    @php($id_rubrosCdp = $cdpsRegistroData->id )
-                                                                    @if($valoresRV->registro_id == $registro->id)
-                                                                        @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro->id == $valoresRV->rubro_id)
-                                                                            <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
-                                                                            @if($registro->secretaria_e == "0")
-                                                                                <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
-                                                                            @else
-                                                                                $<?php echo number_format( $valoresRV->valor,0) ?>
+                                                            @elseif($RCV->valor_disp > 0)
+                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
+                                                                @if($cdpsRegistroData->cdpRegistroValor->count() != 0 )
+                                                                    @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
+                                                                        @php($id_rubrosCdp = $cdpsRegistroData->id )
+                                                                        @if($valoresRV->registro_id == $registro->id)
+                                                                            @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro->id == $valoresRV->rubro_id)
+                                                                                <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
+                                                                                @if($registro->secretaria_e == "0")
+                                                                                    <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                                @else
+                                                                                    $<?php echo number_format( $valoresRV->valor,0) ?>
+                                                                                @endif
                                                                             @endif
                                                                         @endif
+                                                                    @endforeach
+                                                                    @if($registro->cdpRegistroValor->count() == 0)
+                                                                        <input type="hidden" name="rubros_cdp_valor_id[]" value="">
+                                                                        <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" min="0" style="text-align: center">
                                                                     @endif
-                                                                @endforeach
-                                                                @if($registro->cdpRegistroValor->count() == 0)
+                                                                @else
                                                                     <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                     <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" min="0" style="text-align: center">
                                                                 @endif
-                                                            @else
-                                                                <input type="hidden" name="rubros_cdp_valor_id[]" value="">
-                                                                <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" min="0" style="text-align: center">
                                                             @endif
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    @foreach($cdpsRegistroData->cdp->bpinsCdpValor as $item)
+                                                        @if($item->valor_disp != 0)
+                                                            <div class="col-lg-6">
+                                                                <input type="hidden" name="registro_id" value="{{ $registro->id }}">
+                                                                <input type="hidden" name="cdp_id_s[]" value="{{ $item->cdp_id }}">
+                                                                <input type="hidden" name="rubro_id[]" value="{{ $item->actividad->rubro_id }}">
+                                                                <input type="hidden" name="rubros_cdp_id[]" value="{{ $cdpsRegistroData->id }}">
+                                                                <input type="hidden" name="bpin_id[]" value="{{ $item->actividad->id }}">
+                                                                @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
+                                                                <li style="list-style-type: none;">
+                                                                    Dinero Disponible de la Actividad {{ $item->actividad->actividad }} :
+                                                                    $<?php echo number_format($item->actividad->saldo,0) ?>
+                                                                </li>
+                                                            </div>
                                                         @endif
-                                                    </div>
-                                                @endforeach
+                                                        <div class="col-lg-6">
+                                                            @if($registro->secretaria_e == "3")
+                                                                Valor Usado de la Actividad {{ $item->actividad->actividad }}:
+                                                                @if($cdpsRegistroData->cdpRegistroValor->count() != 0)
+                                                                    @foreach($cdpsRegistroData->cdpRegistroValor as $valoresRV)
+                                                                        <input type="hidden" name="bpin_cdp_valor_id[]" value="{{ $item->id }}">
+                                                                        @if($registro->secretaria_e == "0")
+                                                                            <input type="number" required  name="valorActividadUsar[]" id="id{{$item->actividad->id}}" class="valor{{ $cdpsRegistroData->id }}" value="{{ $item->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                        @else
+                                                                            $<?php echo number_format( $item->valor,0) ?>
+                                                                        @endif
+                                                                    @endforeach
+                                                                @else
+                                                                    <input type="hidden" name="bpin_cdp_valor_id[]" value="">
+                                                                    <input type="number" required  name="valorActividadUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{  $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                @endif
+                                                            @elseif($item->valor_disp > 0)
+                                                                Valor Usado de la Actividad {{ $item->actividad->actividad }}:
+                                                                <!-- ARREGLAR EL VALOR QUE SE ESTA MOSTRANDO -->
+                                                                @if($cdpsRegistroData->cdpRegistroValor->count() != 0 )
+                                                                    @foreach($cdpsRegistroData->cdpRegistroValor as  $valoresRV)
+                                                                        @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $item->actividad->rubro_id == $valoresRV->rubro_id)
+                                                                            <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
+                                                                            @if($registro->secretaria_e == "0")
+                                                                                <input type="number" required  name="valorActividadUsar[]" id="id{{$item->actividad->id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                            @else
+                                                                                $<?php echo number_format( $valoresRV->valor,0) ?>
+                                                                            @endif
+                                                                        @endif
+                                                                    @endforeach
+                                                                    @if($registro->cdpRegistroValor->count() == 0)
+                                                                        <input type="hidden" name="bpin_cdp_valor_id[]" value="">
+                                                                        <input type="number" required  name="valorActividadUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" min="0" style="text-align: center">
+                                                                    @endif
+                                                                @else
+                                                                    <input type="hidden" name="bpin_cdp_valor_id[]" value="">
+                                                                    <input type="number" required  name="valorActividadUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" min="0" style="text-align: center">
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    @endforeach
+                                                @endif
                                             </div>
                                         </td>
                                         <td class="text-center">
