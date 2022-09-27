@@ -14,7 +14,7 @@ class BPin extends Model
 
 
     public function rubro(){
-        return $this->belongsTo('App\Model\Hacienda\Presupuesto\rubro', 'rubro_id');
+        return $this->belongsTo('App\Model\Hacienda\Presupuesto\Rubro', 'rubro_id');
     }
 
     public function vigencia(){
