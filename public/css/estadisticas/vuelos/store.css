@@ -29,3 +29,19 @@
 label {
     font-size: small;
 }
+
+.vertical-spacer{
+    height: 10px;
+}
+
+.big-vertical-spacer{
+    height: 40px;
+}
+
+.short-input{
+    width: 10px;
+}
+
+.content-row{
+    height: 100px;
+}

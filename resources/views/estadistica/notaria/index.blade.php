@@ -32,31 +32,9 @@
 
 @section('js')
     <script>
-        const reportes = ['Compraventa de Inmuebles', 'Subdivisión Inmuebles', 'Matrimonios', 'Divorsios'];
-
-        $(document).ready(function(){
-            load_tr()
-        })
-
-        const load_tr = () =>{
-            reportes.forEach(e => {
-                $('#tbody').append(`<tr>
-                    <td>${e}</td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                </tr>`);
-            });
-        }
+        const array_items = ['Compraventa de Inmuebles', 'Subdivisión Inmuebles', 'Matrimonios', 'Divorsios'];
+        let headers = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        let coleccion = "notaria";
     </script>
-
+    @include('estadistica.components.gestion_data')
 @stop

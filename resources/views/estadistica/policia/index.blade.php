@@ -32,31 +32,9 @@
 
 @section('js')
     <script>
-        const reportes = ['Número de contravenciones', 'Número de delitos hurto', 'Número de delitos de lesiones personales', 'Número de homicidios', 'Número de delitos narcotrafico'];
-
-        $(document).ready(function(){
-            load_tr()
-        })
-
-        const load_tr = () =>{
-            reportes.forEach(e => {
-                $('#tbody').append(`<tr>
-                    <td>${e}</td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                </tr>`);
-            });
-        }
+        const array_items = ['Número de contravenciones', 'Número de delitos hurto', 'Número de delitos de lesiones personales', 'Número de homicidios', 'Número de delitos narcotrafico'];
+        let headers = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        let coleccion = "policia";
     </script>
-
+    @include('estadistica.components.gestion_data')
 @stop

@@ -32,31 +32,9 @@
 
 @section('js')
     <script>
-        const reportes = ['Emergencia de incendio', 'Caida de arboles', 'Rescate Acuático', 'Atención accidentes', 'Reportes de llamada'];
-
-        $(document).ready(function(){
-            load_tr()
-        })
-
-        const load_tr = () =>{
-            reportes.forEach(e => {
-                $('#tbody').append(`<tr>
-                    <td>${e}</td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                </tr>`);
-            });
-        }
+        const array_items = ['Emergencia de incendio', 'Caida de arboles', 'Rescate Acuático', 'Atención accidentes', 'Reportes de llamada'];
+        let headers = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        let coleccion = "bomberos";
     </script>
-
+    @include('estadistica.components.gestion_data')
 @stop

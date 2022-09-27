@@ -1,13 +1,13 @@
 @include('modal.updateSoftware')
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-   Estadistica
+   ESTADISTICA
    <span class="caret"></span>
    </a>
    <ul class="dropdown-menu">
       <li><a class="item-menu" tabindex="-1" href="{{route('estadistica.index')}}">Reportes</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{route('reservaVuelo.index')}}">Aeropuerto</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('reservaVuelo.index')}}">Puerto</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('barco.index')}}">Puerto</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{route('colegio.index')}}">Institución Educativa Junin</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{route('sena.index')}}">SENA</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{route('capitania.puerto.index')}}">Capitania de Puerto</a></li>
@@ -20,13 +20,28 @@
       <li><a class="item-menu" tabindex="-1" href="{{route('ludoteca.index')}}">Ludoteca</a></li>
    </ul>
 </li>
-<li class="dropdown ">
+<li class="page-scroll ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-   SECRETARIA
+    ARCHIVOS
    <span class="caret"></span>
    </a>
-
    <ul class="dropdown-menu">
+      <li><a class="item-menu" tabindex="-1" href="{{route('explorador-archivos.index')}}">Archivos</a></li>
+      {{--<li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Archivos')}}">Archivos</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Contratos')}}">Contratos</a></li>
+      --}}
+      <li class="dropdown-submenu">
+         <a class="dropdown-item item-menu" >Contratos</a>
+         <ul class="dropdown-menu">
+            <li><a class="item-menu" href="{{route('carpetas.listar', 'Contratos')}}">Contratos 2020</a></li>
+            <li><a class="item-menu" href="{{route('carpetas.listar', 'Contratos')}}">Contratos 2021</a></li>
+         </ul>
+      </li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Hojas de Vida')}}">Hojas de Vida</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Expedientes')}}">Expedientes</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Manuales')}}">Manuales</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Planes')}}">Planes</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Publicaciones')}}">Publicaciones</a></li>
       <li class="dropdown-submenu">
          <a class="dropdown-item item-menu" >Correspondencia</a>
          <ul class="dropdown-menu">
@@ -34,23 +49,16 @@
             <li><a class="item-menu" href="{{url('/administrativo/inventario/create')}}">Salida</a></li>
          </ul>
       </li>
+       <li class="dropdown-submenu">
+         <a class="dropdown-item item-menu" >Normatividad Interna</a>
+         <ul class="dropdown-menu">
+            <li><a class="item-menu" href="{{route('carpetas.listar', 'Acuerdos')}}">Acuerdos</a></li>
+            <li><a class="item-menu" href="">Resoluciones</a></li>{{--falta url--}}
+            <li><a class="item-menu" href="">Decretos</a></li>{{--falta url--}}
+         </ul>
+      </li>
       <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Boletines')}}">Boletines</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Acuerdos')}}">Acuerdos</a></li>
-   </ul>
-</li>
-<li class="page-scroll ">
-   <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-    ARCHIVOS
-   <span class="caret"></span>
-   </a>
-   <ul class="dropdown-menu">
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Archivos')}}">Archivos</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Contratos')}}">Contratos</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Hojas de Vida')}}">Hojas de Vida</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Expedientes')}}">Expedientes</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Manuales')}}">Manuales</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Planes')}}">Planes</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Publicaciones')}}">Publicaciones</a></li>
+      
       <li><a class="item-menu" tabindex="-1" href="{{route('carpetas.listar', 'Otros')}}">Otros</a></li>
    </ul>
 </li>
@@ -65,12 +73,12 @@
       <li><a tabindex="-1" href="{{url('/personas')}}">Personas</a></li>
    </ul>
 </li>
---}}
 <li >
    <a class="btn btn-default btn-sm item-menu" href="{{ url('/contractual') }}">
     CONTRATACIÓN
    </a>
 </li>
+--}}
 <li >
    <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto') }}">
     PRESUPUESTO
@@ -237,7 +245,8 @@
             <li><a class="item-menu" href="#">Conciliaciones</a></li>
          </ul>
       </li>
-      <li><a class="item-menu" tabindex="-1" href="#">Policivos</a></li>
+      <li><a class="item-menu" tabindex="-1" href="">Policivos</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{ url('/contractual') }}">Contratos</a></li>
    </ul>
 </li>
   

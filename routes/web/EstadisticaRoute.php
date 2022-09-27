@@ -1,10 +1,12 @@
 <?php
 
-
+Route::get('/estadistica-public', 'Estadistica\EstadisticaController@public')->name('estadistica.public');
 Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
     Route::get('/', 'Estadistica\EstadisticaController@index')->name('estadistica.index');
     Route::get('/reserva-vuelo', 'Estadistica\ReservaVueloController@index')->name('reservaVuelo.index');
     Route::post('/reserva-vuelo', 'Estadistica\ReservaVueloController@store')->name('reservaVuelo.store');
+    Route::get('/puerto', 'Estadistica\BarcoController@index')->name('barco.index');
+    ROute::post('/puerto', 'Estadistica\BarcoController@store')->name('barco.store');
 
     Route::get('/colegio', 'Estadistica\ColegioController@index')->name('colegio.index');
     Route::get('/sena', 'Estadistica\SenaController@index')->name('sena.index');
@@ -16,4 +18,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
     Route::get('/hospital', 'Estadistica\HospitalController@index')->name('hospital.index');
     Route::get('/bomberos', 'Estadistica\BomberoController@index')->name('bomberos.index');
     Route::get('/ludoteca', 'Estadistica\LudotecaController@index')->name('ludoteca.index');
+
+    Route::post('store/colecciones', 'Estadistica\EstadisticaController@store_colecciones')->name('colecciones.store');
+    Route::post('data/colecciones', 'Estadistica\EstadisticaController@load_data_collection')->name('colecciones.data');
 });

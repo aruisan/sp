@@ -43,17 +43,21 @@
                 <thead>
                     <th>PROCESO</th>
                     <th>RESPONSABLE</th>
+                    <th>CDP2</th>
+                    <th>REGISTRO</th>
                     <th>VALOR</th>
                     <th>ASUNTO</th>
                     <th>ACCIONES</th>
 
                 </thead>
                 <tbody>
-                    @foreach($consulta as $data )
+                    @foreach($consulta as $K => $data )
 
                     <tr>
                         <td>{{$data->modulo}}</td>
                         <td>{{$data->responsable}}</td>
+                        <td>{{$data->modulo}} --- {{$data->responsable}}</td>
+                        <td>{{$K+1}}</td>
                         <td>$ <?php echo number_format($data->valor,0);?></td>
                         <td>{{$data->asunto}}</td>
                         <td class="text-center">
@@ -98,6 +102,9 @@
 	  //para usar los botones
 	  "pageLength": 5,   
 	  responsive: "true",
+      columnDefs: [
+            { 'visible': false, 'targets': [2,3] }
+        ],
 	  dom: 'Bfrtilp',       
 	  buttons:[ 
 			  {

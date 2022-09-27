@@ -1,15 +1,15 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    Reserva vuelo
+    viaje
 @stop
 @section('content')
-    <link href="{{ asset('css/estadisticas/vuelos/store.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('css/estadisticas/vuelos/store.css') }}" rel="stylesheet" type="text/css" />
     <div class="row">
         <div class="col-sm-4 appbar-component">
             <div class="row">
                 <div class="col-sm-6 appbar-component appbar-active-component">
                     <button class="btn btn-sm btn-block appbar-button" disabled>
-                        <h4>Vuelo no. {{$vuelo}}</h4>
+                        <h4>No. {{$travel}}</h4>
                     </button>
                 </div>
                 <div class="col-sm-6 appbar-component appbar-inactive-component">
@@ -33,10 +33,10 @@
     </div>
     <div class="row vertical-spacer"></div>
     <div class="row">
-        Fecha vuelo: {{$date}}
+        Barco: {{$boatName}}
     </div>
     <div class="row">
-        Aerolínea: {{$airline}}
+        Aerolínea: {{$transportationCompany}}
     </div>
     <div class="row">
         <div class="col-sm-2 col-md-offset-2">
@@ -162,20 +162,18 @@
     </div>
     <div class="row">
         <div class="col-sm-4">
-            <button type="button" class="btn btn-primary btn-block">Nuevo vuelo</button>
+            <button type="button" class="btn btn-primary btn-block">Nuevo viaje</button>
         </div>
         <div class="col-sm-4"></div>
         <div class="col-sm-1">
             <button type="button" class="btn btn-primary">Siguiente</button>
         </div>
         <div class="col-sm-1">
-            <button type="button" class="btn btn-primary">Cerrar vuelo</button>
+            <button type="button" class="btn btn-primary">Cerrar viaje</button>
         </div>
         <div class="col-sm-2"></div>
     </div>
-   
 @stop
-
 @section('js')
     <script type="text/javascript">
 

@@ -32,31 +32,9 @@
 
 @section('js')
     <script>
-        const reportes = ['Número de computadores en uso', 'Número de computadores dañados', 'Estudiantes consulta', 'Particulares', 'Registro total de asistencia'];
-
-        $(document).ready(function(){
-            load_tr()
-        })
-
-        const load_tr = () =>{
-            reportes.forEach(e => {
-                $('#tbody').append(`<tr>
-                    <td>${e}</td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                </tr>`);
-            });
-        }
+        const array_items = ['Número de computadores en uso', 'Número de computadores dañados', 'Estudiantes consulta', 'Particulares', 'Registro total de asistencia'];
+        let headers = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        let coleccion = "ludoteca";
     </script>
-
+    @include('estadistica.components.gestion_data')
 @stop

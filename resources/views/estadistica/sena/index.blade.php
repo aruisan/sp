@@ -24,28 +24,12 @@
 
     </div>
 @stop
-
 @section('js')
     <script>
-        const reportes = ['Número de estudiantes matriculados', 'Número de instructores', 'Número de programas ofrecidos',
+        const array_items = ['Número de estudiantes matriculados', 'Número de instructores', 'Número de programas ofrecidos',
                             , 'Deserción de estudiantes', 'Presupuesto de la Sede Entidad', 'Déficit de programas a Ofertar'];
-        $(document).ready(function(){
-            load_tr()
-        })
-
-        const load_tr = () =>{
-            reportes.forEach(e => {
-                $('#tbody').append(`<tr>
-                    <td>${e}</td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                </tr>`);
-            });
-        }
+        let headers = [2020,2021,2022,2023,2024,2025];
+        let coleccion = "sena";
     </script>
-
+    @include('estadistica.components.gestion_data')
 @stop

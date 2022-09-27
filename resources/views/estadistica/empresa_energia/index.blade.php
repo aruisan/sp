@@ -26,25 +26,9 @@
 
 @section('js')
     <script>
-        const reportes = ['estrato 1', 'estrato 2', 'estrato 3', 'estrato 4', 'estrato 5', 'Comerciantes', 'Industriales'];
-
-        $(document).ready(function(){
-            load_tr()
-        })
-
-        const load_tr = () =>{
-            reportes.forEach(e => {
-                $('#tbody').append(`<tr>
-                    <td>${e}</td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                    <td><input class="form-control"></td>
-                </tr>`);
-            });
-        }
+        const array_items = ['estrato 1', 'estrato 2', 'estrato 3', 'estrato 4', 'estrato 5', 'Comerciantes', 'Industriales'];
+        let headers = [2020,2021,2022,2023,2024,2025];
+        let coleccion = "empresa de energia";
     </script>
-
+    @include('estadistica.components.gestion_data')
 @stop
