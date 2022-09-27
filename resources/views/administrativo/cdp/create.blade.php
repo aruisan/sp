@@ -78,8 +78,15 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> 
-
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="valueControl">Valor de Control<span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" required value="0" min="0" name="valueControl">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <input type="hidden" class="form-control" name="fecha" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}" min="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
                             <input type="hidden" class="form-control" name="dependencia_id" value="{{ $dependencia }}">
                             <input type="hidden" class="form-control" name="vigencia_id" value="{{ $vigencia }}">

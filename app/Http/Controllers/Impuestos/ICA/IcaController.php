@@ -177,15 +177,15 @@ class IcaController extends Controller
             $pago = new Pagos();
             $pago->modulo = "ICA-Contribuyente";
             $pago->entity_id = $ICA->id;
-            $pago->estado = "Generado";
+            $pago->estado = "Borrador";
             $pago->valor = $ICA->totPagar;
             $pago->fechaCreacion = $ICA->presentacion;
             $pago->user_id = Auth::user()->id;
             $pago->save();
 
-            Session::flash('success', 'Formulario declaración de contribuyente presentado exitosamente.');
+            Session::flash('success', 'Borrador del formulario declaración de contribuyente generado exitosamente.');
 
-            return redirect('/impuestos/Pagos');
+            return redirect('/impuestos/Pagos/'.$pago->id);
         } else {
             $ICA = IcaContri::find($request->ica_id);
             $ICA->user_id = Auth::user()->id;
@@ -250,11 +250,11 @@ class IcaController extends Controller
             $ICA->presentacion = Carbon::today();
             $ICA->save();
 
-            $pago = Pagos::where('entity_id', $ICA->id)->get();
-            $pago[0]->entity_id = $ICA->id;
-            $pago[0]->valor = $ICA->totPagar;
-            $pago[0]->fechaCreacion = $ICA->presentacion;
-            $pago[0]->save();
+            $pago = Pagos::where('entity_id', $ICA->id)->where('modulo','ICA-Contribuyente')->first();
+            $pago->entity_id = $ICA->id;
+            $pago->valor = $ICA->totPagar;
+            $pago->fechaCreacion = $ICA->presentacion;
+            $pago->save();
 
             Session::flash('success', 'Formulario declaración de contribuyente corregido exitosamente.');
 

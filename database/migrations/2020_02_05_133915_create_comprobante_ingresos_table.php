@@ -23,6 +23,8 @@ class CreateComprobanteIngresosTable extends Migration
             $table->enum('estado', [0, 1, 2, 3]);
             $table->date('ff');
             $table->string('ruta')->nullable();
+            $table->enum('tipoCI', ['SGP Salud', 'SGP Educacion', 'SGP Otros sectores', 'Otro'])->nullable();
+            $table->text('cualOtroTipo')->nullable();
 
             $table->integer('vigencia_id')->unsigned();
             $table->foreign('vigencia_id')->references('id')->on('vigencias');

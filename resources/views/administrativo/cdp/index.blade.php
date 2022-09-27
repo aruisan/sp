@@ -49,6 +49,7 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Objeto</th>
+                            <th class="text-center">Tipo</th>
                             <th class="text-center">Estado Secretaria</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
@@ -65,6 +66,7 @@
                             <tr>
                                 <td class="text-center">{{ $cdp->code }}</td>
                                 <td class="text-center">{{ $cdp->name }}</td>
+                                <td class="text-center">{{ $cdp->tipo }}</td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
                                         @if($cdp->secretaria_e == "0")
@@ -129,6 +131,7 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Objeto</th>
+                            <th class="text-center">Tipo</th>
                             <th class="text-center">Estado Secretaria</th>
                             <th class="text-center">Fecha Envio Secretaria</th>
                             <th class="text-center">Estado Jefe</th>
@@ -141,6 +144,7 @@
                             <tr>
                                 <td class="text-center">{{ $cdp->code }}</td>
                                 <td class="text-center">{{ $cdp->name }}</td>
+                                <td class="text-center">{{ $cdp->tipo }}</td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
                                         @if($cdp->secretaria_e == "0")
@@ -261,9 +265,37 @@
             responsive: true,
             "searching": true,
             dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'print'
-            ]
+            order: [[0, 'desc']],
+            buttons:[
+                {
+                    extend:    'copyHtml5',
+                    text:      '<i class="fa fa-clone"></i> ',
+                    titleAttr: 'Copiar',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'excelHtml5',
+                    text:      '<i class="fa fa-file-excel-o"></i> ',
+                    titleAttr: 'Exportar a Excel',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'pdfHtml5',
+                    text:      '<i class="fa fa-file-pdf-o"></i> ',
+                    titleAttr: 'Exportar a PDF',
+                    message : 'SIEX-Providencia',
+                    header :true,
+                    orientation : 'landscape',
+                    pageSize: 'LEGAL',
+                    className: 'btn btn-primary',
+                },
+                {
+                    extend:    'print',
+                    text:      '<i class="fa fa-print"></i> ',
+                    titleAttr: 'Imprimir',
+                    className: 'btn btn-primary'
+                },
+        ]
         } );
 
         $('#tabla_Historico').DataTable( {

@@ -87,6 +87,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //PAGOS
         Route::resource('/Pagos', 'Impuestos\Pagos\PagosController');
+        Route::post('/Pagos/Send', 'Impuestos\Pagos\PagosController@Send');
 
         //EMAIL
         Route::get('/sparkpost', function () {
@@ -234,6 +235,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::post('cdp/{id}/anular/{vigen}', 'Administrativo\Cdp\CdpController@anular');
         //pdf cdp
 		Route::get('cdp/pdf/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdf')->name('cpd-pdf');
+        //Crear cdp con actividad
+        Route::post('cdp/{id}/{vigen}/asignActividad', 'Administrativo\Cdp\CdpController@cdpActividad');
 
         Route::resource('marcas-herretes', 'Administrativo\MarcaHerrete\MarcaHerreteController');
         Route::get('persona-find/{identificador}', 'Cobro\PersonasController@personaFind');
@@ -417,6 +420,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     Route::put('presupuesto/rubro/m/{m}/{id}', 'Hacienda\Presupuesto\RubrosMovController@movimiento');
 	Route::resource('presupuesto/FontRubro', 'Hacienda\Presupuesto\FontRubroController');
 	Route::resource('presupuesto/FontRubro/saldo', 'Hacienda\Presupuesto\FontRubroController@saldoFont');
+        //ASIGNAR ACTIVIDAD AL PROYECTO
+        Route::post('presupuesto/proyectos/asignaRubroActiv','Hacienda\Presupuesto\PresupuestoController@asignaRubroProyecto');
+
     //INFORMES PRESUPUESTO EGRESOS
     Route::resource('presupuesto/informes','Hacienda\Presupuesto\Informes\ReportsController');
     Route::get('presupuesto/informes/lvl/{id}/{vigencia}','Hacienda\Presupuesto\Informes\ReportsController@lvl');

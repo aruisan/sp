@@ -32,4 +32,8 @@ class Cdp extends Model implements Auditable
     public function cdpsSecretaria(){
         return $this->belongsTo('App\User','secretaria_e');
     }
+
+    public function bpinsCdpValor(){
+        return $this->hasMany('App\Model\Administrativo\Cdp\BpinCdpValor','cdp_id');
+    }
 }

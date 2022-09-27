@@ -271,6 +271,24 @@
                             </tr>
                             </tbody>
                         </table>
+                        <table id="TABLA6" class="table text-center">
+                            <tbody>
+                            <tr style="background-color: #0e7224; color: white">
+                                <th scope="row" colspan="2">E. FINALIZAR</th>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td><a href="{{ url('impuestos/ICA/contri/update/'.$formulario->id) }}" class="btn btn-impuesto" style="font-size: 25px; color: white">Corregir</a></td>
+                                <td>
+                                    <form action="{{url('/impuestos/Pagos/Send')}}" method="POST" enctype="multipart/form-data">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" value="{{$pago->id}}" name="pago_id">
+                                        <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Firmar y Presentar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
 
 
                     @elseif($pago->modulo == "PREDIAL")

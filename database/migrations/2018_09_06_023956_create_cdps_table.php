@@ -17,6 +17,7 @@ class CreateCdpsTable extends Migration
             $table->increments('id');
             $table->integer('code');
             $table->text('name');
+            $table->integer('valueControl')->nullable();
             $table->integer('valor');
             $table->date('fecha');
 

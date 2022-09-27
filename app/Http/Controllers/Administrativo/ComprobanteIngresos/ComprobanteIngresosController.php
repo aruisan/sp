@@ -59,16 +59,12 @@ class ComprobanteIngresosController extends Controller
         if($request->hasFile('file')) {
             $file = new FileTraits;
             $ruta = $file->File($request->file('file'), 'CertificadoIngresos');
-        }else{
-            $ruta = "";
-        }
+        }else $ruta = "";
 
         $countCI = ComprobanteIngresos::where('vigencia_id', $request->vigencia_id)->orderBy('id')->get()->last();
-        if ($countCI == null){
-            $count = 0;
-        }else{
-            $count = $countCI->code;
-        }
+        if ($countCI == null)  $count = 0;
+        else $count = $countCI->code;
+
         $comprobante = new ComprobanteIngresos();
         $comprobante->code = $count + 1;
         $comprobante->concepto = $request->concepto;
@@ -77,6 +73,8 @@ class ComprobanteIngresosController extends Controller
         $comprobante->val_total = $request->valor + $request->valorIva;
         $comprobante->estado = $request->estado;
         $comprobante->ff = $request->fecha;
+        $comprobante->tipoCI = $request->tipoCI;
+        $comprobante->cualOtroTipo = $request->cualOtroTipo;
         $comprobante->user_id = $request->user_id;
         $comprobante->vigencia_id = $request->vigencia_id;
         $comprobante->ruta = $ruta;
@@ -84,7 +82,6 @@ class ComprobanteIngresosController extends Controller
 
         Session::flash('success','El comprobante de ingreso se ha creado exitosamente');
         return redirect('/administrativo/CIngresos/show/'.$comprobante->id);
-
     }
 
     /**
@@ -229,29 +226,6 @@ class ComprobanteIngresosController extends Controller
             }
 
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\comprobante_egresos  $comprobante_egresos
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(comprobante_egresos $comprobante_egresos)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\comprobante_egresos  $comprobante_egresos
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, comprobante_egresos $comprobante_egresos)
-    {
-        //
     }
 
     /**

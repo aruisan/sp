@@ -25,43 +25,67 @@
 			</center>
 		</div>
 		<?php $sumRubros = 0;?>
-		@foreach($cdp->rubrosCdp as $rubrosCdp)
-		<div class="br-black-1">
-			<table style="margin: 5px 10px;">
-				<tbody>
-					<tr style="font-size: 16px;">
-						<td style="width: 30px;">Proyecto: </td>
-						<td> {{$rubrosCdp->rubros->subProyecto->proyecto->name}}</td>
-					</tr>
-					<tr style="font-size: 16px;">
-						<td style="width: 30px;">Sub-Proyecto: </td>
-						<td> {{$rubrosCdp->rubros->subProyecto->name}}</td>
-					</tr>
-					<tr style="font-size: 16px;">
-						<td style="width: 30px;">Programa: </td>
-						@foreach($infoRubro as $rubro)
-							@if($rubro['name'] == $rubrosCdp->rubros->name)
-								<td>{{$rubro['last_code']}} - {{$rubro['register']}}</td>
-							@endif
-						@endforeach
-					</tr>
-					<tr style="font-size: 16px;">
-						<td style="width: 30px;">Sub Programa: </td>
-						@foreach($infoRubro as $rubro)
-							@if($rubro['name'] == $rubrosCdp->rubros->name)
-								<td>{{$rubro['codigo']}} - {{$rubro['name']}}</td>
-							@endif
-						@endforeach
-					</tr>
-					<tr style="font-size: 16px;">
-						<td style="width: 30px;">Valor: </td>
-						<td> {{number_format($rubrosCdp->rubrosCdpValor->sum('valor'))}}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<?php $sumRubros = $sumRubros+$rubrosCdp->rubrosCdpValor->sum('valor');?>
-		@endforeach
+		@if($cdp->tipo == "Funcionamiento")
+			@foreach($cdp->rubrosCdp as $rubrosCdp)
+			<div class="br-black-1">
+				<table style="margin: 5px 10px;">
+					<tbody>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Proyecto: </td>
+							<td> {{$rubrosCdp->rubros->subProyecto->proyecto->name}}</td>
+						</tr>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Sub-Proyecto: </td>
+							<td> {{$rubrosCdp->rubros->subProyecto->name}}</td>
+						</tr>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Programa: </td>
+							@foreach($infoRubro as $rubro)
+								@if($rubro['name'] == $rubrosCdp->rubros->name)
+									<td>{{$rubro['last_code']}} - {{$rubro['register']}}</td>
+								@endif
+							@endforeach
+						</tr>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Sub Programa: </td>
+							@foreach($infoRubro as $rubro)
+								@if($rubro['name'] == $rubrosCdp->rubros->name)
+									<td>{{$rubro['codigo']}} - {{$rubro['name']}}</td>
+								@endif
+							@endforeach
+						</tr>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Valor: </td>
+							<td> {{number_format($rubrosCdp->rubrosCdpValor->sum('valor'))}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<?php $sumRubros = $sumRubros+$rubrosCdp->rubrosCdpValor->sum('valor');?>
+			@endforeach
+		@else
+			@foreach($cdp->bpinsCdpValor as $bpinsCDP)
+				<div class="br-black-1">
+					<table style="margin: 5px 10px;">
+						<tbody>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Proyecto: </td>
+							<td>{{$bpinsCDP->actividad->cod_proyecto}} - {{$bpinsCDP->actividad->nombre_proyecto}}</td>
+						</tr>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Actividad: </td>
+							<td>{{$bpinsCDP->actividad->cod_actividad}} - {{$bpinsCDP->actividad->actividad}}</td>
+						</tr>
+						<tr style="font-size: 16px;">
+							<td style="width: 30px;">Valor: </td>
+							<td> {{number_format($bpinsCDP->valor)}}</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+					<?php $sumRubros = $cdp->valor;?>
+			@endforeach
+		@endif
 		<div class="br-black-1">
 			<table style="margin: 5px 10px;">
 				<tbody>

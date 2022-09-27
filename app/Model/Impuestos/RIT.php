@@ -22,4 +22,12 @@ class RIT extends Model implements Auditable
     public function establecimientos(){
         return $this->hasMany('App\Model\Impuestos\RitEstablecimientos','rit_id');
     }
+
+    public function ResourceRUT(){
+        return $this->belongsTo('App\Resource','rut_resource_id');
+    }
+
+    public function ResourceCC(){
+        return $this->belongsTo('App\Resource','cc_resource_id');
+    }
 }

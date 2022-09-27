@@ -387,7 +387,7 @@
                         <table id="TABLA7" class="table text-center table-bordered">
                             <tbody>
                             <tr style="background-color: #0e7224; color: white">
-                                <th scope="row" colspan="2">E. FIRMAS</th>
+                                <th scope="row" colspan="2">FINALIZAR FORMULARIO</th>
                             </tr>
                             <tr>
                                 <td>
@@ -396,7 +396,8 @@
                                     <h3>{{ Carbon\Carbon::today()->Format('d-m-Y')}}</h3>
                                 </td>
                                 <td>
-                                    <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Firmar y Presentar</button>
+                                   <!-- <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Firmar y Presentar</button> -->
+                                    <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Generar Borrador</button>
                                 </td>
                             </tr>
                             </tbody>
