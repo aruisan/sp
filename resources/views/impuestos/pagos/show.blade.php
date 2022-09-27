@@ -278,6 +278,13 @@
                             </tr>
                             <tr>
                             <tr>
+                                <td>
+                                    <form action="{{url('impuestos/ICA/contri/delete/'.$formulario->id.'/'.$pago->id)}}" method="POST" enctype="multipart/form-data">
+                                        {{ csrf_field() }}
+                                        {{method_field('DELETE')}}
+                                        <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Eliminar Borrador</button>
+                                    </form>
+                                </td>
                                 <td><a href="{{ url('impuestos/ICA/contri/update/'.$formulario->id) }}" class="btn btn-impuesto" style="font-size: 25px; color: white">Corregir</a></td>
                                 <td>
                                     <form action="{{url('/impuestos/Pagos/Send')}}" method="POST" enctype="multipart/form-data">
@@ -610,6 +617,31 @@
                                 <td>30. T.P. Contador Revisor Fiscal signatario <br> {{ $formulario->tpRevFisc }}<br></td>
                                 <td>31. Nombre del Contador o Revisor Fiscal <br> {{ $formulario->nameRevFisc }}<br></td>
                                 <td>Fecha de presentación <br> <h3>{{ Carbon\Carbon::parse($formulario->presentacion)->Format('d-m-Y')}}</h3>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table id="TABLA6" class="table text-center">
+                            <tbody>
+                            <tr style="background-color: #0e7224; color: white">
+                                <th scope="row" colspan="2">FINALIZAR</th>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td>
+                                    <form action="{{url('impuestos/ICA/retenedor/delete/'.$formulario->id.'/'.$pago->id)}}" method="POST" enctype="multipart/form-data">
+                                        {{ csrf_field() }}
+                                        {{method_field('DELETE')}}
+                                        <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Eliminar Borrador</button>
+                                    </form>
+                                </td>
+                                <td><a href="{{ url('impuestos/ICA/retenedor/update/'.$formulario->id) }}" class="btn btn-impuesto" style="font-size: 25px; color: white">Corregir</a></td>
+                                <td>
+                                    <form action="{{url('/impuestos/Pagos/Send')}}" method="POST" enctype="multipart/form-data">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" value="{{$pago->id}}" name="pago_id">
+                                        <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Firmar y Presentar</button>
+                                    </form>
                                 </td>
                             </tr>
                             </tbody>

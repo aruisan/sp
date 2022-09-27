@@ -14,6 +14,11 @@
                 <li class="nav-item active">
                     <a class="nav-link" data-toggle="pill" href="#tabPagos">Para Pagar</a>
                 </li>
+                @if(count($pagosBorrador) > 0)
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#tabBorradores">Borradores</a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="pill" href="#tabHistorico">Historico de Pagos</a>
                 </li>
@@ -59,6 +64,43 @@
                             <div class="alert alert-danger">
                                 <center>
                                     No tiene pagos pendientes.
+                                </center>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <div id="tabBorradores" class="tab-pane fade"><br>
+                    <br>
+                    <div class="table-responsive">
+                        @if(count($pagosBorrador) > 0)
+                            <table class="table table-bordered" id="tabla_historicos">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Formulario</th>
+                                    <th class="text-center">Fecha Presentación</th>
+                                    <th class="text-center">Valor</th>
+                                    <th class="text-center">Continuar Formulario</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($pagosBorrador as $index => $pago)
+                                    <tr>
+                                        <td class="text-center">{{ $index + 1 }}</td>
+                                        <td class="text-center">{{ $pago->modulo }}</td>
+                                        <td class="text-center"> {{ \Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y') }}</td>
+                                        <td class="text-center">$<?php echo number_format($pago->valor,0) ?></td>
+                                        <td class="text-center">
+                                            <a href="{{ url('impuestos/Pagos/'.$pago->id) }}" title="Ver" class="btn btn-sm btn-primary-impuestos">Continuar Formulario</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="alert alert-danger">
+                                <center>
+                                    No hay pagos anteriores registrados en el sistema.
                                 </center>
                             </div>
                         @endif

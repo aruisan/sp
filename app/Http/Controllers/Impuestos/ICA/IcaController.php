@@ -258,7 +258,7 @@ class IcaController extends Controller
 
             Session::flash('success', 'Formulario declaración de contribuyente corregido exitosamente.');
 
-            return redirect('/impuestos/Pagos');
+            return redirect('/impuestos/Pagos/'.$pago->id);
         }
     }
 
@@ -317,9 +317,9 @@ class IcaController extends Controller
             $pago->user_id = Auth::user()->id;
             $pago->save();
 
-            Session::flash('success', 'Formulario declaración agente retenedor presentado exitosamente.');
+            Session::flash('success', 'Borrador del formulario declaración agente retenedor presentado exitosamente.');
 
-            return redirect('/impuestos/Pagos');
+            return redirect('/impuestos/Pagos/'.$pago->id);
         } else {
             $retenedor = IcaRetenedor::find($request->ica_id);
             $retenedor->user_id = Auth::user()->id;
@@ -348,15 +348,15 @@ class IcaController extends Controller
             $retenedor->presentacion = Carbon::today();
             $retenedor->save();
 
-            $pago = Pagos::where('entity_id', $retenedor->id)->where('modulo','ICA-AgenteRetenedor')->get();
-            $pago[0]->entity_id = $retenedor->id;
-            $pago[0]->valor = $request->pagoTotal;
-            $pago[0]->fechaCreacion = Carbon::today();
-            $pago[0]->save();
+            $pago = Pagos::where('entity_id', $retenedor->id)->where('modulo','ICA-AgenteRetenedor')->first();
+            $pago->entity_id = $retenedor->id;
+            $pago->valor = $request->pagoTotal;
+            $pago->fechaCreacion = Carbon::today();
+            $pago->save();
 
             Session::flash('success', 'Formulario declaración agente retenedor corregido exitosamente.');
 
-            return redirect('/impuestos/Pagos');
+            return redirect('/impuestos/Pagos/'.$pago->id);
         }
     }
 
@@ -502,12 +502,46 @@ class IcaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function deleteExogena($id){
-
         $exogena = Exogena::find($id);
         $exogena->delete();
-
         Session::flash('warning', 'Persona eliminada correctamente.');
+    }
 
+
+    /**
+     * Delete formulario contribuyente.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteContri($idForm, $idPay){
+
+        $pago = Pagos::find($idPay);
+        $pago->delete();
+
+        $ICA = IcaContri::find($idForm);
+        $ICA->delete();
+
+        Session::flash('warning', 'Formulario contribuyente eliminado exitosamente.');
+        return redirect('/impuestos/Pagos');
+    }
+
+    /**
+     * Delete formulario retenedor.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteRetenedor($idForm, $idPay){
+
+        $pago = Pagos::find($idPay);
+        $pago->delete();
+
+        $ICA = IcaRetenedor::find($idForm);
+        $ICA->delete();
+
+        Session::flash('warning', 'Formulario agente retenedor eliminado exitosamente.');
+        return redirect('/impuestos/Pagos');
     }
 
 }

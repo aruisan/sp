@@ -36,8 +36,9 @@ class PagosController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $pagosPendientes = Pagos::where('user_id', $user->id)->where('estado','Generado')->get();
+        $pagosBorrador = Pagos::where('user_id', $user->id)->where('estado','Borrador')->get();
         $pagosHistoricos = Pagos::where('user_id', $user->id)->where('estado','Pagado')->get();
-        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos'));
+        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos','pagosBorrador'));
     }
 
     /**
@@ -86,7 +87,7 @@ class PagosController extends Controller
         $pago->fechaCreacion = Carbon::today();
         $pago->save();
 
-        Session::flash('success', 'Formulario declaración de contribuyente presentado exitosamente.');
+        Session::flash('success', 'Formulario '.$pago->modulo.' declaración de contribuyente presentado exitosamente.');
         return redirect('/impuestos/Pagos');
     }
 }

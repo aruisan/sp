@@ -273,7 +273,7 @@
                                             @if($action == "Corrección" )
                                                 Corregir
                                             @else
-                                                Presentar
+                                                Generar Borrador
                                             @endif
                                         </button>
                                     </td>
@@ -309,7 +309,7 @@
                 alert('Debe tener un pago total superior a 0');
                 return;
             }
-            //this.submit();
+            this.submit();
         }
 
         const formatter = new Intl.NumberFormat('en-US', {

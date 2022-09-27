@@ -65,12 +65,14 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('/ICA/contri/update/{id}','Impuestos\ICA\IcaController@updateContri')->name('impuestos.icaContri.update');
         Route::post('/ICA/contri', 'Impuestos\ICA\IcaController@storeContri')->name('impuestos.icaContri.store');
         Route::get('/ICA/contri/pdf/{id}', 'Impuestos\ICA\IcaController@facturaContri')->name('impuestos.icaContri.factura');
+        Route::delete('/ICA/contri/delete/{idForm}/{idPay}', 'Impuestos\ICA\IcaController@deleteContri');
 
             //AGENTE RETENEDOR
         Route::get('/ICA/retenedor/create','Impuestos\ICA\IcaController@createRetenedor')->name('impuestos.icaRetenedor.create');
         Route::get('/ICA/retenedor/update/{id}','Impuestos\ICA\IcaController@updateRetenedor')->name('impuestos.icaRetenedor.update');
         Route::post('/ICA/retenedor', 'Impuestos\ICA\IcaController@storeRetenedor')->name('impuestos.icaRetenedor.store');
         Route::get('/ICA/retenedor/pdf/{id}', 'Impuestos\ICA\IcaController@facturaRetenedor')->name('impuestos.icaRetenedor.factura');
+        Route::delete('/ICA/retenedor/delete/{idForm}/{idPay}', 'Impuestos\ICA\IcaController@deleteRetenedor');
 
             //EXOGENA
         Route::get('/ICA/exogena/create','Impuestos\ICA\IcaController@createExogena')->name('impuestos.icaExogena.create');

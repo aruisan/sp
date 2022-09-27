@@ -34,6 +34,14 @@
 					<td>Fecha de presentación <br> {{ $ica->presentacion }}</td>
 					<td>Total a Pagar <br> <h4>$<?php echo number_format($ica->pagoTotal,0) ?></h4></td>
 				</tr>
+				<tr>
+					<td colspan="2">
+						{!! DNS1D::getBarcodeHTML('(415)7709998144460(8020)'.$ica->numReferencia.'(3900)'.$ica->pagoTotal.'(96)'. \Carbon\Carbon::parse($ica->presentacion)->format('Ymd'), 'C128',1.04,45) !!}
+						(415)7709998144460(8020){{$ica->numReferencia}}(3900){{$ica->pagoTotal}}(96){{ \Carbon\Carbon::parse($ica->presentacion)->format('Ymd') }}
+						<br>
+						Señor Cajero por favor no colocar el sello en el código de barras
+					</td>
+				</tr>
 			</table>
 		</div>
 	</div>
