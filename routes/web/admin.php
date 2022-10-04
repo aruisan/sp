@@ -239,6 +239,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 		Route::get('cdp/pdf/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdf')->name('cpd-pdf');
         //Crear cdp con actividad
         Route::post('cdp/{id}/{vigen}/asignActividad', 'Administrativo\Cdp\CdpController@cdpActividad');
+        Route::post('cdp/{id}/RestartInv', 'Administrativo\Cdp\CdpController@restaurarInv');
+        Route::post('cdp/{id}/DeleteInv', 'Administrativo\Cdp\CdpController@deleteInv');
 
         Route::resource('marcas-herretes', 'Administrativo\MarcaHerrete\MarcaHerreteController');
         Route::get('persona-find/{identificador}', 'Cobro\PersonasController@personaFind');

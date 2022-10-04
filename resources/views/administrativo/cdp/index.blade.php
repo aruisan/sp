@@ -6,11 +6,9 @@
             <h4><b>CDP's</b></h4>
         </strong>
     </div>
-
     <ul class="nav nav-pills">
         <li class="nav-item regresar">
             <a class="nav-link" href="{{ url('/presupuesto') }}" >
-
                 Volver a Presupuesto</a>
         </li>
         <li class="nav-item active">
@@ -24,19 +22,11 @@
         <li class="nav-item">
             <a class="nav-link" data-toggle="pill" href="#tabHistorico">HISTORICO</a>
         </li>
-       
-
         @if( $rol == 2)
             <li class="nav-item">
-                <a class="nav-link" href="{{ url('/administrativo/cdp/create/'.$vigencia_id) }}" >
-
-                    NUEVO CDP</a>
+                <a class="nav-link" href="{{ url('/administrativo/cdp/create/'.$vigencia_id) }}" >NUEVO CDP</a>
             </li>
-
-
         @endif
-
-
     </ul>
 
     <div class="tab-content" >
@@ -51,12 +41,15 @@
                             <th class="text-center">Objeto</th>
                             <th class="text-center">Tipo</th>
                             <th class="text-center">Estado Secretaria</th>
+                            <th class="text-center">Estado Alcalde</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
                             @if($rol == 2)
                                 <th class="text-center"><i class="fa fa-usd"></i></th>
                                 <th class="text-center"><i class="fa fa-edit"></i></th>
                             @elseif ($rol == 3)
+                                <th class="text-center">Ver</th>
+                            @elseif ($rol == 5)
                                 <th class="text-center">Ver</th>
                             @endif
                         </tr>
@@ -82,6 +75,19 @@
                                 </td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
+                                        @if($cdp->alcalde_e == "0")
+                                            Pendiente
+                                        @elseif($cdp->alcalde_e == "1")
+                                            Rechazado
+                                        @elseif($cdp->alcalde_e == "2")
+                                            Anulado
+                                        @else
+                                            Enviado
+                                        @endif
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-pill badge-danger">
                                         @if($cdp->jefe_e == "0")
                                             Pendiente
                                         @elseif($cdp->jefe_e == "1")
@@ -95,7 +101,7 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center">$<?php echo number_format($cdp->rubrosCdpValor->sum('valor_disp'),0) ?></td>
+                                <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
                                 @if($rol == 2)
                                     <td class="text-center">
                                         <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ingresar Dinero al CDP" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
@@ -104,6 +110,10 @@
                                         <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id.'/edit') }}" title="Editar CDP" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                     </td>
                                 @elseif($rol == 3)
+                                    <td class="text-center">
+                                        <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    </td>
+                                @elseif($rol == 5)
                                     <td class="text-center">
                                         <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                     </td>
@@ -134,6 +144,7 @@
                             <th class="text-center">Tipo</th>
                             <th class="text-center">Estado Secretaria</th>
                             <th class="text-center">Fecha Envio Secretaria</th>
+                            <th class="text-center">Estado Alcalde</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Ver CDP</th>
@@ -158,7 +169,20 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center">{{ $cdp->ff_secretaria_e }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($cdp->ff_secretaria_e)->format('d-m-Y') }}</td>
+                                <td class="text-center">
+                                    <span class="badge badge-pill badge-danger">
+                                        @if($cdp->alcalde_e == "0")
+                                            Pendiente
+                                        @elseif($cdp->alcalde_e == "1")
+                                            Rechazado
+                                        @elseif($cdp->alcalde_e == "2")
+                                            Anulado
+                                        @else
+                                            Enviado - {{ \Carbon\Carbon::parse($cdp->ff_alcalde_e)->format('d-m-Y') }}
+                                        @endif
+                                    </span>
+                                </td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
                                         @if($cdp->jefe_e == "0")
@@ -174,7 +198,7 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center">$<?php echo number_format($cdp->rubrosCdpValor->sum('valor_disp'),0) ?></td>
+                                <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>

@@ -500,6 +500,7 @@
                                         <th class="text-center">Objeto</th>
                                         <th class="text-center">Valor</th>
                                         <th class="text-center">Estado Secretaria</th>
+                                        <th class="text-center">Estado Alcalde</th>
                                         <th class="text-center">Estado Jefe</th>
                                         <th class="text-center">Ver</th>
                                         <th class="text-center">Archivo</th>
@@ -521,6 +522,21 @@
                                                     Anulado
                                                 @else
                                                     Enviado
+                                                @endif
+                                            </span>
+                                            </td>
+                                            <td class="text-center">
+                                            <span class="badge badge-pill badge-danger">
+                                                @if($cdp['alcalde_e'] == "0")
+                                                    Pendiente
+                                                @elseif($cdp['alcalde_e'] == "1")
+                                                    Rechazado
+                                                @elseif($cdp['alcalde_e'] == "2")
+                                                    Anulado
+                                                @elseif($cdp['alcalde_e'] == "3")
+                                                    Aprobado
+                                                @else
+                                                    En Espera
                                                 @endif
                                             </span>
                                             </td>

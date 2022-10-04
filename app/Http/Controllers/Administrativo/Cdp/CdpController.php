@@ -50,14 +50,26 @@ class CdpController extends Controller
 
         }elseif ($rol == 3)
         {
-            $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e','0')->get();
+            $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e','0')->where('alcalde_e','3')->get();
             $cdProcess = null;
             $cdps = Cdp::where('vigencia_id', $id)
                 ->where(function ($query) {
                     $query->where('jefe_e','3')
                         ->orWhere('jefe_e','2');
                 })->get();
-        } else
+        }
+        elseif ($rol == 5)
+        {
+            //ROL DE ALCALDE
+            $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('alcalde_e','0')->get();
+            $cdProcess = null;
+            $cdps = Cdp::where('vigencia_id', $id)
+                ->where(function ($query) {
+                    $query->where('jefe_e','3')
+                        ->orWhere('jefe_e','2');
+                })->get();
+        }
+        else
         {
             $cdpTarea = null;
             $cdps = null;
@@ -157,6 +169,7 @@ class CdpController extends Controller
         $cdp->saldo = 0;
         $cdp->secretaria_e = $request->secretaria_e;
         $cdp->ff_secretaria_e = $request->fecha;
+        $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
         $cdp->save();
         Session::flash('success','El CDP se ha creado exitosamente');
@@ -305,6 +318,8 @@ class CdpController extends Controller
         $update = Cdp::findOrFail($id);
         if ($rol == 2){
             $update->secretaria_e = $estado;
+            $update->alcalde_e = "0";
+            $update->ff_alcalde_e = $fecha;
             $update->jefe_e = "0";
             $update->ff_secretaria_e = $fecha;
             $update->save();
@@ -356,6 +371,16 @@ class CdpController extends Controller
                 }
             }
         }
+        if ($rol == 5){
+            if ($estado == 3) {
+                $update->alcalde_e = $estado;
+                $update->ff_alcalde_e = $fecha;
+                $update->save();
+
+                Session::flash('success','El CDP ha sido enviado al jefe exitosamente');
+                return redirect('/administrativo/cdp/'.$update->vigencia_id);
+            }
+        }
     }
 
     public function rechazar(Request $request, $id, $vigen)
@@ -365,6 +390,19 @@ class CdpController extends Controller
             $update->jefe_e = "1";
             $update->secretaria_e = "0";
             $update->ff_jefe_e = $request->fecha;
+            $update->alcalde_e = "0";
+            $update->ff_alcalde_e = $request->fecha;
+            $update->motivo = $request->motivo;
+            $update->save();
+
+            Session::flash('error','El CDP ha sido rechazado');
+            return redirect('/administrativo/cdp/'.$vigen);
+
+        } else if ($request->rol == "5"){
+            $update = Cdp::findOrFail($id);
+            $update->alcalde_e = "1";
+            $update->secretaria_e = "0";
+            $update->ff_alcalde_e = $request->fecha;
             $update->motivo = $request->motivo;
             $update->save();
 
@@ -503,5 +541,33 @@ class CdpController extends Controller
 
         Session::flash('success','El CDP ha sido enviado exitosamente');
         return redirect('/administrativo/cdp/'.$vigencia);
+    }
+
+    public function DeleteInv($id){
+        $bpindCdp = BpinCdpValor::where('cdp_id', $id)->first();
+        $bpindCdp->delete();
+
+        $CDP = Cdp::findOrFail($id);
+        $CDP->delete();
+
+        Session::flash('success','El CDP ha sido eliminado');
+        return redirect('/administrativo/cdp/'.$CDP->vigencia_id);
+    }
+
+    public function restaurarInv($id){
+        $CDP = Cdp::findOrFail($id);
+        $bpindCdp = BpinCdpValor::where('cdp_id', $id)->first();
+        $bpindCdp->delete();
+
+        $CDP->valor = 0;
+        $CDP->ff_secretaria_e = null;
+        $CDP->alcalde_e = '0';
+        $CDP->ff_alcalde_e = null;
+        $CDP->motivo = null;
+        $CDP->saldo = 0;
+        $CDP->save();
+
+        Session::flash('success','El CDP ha sido reiniciado, seleccione nuevamente el proyecto a asignar');
+        return redirect('/administrativo/cdp/'.$CDP->vigencia_id.'/'.$id);
     }
 }

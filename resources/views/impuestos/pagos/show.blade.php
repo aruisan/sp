@@ -605,8 +605,8 @@
                             <tbody>
                             <tr><th style="background-color: #0e7224; color: white" scope="row" colspan="3">FIRMAS</th></tr>
                             <tr>
-                                <td style="width: 300px">25. Identificación del signatario<br> {{ $formulario->compraBienes }}</td>
-                                <td>26. Nombre del signatario <br> {{ $formulario->compraBienes }}</td>
+                                <td style="width: 300px">25. Identificación del signatario<br> {{ $formulario->idSignatario }}</td>
+                                <td>26. Nombre del signatario <br> {{ $formulario->nameSignatario }}</td>
                                 <td style="vertical-align: middle">
                                     @if($formulario->signatario == "repLegal") Signatario Representante Legal
                                     @elseif($formulario->signatario == "delegado") Signatario Delegado o Con Poder
@@ -624,7 +624,7 @@
                         <table id="TABLA6" class="table text-center">
                             <tbody>
                             <tr style="background-color: #0e7224; color: white">
-                                <th scope="row" colspan="2">FINALIZAR</th>
+                                <th scope="row" colspan="3">FINALIZAR</th>
                             </tr>
                             <tr>
                             <tr>

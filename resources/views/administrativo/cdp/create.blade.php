@@ -82,7 +82,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="valueControl">Valor de Control<span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" required value="0" min="0" name="valueControl">
+                                            <input type="number" class="form-control" required value="1" min="1" name="valueControl">
                                         </div>
                                     </div>
                                 </div>
