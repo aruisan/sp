@@ -551,7 +551,7 @@
                                         @if($action != "Inscripción" and $rit->rutaFileCC != null)
                                             <a href="{{Storage::url($rit->rutaFileCC)}}" target="_blank" title="Ver" class="btn btn-success">CAMARA DE COMERCIO ALMACENADO</a>
                                             <br>
-                                            Si desea cambiar el RUT almacenado seleccione un nuevo archivo.
+                                            Si desea cambiar el documento camara de comercio almacenado seleccione un nuevo archivo.
                                         @endif
                                         <input type="file" class="form-check-input" accept=".pdf" name="fileCC">
                                     </td>

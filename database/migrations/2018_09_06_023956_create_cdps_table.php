@@ -26,6 +26,9 @@ class CreateCdpsTable extends Migration
 
             $table->enum('secretaria_e', [0, 1, 2, 3]);
             $table->date('ff_secretaria_e');
+            $table->enum('alcalde_e', [0, 1, 2, 3])->nullable();
+            $table->date('ff_alcalde_e')->nullable();
+            $table->text('motivoAlcalde')->nullable();
             $table->enum('jefe_e', [0, 1, 2, 3])->nullable();
             $table->date('ff_jefe_e')->nullable();
             $table->text('motivo')->nullable();

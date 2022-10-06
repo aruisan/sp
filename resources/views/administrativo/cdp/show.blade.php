@@ -26,19 +26,25 @@
                             <div class="col-md-12 align-self-center">
                                 <div class="alert alert-danger text-center">
                                     <center>
-                                        <h4><b>Motivo del Rechazo</b></h4>
+                                        <h4><b>Motivo del Rechazo del Jefe</b></h4>
                                     </center>
                                     <div class="text-center">
                                         {{ $cdp->motivo }}
                                     </div>
                                 </div>
                             </div>
+                        @elseif($cdp->alcalde_e == "1" and $cdp->motivo != null)
+                            <div class="col-md-12 align-self-center">
+                                <div class="alert alert-danger text-center">
+                                    <center><h4><b>Motivo del Rechazo del Alcalde</b></h4></center>
+                                    <div class="text-center">{{ $cdp->motivo }}</div>
+                                </div>
+                            </div>
                         @endif
                         <br>
                         <div class="col-sm-9"><h3>Objeto del CDP: {{ $cdp->name }}</h3></div>
                         <div class="col-sm-3"><h4><b>Número del CDP:</b>&nbsp;{{ $cdp->code }}</h4></div>
-                        <br>
-                        <br>
+                        <br><br>
                         <div class="form-validation">
                             <form class="form" action="">
                                 <hr>
@@ -88,13 +94,12 @@
                                     </table>
                                 </div>
                                 <div class="col-lg-12 text-center">
-                                    <br>
-                                    <b>
-                                        @if($cdp->secretaria_e == "3" and $cdp->jefe_e == "0")
-                                            Fecha de Envio por Secretaria:
-                                            {{ $cdp->ff_secretaria_e }}
-                                        @endif
-                                    </b>
+                                    @if($cdp->secretaria_e == "3" and $cdp->jefe_e == "0")
+                                        <br><b>Fecha de Envio por Secretaria: {{ \Carbon\Carbon::parse($cdp->ff_secretaria_e)->format('d-m-Y') }}</b>
+                                    @endif
+                                    @if($cdp->alcalde_e == "3" and $cdp->jefe_e == "0")
+                                        <br><b>Fecha de Envio por Alcalde: {{ \Carbon\Carbon::parse($cdp->ff_alcalde_e)->format('d-m-Y') }}</b>
+                                    @endif
                                 </div>
                             </form>
                             @if($cdp->secretaria_e == "0")
@@ -496,6 +501,25 @@
                                                         @endforeach
                                                     </tbody>
                                                 </table>
+                                                @if($cdp->jefe_e == "1" || $cdp->alcalde_e == "1")
+                                                    <div class="text-center">
+                                                        <form action="{{url('/administrativo/cdp/'.$cdp->id.'/RestartInv/')}}" method="POST" class="form">
+                                                            {{method_field('POST')}}
+                                                            {{ csrf_field() }}
+                                                            <div class="row text-center">
+                                                                <button class="btn btn-danger text-center" type="submit" title="Reiniciar CDP">Reiniciar</button>
+                                                            </div>
+                                                        </form>
+                                                        <br>
+                                                        <form action="{{url('/administrativo/cdp/'.$cdp->id.'/DeleteInv/')}}" method="POST" class="form">
+                                                            {{method_field('POST')}}
+                                                            {{ csrf_field() }}
+                                                            <div class="row text-center">
+                                                                <button class="btn btn-danger text-center" type="submit" title="Reiniciar CDP">Eliminar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                @endif
                                                 @if($rol == 3)
                                                     @if($cdp->bpinsCdpValor->count() > 0 )
                                                         @if($cdp->jefe_e == "2" and $cdp->secretaria_e == "3")
@@ -506,7 +530,7 @@
                                                             </div>
                                                         @else
                                                             <div class="text-center">
-                                                                <a href="{{url('/administrativo/cdp/'.$cdp->id.'/'.$rol.'/'.$fechaActual.'/'.$cdp->bpinsCdpValor->sum('valor').'/3')}}" class="btn btn-danger">
+                                                                <a href="{{url('/administrativo/cdp/'.$cdp->id.'/'.$rol.'/'.$fechaActual.'/'.$cdp->valor.'/3')}}" class="btn btn-danger">
                                                                     Finalizar CDP
                                                                 </a>
                                                                 <a data-toggle="modal" data-target="#observacionCDP" class="btn btn-success">
@@ -514,6 +538,23 @@
                                                                 </a>
                                                             </div>
                                                         @endif
+                                                    @endif
+                                                @elseif($rol == 5)
+                                                    @if($cdp->jefe_e == "2" and $cdp->secretaria_e == "3")
+                                                        <div class="col-md-12 align-self-center">
+                                                            <div class="alert alert-danger text-center">
+                                                                El CDP ha sido anulado.
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="text-center">
+                                                            <a href="{{url('/administrativo/cdp/'.$cdp->id.'/'.$rol.'/'.$fechaActual.'/'.$cdp->valor.'/3')}}" class="btn btn-danger">
+                                                                Enviar al Jefe
+                                                            </a>
+                                                            <a data-toggle="modal" data-target="#observacionCDP" class="btn btn-success">
+                                                                Rechazar
+                                                            </a>
+                                                        </div>
                                                     @endif
                                                 @else
                                                     @if($cdp->jefe_e == "2" and $cdp->secretaria_e == "3")
