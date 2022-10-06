@@ -192,6 +192,8 @@ return [
 
         //bars code
         Milon\Barcode\BarcodeServiceProvider::class,
+        //hgoogle charts
+        Scopdrag\LaravelGoogleChart\LaravelGoogleChartServiceProvider::class,
 
     ],
 

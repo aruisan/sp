@@ -51,7 +51,7 @@
                 <p> Número de accidentes </p>
             </div>
             <div class="row">
-                <a href="#"><h4>EDUCACIÖN</h4></a>
+                <a href="{{route('graficos.educacion')}}"><h4>EDUCACIÖN</h4></a>
             </div>
             <div class="row">
                 <p> Número de alumnos </p>

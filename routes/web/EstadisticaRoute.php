@@ -22,3 +22,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
     Route::post('store/colecciones', 'Estadistica\EstadisticaController@store_colecciones')->name('colecciones.store');
     Route::post('data/colecciones', 'Estadistica\EstadisticaController@load_data_collection')->name('colecciones.data');
 });
+
+Route::group([ 'middleware' => 'auth', 'prefix' => 'graficos'] ,function(){
+    Route::get('/educacion', 'Estadistica\GraficoController@educacion')->name('graficos.educacion');
+});
