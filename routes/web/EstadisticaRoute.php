@@ -24,5 +24,5 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
 });
 
 Route::group([ 'middleware' => 'auth', 'prefix' => 'graficos'] ,function(){
-    Route::get('/educacion', 'Estadistica\GraficoController@educacion')->name('graficos.educacion');
+    Route::get('/graficos/{tipo}', 'Estadistica\GraficoController@grafico')->name('graficos.mostrar');
 });

@@ -177,11 +177,6 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
                         <li><a href="#">Información</a></li>
                       </ul>
                     </li>
-                    <li>
-                      <a href="{{route('estadistica.public')}}">
-                        ESTADISTICA
-                      </a>
-                    </li>
                     <li class="dropdown li-nav_2">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TRANSPARENCIA <span class="caret"></span></a>
                       <ul class="dropdown-menu">

@@ -1,23 +1,12 @@
 @include('modal.updateSoftware')
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-   ESTADISTICA
+   Nomina
    <span class="caret"></span>
    </a>
    <ul class="dropdown-menu">
-      <li><a class="item-menu" tabindex="-1" href="{{route('estadistica.index')}}">Reportes</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('reservaVuelo.index')}}">Aeropuerto</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('barco.index')}}">Puerto</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('colegio.index')}}">Institución Educativa Junin</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('sena.index')}}">SENA</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('capitania.puerto.index')}}">Capitania de Puerto</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('policia.index')}}">Policia Nacional</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('empresa.energia.index')}}">Empresa de Energia - Sopesa</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('empresa.aaa.index')}}">Empresa de AAA</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('notaria.index')}}">Notaria Unica</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('hospital.index')}}">Hospital Local</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('bomberos.index')}}">Bomberos Oficiales</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('ludoteca.index')}}">Ludoteca</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.pagos.index')}}">Pagos</a></li>
    </ul>
 </li>
 <li class="page-scroll ">
