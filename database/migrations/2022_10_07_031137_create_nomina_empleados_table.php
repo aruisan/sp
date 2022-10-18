@@ -10,7 +10,7 @@ class CreateNominaEmpleadosTable extends Migration
      * Run the migrations.
      *
      * @return void
-     */
+    */
     public function up()
     {
         Schema::create('nomina_empleados', function (Blueprint $table) {
