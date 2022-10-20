@@ -19,7 +19,7 @@
 		<a class="nav-link" data-toggle="pill" href="#personas"> Terceros</a>
 	</li>
 	<li class="nav-item ">
-		<a class="nav-link"  href="{{route('personas.create')}}">Nuevo Tercero</a>
+		<a class="nav-link"  href="{{route('nomina.empleados.create')}}">Nuevo Tercero</a>
 	</li>
 </ul>
      
@@ -56,7 +56,7 @@
 									<td>{{$persona->direccion}}</td>
 									<td>{{$persona->telefono}}</td>
 									<td>{{$persona->edad}}</td>
-									<td><a href="{{ route("personas.edit", $persona->id)}}" class="btn btn-xs btn-danger">
+									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger">
 									<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
 									<td>
 										@include('personas.delete', ['persona' => $persona])

@@ -16,6 +16,8 @@ class CreateNominaEmpleadosTable extends Migration
         Schema::create('nomina_empleados', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('num_dc');
+            $table->string('nombre');
+            $table->string('edad');
             $table->string('email');
             $table->string('direccion');
             $table->string('fecha_nacimiento');
