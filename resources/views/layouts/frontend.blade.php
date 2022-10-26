@@ -178,7 +178,7 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
                       </ul>
                     </li>
                     <li>
-                      <a href="{{route('estadistica.public')}}">
+                      <a href="{{route('estadistica.index')}}">
                         ESTADISTICA
                       </a>
                     </li>
@@ -308,5 +308,6 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
     {{-- <script src="{{ asset('adminLTE/plugins/jQuery/jQuery-2.2.0.min.js')}}"></script> --}}
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    @yield('js')
 <html/>
 

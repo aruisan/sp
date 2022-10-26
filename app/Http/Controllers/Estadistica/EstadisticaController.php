@@ -13,9 +13,6 @@ class EstadisticaController extends Controller
     public function index(){
         return view("{$this->dir_view}.index");
     }
-    public function public(){
-        return view("{$this->dir_view}.public");
-    }
 
     public function load_data_collection(Request $request){
         //return $request->data;

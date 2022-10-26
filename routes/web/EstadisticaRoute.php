@@ -1,8 +1,10 @@
 <?php
 
-Route::get('/estadistica-public', 'Estadistica\EstadisticaController@public')->name('estadistica.public');
-Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
+//Route::get('/estadistica-public', 'Estadistica\EstadisticaController@index')->name('estadistica.public');
+Route::group([ 'prefix' => 'estadistica'] ,function(){
     Route::get('/', 'Estadistica\EstadisticaController@index')->name('estadistica.index');
+});
+Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
     Route::get('/reserva-vuelo', 'Estadistica\ReservaVueloController@index')->name('reservaVuelo.index');
     Route::post('/reserva-vuelo', 'Estadistica\ReservaVueloController@store')->name('reservaVuelo.store');
     Route::get('/puerto', 'Estadistica\BarcoController@index')->name('barco.index');
@@ -23,6 +25,6 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
     Route::post('data/colecciones', 'Estadistica\EstadisticaController@load_data_collection')->name('colecciones.data');
 });
 
-Route::group([ 'middleware' => 'auth', 'prefix' => 'graficos'] ,function(){
-    Route::get('/educacion', 'Estadistica\GraficoController@educacion')->name('graficos.educacion');
+Route::group(['prefix' => 'graficos'] ,function(){
+    Route::get('/graficos/{tipo}', 'Estadistica\GraficoController@grafico')->name('graficos.mostrar');
 });
