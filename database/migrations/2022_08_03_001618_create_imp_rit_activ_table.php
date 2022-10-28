@@ -20,10 +20,7 @@ class CreateImpRitActivTable extends Migration
             $table->integer('rit_id')->unsigned();
             $table->foreign('rit_id')->references('id')->on('imp_rit');
 
-            $table->text('codActividad')->nullable();
             $table->text('codCIIU')->nullable();
-            $table->text('descripción')->nullable();
-            $table->text('baseGravable')->nullable();
 
             $table->timestamps();
         });

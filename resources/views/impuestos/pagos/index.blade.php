@@ -35,6 +35,7 @@
                                     <th class="text-center">Formulario</th>
                                     <th class="text-center">Fecha Presentación</th>
                                     <th class="text-center">Valor</th>
+                                    <th class="text-center">Formulario</th>
                                     <th class="text-center">Pago Codigo de Barras</th>
                                     <th class="text-center">Pago PSE</th>
                                 </tr>
@@ -48,11 +49,20 @@
                                         <td class="text-center">$<?php echo number_format($pago->valor,0) ?></td>
                                         <td class="text-center">
                                             @if($pago->modulo == "ICA-Contribuyente")
-                                                <a href="{{ url('impuestos/ICA/contri/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Recibo" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                                <a href="{{ url('impuestos/ICA/contri/form/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
                                             @elseif($pago->modulo == "PREDIAL")
-                                                <a href="{{ url('impuestos/PREDIAL/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Recibo" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                                <a href="{{ url('impuestos/PREDIAL/form/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
                                             @elseif($pago->modulo == "ICA-AgenteRetenedor")
-                                                <a href="{{ url('impuestos/ICA/retenedor/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Recibo" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                                <a href="{{ url('impuestos/ICA/retenedor/form/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            @if($pago->modulo == "ICA-Contribuyente")
+                                                <a href="{{ url('impuestos/ICA/contri/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Recibo" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-barcode"></i></a>
+                                            @elseif($pago->modulo == "PREDIAL")
+                                                <a href="{{ url('impuestos/PREDIAL/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Recibo" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-barcode"></i></a>
+                                            @elseif($pago->modulo == "ICA-AgenteRetenedor")
+                                                <a href="{{ url('impuestos/ICA/retenedor/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Recibo" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-barcode"></i></a>
                                             @endif
                                         </td>
                                         <td class="text-center"><a href="" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-credit-card"></i></a></td>

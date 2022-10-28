@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Administrativo\Cdp;
 use App\BPin;
 use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
+use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Administrativo\Registro\CdpsRegistro;
 use App\Model\Administrativo\Cdp\Cdp;
+use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Administrativo\Cdp\RubrosCdp;
+use App\Model\Hacienda\Presupuesto\SourceFunding;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
@@ -17,6 +20,7 @@ use App\Model\Hacienda\Presupuesto\Font;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Hacienda\Presupuesto\Level;
 use App\Model\Hacienda\Presupuesto\Register;
+use Illuminate\Support\Facades\DB;
 use PDF;
 use Carbon\Carbon;
 Use App\Traits\ConteoTraits;
@@ -185,16 +189,14 @@ class CdpController extends Controller
     public function show($vigencia,$id)
     {
         $roles = auth()->user()->roles;
-        foreach ($roles as $role){
-            $rol= $role->id;
-        }
+        foreach ($roles as $role) $rol= $role->id;
         $cdp = Cdp::findOrFail($id);
         $all_rubros = Rubro::where('vigencia_id',$vigencia)->get();
         foreach ($all_rubros as $rubro){
             if ($rubro->fontsRubro->sum('valor_disp') != 0){
                 $valFuente = FontsRubro::where('rubro_id', $rubro->id)->sum('valor_disp');
                 $valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
-                $rubros[] = collect(['id' => $rubro->id, 'name' => $rubro->name]);
+                if ($rubro->tipo == "Funcionamiento") $rubros[] = collect(['id' => $rubro->id, 'name' => $rubro->name]);
             }
         }
 
@@ -207,52 +209,18 @@ class CdpController extends Controller
         $conteoTraits = new ConteoTraits;
         $conteo = $conteoTraits->conteoCdps($vigens, $cdp->id);
 
-        $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
-        $registers = Register::where('level_id', $ultimoLevel->id)->get();
-        $registers2 = Register::where('level_id', '<', $ultimoLevel->id)->get();
-        $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
-        $rubroz = Rubro::where('vigencia_id', $vigencia_id)->get();
-
-        global $lastLevel;
-        $lastLevel = $ultimoLevel->id;
-        $lastLevel2 = $ultimoLevel2->level_id;
-        foreach ($registers2 as $register2) {
-            global $codigoLast;
-            if ($register2->register_id == null) {
-                $codigoEnd = $register2->code;
-            } elseif ($codigoLast > 0) {
-                if ($lastLevel2 == $register2->level_id) {
-                    $codigo = $register2->code;
-                    $codigoEnd = "$codigoLast$codigo";
-                    foreach ($registers as $register) {
-                        if ($register2->id == $register->register_id) {
-                            $register_id = $register->code_padre->registers->id;
-                            $code = $register->code_padre->registers->code . $register->code;
-                            $ultimo = $register->code_padre->registers->level->level;
-                            while ($ultimo > 1) {
-                                $registro = Register::findOrFail($register_id);
-                                $register_id = $registro->code_padre->registers->id;
-                                $code = $registro->code_padre->registers->code . $code;
-
-                                $ultimo = $registro->code_padre->registers->level->level;
-                            }
-                            if ($register->level_id == $lastLevel) {
-                                foreach ($rubroz as $rub) {
-                                    if ($register->id == $rub->register_id) {
-                                        $newCod = "$code$rub->cod";
-                                        $infoRubro[] = collect(['id_rubro' => $rub->id, 'id' => '', 'codigo' => $newCod, 'name' => $rub->name, 'code' => $rub->code]);
-                                    }
-                                }
-                            }
-                        }
-                    }
+        //NEW PRESUPUESTO
+        $plantilla = PlantillaCuipo::where('id', '>', 317)->get();
+        foreach ($plantilla as $data) {
+            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+            if ($data->id < '324') {
+            } elseif (count($rubro) > 0) {
+                if($rubro[0]->fontsRubro and $rubro[0]->tipo == "Funcionamiento"){
+                    //SE VALIDA QUE EL RUBRO TENGA DINERO DISPONIBLE
+                    foreach ($rubro[0]->fontsRubro as $fuentes) $valDisp [] = $fuentes->valor_disp;
+                    if (array_sum($valDisp) > 0) $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
+                    unset($valDisp);
                 }
-            }else {
-                $codigo = $register2->code;
-                $newRegisters = Register::findOrFail($register2->register_id);
-                $codigoNew = $newRegisters->code;
-                $codigoEnd = "$codigoNew$codigo";
-                $codigoLast = $codigoEnd;
             }
         }
 
@@ -262,7 +230,8 @@ class CdpController extends Controller
             if ($bpin->rubro_id != 0) $bpin['rubro'] = $bpin->rubro->name;
             else $bpin['rubro'] = "No";
         }
-        //dd($bpins, $vigencia_id, $vigens);
+
+        //dd($cdp->rubrosCdp[0]->rubros->fontsRubro[0]->sourceFunding->description);
 
         return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins'));
     }
@@ -519,6 +488,87 @@ class CdpController extends Controller
             Session::flash('error','El CDP no ha sido finalizado, debe finalizarse para poder generar el PDF');
             return back();
         }
+    }
+
+    public function pdfBorrador($id, $vigen)
+    {
+        $roles = auth()->user()->roles;
+        foreach ($roles as $role) $rol= $role->id;
+        $cdp = Cdp::findOrFail($id);
+
+        $all_rubros = Rubro::all();
+        foreach ($all_rubros as $rubro){
+            if ($rubro->fontsRubro->sum('valor_disp') != 0){
+                $valFuente = FontsRubro::where('rubro_id', $rubro->id)->sum('valor_disp');
+                $valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
+                $rubros[] = collect(['id' => $rubro->id, 'name' => $rubro->name]);
+            }
+        }
+
+        //codigo de rubros
+
+        $V = $vigen;
+        $vigencia_id = $V;
+        $vigencia = Vigencia::find($vigencia_id);
+
+        $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
+        $registers = Register::where('level_id', $ultimoLevel->id)->get();
+        $registers2 = Register::where('level_id', '<', $ultimoLevel->id)->get();
+        $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
+        $rubroz = Rubro::where('vigencia_id', $vigencia_id)->get();
+
+        global $lastLevel;
+        $lastLevel = $ultimoLevel->id;
+        $lastLevel2 = $ultimoLevel2->level_id;
+        foreach ($registers2 as $register2) {
+            global $codigoLast;
+            if ($register2->register_id == null) {
+                $codigoEnd = $register2->code;
+            } elseif ($codigoLast > 0) {
+                if ($lastLevel2 == $register2->level_id) {
+                    $codigo = $register2->code;
+                    $codigoEnd = "$codigoLast$codigo";
+                    foreach ($registers as $register) {
+                        if ($register2->id == $register->register_id) {
+                            $register_id = $register->code_padre->registers->id;
+                            $code = $register->code_padre->registers->code . $register->code;
+                            $ultimo = $register->code_padre->registers->level->level;
+                            while ($ultimo > 1) {
+                                $registro = Register::findOrFail($register_id);
+                                $register_id = $registro->code_padre->registers->id;
+                                $code = $registro->code_padre->registers->code . $code;
+
+                                $ultimo = $registro->code_padre->registers->level->level;
+                            }
+                            if ($register->level_id == $lastLevel) {
+                                foreach ($rubroz as $rub) {
+                                    if ($register->id == $rub->register_id) {
+                                        $newCod = "$code$rub->cod";
+                                        $infoRubro[] = collect(['id_rubro' => $rub->id, 'id' => '', 'codigo' => $newCod, 'name' => $rub->name, 'code' => $rub->code, 'last_code' => $code, 'register' => $register->name]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }else {
+                $codigo = $register2->code;
+                $newRegisters = Register::findOrFail($register2->register_id);
+                $codigoNew = $newRegisters->code;
+                $codigoEnd = "$codigoNew$codigo";
+                $codigoLast = $codigoEnd;
+            }
+        }
+
+        $fecha = Carbon::createFromTimeString($cdp->created_at);
+
+
+        $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+        $pdf = PDF::loadView('administrativo.cdp.pdfBorrador', compact('cdp','rubros','valores','rol','infoRubro', 'vigencia', 'dias', 'meses', 'fecha'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
+
     }
 
     public function cdpActividad(Request $request, $cdp, $vigencia){

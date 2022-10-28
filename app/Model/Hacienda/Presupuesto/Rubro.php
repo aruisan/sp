@@ -61,4 +61,8 @@ class Rubro extends Model implements Auditable
     public function cpcs(){
         return $this->hasMany('App\Model\Hacienda\Presupuesto\CpcsRubro','rubro_id');
     }
+
+    public function bpin(){
+        return $this->hasOne('App\BPin','id', 'bpin_id');
+    }
 }

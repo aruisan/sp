@@ -66,11 +66,16 @@ class VisitanteController extends Controller
             $item->carpeta->tipo == 'Plan de adquisiones';
         });
 
+        $V = "Vacio";
+
+        return view('visitante.index', compact('V', 'Concejales', 'añoActual','Boletines','Actas','Acuerdos','Resoluciones','ManualC','PlanA'));
+
+        //CODIGO EN EL QUE SE MUESTRA EL PRESUPUESTO - CREO QUE YA NO SE REQUIERE MOSTRAR EL PRESUÚESTO EN LA PAGINA DE INICIO.
+
         if ($vigens->count() == 0){
             $V = "Vacio";
 
             return view('visitante.index', compact('V', 'Concejales', 'añoActual','Boletines','Actas','Acuerdos','Resoluciones','ManualC','PlanA'));
-
         } else {
             $V = $vigens[0]->id;
             $vigencia_id = $V;

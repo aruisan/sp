@@ -65,6 +65,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('/ICA/contri/update/{id}','Impuestos\ICA\IcaController@updateContri')->name('impuestos.icaContri.update');
         Route::post('/ICA/contri', 'Impuestos\ICA\IcaController@storeContri')->name('impuestos.icaContri.store');
         Route::get('/ICA/contri/pdf/{id}', 'Impuestos\ICA\IcaController@facturaContri')->name('impuestos.icaContri.factura');
+        Route::get('/ICA/contri/form/{id}', 'Impuestos\ICA\IcaController@formContri')->name('impuestos.icaContri.formulario');
         Route::delete('/ICA/contri/delete/{idForm}/{idPay}', 'Impuestos\ICA\IcaController@deleteContri');
 
             //AGENTE RETENEDOR
@@ -72,6 +73,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('/ICA/retenedor/update/{id}','Impuestos\ICA\IcaController@updateRetenedor')->name('impuestos.icaRetenedor.update');
         Route::post('/ICA/retenedor', 'Impuestos\ICA\IcaController@storeRetenedor')->name('impuestos.icaRetenedor.store');
         Route::get('/ICA/retenedor/pdf/{id}', 'Impuestos\ICA\IcaController@facturaRetenedor')->name('impuestos.icaRetenedor.factura');
+        Route::get('/ICA/retenedor/form/{id}', 'Impuestos\ICA\IcaController@formRetenedor')->name('impuestos.icaRetenedor.formulario');
         Route::delete('/ICA/retenedor/delete/{idForm}/{idPay}', 'Impuestos\ICA\IcaController@deleteRetenedor');
 
             //EXOGENA
@@ -85,6 +87,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::post('/PREDIAL/calendario','Impuestos\Predial\PredialController@getImpCalendar');
         Route::post('/PREDIAL/liquidar','Impuestos\Predial\PredialController@liquidar');
         Route::get('/PREDIAL/pdf/{id}', 'Impuestos\Predial\PredialController@factura')->name('impuestos.predial.factura');
+        Route::get('/PREDIAL/form/{id}', 'Impuestos\Predial\PredialController@form')->name('impuestos.predial.formulario');
 
 
         //PAGOS
@@ -237,6 +240,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::post('cdp/{id}/anular/{vigen}', 'Administrativo\Cdp\CdpController@anular');
         //pdf cdp
 		Route::get('cdp/pdf/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdf')->name('cpd-pdf');
+		Route::get('cdp/pdfBorrador/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdfBorrador')->name('cpd-pdf-borrador');
         //Crear cdp con actividad
         Route::post('cdp/{id}/{vigen}/asignActividad', 'Administrativo\Cdp\CdpController@cdpActividad');
         Route::post('cdp/{id}/RestartInv', 'Administrativo\Cdp\CdpController@restaurarInv');

@@ -148,6 +148,7 @@
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Ver CDP</th>
+                            <th class="text-center">Borrador</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -202,6 +203,9 @@
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
+                                <td class="text-center">
+                                    <a href="{{ url('administrativo/cdp/pdfBorrador/'.$cdp['id'].'/'.$vigencia_id) }}" target="_blank" title="File" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -253,7 +257,7 @@
                                     @if($cdp->jefe_e == "2")
                                         <span class="badge badge-pill badge-danger">Anulado</span>
                                     @else
-                                        <a href="{{ url('administrativo/cdp/pdf/'.$cdp['id'].'/'.$vigencia_id) }}" title="File" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                        <a href="{{ url('administrativo/cdp/pdf/'.$cdp['id'].'/'.$vigencia_id) }}" target="_blank" title="File" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
                             </tr>

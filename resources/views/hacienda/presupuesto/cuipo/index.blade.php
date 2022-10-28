@@ -40,6 +40,7 @@
 	</ul>
 		<input type="hidden" id="vigencia_id" name="vigencia_id" value="{{  $vigencia->id }}">
 		<div class="table-responsive" id="crud">   <br>
+			{{ $rubros->links() }}
 			<table class="table table-bordered" id="tabla">
 				<thead>
 				<th class="text-center">Codigo</th>
@@ -76,9 +77,9 @@
 						@elseif($paso == "2")
 							<td class="text-center">
 								@if(count($data['fontsRubro']) > 0)
-									<button onclick="getModalSourceFundings({{$data}}, {{$fuentes}})" class="btn btn-success">OK!</button>
+									<button onclick="getModalSourceFundings({{$data}}, {{$fuentes}}, {{$maxValue}})" class="btn btn-success">OK!</button>
 								@else
-									<button onclick="getModalSourceFundings({{$data}}, {{$fuentes}})" class="btn btn-danger">Pendiente!</button>
+									<button onclick="getModalSourceFundings({{$data}}, {{$fuentes}}, {{$maxValue}})" class="btn btn-danger">Pendiente!</button>
 								@endif
 							</td>
 							<td class="text-center">
@@ -150,6 +151,7 @@
 				@endforeach
 				</tbody>
 			</table>
+			{{ $rubros->links() }}
 		</div>
 			@if($paso == "1")
 				<center><a href="{{ url('/presupuesto/rubro/CUIPO/2',$vigencia->id) }}" class="btn btn-primary"><i class="fa fa-arrow-right"></i>&nbsp; Siguiente</a></center>
@@ -206,7 +208,7 @@
 		$('#formCPC').modal('show');
 	}
 
-	function getModalSourceFundings(rubro, Fuentes){
+	function getModalSourceFundings(rubro, Fuentes, valueVigen){
 		$('#rubroID').val(rubro['id']);
 		$('#vigencia_id').val(rubro['vigencia_id']);
 		document.getElementById("nameRubro").innerHTML = rubro['name'];
@@ -216,7 +218,7 @@
 			document.getElementById("buttonSaveSF").style.display = "none";
 			document.getElementById("selectedSF").innerHTML = "" +
 					"<p>Fuentes de financiación seleccionadas actualmente</p>"+
-					"<table class='table table-bordered'><thead><th class='text-center'>Código</th><th class='text-center'>Descripción</th><th class='text-center'>Eliminar Fuente</th> " +
+					"<table class='table table-bordered'><thead><th class='text-center'>Código</th><th class='text-center'>Descripción</th><th class='text-center'>Valor Inicial</th><th class='text-center'>Acciones</th> " +
 					"</thead><tbody id='bodySF'></tbody></table>";
 
 			$("#bodySF").html("");
@@ -224,7 +226,9 @@
 				var tr = `<tr>
           <td>`+ Fuentes[rubro['fonts_rubro'][i]['source_fundings_id']]['code']+`</td>
           <td>`+ Fuentes[rubro['fonts_rubro'][i]['source_fundings_id']]['description']+`</td>
-          <td><a href="/presupuesto/rubro/CUIPO/SourceFundings/` +rubro['fonts_rubro'][i]['id'] +`/`+ rubro['vigencia_id']+`/DELETE" type="button" class="btn-sm btn-danger" ><i class="fa fa-trash"></i></a></td>
+          <td><input type="number" class="form-control" name="value" min="0" max="`+ valueVigen +`" value="`+ rubro['fonts_rubro'][i]['valor']+`"/><input type="hidden" name="idFontRubro" value="`+rubro['fonts_rubro'][i]['id'] +`"/></td>
+          <td><button title="Actualizar Valor Inicial Fuente" type="submit" class="btn-sm btn-danger" ><i class="fa fa-refresh"></i></button>
+			<a href="/presupuesto/rubro/CUIPO/SourceFundings/` +rubro['fonts_rubro'][i]['id'] +`/`+ rubro['vigencia_id']+`/DELETE" title="Eliminar Fuente" pe="button" class="btn-sm btn-danger" ><i class="fa fa-trash"></i></a></td>
         </tr>`;
 				$("#bodySF").append(tr)
 			}

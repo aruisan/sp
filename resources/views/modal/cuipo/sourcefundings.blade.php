@@ -15,7 +15,7 @@
                     <input type="hidden"  name="rubroID" id="rubroID"/>
                     <input type="hidden"  name="vigencia_id" id="vigencia_id"/>
                     <div id="select_SF">
-                        <select class="select-sf" style="width: 100%" name="code[]" multiple="multiple" required>
+                        <select class="select-sf" style="width: 100%" name="code[]" multiple="multiple">
                             @foreach($fuentes as $fuente)
                                 <option value="{{$fuente->id}}">{{$fuente->code}} - {{$fuente->description}}</option>
                             @endforeach

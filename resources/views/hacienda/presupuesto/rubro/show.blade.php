@@ -109,7 +109,7 @@
                             <div class="form-group">
                                 <label class="control-label text-right col-md-4" for="valor">Codigo Rubro:</label>
                                 <div class="col-lg-6">
-                                    <input type="number" disabled class="form-control" style="text-align:center" name="valor" value="{{ $rubro->cod }}">
+                                    <input type="text" disabled class="form-control" style="text-align:center" name="valor" value="{{ $rubro->cod }}">
                                 </div>
                             </div>
                         </div>
@@ -188,8 +188,8 @@
                         <tbody>
                         @foreach($fuentesR as  $fuentes)
                             <tr>
-                                <td>{{ $fuentes->fontVigencia->font->code }}</td>
-                                <td>{{ $fuentes->fontVigencia->font->name }}</td>
+                                <td>{{ $fuentes->sourceFunding->code }}</td>
+                                <td>{{ $fuentes->sourceFunding->description }}</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
                             </tr>
@@ -292,7 +292,7 @@
                             @foreach($fuentesR as $fuentes)
                                 <tr>
                                     <td>{{ $fuentes->id }}</td>
-                                    <td>{{ $fuentes->fontVigencia->font->name }}</td>
+                                    <td>{{ $fuentes->sourceFunding->description }}</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                     <td class="text-center">
                                         @foreach($valores as $valAdd)

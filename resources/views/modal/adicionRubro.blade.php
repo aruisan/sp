@@ -15,7 +15,7 @@
                             <thead>
                             <tr>
                                 @foreach($fuentesR as $data)
-                                    <th class="text-center">Dinero a la fuente: {{ $data->fontVigencia->font->name }}</th>
+                                    <th class="text-center">Dinero a la fuente: {{ $data->sourceFunding->description }}</th>
                                 @endforeach
                                 <th scope="col" class="text-center">Archivo</th>
                             </tr>
@@ -30,13 +30,13 @@
                                             <!--
                                                 <input type="hidden" name="fuente_id[]" value="@foreach($add as $mov) @if($mov->rubro_id == $fuentesRubro->rubro_id and $mov->movimiento == 2) {{ $fuentesRubro->id }} @else
                                                 {{ $fuentesRubro->id }} @endif @endforeach">
-                                                <input type="hidden" name="fuenteBase_id[]" value="{{ $fuentesRubro->fontVigencia->font->id }}">
+                                                <input type="hidden" name="fuenteBase_id[]" value="{{ $fuentesRubro->sourceFunding->id }}">
 
                                             -->
                                                 <input type="hidden" name="mov_id[]" value="@foreach($add as $mov) @if($mov->rubro_id == $fuentesRubro->rubro_id and $mov->movimiento == 2) {{ $mov->id }} @endif @endforeach">
                                                 <input type="text" required  name="valorCred[]" value="@foreach($fuentesRubro->rubrosMov as $mov) @if($mov->rubro_id == $rubro->id and $mov->movimiento == 2) {{  $mov->valor }} @endif @endforeach" style="text-align: center">
                                             @else
-                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->fontVigencia->font->id }}">
+                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->sourceFunding->id }}">
                                                 <input type="hidden" name="mov_id[]" value="">
                                                 <input type="number" required  name="valorCred[]" class="form-group-sm" value="0" style="text-align: center">
                                             @endif
