@@ -2,7 +2,7 @@
 @extends('layouts.certificadosPdf')
 @section('contenido')
 		<div class="row">
-			<center><h3>CERTIFICADO DE DISPONIBILIDAD PRESUPUESTAL</h3></center>
+			<center><h3>BORRADOR DE CDP</h3></center>
 		</div>
 		<div style="border:1px solid black;">
 			<div style="width: 78%;   display: inline-block; margin-left: 3%">
@@ -17,11 +17,14 @@
 		<div class="br-black-1">
 			<br>
 			<center>
-				<h2>CERTIFICA</h2>
+				<h2>BORRADOR DE CDP</h2>
 				<br>
-				<p>
-					Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} Existe Disponibilidad Presupuestal por:
-				</p>
+				@if($cdp->alcalde_e == "0")
+					<p>PENDIENTE POR APROBAR EL ALCALDE</p>
+				@endif
+				@if($cdp->jefe_e == "0")
+					<p>PENDIENTE POR APROBAR EL JEFE</p>
+				@endif
 			</center>
 		</div>
 		<?php $sumRubros = 0;?>
@@ -60,7 +63,7 @@
 						</tr>
 						<tr style="font-size: 16px;">
 							<td style="width: 30px;">Valor: </td>
-							<td> {{number_format($rubrosCdp->rubrosCdpValor->sum('valor'))}}</td>
+							<td> {{number_format($cdp->valor)}}</td>
 						</tr>
 					</tbody>
 				</table>

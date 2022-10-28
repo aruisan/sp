@@ -125,7 +125,7 @@
                                 <th>CODIGO CLASIFICACION MUNICIPAL</th>
                                 <th>INGRESOS GRAVADOS</th>
                                 <th>TARIFA</th>
-                                <th>IMPUESTO INDUSTRIA Y COMERIO</th>
+                                <th>IMPUESTO INDUSTRIA Y COMERCIO</th>
                             </tr>
                             <tr>
                                 <td>ACTIVIDAD 1 (PRINCIPAL)</td>
@@ -296,8 +296,6 @@
                             </tr>
                             </tbody>
                         </table>
-
-
                     @elseif($pago->modulo == "PREDIAL")
                         <table class="table text-center table-bordered">
                             <tbody>

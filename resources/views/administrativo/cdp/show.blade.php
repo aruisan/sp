@@ -13,8 +13,10 @@
                 <li class="nav-item regresar"><a class="nav-link "  href="{{ url('/administrativo/cdp/'.$cdp->vigencia_id) }}">Volver a CDP'S</a></li>
                 <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">CDP {{ $cdp->code }}</a></li>
                 <li class="nav-item "><a class="tituloTabs" data-toggle="tab" href="#rubros">Dinero en Rubros</a></li>
-                @if($cdp->secretaria_e == "3" and $cdp->jefe_e == "3")
+                @if($cdp->secretaria_e == "3" and $cdp->alcalde_e == "3" and $cdp->jefe_e == "3")
                     <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/cdp/pdf/'.$cdp->id.'/'.$cdp->vigencia_id) }}" target="_blank" title="PDF"><i class="fa fa-file-pdf-o"></i></a></li>
+                @elseif($cdp->secretaria_e == "3")
+                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/cdp/pdfBorrador/'.$cdp->id.'/'.$cdp->vigencia_id) }}" target="_blank" title="BORRADOR DE PDF"><i class="fa fa-file-pdf-o"></i></a></li>
                 @endif
             </ul>
         </div>
@@ -132,7 +134,7 @@
                                     @if($cdp->rubrosCdp->count() == 0 )
                                         <div class="col-md-12 align-self-center">
                                             <div class="alert alert-danger text-center">
-                                                El CDP no tiene rubros asigandos. Desea borrar el CDP? &nbsp;
+                                                El CDP no tiene rubros asignados. Desea borrar el CDP? &nbsp;
                                                 <form action="{{ url('/administrativo/cdp/'.$cdp->vigencia_id.'/'.$cdp->id.'/delete') }}" method="post" class="form">
                                                     {!! method_field('DELETE') !!}
                                                     {{ csrf_field() }}
@@ -161,7 +163,7 @@
                                                             <td>&nbsp;</td>
                                                             <td class="text-center">
                                                                 <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
-                                                                <select name="rubro_id[]" class="form-group-lg" required>
+                                                                <select name="rubro_id[]" class="form-control" onchange="selectedRubro(this.value)" required>
                                                                     @foreach($infoRubro as $rubro)
                                                                         <option value="{{ $rubro['id_rubro'] }}">{{ $rubro['codigo'] }} - {{ $rubro['name'] }}</option>
                                                                     @endforeach
@@ -229,7 +231,7 @@
                                                                         <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
                                                                         <input type="hidden" name="rubros_cdp_id[]" value="{{ $rubrosCdpData->id }}">
                                                                         <li style="list-style-type: none;">
-                                                                            {{ $fuentesRubro->fontVigencia->font->name }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
+                                                                            {{ $fuentesRubro->sourceFunding->description }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
                                                                         </li>
                                                                     </div>
                                                                 @elseif($fuentesRubro->valor_disp != 0)
@@ -238,13 +240,13 @@
                                                                         <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
                                                                         <input type="hidden" name="rubros_cdp_id[]" value="{{ $rubrosCdpData->id }}">
                                                                         <li style="list-style-type: none;">
-                                                                            {{ $fuentesRubro->fontVigencia->font->name }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
+                                                                            {{ $fuentesRubro->sourceFunding->description }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
                                                                         </li>
                                                                     </div>
                                                                 @endif
                                                                 <div class="col-lg-6">
                                                                     @if($cdp->jefe_e == "3")
-                                                                        Valor usado de {{ $fuentesRubro->fontVigencia->font->name}}:
+                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:
                                                                         @if($fuentesRubro->rubrosCdpValor->count() != 0)
                                                                             @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                 @php($id_rubrosCdp = $rubrosCdpData->id )
@@ -266,7 +268,7 @@
                                                                             <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->valor_disp }}" style="text-align: center">
                                                                         @endif
                                                                     @elseif($fuentesRubro->valor_disp != 0)
-                                                                        Valor usado de {{ $fuentesRubro->fontVigencia->font->name}}:
+                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:
                                                                         @if($fuentesRubro->rubrosCdpValor->count() != 0)
                                                                             @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                 @php($id_rubrosCdp = $rubrosCdpData->id )
@@ -706,10 +708,13 @@
         const bpins = @json($bpins);
         var valueControl = '<?php echo $cdp->valueControl; ?>';
 
+        function selectedRubro(rubro){
+            console.log(rubro);
+        }
+
         function showActividades(codProy){
             document.getElementById("actividades").style.display = "";
             bpins.filter(r => r.cod_proyecto == codProy).forEach(e => {
-                console.log(e.cod_actividad, e.actividad, e.rubro);
 
                 $('#tbody_actividades').append(`
                 <tr>
@@ -750,6 +755,8 @@
         }
 
         $(document).ready(function() {
+
+
 
             $('#tabla_rubrosCdp').DataTable( {
                 responsive: true,

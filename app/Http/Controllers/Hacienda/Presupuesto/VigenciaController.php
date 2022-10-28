@@ -91,7 +91,7 @@ class VigenciaController extends Controller
             $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
             $fonts = FontsVigencia::where('vigencia_id',$vigencia_id)->get();
             $rubros = Rubro::where('vigencia_id', $vigencia_id)->get();
-            $fontsRubros = FontsRubro::orderBy('font_vigencia_id')->get();
+            $fontsRubros = FontsRubro::orderBy('font_vigencia_id')->where('font_vigencia_id','!=',null)->get();
             $allRegisters = Register::orderByDesc('level_id')->get();
             $ordenP = OrdenPagos::all();
 

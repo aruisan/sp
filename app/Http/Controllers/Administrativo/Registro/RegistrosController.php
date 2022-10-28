@@ -78,22 +78,13 @@ class RegistrosController extends Controller
     {
         $personas = Persona::all();
         $roles = auth()->user()->roles;
-        foreach ($roles as $role){$rol= $role->id;}
-        $cdp = Cdp::all()->where('jefe_e','3')->where('vigencia_id',$id)->count();
+        foreach ($roles as $role) $rol= $role->id;
+        $cdps = Cdp::all()->where('jefe_e','3')->where('saldo','>','0')->where('vigencia_id',$id);
         $registros = Registro::all();
         $registrocount = 0;
-        foreach ($registros as $registro){
-            if ($registro->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $registrocount = $registrocount +1;
-            }
-        }
-        if($cdp > 0){
-            $cdps = Cdp::all()->where('jefe_e','3')->where('saldo','>','0')->where('vigencia_id',$id);
-            return view('administrativo.registros.create', compact('rol','personas','cdps', 'id','registrocount'));
-        }else{
-            Session::flash('error','Actualmente no existen CDPs disponibles para crear registros.');
-            return redirect('/administrativo/registros/'.$id);
-        }
+        foreach ($registros as $registro) if ($registro->cdpsRegistro[0]->cdp->vigencia_id == $id) $registrocount = $registrocount +1;
+        if(count($cdps) > 0) return view('administrativo.registros.create', compact('rol','personas','cdps', 'id','registrocount'));
+        else Session::flash('error','Actualmente no existen CDPs disponibles para crear registros.');return back();
     }
  
     /**
@@ -108,9 +99,7 @@ class RegistrosController extends Controller
         {
             $file = new FileTraits;
             $ruta = $file->File($request->file('file'), 'Registros');
-        }else{
-            $ruta = "";
-        }
+        }else $ruta = "";
 
         $registro = new Registro();
 
@@ -123,13 +112,9 @@ class RegistrosController extends Controller
         $registro->val_total = "0";
         $registro->iva = "0";
         $registro->persona_id = $request->persona_id;
-        if ($request->tipo_doc_text == null){
-            $registro->tipo_doc = $request->tipo_doc;
-        } elseif($request->tipo_doc == "Otro" and $request->tipo_doc_text != null) {
-            $registro->tipo_doc = $request->tipo_doc_text;
-        } else {
-            $registro->tipo_doc = $request->tipo_doc;
-        }
+        if ($request->tipo_doc_text == null) $registro->tipo_doc = $request->tipo_doc;
+        elseif($request->tipo_doc == "Otro" and $request->tipo_doc_text != null) $registro->tipo_doc = $request->tipo_doc_text;
+        else $registro->tipo_doc = $request->tipo_doc;
         $registro->num_doc = $request->num_tipo_doc;
         $registro->ff_doc = $request->fecha_tipo_doc;
         $registro->secretaria_e = $request->secretaria_e;

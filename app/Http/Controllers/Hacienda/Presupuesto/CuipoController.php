@@ -29,20 +29,28 @@ class CuipoController extends Controller
     public function index($paso ,$vigencia_id)
     {
         if ($paso == "1"){
-            $rubros = Rubro::where('vigencia_id',$vigencia_id)->with('cpcs')->get();
+            $rubros = Rubro::where('vigencia_id',$vigencia_id)->with('cpcs')->paginate(25);
             $vigencia = Vigencia::findOrFail($vigencia_id);
             $CPCs = Cpc::select(['id','code','class'])->get();
             $CPCsRubro = CpcsRubro::all();
+            //SE DEBE OCULTAR EL BOTON DE SIGUIENTE CUANDO EL USUARIO NO HA SELECCIONADO TODOS LOS CPCS A LOS RUBROS
             return view('hacienda.presupuesto.cuipo.index', compact('vigencia', 'rubros','CPCs','CPCsRubro','paso'));
         } elseif ($paso == "2") {
-            $rubros = Rubro::where('vigencia_id',$vigencia_id)->with('fontsRubro')->get();
+            $rubros = Rubro::where('vigencia_id',$vigencia_id)->with('fontsRubro')->paginate(20);
             $vigencia = Vigencia::findOrFail($vigencia_id);
             $terceros = Terceros::all();
             $tipoNormas = TipoNorma::all();
             $fuentes = SourceFunding::all();
             $fontRubro = FontsRubro::where('source_fundings_id','!=',null)->get();
             $publicPolitics = PublicPolitic::all();
-            return view('hacienda.presupuesto.cuipo.index', compact('vigencia', 'rubros','terceros','paso','vigencia','tipoNormas','fuentes','fontRubro','publicPolitics'));
+            $allRub = Rubro::where('vigencia_id',$vigencia_id)->with('fontsRubro')->get();
+            foreach ($allRub as $item) {
+                if ($item->fontsRubro){
+                    foreach ($item->fontsRubro as $itemFont) $value[] = $itemFont->valor;
+                } else $value[] = 0;
+            }
+            $maxValue = $vigencia->presupuesto_inicial - array_sum($value);
+            return view('hacienda.presupuesto.cuipo.index', compact('vigencia', 'rubros','terceros','paso','vigencia','tipoNormas','fuentes','fontRubro','publicPolitics','maxValue'));
         } elseif ($paso == "3"){
             $rubros = Rubro::where('vigencia_id',$vigencia_id)->with('fontsRubro')->get();
             $vigencia = Vigencia::findOrFail($vigencia_id);
@@ -122,19 +130,29 @@ class CuipoController extends Controller
      */
     public function saveSourceFundings(Request $request)
     {
-        $fontVigen = FontsVigencia::where('vigencia_id',$request->vigencia_id)->first();
-        foreach ($request->code as $item){
-            $sourcefunding = new FontsRubro();
-            $sourcefunding->source_fundings_id = $item;
-            $sourcefunding->rubro_id = $request->rubroID;
-            $sourcefunding->valor = 0;
-            $sourcefunding->valor_disp = 1;
-            $sourcefunding->font_vigencia_id = $fontVigen->id;
-            $sourcefunding->save();
-        }
+        if (isset($request->value)){
+            $fontRubro = FontsRubro::findOrFail($request->idFontRubro);
+            $fontRubro->valor = $request->value;
+            $fontRubro->valor_disp = $request->value;
+            $fontRubro->save();
 
-        Session::flash('success','Se han asignado las fuentes de financiación al rubro correctamente');
-        return redirect('/presupuesto/rubro/CUIPO/2/'.$request->vigencia_id);
+            Session::flash('success','Se ha actualizado correctamente el valor de la fuente');
+            return redirect('/presupuesto/rubro/CUIPO/2/'.$request->vigencia_id);
+        } else {
+            $fontVigen = FontsVigencia::where('vigencia_id',$request->vigencia_id)->first();
+            foreach ($request->code as $item){
+                $sourcefunding = new FontsRubro();
+                $sourcefunding->source_fundings_id = $item;
+                $sourcefunding->rubro_id = $request->rubroID;
+                $sourcefunding->valor = 1;
+                $sourcefunding->valor_disp = 1;
+                $sourcefunding->font_vigencia_id = $fontVigen['id'];
+                $sourcefunding->save();
+            }
+
+            Session::flash('success','Se han asignado las fuentes de financiación al rubro correctamente');
+            return redirect('/presupuesto/rubro/CUIPO/2/'.$request->vigencia_id);
+        }
     }
 
     /**

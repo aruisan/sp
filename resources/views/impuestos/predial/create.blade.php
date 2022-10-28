@@ -191,7 +191,7 @@
                 alert('El valor a pagar no puede ser menor a 0');
                 return;
             }
-            this.submit();
+            //this.submit();
         }
 
         const formatter = new Intl.NumberFormat('en-US', {

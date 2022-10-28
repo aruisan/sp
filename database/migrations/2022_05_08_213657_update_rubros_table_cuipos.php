@@ -42,6 +42,11 @@ class UpdateRubrosTableCuipos extends Migration
 
             $table->integer('sector_details_id')->nullable()->unsigned()->after('additional_budget_sections_id');
             $table->foreign('sector_details_id')->references('id')->on('sector_details');
+
+            $table->enum('tipo', ['Funcionamiento', 'Inversion']);
+
+            $table->integer('bpin_id')->nullable()->unsigned()->after('tipo');
+            $table->foreign('bpin_id')->references('id')->on('b_pins');
         });
     }
 
@@ -62,6 +67,8 @@ class UpdateRubrosTableCuipos extends Migration
             $table->dropColumn('fund_situations_id');
             $table->dropColumn('additional_budget_sections_id');
             $table->dropColumn('sector_details_id');
+            $table->dropColumn('tipo');
+            $table->dropColumn('bpin_id');
         });
     }
 }

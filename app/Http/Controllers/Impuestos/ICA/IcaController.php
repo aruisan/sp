@@ -376,6 +376,21 @@ class IcaController extends Controller
     }
 
     /**
+     * Generate form from the ICA Contribuyente.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function formContri($id_ica){
+        $user = User::find(Auth::user()->id);
+        $rit = $user->rit;
+        $rit->natJuridiContri = $this->nameNaturalezaJuridica($rit->natJuridiContri);
+        $formulario = IcaContri::find($id_ica);
+        $formulario->presentacion = Carbon::parse($formulario->presentacion)->format('d-m-Y');
+        $pdf = PDF::loadView('impuestos.ica.contribuyente.formulario', compact('rit','formulario'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
+    }
+
+    /**
      * Generate facture from the ICA Retenedor.
      *
      * @return \Illuminate\Http\Response
@@ -389,6 +404,23 @@ class IcaController extends Controller
         $pdf = PDF::loadView('impuestos.ica.retenedor.pdf', compact('rit','ica'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
     }
+
+    /**
+     * Generate form from the ICA Retenedor.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function formRetenedor($id_ica){
+        $user = User::find(Auth::user()->id);
+        $rit = $user->rit;
+        $rit->natJuridiContri = $this->nameNaturalezaJuridica($rit->natJuridiContri);
+        $formulario = IcaRetenedor::find($id_ica);
+        $formulario->presentacion = Carbon::parse($formulario->presentacion)->format('d-m-Y');
+        $pdf = PDF::loadView('impuestos.ica.retenedor.formulario', compact('rit','formulario'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
+    }
+
+
     /*
     **
     * Show the form of update the ICA Contribuyente.

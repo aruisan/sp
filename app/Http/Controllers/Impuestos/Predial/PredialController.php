@@ -39,8 +39,13 @@ class PredialController extends Controller
         $user = User::find(Auth::user()->id);
         $action = "Creación";
         $contribuyente = PredialContribuyentes::where('email',$user->email)->get();
-        $contribuyente = $contribuyente[0];
-        return view('impuestos.predial.create', compact('action','contribuyente'));
+        if (count($contribuyente) == 0){
+            Session::flash('warning', 'No se encuentra información del usuario almacenada en el sistema - Contacte con un funcionario.');
+            return back();
+        } else{
+            $contribuyente = $contribuyente[0];
+            return view('impuestos.predial.create', compact('action','contribuyente'));
+        }
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Impuestos;
 use App\Http\Controllers\Controller;
+use App\Model\Impuestos\Ciuu;
 use App\Model\Impuestos\Comunicado;
 use App\Model\Impuestos\PredialContribuyentes;
 use App\Model\User;
@@ -55,6 +56,11 @@ class ImpuestosController extends Controller
         $rit->tipEntidadContri = $this->nameTipoEntidad($rit->tipEntidadContri);
         $rit->claEntidadContri = $this->nameClaseEntidad($rit->claEntidadContri);
         $actividades = $rit->actividades;
+        foreach ($actividades as $actividad){
+            $ciuu = Ciuu::find($actividad->codCIIU);
+            $actividad['code'] = $ciuu->code_ciuu;
+            $actividad['description'] = $ciuu->description;
+        }
         $establecimientos = $rit->establecimientos;
         $pdf = PDF::loadView('impuestos.rit.pdf', compact('rit','actividades','establecimientos'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();

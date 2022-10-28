@@ -154,24 +154,13 @@
 				</tbody>
 			</table>
 			<br>
-			<table class="table text-center table-bordered table-condensed">
+			<table class="table text-left table-bordered table-condensed">
 				<tr style="background-color: #0e7224; color: white">
-					<td colspan="4">V. DATOS DE ACTIVIDADES ECONÓMICAS</td>
+					<td colspan="4" class="text-center">V. DATOS DE ACTIVIDADES ECONÓMICAS</td>
 				</tr>
-				<thead>
-					<tr>
-						<td>31. Cód.Activ.</td>
-						<td>Cód. CIIU</td>
-						<td>32. Descripción de la Actividad Económica</td>
-						<td>33. Base Gravable Mensual</td>
-					</tr>
-				</thead>
 				@foreach($actividades as $actividad)
 					<tr>
-						<td>{{ $actividad->codActividad }}</td>
-						<td>{{ $actividad->codCIIU }}</td>
-						<td>{{ $actividad->descripción }}</td>
-						<td>$<?php echo number_format($actividad->baseGravable,0) ?></td>
+						<td><div style="width: auto; word-wrap: break-word; overflow: hidden;">{{ $actividad->code }} - {{ $actividad->description }}</div></td>
 					</tr>
 				@endforeach
 			</table>
@@ -185,3 +174,9 @@
 		</div>
 	</div>
 @stop
+<script>
+	import Xhtmlstyle from "../../../../public/assets/ckeditor/samples/old/xhtmlstyle.html";
+	export default {
+		components: {Xhtmlstyle}
+	}
+</script>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Hacienda\Presupuesto\FontsVigencia;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
+use App\Model\Hacienda\Presupuesto\SourceFunding;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use App\Model\Hacienda\Presupuesto\Rubro;
@@ -28,7 +29,7 @@ class RubrosController extends Controller
         $niveles = Level::where('vigencia_id', $vigencia_id)->get();
         $subProy = SubProyecto::all();
         $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
-        $registers = Register::where('level_id', $ultimoLevel->id)->get();
+        $registers = Register::where('level_id', $ultimoLevel['id'])->get();
 
         foreach ($registers as $register){
             $register_id = $register->code_padre->registers->id;
@@ -61,6 +62,11 @@ class RubrosController extends Controller
 
         $rubrosChecked = Rubro::where('plantilla_cuipos_id','!=',null)->where('vigencia_id', $vigencia_id)->select(['plantilla_cuipos_id'])->get();
         $validate = false;
+
+        if (!isset($codigos)){
+            $codigos[] = null;
+            unset($codigos[0]);
+        }
 
         return view('hacienda.presupuesto.vigencia.createRubros', compact('vigencia', 'fonts', 'subProy', 'fila', 'niveles', 'registers', 'codigos','vigencia_id',
             'plantilla','rubrosChecked','validate'));
@@ -148,7 +154,7 @@ class RubrosController extends Controller
         $add = rubrosMov::where([['rubro_id','=',$id],['movimiento','=','2']])->get();
         $red = rubrosMov::where([['rubro_id','=',$id],['movimiento','=','3']])->get();
         $vigens = Vigencia::findOrFail($rubro->vigencia_id);
-        $fuentesAll = FontsVigencia::where('vigencia_id', $vigens->id)->get();
+        $fuentesAll = SourceFunding::all();
         $valor = $fuentesR->sum('valor');
         $valorDisp = $fuentesR->sum('valor_disp');
 
@@ -219,7 +225,6 @@ class RubrosController extends Controller
                 $contadorRubDisp = $contadorRubDisp + 1;
             }
         }
-
 
         return view('hacienda.presupuesto.rubro.show', compact('rubro','fuentesR','valor','valorDisp','rol','rubros','fuentesAll','valores','files','add','red','contadorRubDisp','vigens'));
 

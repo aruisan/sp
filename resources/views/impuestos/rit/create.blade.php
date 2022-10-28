@@ -72,6 +72,24 @@
                                             <label class="form-check-label" for="claseContribuyente3">Mixto</label>
                                         </div>
                                     </td>
+                                    <td>
+                                        2.1. Otras Clases de Contribuyente
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="otrasClasesContribuyente" value="Gran Contribuyente" id="otrasClasesContribuyente"
+                                                   @if($action != "Inscripción" and $rit->otrasClasesContribuyente == "Gran Contribuyente") checked @else checked @endif>
+                                            <label class="form-check-label" for="otrasClasesContribuyente">Gran Contribuyente</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="otrasClasesContribuyente" value="Régimen Simple de Tributación" id="otrasClasesContribuyente2"
+                                                   @if($action != "Inscripción" and $rit->otrasClasesContribuyente == "Régimen Simple de Tributación") checked @endif>
+                                            <label class="form-check-label" for="otrasClasesContribuyente2">Régimen Simple de Tributación</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="otrasClasesContribuyente" value="Autorretenedor ICA" id="otrasClasesContribuyente3"
+                                                   @if($action != "Inscripción" and $rit->otrasClasesContribuyente == "Autorretenedor ICA") checked @endif>
+                                            <label class="form-check-label" for="otrasClasesContribuyente3">Autorretenedor ICA</label>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr id="RevFiscalRow">
                                     <td colspan="3">
@@ -203,7 +221,9 @@
                                             <option value="9" @if($action != "Inscripción" and $rit->tipSociedadContri == "9") selected @endif>9 - Extranjera</option>
                                             <option value="10" @if($action != "Inscripción" and $rit->tipSociedadContri == "10") selected @endif>10 - Civil</option>
                                             <option value="11" @if($action != "Inscripción" and $rit->tipSociedadContri == "11") selected @endif>11 - Asociativa de Trabajo</option>
-                                            <option value="12" @if($action != "Inscripción" and $rit->tipSociedadContri == "12") selected @endif>12 - Otras</option>
+                                            <option value="11" @if($action != "Inscripción" and $rit->tipSociedadContri == "12") selected @endif>12 - Responsables de IVA</option>
+                                            <option value="11" @if($action != "Inscripción" and $rit->tipSociedadContri == "13") selected @endif>13 - NO Responsables de IVA</option>
+                                            <option value="12" @if($action != "Inscripción" and $rit->tipSociedadContri == "14") selected @endif>14 - Otras</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -460,10 +480,7 @@
                                     </tr>
                                     <tr>
                                         <th style="vertical-align: middle"><i class="fa fa-plus"></i></th>
-                                        <th style="vertical-align: middle">31. Cód.Activ.</th>
-                                        <th style="vertical-align: middle">Cód. CIIU</th>
-                                        <th style="vertical-align: middle">32. Descripción de la Actividad Económica</th>
-                                        <th style="vertical-align: middle">33. Base Gravable Mensual</th>
+                                        <th style="vertical-align: middle">31. Seleccione CIIU</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -471,10 +488,7 @@
                                         @foreach($actividades as $actividad)
                                             <tr>
                                                 <td><button type="button" @click.prevent="eliminarActividad({{ $actividad->id }})" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-trash"></i></button></td>
-                                                <td style="vertical-align: middle">{{ $actividad->codActividad }}</td>
-                                                <td style="vertical-align: middle">{{ $actividad->codCIIU }}</td>
-                                                <td style="vertical-align: middle">{{ $actividad->descripción }}</td>
-                                                <td style="vertical-align: middle">{{ $actividad->baseGravable }}</td>
+                                                <td style="vertical-align: middle">{{ $actividad->code }} - {{ $actividad->description }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -485,10 +499,13 @@
                                                 <button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button>
                                             @endif
                                         </td>
-                                        <td style="width: 12%; vertical-align: middle"><input type="text" class="form-control" name="codActividad[]" maxlength="3"></td>
-                                        <td style="width: 12%; vertical-align: middle"><input type="text" class="form-control" name="codCIIU[]" maxlength="4"></td>
-                                        <td style="vertical-align: middle"><input type="text" class="form-control" name="descripción[]"></td>
-                                        <td style="width: 20%; vertical-align: middle"><input type="text" class="form-control" name="baseGravable[]"></td>
+                                        <td style="vertical-align: middle">
+                                            <select style="width: 100%" class="select-ciuu" name="codCIIU[]" required>
+                                                @foreach($ciius as $ciiu)
+                                                    <option value="{{$ciiu->id}}">{{$ciiu->code_ciuu}} - {{$ciiu->description}}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -629,6 +646,7 @@
 
         $(document).ready(function(){
 
+            $('.select-ciuu').select2();
             $(document).on('click', '.borrar', function (event) {
                 event.preventDefault();
                 $(this).closest('tr').remove();
@@ -801,11 +819,10 @@
                 nuevaFilaActividades(){
                     $('#TABLA5 tbody tr:first').after('<tr>\n' +
                         '<td style="vertical-align: middle"><button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button></td>\n'+
-                        '<td style="width: 12%"><input type="text" class="form-control" name="codActividad[]" maxlength="3" required></td>\n'+
-                        '<td style="width: 12%"><input type="text" class="form-control" name="codCIIU[]" maxlength="4" required></td>\n'+
-                        '<td><input type="text" class="form-control" name="descripción[]" required></td>\n'+
-                        '<td style="width: 20%"><input type="text" class="form-control" name="baseGravable[]" required></td>\n'+
+                        '<td style="vertical-align: middle"><select style="width: 100%" class="select-ciuu" name="codCIIU[]" required>@foreach($ciius as $ciiu)<option value="{{$ciiu->id}}">{{$ciiu->code_ciuu}} - {{$ciiu->description}}</option>@endforeach</select></td>\n'+
                         '</tr>\n');
+
+                    $('.select-ciuu').select2();
                 }
             }
         });

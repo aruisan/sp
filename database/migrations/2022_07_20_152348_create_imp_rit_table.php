@@ -33,6 +33,7 @@ class CreateImpRitTable extends Migration
             //I. ENCABEZADO
             $table->enum('opciondeUso', ['Inscripción', 'Actualización', 'Cancelación']);
             $table->enum('claseContribuyente', ['Retenedor', 'Contribuyente', 'Mixto']);
+            $table->enum('otrasClasesContribuyente', ['Gran Contribuyente', 'Régimen Simple de Tributación', 'Autorretenedor ICA']);
             $table->text('nameRevFisc')->nullable();
             $table->text('idRevFisc')->nullable();
             $table->text('TPRevFisc')->nullable();

@@ -30,4 +30,8 @@ class FontsRubro extends Model implements Auditable
     public function rubro(){
         return $this->hasOne('App\Model\Hacienda\Presupuesto\Rubro','id','rubro_id');
     }
+
+    public function sourceFunding(){
+        return $this->hasOne('App\Model\Hacienda\Presupuesto\SourceFunding','id','source_fundings_id');
+    }
 }

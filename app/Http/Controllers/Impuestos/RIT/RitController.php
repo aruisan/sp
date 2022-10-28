@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Impuestos\RIT;
 use App\Http\Controllers\Controller;
+use App\Model\Impuestos\Ciuu;
 use App\Model\Impuestos\RitActividades;
 use App\Model\Impuestos\RitEstablecimientos;
 use App\Model\User;
@@ -35,7 +36,8 @@ class RitController extends Controller
     public function create()
     {
         $action = "Inscripción";
-        return view('impuestos.rit.create', compact('action'));
+        $ciius = Ciuu::all();
+        return view('impuestos.rit.create', compact('action','ciius'));
     }
 
     /**
@@ -52,6 +54,7 @@ class RitController extends Controller
             //I. ENCABEZADO
             $RIT->opciondeUso = $request->opciondeUso;
             $RIT->claseContribuyente = $request->claseContribuyente;
+            $RIT->otrasClasesContribuyente = $request->otrasClasesContribuyente;
             $RIT->nameRevFisc = $request->nameRevFisc;
             $RIT->idRevFisc = $request->idRevFisc;
             $RIT->TPRevFisc = $request->TPRevFisc;
@@ -125,14 +128,11 @@ class RitController extends Controller
             }
 
             //TABLA V. DATOS DE ACTIVIDADES ECONÓMICAS
-            if (count($request->codActividad) > 0){
-                for ($i = 0; $i <= count($request->codActividad) -1; $i++) {
+            if (count($request->codCIIU) > 0){
+                for ($i = 0; $i <= count($request->codCIIU) -1; $i++) {
                     $actividades = new RitActividades();
                     $actividades->rit_id = $RIT->id;
-                    $actividades->codActividad = $request->codActividad[$i];
                     $actividades->codCIIU = $request->codCIIU[$i];
-                    $actividades->descripción = $request->descripción[$i];
-                    $actividades->baseGravable = $request->baseGravable[$i];
                     $actividades->save();
                 }
             }
@@ -142,6 +142,7 @@ class RitController extends Controller
             $RIT = RIT::find($request->rit_id);
             $RIT->opciondeUso = $request->opciondeUso;
             $RIT->claseContribuyente = $request->claseContribuyente;
+            $RIT->otrasClasesContribuyente = $request->otrasClasesContribuyente;
             $RIT->nameRevFisc = $request->nameRevFisc;
             $RIT->idRevFisc = $request->idRevFisc;
             $RIT->TPRevFisc = $request->TPRevFisc;
@@ -227,14 +228,11 @@ class RitController extends Controller
             }
 
             //TABLA V. DATOS DE ACTIVIDADES ECONÓMICAS
-            if ($request->codActividad){
-                for ($i = 0; $i <= count($request->codActividad) -1 ; $i++) {
+            if ($request->codCIIU){
+                for ($i = 0; $i <= count($request->codCIIU) -1 ; $i++) {
                     $actividades = new RitActividades();
                     $actividades->rit_id = $request->rit_id;
-                    $actividades->codActividad = $request->codActividad[$i];
                     $actividades->codCIIU = $request->codCIIU[$i];
-                    $actividades->descripción = $request->descripción[$i];
-                    $actividades->baseGravable = $request->baseGravable[$i];
                     $actividades->save();
                 }
             }
@@ -265,6 +263,7 @@ class RitController extends Controller
     public function updateRIT()
     {
         $action = "Actualización";
+        $ciius = Ciuu::all();
         $user = User::find(Auth::user()->id);
         $rit = $user->rit;
         if ($rit->ResourceRUT) $rit->rutaFileRUT = $rit->ResourceRUT->ruta;
@@ -272,8 +271,13 @@ class RitController extends Controller
         if ($rit->ResourceCC)  $rit->rutaFileCC = $rit->ResourceCC->ruta;
         else $rit->rutaFileCC = null;
         $actividades = $rit->actividades;
+        foreach ($actividades as $actividad){
+            $ciuu = Ciuu::find($actividad->codCIIU);
+            $actividad['code'] = $ciuu->code_ciuu;
+            $actividad['description'] = $ciuu->description;
+        }
         $establecimientos = $rit->establecimientos;
-        return view('impuestos.rit.create', compact('action','rit','actividades','establecimientos'));
+        return view('impuestos.rit.create', compact('action','rit','actividades','establecimientos','ciius'));
     }
 
     /**

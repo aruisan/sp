@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-8">
-                                        <a href="#" class="btn btn-impuesto" ><i class="fa fa-clipboard"></i></a>
+                                        <a href="/impuestos/PREDIAL/create" class="btn btn-impuesto" ><i class="fa fa-clipboard"></i></a>
                                     </div>
                                     <div class="col-md-4">
                                         <h4>Diligenciar y Presentar</h4>
@@ -123,7 +123,7 @@
                                 <h3>Destacados del mes</h3>
                                 <hr>
                                 <div class="col-md-8">
-                                    <a href="#" class="btn btn-impuesto" @if(!$rit) disabled @endif><i class="fa fa-users"></i></a>
+                                    <a href="/impuestos/ICA/exogena/create" class="btn btn-impuesto" @if(!$rit) disabled @endif><i class="fa fa-users"></i></a>
                                 </div>
                                 <div class="col-md-4">
                                     <h4>Consultar información Exógena</h4>
@@ -183,7 +183,6 @@
                             </div>
                         </div>
                         <hr>
-
                             <h3>Impuesto Predial y Sobretasa Bomberil</h3>
                             <hr>
                             <div class="row">
@@ -198,7 +197,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-8">
-                                        <a href="#" class="btn btn-impuesto" ><i class="fa fa-clipboard"></i></a>
+                                        <a href="/impuestos/PREDIAL/create" class="btn btn-impuesto" ><i class="fa fa-clipboard"></i></a>
                                     </div>
                                     <div class="col-md-4">
                                         <h4>Diligenciar y Presentar</h4>
@@ -232,7 +231,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-8">
-                                    <a href="#" class="btn btn-impuesto" ><i class="fa fa-clipboard"></i></a>
+                                    <a href="/impuestos/PREDIAL/create" class="btn btn-impuesto" ><i class="fa fa-clipboard"></i></a>
                                 </div>
                                 <div class="col-md-4">
                                     <h4>Diligenciar y Presentar</h4>
