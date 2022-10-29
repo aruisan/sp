@@ -26,18 +26,6 @@
     <div class="col-sm-3 col-md-4">
     </div>
     <div class="col-sm-6 col-md-4 input-group">
-        <label for="employee_age">
-            Edad
-        </label>
-        <input type="text" value="{{isset($employee)? $employee->edad : "" }}" class="form-control short-input" id="employee_age" name="employee_age"/>
-    </div>
-    <div class="col-sm-3 col-md-4">
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-3 col-md-4">
-    </div>
-    <div class="col-sm-6 col-md-4 input-group">
         <label for="employee_email">
             Email
         </label>

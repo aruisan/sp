@@ -18,7 +18,6 @@ class EmpleadoController extends Controller
         $newEmployee = new NominaEmpleado();
         $newEmployee->num_dc = $request->employee_doc_number;
         $newEmployee->nombre = $request->employee_name;
-        $newEmployee->edad = $request->employee_age;
         $newEmployee->email = $request->employee_email;
         $newEmployee->direccion = $request->employee_address;
         $newEmployee->fecha_nacimiento = $request->employee_birth_date;
@@ -37,7 +36,6 @@ class EmpleadoController extends Controller
         $employee = NominaEmpleado::find($id);
         $employee->num_dc = $request->employee_doc_number;
         $employee->nombre = $request->employee_name;
-        $employee->edad = $request->employee_age;
         $employee->email = $request->employee_email;
         $employee->direccion = $request->employee_address;
         $employee->fecha_nacimiento = $request->employee_birth_date;

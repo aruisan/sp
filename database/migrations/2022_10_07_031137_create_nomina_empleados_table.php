@@ -17,7 +17,6 @@ class CreateNominaEmpleadosTable extends Migration
             $table->increments('id');
             $table->integer('num_dc');
             $table->string('nombre');
-            $table->string('edad');
             $table->string('email');
             $table->string('direccion');
             $table->string('fecha_nacimiento');
