@@ -9,7 +9,7 @@ class Dependencia extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['num','name','sec'];
 
     public function subProyectos(){
 		return $this->hasMany('App\Model\Planeacion\Pdd\SubProyecto','dependencia_id');

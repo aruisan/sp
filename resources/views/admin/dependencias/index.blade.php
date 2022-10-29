@@ -8,7 +8,6 @@
     <div class="col-lg-12 margin-tb">
             <h2 class="text-center"> Dependencias</h2>
     </div>
-</div>
 
    <div class="container-fluid" id="crud">
         <!-- Start Page Content -->
@@ -19,14 +18,17 @@
                         {{ csrf_field() }}
                         <table class="table" id="tabla">
                             <thead>
-                                <th class="text-center">Nombre de la Dependencia</th>
+                                <th class="text-center">Número</th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Secuencia</th>
                                 <th class="text-center"><i class="fa fa-trash-o"></i></th>
                             </thead>
                             <tbody>
                                 @can('dependencia-create')
                                 <tr>
-                                    <td>
-                                        <input type="text" class="form-control" name="name[]" required>
+                                    <td><input type="number" min="1" class="form-control" name="num[]" required></td>
+                                    <td><input type="text" class="form-control" name="name[]" required></td>
+                                    <td><input type="number" min="1" class="form-control" name="sec[]" required></td>
                                     <td class="text-center">
                                         <button class="borrar btn btn-danger btn-sm"><i class="fa fa-minus"></i></button>
                                     </td>
@@ -34,7 +36,13 @@
                                 @endcan
                                 <tr class="table-primary" v-for="dato in datos">
                                     <td>
+                                        <input type="text" @if(!auth()->user()->can('dependencia-edit')) disabled @endif type="number" min="1" class="form-control" name="num[]" v-model="dato.num" @can('dependencia-edit') @change="actualizar(dato.id)" @endcan required>
+                                    </td>
+                                    <td>
                                         <input type="text" @if(!auth()->user()->can('dependencia-edit')) disabled @endif class="form-control" name="name[]" v-model="dato.name" @can('dependencia-edit') @change="actualizar(dato.id)" @endcan required>
+                                    </td>
+                                    <td>
+                                        <input type="text" @if(!auth()->user()->can('dependencia-edit')) disabled @endif type="number" min="1" class="form-control" name="sec[]" v-model="dato.sec" @can('dependencia-edit') @change="actualizar(dato.id)" @endcan required>
                                     </td>
                                     <td class="text-center">
                                     @can('dependencia-delete')
@@ -60,6 +68,7 @@
             </div>
         </div>
     </div>
+</div>
 @stop
 @section('js')
     <script>
@@ -161,7 +170,7 @@
                 },
                 nuevaFila: function(){
                     var dependencia=parseInt($("#tabla tr").length);
-                    $('#tabla tbody tr:first').before('<tr><td><input type="text" class="form-control" name="name[]" required></td><td class="text-center"><button class="borrar btn btn-danger btn-sm"><i class="fa fa-minus"></i></button></td></tr>');
+                    $('#tabla tbody tr:first').before('<tr><td><input type="number" min="1" class="form-control" name="num[]" required></td><td><input type="text" class="form-control" name="name[]" required></td><td><input type="number" min="1" class="form-control" name="sec[]" required></td><td class="text-center"><button class="borrar btn btn-danger btn-sm"><i class="fa fa-minus"></i></button></td></tr>');
 
                 }
 

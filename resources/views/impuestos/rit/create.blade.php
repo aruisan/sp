@@ -427,7 +427,7 @@
                                             <th></th>
                                         </tr>
                                     <tr>
-                                        <th style="vertical-align: middle"><i class="fa fa-plus"></i></th>
+                                        <th style="vertical-align: middle"><i class="fa fa-plus"></i>/<i class="fa fa-trash"></i></th>
                                         <th style="vertical-align: middle">22. Nombre comercial del establecimiento</th>
                                         <th style="vertical-align: middle">23. Matricula Mercantil</th>
                                         <th style="vertical-align: middle">24. Teléfono</th>
@@ -451,24 +451,24 @@
                                                 <td style="vertical-align: middle">{{ $establecimiento->fechaCancel }}</td>
                                             </tr>
                                         @endforeach
-                                    @endif
+                                    @else
                                         <tr>
-                                            <td style="vertical-align: middle">
-                                                <button type="button" @click.prevent="nuevaFilaRIT" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-plus"></i></button>
-                                                @if($action != "Inscripción")
-                                                    <button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button>
-                                                @endif
-                                            </td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="nombre[]"></td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="matMercantil[]"></td>
-                                            <td style="vertical-align: middle"><input type="number" class="form-control" name="telefono[]"></td>
-                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaInicio[]"></td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="direccion[]"></td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="barrio[]"></td>
-                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaCancel[]"></td>
+                                            <td style="vertical-align: middle"></td>
+                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="nombre[]" required></td>
+                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="matMercantil[]" required></td>
+                                            <td style="vertical-align: middle"><input type="number" class="form-control" name="telefono[]" required></td>
+                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaInicio[]" required></td>
+                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="direccion[]" required></td>
+                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="barrio[]" required></td>
+                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaCancel[]" required></td>
                                         </tr>
+                                    @endif
+
                                     </tbody>
                                 </table>
+                                <div class="text-center" id="buttonAddEstable">
+                                    <button type="button" @click.prevent="nuevaFilaRIT" class="btn btn-sm btn-primary-impuestos">AGREGAR ESTABLECIMIENTO</button>
+                                </div>
                             </div>
 
                             {{-- TABLA V. DATOS DE ACTIVIDADES ECONÓMICAS --}}
@@ -479,7 +479,7 @@
                                         <th scope="row" colspan="5">V. DATOS DE ACTIVIDADES ECONÓMICAS </th>
                                     </tr>
                                     <tr>
-                                        <th style="vertical-align: middle"><i class="fa fa-plus"></i></th>
+                                        <th style="vertical-align: middle"><i class="fa fa-plus"></i>/<i class="fa fa-trash"></i></th>
                                         <th style="vertical-align: middle">31. Seleccione CIIU</th>
                                     </tr>
                                     </thead>
@@ -491,24 +491,23 @@
                                                 <td style="vertical-align: middle">{{ $actividad->code }} - {{ $actividad->description }}</td>
                                             </tr>
                                         @endforeach
+                                    @else
+                                        <tr>
+                                            <td style="vertical-align: middle"></td>
+                                            <td style="vertical-align: middle">
+                                                <select style="width: 100%" class="select-ciuu" name="codCIIU[]" required>
+                                                    @foreach($ciius as $ciiu)
+                                                        <option value="{{$ciiu->id}}">{{$ciiu->code_ciuu}} - {{$ciiu->description}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
                                     @endif
-                                    <tr>
-                                        <td style="vertical-align: middle">
-                                            <button type="button" @click.prevent="nuevaFilaActividades" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-plus"></i></button>
-                                            @if($action != "Inscripción")
-                                                <button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button>
-                                            @endif
-                                        </td>
-                                        <td style="vertical-align: middle">
-                                            <select style="width: 100%" class="select-ciuu" name="codCIIU[]" required>
-                                                @foreach($ciius as $ciiu)
-                                                    <option value="{{$ciiu->id}}">{{$ciiu->code_ciuu}} - {{$ciiu->description}}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                    </tr>
                                     </tbody>
                                 </table>
+                                <div class="text-center" id="buttonAddActividad">
+                                    <button type="button" @click.prevent="nuevaFilaActividades" class="btn btn-sm btn-primary-impuestos">AGREGAR ACTIVIDAD</button>
+                                </div>
                             </div>
 
                             {{-- TABLA VI. CANCELACIÓN --}}
@@ -661,6 +660,9 @@
                     $("#TABLA5").show();
                     $("#TABLA6").hide();
                     $("#RevFiscalRow").show();
+                    $("#buttonAddEstable").show();
+                    $("#buttonAddActividad").show();
+                    $("#TABLA8").show();
                 } else if (valor == "Cancelación") {
                     document.getElementById("TABLA2").style.display = "none";
                     document.getElementById("TABLA3").style.display = "none";
@@ -668,7 +670,9 @@
                     document.getElementById("TABLA5").style.display = "none";
                     document.getElementById("TABLA6").style.display = "";
                     document.getElementById("RevFiscalRow").style.display = "none";
-
+                    document.getElementById("buttonAddEstable").style.display = "none";
+                    document.getElementById("buttonAddActividad").style.display = "none";
+                    document.getElementById("TABLA8").style.display = "none";
                 }
             });
 

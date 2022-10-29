@@ -40,14 +40,15 @@ class DependenciasController extends Controller
      */
     public function store(Request $request)
     {
+    	$num = $request->num;
     	$name = $request->name;
+    	$sec = $request->sec;
     	$count = count($name);
         for($i = 0; $i < $count; $i++){	        
-	        $store = Dependencia::firstOrCreate(['name' => $name[$i]]);
+	        $store = Dependencia::firstOrCreate(['num' => $num[$i] ,'name' => $name[$i], 'sec' => $sec[$i]]);
 	    }
 
-        return  redirect()->route('dependencias.index')
-        				->with('success','Dependencia Creada Exitosamente');
+        return  redirect()->route('dependencias.index')->with('success','Dependencia Creada Exitosamente');
     }
 
     /**
@@ -76,7 +77,7 @@ class DependenciasController extends Controller
     	$count = count($request['datos']);
         for($i = 0; $i < $count; $i++){	        
     		if($request['datos'][$i]['id'] == $id){
-        		Dependencia::find($request['datos'][$i]['id'])->update(['name' => $request['datos'][$i]['name']]);
+        		Dependencia::find($request['datos'][$i]['id'])->update(['num' => $request['datos'][$i]['num'], 'name' => $request['datos'][$i]['name'], 'sec' => $request['datos'][$i]['sec']]);
     		}
 
 	    }
