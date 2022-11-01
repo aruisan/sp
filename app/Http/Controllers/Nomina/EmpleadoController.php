@@ -22,6 +22,16 @@ class EmpleadoController extends Controller
         $newEmployee->direccion = $request->employee_address;
         $newEmployee->fecha_nacimiento = $request->employee_birth_date;
         $newEmployee->telefono = $request->employee_phone;
+        $newEmployee->cargo = $request->position;
+        $newEmployee->codigo_cargo = $request->employee_position_code;
+        $newEmployee->tipo_cargo = $request->employee_position_type;
+        $newEmployee->grado = $request->employee_degree;
+        $newEmployee->apto_administrativo_numero = $request->employee_apto_administrative_num;
+        $newEmployee->apto_administrativo_fecha = $request->apto_adnimistrative_date;
+        $newEmployee->apto_administrativo_archivo = $request->employee_apto_administrative_file;
+        $newEmployee->eps = $request->eps;
+        $newEmployee->fondo_pensiones = $request->employee_pension_fund;
+        $newEmployee->tipo_cuenta_bancaria = $request->bank_account_type;
         $newEmployee->save();
         return redirect()->route('nomina.empleados.index')
                 ->with('empleados', NominaEmpleado::all());
