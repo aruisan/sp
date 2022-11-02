@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Nomina;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\NominaEmpleado;
+use App\Traits\FileTraits;
 
 class EmpleadoController extends Controller
 {
@@ -35,6 +36,12 @@ class EmpleadoController extends Controller
         $newEmployee->numero_cuenta_bancaria = $request->employee_bank_account_num;
         $newEmployee->banco_cuenta_bancaria = $request->employee_bank_account_bank;
         $newEmployee->certificado_cuenta_bancaria = $request->employee_bank_account_certificate;
+        $newEmployee->save();
+        $fileTraits = new FileTraits();
+        $savedEmployeeAptoAdministrativeFile = $fileTraits->File($newEmployee->apto_administrativo_archivo, 'empleados/'.$newEmployee->id);
+        $newEmployee->apto_administrativo_archivo = $savedEmployeeAptoAdministrativeFile;
+        $savedEployeeBankAccountCertificate =  $fileTraits->File($newEmployee->certificado_cuenta_bancaria, 'empleados/'.$newEmployee->id);
+        $newEmployee->certificado_cuenta_bancaria = $savedEployeeBankAccountCertificate;
         $newEmployee->save();
         return redirect()->route('nomina.empleados.index')
                 ->with('empleados', NominaEmpleado::all());

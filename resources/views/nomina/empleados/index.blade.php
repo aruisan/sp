@@ -46,6 +46,7 @@
 									<th class="text-center">Código cargo</th>
 									<th class="text-center">Tipo cargo</th>
 									<th class="text-center">Grado</th>
+									<th class="text-center">Certificado bancario</th>
 									<th class="text-center"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
 									<th class="text-center"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></th>
 								</tr>
@@ -64,6 +65,7 @@
 									<td>{{$persona->codigo_cargo}}</td>
 									<td>{{$persona->tipo_cargo}}</td>
 									<td>{{$persona->grado}}</td>
+									<td>{{$persona->certificado_cuenta_bancaria}}</td>
 									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger">
 									<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
 									<td>
