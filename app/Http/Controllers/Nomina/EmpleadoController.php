@@ -22,16 +22,19 @@ class EmpleadoController extends Controller
         $newEmployee->direccion = $request->employee_address;
         $newEmployee->fecha_nacimiento = $request->employee_birth_date;
         $newEmployee->telefono = $request->employee_phone;
-        $newEmployee->cargo = $request->position;
+        $newEmployee->cargo = $request->employee_position;
         $newEmployee->codigo_cargo = $request->employee_position_code;
         $newEmployee->tipo_cargo = $request->employee_position_type;
         $newEmployee->grado = $request->employee_degree;
         $newEmployee->apto_administrativo_numero = $request->employee_apto_administrative_num;
-        $newEmployee->apto_administrativo_fecha = $request->apto_adnimistrative_date;
+        $newEmployee->apto_administrativo_fecha = $request->employee_apto_adnimistrative_date;
         $newEmployee->apto_administrativo_archivo = $request->employee_apto_administrative_file;
-        $newEmployee->eps = $request->eps;
+        $newEmployee->eps = $request->employee_eps;
         $newEmployee->fondo_pensiones = $request->employee_pension_fund;
-        $newEmployee->tipo_cuenta_bancaria = $request->bank_account_type;
+        $newEmployee->tipo_cuenta_bancaria = $request->employee_bank_account_type;
+        $newEmployee->numero_cuenta_bancaria = $request->employee_bank_account_num;
+        $newEmployee->banco_cuenta_bancaria = $request->employee_bank_account_bank;
+        $newEmployee->certificado_cuenta_bancaria = $request->employee_bank_account_certificate;
         $newEmployee->save();
         return redirect()->route('nomina.empleados.index')
                 ->with('empleados', NominaEmpleado::all());
@@ -50,6 +53,19 @@ class EmpleadoController extends Controller
         $employee->direccion = $request->employee_address;
         $employee->fecha_nacimiento = $request->employee_birth_date;
         $employee->telefono = $request->employee_phone;
+        $employee->cargo = $request->employee_position;
+        $employee->codigo_cargo = $request->employee_position_code;
+        $employee->tipo_cargo = $request->employee_position_type;
+        $employee->grado = $request->employee_degree;
+        $employee->apto_administrativo_numero = $request->employee_apto_administrative_num;
+        $employee->apto_administrativo_fecha = $request->employee_apto_adnimistrative_date;
+        //$employee->apto_administrativo_archivo = $request->employee_apto_administrative_file;
+        $employee->eps = $request->employee_eps;
+        $employee->fondo_pensiones = $request->employee_pension_fund;
+        $employee->tipo_cuenta_bancaria = $request->employee_bank_account_type;
+        $employee->numero_cuenta_bancaria = $request->employee_bank_account_num;
+        $employee->banco_cuenta_bancaria = $request->employee_bank_account_bank;
+        //$employee->certificado_cuenta_bancaria = $request->employee_bank_account_certificate;
         $employee->save();
         return redirect()->route('nomina.empleados.index')
                 ->with('empleados', NominaEmpleado::all());

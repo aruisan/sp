@@ -42,6 +42,10 @@
 									<th class="text-center">Direccion</th>
 									<th class="text-center">Telefono</th>
 									<th class="text-center">Edad</th>
+									<th class="text-center">Cargo</th>
+									<th class="text-center">Código cargo</th>
+									<th class="text-center">Tipo cargo</th>
+									<th class="text-center">Grado</th>
 									<th class="text-center"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
 									<th class="text-center"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></th>
 								</tr>
@@ -56,6 +60,10 @@
 									<td>{{$persona->direccion}}</td>
 									<td>{{$persona->telefono}}</td>
 									<td>{{$persona->edad}}</td>
+									<td>{{$persona->cargo}}</td>
+									<td>{{$persona->codigo_cargo}}</td>
+									<td>{{$persona->tipo_cargo}}</td>
+									<td>{{$persona->grado}}</td>
 									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger">
 									<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
 									<td>
