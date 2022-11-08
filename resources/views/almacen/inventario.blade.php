@@ -9,8 +9,7 @@
         </strong>
     </div>
     <div class="tab-content" style="background-color: white">
-        <div id="tabHome" class="tab-pane active"><br>
-            <a class="btn btn-primary" href="{{route('almacen.create')}}">+</a>
+        <div id="tabHome" class="tab-pane active">
             <br>
             <div class="table-responsive">
                 @if($articulos->count() > 0)
@@ -18,15 +17,22 @@
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">Codigo</th>
-                            <th class="text-center">Cantidad</th>
                             <th class="text-center">Nombre del Articulo</th>
+                            <th class="text-center">Codigo</th>
                             <th class="text-center">Referencia</th>
-                            <th class="text-center">Ncomin Fecha Ingreso</th>
-                            <th class="text-center">Ncomin Fecha Egreso</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Stock</th>
                             <th class="text-center">Valor Unitario</th>
                             <th class="text-center">Total</th>
+                            <th class="text-center">No. Factura</th>
+                            <th class="text-center">Proovedor</th>
+                            <th class="text-center">ccd</th>
+                            <th class="text-center">ccc</th>
+                            <th class="text-center">Comprobante de Ingreso</th>
+                            <th class="text-center">Comprobante de Egreso</th>
                             <th class="text-center">Dependencia</th>
+                            <th class="text-center">Responsable</th>
+                            <th class="text-center">Estado</th>
                             <th>Opcion</th>
                         </tr>
                         </thead>
@@ -34,15 +40,18 @@
                         @foreach($articulos as $key => $item)
                             <tr class="text-center">
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $item->codigo }}</td>
-                                <td>{{ $item->cantidad}}</td>
                                 <td>{{ $item->nombre_articulo}}</td>
+                                <td>{{ $item->codigo }}</td>
                                 <td>{{ $item->referencia}}</td>
-                                <td>{{ $item->n_comin_ingreso_fecha}}</td>
-                                <td>{{ $item->n_comin_egreso_fecha}}</td>
+                                <td>{{ $item->cantidad}}</td>
+                                <td>{{ $item->stock}}</td>
                                 <td>{{ $item->valor_unitario}}</td>
                                 <td>{{ $item->total}}</td>
-                                <td>{{ $item->dependencia->name}}</td>
+                                <td>{{ $item->factura->numero_factura}}</td>
+                                <td>{{ $item->factura->proovedor->nombre}}</td>
+                                <td>{{ $item->ccd}}</td>
+                                <td>{{ $item->ccc}}</td>
+                                <td></td>
                                 <td>
                                     <a class="btn btn-success" href="{{route('almacen.edit', $item->id)}}">Editar</a>
                                 </td>

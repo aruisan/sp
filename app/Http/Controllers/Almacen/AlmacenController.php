@@ -5,13 +5,28 @@ namespace App\Http\Controllers\Almacen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Almacen;
+use App\AlmacenFacturaArticulo;
+use App\AlmacenFactura;
 use App\Model\Admin\Dependencia;
+use App\Model\Persona;
 
 class AlmacenController extends Controller
 {
     public function index(){
-        $articulos = Almacen::get();
-        return view('almacen.index', compact('articulos'));
+        $articulos = AlmacenFacturaArticulo::get();
+        return view('almacen.inventario', compact('articulos'));
+    }
+
+    public function ingresos(){
+        $dependencias = Dependencia::all();
+        $proovedores = Persona::all();
+        $factura = AlmacenFactura::create(['owner_id' => auth()->id()]);
+        return view('almacen.ingresos', compact('dependencias', 'factura', 'proovedores'));
+    }
+
+    public function egresos(){
+        $dependencias = Dependencia::all();
+        return view('almacen.egresos', compact('dependencias'));
     }
 
     public function create(){

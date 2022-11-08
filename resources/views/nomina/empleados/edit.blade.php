@@ -13,10 +13,10 @@
 @section('content')
 <ul class="nav nav-pills">
     <li class="nav-item active">
-        <a class="nav-link"  href="{{route('nomina.empleados.index')}}"> Terceros</a>
+        <a class="nav-link"  href="{{route('nomina.empleados.index')}}"> Empleados</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-toggle="pill" href="{{route('nomina.empleados.create')}}">Nuevo Tercero</a>
+        <a class="nav-link" data-toggle="pill" href="{{route('nomina.empleados.create')}}">Nuevo Empleado</a>
     </li>
 </ul>
 <form class="container" method="POST">

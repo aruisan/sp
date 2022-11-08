@@ -1,13 +1,34 @@
 @include('modal.updateSoftware')
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-   Nomina
+   NOMINA
    <span class="caret"></span>
    </a>
    <ul class="dropdown-menu">
       <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.pagos.index')}}">Pagos</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Pensionados</a></li>
    </ul>
+
+{{--
+   <li class="dropdown-submenu">
+         <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
+         <ul class="dropdown-menu">
+            <li><a class="item-menu" href="{{url('/administrativo/muebles/create')}}">Sueldo</a></li>
+            <li><a class="item-menu" href="{{url('/administrativo/inventario/create')}}">Prima</a></li>
+         </ul>
+      </li>
+      <li class="dropdown-submenu">
+         <a class="dropdown-item item-menu">Nomina de Empleados</a>
+         <ul class="dropdown-menu">
+            <li><a class="item-menu" href="">Sueldo</a></li>
+            <li><a class="item-menu" href="">Prima Navidad</a></li>
+            <li><a class="item-menu" href="">Vacaciones</a></li>
+            <li><a class="item-menu" href="">Prima de Vacaciones</a></li>
+            <li><a class="item-menu" href="">Prima de Antiguedad</a></li>
+         </ul>
+      </li>
+      <li><a class="item-menu" href="">Nomina de Bonificación</a></li>
+--}}
 </li>
 <li class="page-scroll ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
@@ -114,7 +135,14 @@
    ALMACEN
    <span class="caret"></span>
    </a>
-
+   <ul class="dropdown-menu">
+      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.index')}}">Inventorio</a></li>
+      
+      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.ingreso')}}">Comprobante de Ingreso</a></li>
+      
+      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.egreso')}}">Comprobante de egresos</a></li>
+   </ul>
+{{--
    <ul class="dropdown-menu">
       <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/muebles')}}">Bienes, Muebles e Inmuebles</a></li>
       <li class="dropdown-submenu">
@@ -137,6 +165,7 @@
       <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/productos')}}">Productos</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/inventario')}}">Inventario</a></li>
    </ul>
+--}}
 </li>
 
 <li class="dropdown ">

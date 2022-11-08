@@ -5,13 +5,11 @@ namespace App\Traits;
 Class FileTraits
 {
 	public function File($file, $carpeta){
-
-        $path = public_path().'/uploads/'.$carpeta;
-        $name = $file;
-        $fileName = $carpeta.'_'. time().'.'.$name->getClientOriginalExtension();
-        $move = $file->move($path, $fileName);
-        return $fileName;
-
+                $path = public_path().'/uploads/'.$carpeta;
+                $name = $file;
+                $fileName = $carpeta.'_'. time().'.'.$name->getClientOriginalExtension();
+                $move = $file->move($path, $fileName);
+                return $fileName;
 	}
 
 	public function Img($file, $carpeta, $name){

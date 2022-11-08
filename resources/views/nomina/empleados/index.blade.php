@@ -16,10 +16,21 @@
 
 <ul class="nav nav-pills">
 	<li class="nav-item active">
-		<a class="nav-link" data-toggle="pill" href="#personas"> Terceros</a>
+		<a class="nav-link" data-toggle="pill" href="#personas"> Empleados</a>
 	</li>
 	<li class="nav-item ">
-		<a class="nav-link"  href="{{route('nomina.empleados.create')}}">Nuevo Tercero</a>
+		<a class="nav-link"  href="{{route('nomina.empleados.create')}}">Nuevo Empleado</a>
+	</li>
+	<li class="dropdown-submenu">
+		<a class="dropdown-item item-menu">Nomina</a>
+		<ul class="dropdown-menu">
+			<li><a class="item-menu" href="">Sueldo</a></li>
+			<li><a class="item-menu" href="">Prima Navidad</a></li>
+			<li><a class="item-menu" href="">Vacaciones</a></li>
+			<li><a class="item-menu" href="">Prima de Vacaciones</a></li>
+			<li><a class="item-menu" href="">Prima de Antiguedad</a></li>
+			<li><a class="item-menu" href="">Bonificación</a></li>
+		</ul>
 	</li>
 </ul>
      
@@ -44,6 +55,7 @@
 									<th class="text-center">Edad</th>
 									<th class="text-center"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
 									<th class="text-center"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></th>
+									<th class="text-center">Hv</th>
 								</tr>
 							</thead>
 
@@ -61,6 +73,9 @@
 									<td>
 										@include('personas.delete', ['persona' => $persona])
 									</td>
+									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger" title="Hoja de vida">
+										<i class="fa fa-book" aria-hidden="true"></i>
+									</td>
 								</tr>
 							@endforeach
 							</tbody>
@@ -71,6 +86,9 @@
 		</div>
 	</div>
 </div>
+
+
+
 @stop
 
 @section('js')
