@@ -1,8 +1,8 @@
-@extends('layouts.dashboard')
+@extends(Auth::guest() ? 'layouts.frontend' : 'layouts.dashboard')
 @section('titulo')
     Estadistica
 @stop
-@section('content')
+@section(Auth::guest() ? 'contenido' :'content')
    <div class="row">
         <div class="col-sm-3">
             <div class="row">
@@ -43,7 +43,7 @@
                 <p> Extranjeros___% </p>
             </div>
             <div class="row">
-                <a href="#"><h4>SALUD</h4></a>
+                <a href="{{route('graficos.mostrar', 'salud')}}"><h4>SALUD</h4></a>
             </div>
             <div class="row">
                 <p> Enfermedad prevalente </p>
@@ -51,7 +51,7 @@
                 <p> Número de accidentes </p>
             </div>
             <div class="row">
-                <a href="#"><h4>EDUCACIÖN</h4></a>
+                <a href="{{route('graficos.mostrar', 'educacion')}}"><h4>EDUCACIÖN</h4></a>
             </div>
             <div class="row">
                 <p> Número de alumnos </p>
@@ -62,7 +62,7 @@
         </div>
         <div class="col-sm-2">
             <div class="row">
-                <a href="#"><h4>OTROS DATOS</h4></a>
+                <a href="{{route('graficos.mostrar', 'otros')}}"><h4>OTROS DATOS</h4></a>
             </div>
             <div class="row">
                 <p> Valor M2 lote </p>
@@ -70,7 +70,7 @@
                 <p> Número de ventas </p>
             </div>
             <div class="row">
-                <a href="#"><h4>GOBIERNO</h4></a>
+                <a href="{{route('graficos.mostrar', 'gobierno')}}"><h4>GOBIERNO</h4></a>
             </div>
             <div class="row">
                 <p> Número de embarcaciones </p>

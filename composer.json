@@ -19,6 +19,7 @@
         "maatwebsite/excel": "^3.1",
         "milon/barcode": "6.0.0",
         "owen-it/laravel-auditing": "^8.0",
+        "scopdrag/laravel-google-chart": "^1.0",
         "spatie/laravel-permission": "^2.16",
         "villca/numeros-en-letras": "^1.2"
     },

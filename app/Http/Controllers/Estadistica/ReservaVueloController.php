@@ -15,6 +15,8 @@ class ReservaVueloController extends Controller
 
     public function store(Request $request){
         $vuelo = $request->n_vuelo;
-        return view("{$dir_view}.detail", compact('vuelo'));
+        $airline = $request->airline;
+        $date = $request->date;
+        return view("{$this->dir_view}.store", compact('vuelo', 'airline', 'date'));
     }
 }

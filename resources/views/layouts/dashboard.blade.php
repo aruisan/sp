@@ -296,6 +296,7 @@
     <script src="{{asset('/assets/raphael/raphael.min.js')}}"></script>
     <script src="{{asset('/assets/morrisjs/morris.min.js')}}"></script>
     <script src="{{asset('/assets/sb-admin/js/sb-admin-2.js')}}"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 
      <!-- SlimScroll -->
