@@ -258,6 +258,9 @@
                                     <th class="text-center">Nombre</th>
                                     <th class="text-center">Valor Inicial</th>
                                     <th class="text-center">Valor Disponible</th>
+                                    @if(auth()->user()->roles->first()->id != 2)
+                                        <th class="text-center">Valor Por Asignar</th>
+                                    @endif
                                     <th class="text-center">Acciones</th>
                                 </tr>
                                 </thead>
@@ -269,6 +272,7 @@
                                             <td class="text-dark" style="vertical-align:middle;">{{ $codigo['name']}}</td>
                                             <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['presupuesto_inicial'],0);?></td>
                                             <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_disp'],0);?></td>
+                                            @if(auth()->user()->roles->first()->id != 2)<td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_asign'],0);?></td>@endif
                                             <td class="text-center">
                                                 <a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}" class="btn-sm btn-success"><i class="fa fa-info"></i></a>
                                             </td>
@@ -824,17 +828,17 @@
             document.getElementById('tablaList').innerHTML = '';
             if (tipo == "FUNCIONAMIENTO"){
                 document.getElementById('tablaList').innerHTML ='<table class="table table-bordered" id="tabla_Rubros">'+
-                    '<thead><tr><th class="text-center">Rubro</th><th class="text-center">Nombre</th><th class="text-center">Valor Inicial</th><th class="text-center">Valor Disponible</th><th class="text-center">Ver</th></tr></thead>'+
+                    '<thead><tr><th class="text-center">Rubro</th><th class="text-center">Nombre</th><th class="text-center">Valor Inicial</th><th class="text-center">Valor Disponible</th>@if(auth()->user()->roles->first()->id != 2)<th class="text-center">Valor Por Asignar</th>@endif<th class="text-center">Ver</th></tr></thead>'+
                     '<tbody>@foreach($presupuesto as $codigo)@if($codigo['id_rubro'] > 0 and $codigo['tipo'] == 'Funcionamiento')<tr><td class="text-dark" style="vertical-align:middle;">{{ $codigo['cod']}}</td>'+
                     '<td class="text-dark" style="vertical-align:middle;">{{ $codigo['name']}}</td><td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['presupuesto_inicial'],0);?></td>'+
-                    '<td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_disp'],0);?></td><td class="text-center"><a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}" class="btn-sm btn-success"><i class="fa fa-info"></i></a></td></tr>'+
+                    '<td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_disp'],0);?></td>@if(auth()->user()->roles->first()->id != 2)<td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_asign'],0);?></td>@endif<td class="text-center"><a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}" class="btn-sm btn-success"><i class="fa fa-info"></i></a></td></tr>'+
                     '@endif @endforeach</tbody></table>';
             } else if(tipo  == "INVERSION"){
                 document.getElementById('tablaList').innerHTML ='<table class="table table-bordered" id="tabla_Rubros">'+
-                    '<thead><tr><th class="text-center">Rubro</th><th class="text-center">Nombre</th><th class="text-center">Valor Inicial</th><th class="text-center">Valor Disponible</th><th class="text-center">Ver</th></tr></thead>'+
+                    '<thead><tr><th class="text-center">Rubro</th><th class="text-center">Nombre</th><th class="text-center">Valor Inicial</th><th class="text-center">Valor Disponible</th>@if(auth()->user()->roles->first()->id != 2)<th class="text-center">Valor Por Asignar</th>@endif<th class="text-center">Ver</th></tr></thead>'+
                     '<tbody>@foreach($presupuesto as $codigo)@if($codigo['id_rubro'] > 0 and $codigo['tipo'] == 'Inversion')<tr><td class="text-dark" style="vertical-align:middle;">{{ $codigo['cod']}}</td>'+
                     '<td class="text-dark" style="vertical-align:middle;">{{ $codigo['name']}}</td><td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['presupuesto_inicial'],0);?></td>'+
-                    '<td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_disp'],0);?></td><td class="text-center"><a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}" class="btn-sm btn-success"><i class="fa fa-info"></i></a></td></tr>'+
+                    '<td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_disp'],0);?></td>@if(auth()->user()->roles->first()->id != 2)<td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['rubros_asign'],0);?></td>@endif<td class="text-center"><a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}" class="btn-sm btn-success"><i class="fa fa-info"></i></a></td></tr>'+
                     '@endif @endforeach</tbody></table>';
             } else document.getElementById('tablaList').innerHTML = '';
             $("#tablaList").show();

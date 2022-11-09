@@ -34,4 +34,8 @@ class FontsRubro extends Model implements Auditable
     public function sourceFunding(){
         return $this->hasOne('App\Model\Hacienda\Presupuesto\SourceFunding','id','source_fundings_id');
     }
+
+    public function dependenciaFont(){
+        return $this->hasMany('App\Model\Admin\DependenciaRubroFont', 'rubro_font_id','id');
+    }
 }

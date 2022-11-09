@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Hacienda\Presupuesto;
 
 use App\Http\Controllers\Controller;
+use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\FontsVigencia;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
@@ -12,7 +14,7 @@ use Illuminate\Http\Request;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Font;
 use App\Model\Planeacion\Pdd\SubProyecto;
-use App\Model\Dependencia;
+use App\Model\Admin\Dependencia;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Hacienda\Presupuesto\Level;
 use App\Model\Hacienda\Presupuesto\Register;
@@ -145,9 +147,7 @@ class RubrosController extends Controller
     public function show($id)
     {
         $roles = auth()->user()->roles;
-        foreach ($roles as $role){
-            $rol= $role->id;
-        }
+        foreach ($roles as $role) $rol= $role->id;
         $rubro = Rubro::findOrFail($id);
         $rubros = Rubro::where('id', '!=', $id)->where('vigencia_id', $rubro->vigencia_id)->get();
         $fuentesR = $rubro->Fontsrubro;
@@ -157,6 +157,7 @@ class RubrosController extends Controller
         $fuentesAll = SourceFunding::all();
         $valor = $fuentesR->sum('valor');
         $valorDisp = $fuentesR->sum('valor_disp');
+        $dependencias = Dependencia::all();
 
         foreach ($fuentesR as $fuente){
             $suma[] = null;
@@ -226,7 +227,7 @@ class RubrosController extends Controller
             }
         }
 
-        return view('hacienda.presupuesto.rubro.show', compact('rubro','fuentesR','valor','valorDisp','rol','rubros','fuentesAll','valores','files','add','red','contadorRubDisp','vigens'));
+        return view('hacienda.presupuesto.rubro.show', compact('rubro','fuentesR','valor','valorDisp','rol','rubros','fuentesAll','valores','files','add','red','contadorRubDisp','vigens','dependencias'));
 
     }
 
@@ -283,6 +284,57 @@ class RubrosController extends Controller
         }
 
         return view('administrativo.contractual.rubrosAsignados', compact('datas'));
+    }
+
+    /**
+     * Asignar dinero a dependencias
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function asignarDineroDep(Request $request, $id)
+    {
+        for ($i = 0; $i < sizeof($request->valorAsignar); $i++) {
+            if ($request->depFontID != 0){
+                $fontDep = DependenciaRubroFont::find($request->depFontID);
+                if ($fontDep->value == $fontDep->saldo){
+                    $fontRubro = FontsRubro::find($request->fuenteRid);
+                    if ($request->valorAsignar[0] > $fontRubro->valor_disp_asign){
+                        Session::flash('warning','El dinero solicitado es superior al disponible para asignar.');
+                    } else {
+                        //SE ADICIONA EL DINERO QUE HABIA SIDO RETIRADO ANTERIORMENTE
+                        $add = $fontRubro->valor_disp_asign + $fontDep->value;
+                        $fontRubro->valor_disp_asign = $add - $request->valorAsignar[0];
+                        $fontRubro->save();
+
+                        $fontDep->value = $request->valorAsignar[0];
+                        $fontDep->saldo = $request->valorAsignar[0];
+                        $fontDep->save();
+
+                        Session::flash('success', 'Se ha actualizado el dinero correctamente de la dependencia');
+                    }
+                } else Session::flash('warning','Ya se han usado dineros de la dependencia, no se puede cambiar el valor.');
+            } else {
+                $fontRubro = FontsRubro::find($request->fuenteRid);
+                if ($request->valorAsignar[0] > $fontRubro->valor_disp_asign){
+                    Session::flash('warning','El dinero solicitado es superior al disponible para asignar.');
+                } else {
+                    $fontRubro->valor_disp_asign = $fontRubro->valor_disp_asign - $request->valorAsignar[0];
+                    $fontRubro->save();
+
+                    $depAsignar = new DependenciaRubroFont();
+                    $depAsignar->dependencia_id = $request->idDep;
+                    $depAsignar->rubro_font_id  = $request->fuenteRid;
+                    $depAsignar->vigencia_id  = $request->vigenciaid;
+                    $depAsignar->value = $request->valorAsignar[$i];
+                    $depAsignar->saldo = $request->valorAsignar[$i];
+                    $depAsignar->save();
+
+                    Session::flash('success','Se ha asignado el dinero correctamente a la dependencia');
+                }
+            }
+        }
+        return redirect('/presupuesto/rubro/'.$id);
     }
 
 }

@@ -58,6 +58,7 @@ class MuellajeController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $muellaje = new Muellaje();
         $muellaje->fecha = Carbon::today();
         $muellaje->name = $request->name;

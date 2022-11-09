@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>SIEX - Concejo Providencia Islas</title>
+    <title> - SIEX - </title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -28,7 +28,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">SIEX - Concejo Providencia Islas</a>
+                    <a class="navbar-brand" href="{{ url('/') }}"> - SIEX - </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">

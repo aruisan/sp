@@ -473,6 +473,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     Route::post('presupuesto/rubro/CUIPO/VigenciaGastos', 'Hacienda\Presupuesto\CuipoController@saveVG');
     Route::post('presupuesto/rubro/CUIPO/Sectors', 'Hacienda\Presupuesto\CuipoController@saveSec');
 
+    /////RUTA DE ASIGNAR DINERO A LA DEPENDENCIA DEL RUBRO
+    Route::post('presupuesto/rubro/dineroDependencia/{id}', 'Hacienda\Presupuesto\RubrosController@asignarDineroDep');
+
 
     ////// RUTAS PLAN DE DESARROLLO
 	Route::resource('pdd','Planeacion\Pdd\PdesarrolloController');

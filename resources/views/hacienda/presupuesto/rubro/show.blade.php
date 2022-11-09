@@ -169,8 +169,8 @@
             </div>
 
             <div id="fuentes" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tab-pane">
-                <center><h2>Fuentes del Rubro</h2></center>
                 <br>
+                <center><h2>Fuentes del Rubro</h2></center>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="tablaFuentesR">
                         <thead>
@@ -183,6 +183,7 @@
                             @else
                                 <th class="text-center">Valor Actual</th>
                             @endif
+                            <th class="text-center">Valor Disponible Asignación</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -192,11 +193,66 @@
                                 <td>{{ $fuentes->sourceFunding->description }}</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
+                                <td class="text-center">$ <?php echo number_format($fuentes['valor_disp_asign'],0);?>.00</td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
                 </div>
+                @if( $rol == 3 or $rol == 1)
+                    <br><center><h2>ASIGNACIÓN DE DINERO A DEPENDENCIAS</h2></center>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tablaAsignarDineroDep">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Dependencia</th>
+                                <th class="text-center">Valor Tomado de Fuentes</th>
+                                <th class="text-center"><i class="fa fa-cogs"></i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($dependencias as  $dependencia)
+                                <tr>
+                                    <td>{{ $dependencia->num }} - {{ $dependencia->name }}</td>
+                                    <td class="text-center">
+                                        @foreach($fuentesR as  $fuentes)
+                                            {{ $fuentes->sourceFunding->code }}
+                                            {{ $fuentes->sourceFunding->description }}<br>
+                                            @if(count($fuentes->dependenciaFont) > 0)
+                                                @foreach($fuentes->dependenciaFont as $depFont)
+                                                    @if($depFont->dependencia_id == $dependencia->id)
+                                                        $ <?php echo number_format($depFont->value,0);?>.00
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                0 $
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td class="text-center">
+                                        @foreach($fuentesR as  $fuentes)
+                                            @if(count($fuentes->dependenciaFont) > 0)
+                                                @php($bandera = false)
+                                                @foreach($fuentes->dependenciaFont as $depFont)
+                                                    @if($depFont->dependencia_id == $dependencia->id)
+                                                        @php($bandera = true)
+                                                        <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', {{ $depFont->value }}, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, {{$depFont->id}})" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
+                                                    @endif
+                                                @endforeach
+                                                @if($bandera == false and $fuentes->valor_disp_asign > 0)
+                                                    <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
+                                                @endif
+                                            @else
+                                                <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
             </div>
             <div id="cdp" class="col-xs-12 col-sm-12 col-md-12 col-lg-12  tab-pane">
                 <center><h2>CDP's Asignados al Rubro</h2></center>
@@ -363,11 +419,29 @@
     @include('modal.adicionRubro')
     @include('modal.reduccionRubro')
     @include('modal.creditoRubro')
+    @include('modal.asignarDineroDep')
     @stop
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="{{ asset('/js/datatableRubro.js') }}"></script>
     <script>
+
+        const fuentesR = @json($fuentesR);
+
+        function getModalDependencia(id, name, value, fuenteRid, fuente_id, valorDisp, depFontID){
+            document.getElementById("nameDep").innerHTML = name;
+            $('#idDep').val(id);
+            $('#fuenteRid').val(fuenteRid);
+            $('#depFontID').val(depFontID);
+            $('#asignarDineroDep').modal('show');
+            $("#bodyTableFonts").html("");
+
+            var tr = `<tr>
+            <td><input type="hidden" name="fuente_id[]" value="`+ fuente_id +`"><input type="number" required  name="valorAsignar[]" class="form-control" min="0" value="`+ value +`" max="`+ valorDisp +`" style="text-align: center"></td>
+            </tr>`;
+
+            $("#bodyTableFonts").append(tr)
+        }
 
         var visto = null;
         function ver(num) {

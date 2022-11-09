@@ -188,7 +188,7 @@
          <a class="dropdown-item item-menu" >Impuestos</a>
          <ul class="dropdown-menu">
             <li><a class="item-menu" href="{{ url('/administrativo/impuestospredial/liquidador') }}">Liquidador</a></li>
-            <li><a class="item-menu" href="{{ url('#') }}">Muellaje</a></li>
+            <li><a class="item-menu" href="{{ url('/administrativo/impuestos/muellaje') }}">Muellaje</a></li>
             <li><a class="item-menu" href="{{ url('#') }}">Delineación y Urbanismo</a></li>
             <li><a class="item-menu" href="{{url('/administrativo/contabilidad/impumuni')}}">Impuestos Municipales</a></li>
             <li><a class="item-menu" href="{{url('/administrativo/impuestos/pagos')}}">Pagos</a></li>
