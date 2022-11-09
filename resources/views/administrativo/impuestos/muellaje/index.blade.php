@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @section('titulo') REGISTROS DE ATRAQUES @stop
 @section('content')
-    @include('modal.impuestos.pagoMuellaje')
+    @include('modal.impuestos.pagomuellaje')
     <div class="breadcrumb text-center"><strong><h4><b>REGISTROS DE ATRAQUES</b></h4></strong></div>
     <ul class="nav nav-pills">
         <li class="nav-item active">
