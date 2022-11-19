@@ -101,7 +101,11 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
+                                @if($cdp->valor == 0)
+                                    <td class="text-center">$<?php echo number_format($cdp->rubrosCdpValor->sum('valor_disp'),0) ?></td>
+                                @else
+                                    <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
+                                @endif
                                 @if($rol == 2)
                                     <td class="text-center">
                                         <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ingresar Dinero al CDP" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
@@ -123,7 +127,6 @@
                         </tbody>
                     </table>
                 @else
-                    <br><br>
                     <div class="alert alert-danger">
                         <center>
                             No hay CDP's pendientes.
@@ -199,7 +202,11 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
+                                @if($cdp->valor == 0)
+                                    <td class="text-center">$<?php echo number_format($cdp->rubrosCdpValor->sum('valor_disp'),0) ?></td>
+                                @else
+                                    <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
+                                @endif
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>

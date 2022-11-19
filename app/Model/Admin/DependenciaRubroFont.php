@@ -20,4 +20,8 @@ class DependenciaRubroFont extends Model implements Auditable
     public function vigencia(){
         return $this->hasMany('App\Model\Hacienda\Presupuesto\Vigencia', 'vigencia_id');
     }
+
+    public function rubroCdpValor(){
+        return $this->hasMany('App\Model\Administrativo\Cdp\RubrosCdpValor','fontsDep_id');
+    }
 }

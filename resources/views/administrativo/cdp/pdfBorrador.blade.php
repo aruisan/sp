@@ -45,7 +45,7 @@
 							<td style="width: 30px;">Programa: </td>
 							@foreach($infoRubro as $rubro)
 								@if($rubro['name'] == $rubrosCdp->rubros->name)
-									<td>{{$rubro['last_code']}} - {{$rubro['register']}}</td>
+									<td>{{$rubro['codigo']}} - {{$rubro['name']}}</td>
 								@endif
 							@endforeach
 						</tr>

@@ -183,7 +183,9 @@
                             @else
                                 <th class="text-center">Valor Actual</th>
                             @endif
-                            <th class="text-center">Valor Disponible Asignación</th>
+                            @if( $rol == 3 or $rol == 1)
+                                <th class="text-center">Valor Disponible Asignación</th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody>
@@ -193,7 +195,9 @@
                                 <td>{{ $fuentes->sourceFunding->description }}</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
-                                <td class="text-center">$ <?php echo number_format($fuentes['valor_disp_asign'],0);?>.00</td>
+                                @if( $rol == 3 or $rol == 1)
+                                    <td class="text-center">$ <?php echo number_format($fuentes['valor_disp_asign'],0);?>.00</td>
+                                @endif
                             </tr>
                         @endforeach
                         </tbody>

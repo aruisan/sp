@@ -151,7 +151,7 @@
                             </div>
 
                             {{-- TABLA E. FIRMAS --}}
-                            <table id="TABLA7" class="table text-center table-bordered">
+                            <table id="TABLA7" style="display: none" class="table text-center table-bordered">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
                                     <th scope="row" colspan="2">Pagar</th>
@@ -306,6 +306,7 @@
 
         function listarAños(año){
             $("#costeo").show();
+            $("#TABLA7").show();
             $("#cuerpo tr").remove();
             const hoy = new Date();
             const numRows = hoy.getFullYear() - parseInt(año) +1;

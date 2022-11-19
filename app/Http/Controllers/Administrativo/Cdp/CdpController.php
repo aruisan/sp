@@ -156,11 +156,10 @@ class CdpController extends Controller
     {
 
         $countCdps = Cdp::where('vigencia_id', $request->vigencia_id)->orderBy('id')->get()->last();
-        if ($countCdps == null){
-            $count = 0;
-        }else{
-            $count = $countCdps->code;
-        }
+
+        if ($countCdps == null) $count = 0;
+        else $count = $countCdps->code;
+
         $cdp = new Cdp();
         $cdp->name = $request->name;
         $cdp->tipo = $request->tipo;
@@ -176,6 +175,7 @@ class CdpController extends Controller
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
         $cdp->save();
+
         Session::flash('success','El CDP se ha creado exitosamente');
         return redirect('/administrativo/cdp/'.$request->vigencia_id.'/'.$cdp->id);
     }
@@ -189,6 +189,7 @@ class CdpController extends Controller
     public function show($vigencia,$id)
     {
         $roles = auth()->user()->roles;
+        $user = auth()->user();
         foreach ($roles as $role) $rol= $role->id;
         $cdp = Cdp::findOrFail($id);
         $all_rubros = Rubro::where('vigencia_id',$vigencia)->get();
@@ -217,12 +218,20 @@ class CdpController extends Controller
             } elseif (count($rubro) > 0) {
                 if($rubro[0]->fontsRubro and $rubro[0]->tipo == "Funcionamiento"){
                     //SE VALIDA QUE EL RUBRO TENGA DINERO DISPONIBLE
-                    foreach ($rubro[0]->fontsRubro as $fuentes) $valDisp [] = $fuentes->valor_disp;
-                    if (array_sum($valDisp) > 0) $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
-                    unset($valDisp);
+                    foreach ($rubro[0]->fontsRubro as $fuentes){
+                        foreach ($fuentes->dependenciaFont as $fontDep){
+                            if (auth()->user()->dependencia_id == $fontDep->dependencia_id) $valDisp[] = $fontDep->saldo;
+                        }
+                    }
+                    if (isset($valDisp) and array_sum($valDisp) > 0){
+                        $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
+                        unset($valDisp);
+                    }
                 }
             }
         }
+
+        if (!isset($infoRubro)) $infoRubro = [];
 
         //BPINS
         $bpins = BPin::where('rubro_id','!=',0)->where('vigencia_id',$vigencia_id)->get();
@@ -233,7 +242,7 @@ class CdpController extends Controller
 
         //dd($cdp->rubrosCdp[0]->rubros->fontsRubro[0]->sourceFunding->description);
 
-        return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins'));
+        return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins', 'user'));
     }
 
     /**
@@ -507,56 +516,32 @@ class CdpController extends Controller
 
         //codigo de rubros
 
-        $V = $vigen;
+        $vigens = Vigencia::findOrFail($vigen);
+        $vigencia = $vigens;
+        $V = $vigens->id;
         $vigencia_id = $V;
-        $vigencia = Vigencia::find($vigencia_id);
 
-        $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
-        $registers = Register::where('level_id', $ultimoLevel->id)->get();
-        $registers2 = Register::where('level_id', '<', $ultimoLevel->id)->get();
-        $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
-        $rubroz = Rubro::where('vigencia_id', $vigencia_id)->get();
+        $conteoTraits = new ConteoTraits;
+        $conteo = $conteoTraits->conteoCdps($vigens, $cdp->id);
 
-        global $lastLevel;
-        $lastLevel = $ultimoLevel->id;
-        $lastLevel2 = $ultimoLevel2->level_id;
-        foreach ($registers2 as $register2) {
-            global $codigoLast;
-            if ($register2->register_id == null) {
-                $codigoEnd = $register2->code;
-            } elseif ($codigoLast > 0) {
-                if ($lastLevel2 == $register2->level_id) {
-                    $codigo = $register2->code;
-                    $codigoEnd = "$codigoLast$codigo";
-                    foreach ($registers as $register) {
-                        if ($register2->id == $register->register_id) {
-                            $register_id = $register->code_padre->registers->id;
-                            $code = $register->code_padre->registers->code . $register->code;
-                            $ultimo = $register->code_padre->registers->level->level;
-                            while ($ultimo > 1) {
-                                $registro = Register::findOrFail($register_id);
-                                $register_id = $registro->code_padre->registers->id;
-                                $code = $registro->code_padre->registers->code . $code;
-
-                                $ultimo = $registro->code_padre->registers->level->level;
-                            }
-                            if ($register->level_id == $lastLevel) {
-                                foreach ($rubroz as $rub) {
-                                    if ($register->id == $rub->register_id) {
-                                        $newCod = "$code$rub->cod";
-                                        $infoRubro[] = collect(['id_rubro' => $rub->id, 'id' => '', 'codigo' => $newCod, 'name' => $rub->name, 'code' => $rub->code, 'last_code' => $code, 'register' => $register->name]);
-                                    }
-                                }
-                            }
+        //NEW PRESUPUESTO
+        $plantilla = PlantillaCuipo::where('id', '>', 317)->get();
+        foreach ($plantilla as $data) {
+            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+            if ($data->id < '324') {
+            } elseif (count($rubro) > 0) {
+                if($rubro[0]->fontsRubro and $rubro[0]->tipo == "Funcionamiento"){
+                    //SE VALIDA QUE EL RUBRO TENGA DINERO DISPONIBLE
+                    foreach ($rubro[0]->fontsRubro as $fuentes){
+                        foreach ($fuentes->dependenciaFont as $fontDep){
+                            if (auth()->user()->dependencia_id == $fontDep->dependencia_id) $valDisp[] = $fontDep->saldo;
                         }
                     }
+                    if (isset($valDisp) and array_sum($valDisp) > 0){
+                        $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
+                        unset($valDisp);
+                    }
                 }
-            }else {
-                $codigo = $register2->code;
-                $newRegisters = Register::findOrFail($register2->register_id);
-                $codigoNew = $newRegisters->code;
-                $codigoEnd = "$codigoNew$codigo";
-                $codigoLast = $codigoEnd;
             }
         }
 
