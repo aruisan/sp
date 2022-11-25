@@ -1,6 +1,6 @@
 @extends('impuestos.layout')
 @section('container')
-    @include('modal.Impuestos.formularios')
+    @include('modal.impuestos.formularios')
     <div class="container">
     <div class="row">
         <div class="col-md-2 text-center">

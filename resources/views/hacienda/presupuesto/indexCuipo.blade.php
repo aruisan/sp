@@ -3,6 +3,11 @@
     Vigencia: {{ $añoActual }}
 @stop
 @section('content')
+    @if($V != "Vacio")
+        @include('modal.Informes.reporte')
+        @include('modal.Informes.ejecucionPresupuestal')
+        @include('modal.Proyectos.asignarubro')
+    @endif
     <div class="row inputCenter">
         <ul class="nav nav-pills">
             @if($mesActual == 12)
@@ -675,14 +680,16 @@
                                 <tr>
                                     <th class="text-center">Codigo Proyecto</th>
                                     <th class="text-center">Nombre Proyecto</th>
+                                    <th class="text-center">Secretaria</th>
                                     <th class="text-center">Ver</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($bpins->filter(function($e){ return $e->secretaria == auth()->user()->dependencia->name;})->unique('cod_proyecto') as $item)
+                                @foreach($bpins->unique('cod_proyecto') as $item)
                                     <tr>
                                         <td>{{$item->cod_proyecto}}</td>
                                         <td>{{$item->nombre_proyecto}}</td>
+                                        <td>{{$item->secretaria}}</td>
                                         <td><a class="btn btn-success" onclick="show_proyecto('{{$item->cod_proyecto}}')">Ver</a></td>
                                     </tr>
                                 @endforeach
@@ -797,7 +804,7 @@
             $('#tbody-actividades').empty();
             $('#input-cod-proyecto').val(cod_proyecto);
             bpins.filter(r => r.cod_proyecto == cod_proyecto).forEach(e =>{
-                if (e.rubro.name) var button = e.rubro.name;
+                if (e.rubro != "No") var button = e.rubro+`<br> Dinero Asignado: `+e.rubro_find[0].propios.toLocaleString();
                 else var button = `<button onclick="getModalAsignaRubro(${e.cod_actividad})" class="btn btn-primary">Asignar Rubro a la Actividad</button>`;
                 $('#tbody-actividades').append(`
                 <tr>
@@ -811,13 +818,23 @@
         }
 
         function getModalAsignaRubro(code){
-            console.log(code)
             bpins.filter(r => r.cod_actividad == code).forEach(e =>{
                 document.getElementById("nameActividad").innerHTML = e.actividad;
                 document.getElementById("codeActividad").innerHTML = code;
+                document.getElementById("dispActividad").innerHTML = e.saldo;
                 $('#actividadCode').val(code);
                 $('#vigencia_id').val(e.vigencia_id);
-                console.log(e);
+                $('#valueAsignarRubro').val(e.saldo);
+
+                $(document).on('keyup', '#valueAsignarRubro', function(event) {
+                    let max= parseInt(e.saldo);
+                    let valor = parseInt(this.value);
+                    if(valor>max){
+                        alert("El Valor no está Permitido")
+                        this.value = max;
+                    }
+
+                });
             });
             $('#formAsignaRubro').modal('show');
         }

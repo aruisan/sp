@@ -342,6 +342,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::delete('impuestos/delineacion/vecino/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteVecino');
         Route::delete('impuestos/delineacion/titular/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteTitular');
 
+        //ADMINISTRACION DE IMPUESTOS
+        Route::resource('impuestos/admin','Administrativo\Impuestos\ImpAdminController');
+
         //LIBROS
         Route::post('contabilidad/libros/rubros_puc','Administrativo\Contabilidad\LibrosController@getRubrosPUC');
         Route::resource('contabilidad/libros','Administrativo\Contabilidad\LibrosController');

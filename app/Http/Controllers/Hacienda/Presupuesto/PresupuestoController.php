@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Hacienda\Presupuesto;
 
+use App\bpinVigencias;
 use App\Http\Controllers\Administrativo\Tesoreria\PacController;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
@@ -41,16 +42,11 @@ class PresupuestoController extends Controller
 
 
     public function index(){
-        $bpins = BPin::all();
-        foreach ($bpins as $bpin){
-            if ($bpin->rubro_id != 0) $bpin['rubro'] = $bpin->rubro->name;
-            else $bpin['rubro'] = "No";
-        }
-        //dd($bpins);
 
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
+        $rubros = Rubro::where('vigencia_id', $vigens->first()->id)->get();
         $historico = Vigencia::where('vigencia', '!=', $añoActual)->get();
         foreach ($historico as $his) {
             if ($his->tipo == "0"){
@@ -63,10 +59,20 @@ class PresupuestoController extends Controller
 
         if ($vigens->count() == 0){
             $V = "Vacio";
-            return view('hacienda.presupuesto.index', compact('V', 'añoActual','mesActual', 'bpins'));
+            return view('hacienda.presupuesto.index', compact('V', 'añoActual','mesActual'));
         } else {
             $V = $vigens[0]->id;
             $vigencia_id = $V;
+
+            $bpins = BPin::all();
+            foreach ($bpins as $bpin){
+                $bpin['rubro'] = "No";
+                if (count($bpin->rubroFind) > 0) {
+                    foreach ($bpin->rubroFind as $rub){
+                        if ($rub->vigencia_id == $V) $bpin['rubro'] = $rub->rubro->name;
+                    }
+                }
+            }
 
             //ORDEN DE PAGO
             $ordenP = OrdenPagos::all();
@@ -733,9 +739,25 @@ class PresupuestoController extends Controller
                 unset($registros[0]);
             }
 
-            //dd($presupuesto);
+            //CODE CONTRACTUALES
+            $codeCon = CodeContractuales::all();
+            $lastDay = Carbon::now()->subDay()->toDateString();
+            $actuallyDay = Carbon::now()->toDateString();
 
-            return view('hacienda.presupuesto.indexCuipo', compact('V', 'presupuesto', 'añoActual', 'mesActual', 'years', 'fonts', 'cdps', 'registros','ordenPagos', 'pagos', 'bpins'));
+            //Rubros no asignados a alguna actividad
+            foreach ($presupuesto as $item){
+                if ($item['id_rubro'] != ""){
+                    $bpin = bpinVigencias::where('rubro_id', $item['id_rubro'])->where('vigencia_id', $V)->first();
+                    if (!$bpin) $rubBPIN[] = collect($item);
+                }
+            }
+
+            if (!isset($rubBPIN)){
+                $rubBPIN[] = null;
+                unset($rubBPIN[0]);
+            }
+
+            return view('hacienda.presupuesto.indexCuipo', compact('V', 'presupuesto', 'añoActual', 'mesActual', 'years', 'fonts', 'cdps', 'registros','ordenPagos', 'pagos', 'bpins','codeCon','lastDay','actuallyDay','rubBPIN'));
 
             /**
              *
@@ -3388,11 +3410,25 @@ class PresupuestoController extends Controller
      */
     public function asignaRubroProyecto(Request $request)
     {
-        $bpinFind = BPin::where('cod_actividad', $request->actividadCode)->where('vigencia_id', $request->vigencia_id)->first();
-        $bpinFind->rubro_id = $request->rubro_id;
-        $bpinFind->save();
+        $bpinFind = BPin::where('cod_actividad', $request->actividadCode)->first();
 
-        Session::flash('success','Se ha asignado exitosamente la actividad al rubro.');
-        return redirect('presupuesto/');
+        if ($bpinFind->saldo > $request->valueAsignarRubro){
+            Session::flash('warning','El valor asignado es superior al saldo de la actividad.');
+            return back();
+        } else {
+            $bpinSave = new bpinVigencias();
+            $bpinSave->bpin_id = $bpinFind->id;
+            $bpinSave->rubro_id = $request->rubro_id;
+            $bpinSave->vigencia_id = $request->vigencia_id;
+            $bpinSave->propios = $request->valueAsignarRubro;
+            $bpinSave->saldo = $request->valueAsignarRubro;
+            $bpinSave->save();
+
+            $bpinFind->saldo = $bpinFind->saldo - $request->valueAsignarRubro;
+            $bpinFind->save();
+
+            Session::flash('success','Se ha asignado exitosamente la actividad al rubro.');
+            return redirect('presupuesto/');
+        }
     }
 }

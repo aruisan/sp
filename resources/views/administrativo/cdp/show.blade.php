@@ -496,7 +496,7 @@
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                @foreach($bpins->filter(function($e){ return $e->secretaria == auth()->user()->dependencia->name;})->unique('cod_proyecto') as $item)
+                                                                @foreach($bpins->unique('cod_proyecto') as $item)
                                                                     <tr onclick="showActividades({{$item->cod_proyecto}})" style="cursor: pointer">
                                                                         <td>{{ $item->cod_proyecto }}</td>
                                                                         <td>{{ $item->nombre_proyecto }}</td>
@@ -541,7 +541,11 @@
                                                             <tr>
                                                                 <td>{{$item->actividad->cod_actividad}}</td>
                                                                 <td>{{$item->actividad->actividad}}</td>
-                                                                <td>{{$item->actividad->rubro->name}}</td>
+                                                                @foreach($item->actividad->rubroFind as $rubBpin)
+                                                                    @if($rubBpin->bpin_id == $item->actividad->id)
+                                                                        <td>{{$rubBpin->rubro->cod}} - {{$rubBpin->rubro->name}}</td>
+                                                                    @endif
+                                                                @endforeach
                                                                 <td>$<?php echo number_format( $item->valor ,0) ?></td>
                                                             </tr>
                                                         @endforeach
@@ -795,15 +799,15 @@
         }
 
         function showActividades(codProy){
+            document.getElementById("tbody_actividades").innerHTML = "";
             document.getElementById("actividades").style.display = "";
             bpins.filter(r => r.cod_proyecto == codProy).forEach(e => {
-
                 $('#tbody_actividades').append(`
                 <tr>
                     <td>${e.cod_actividad} <input type="hidden" name="codActividad[]" value="${e.cod_actividad}"></td>
                     <td>${e.actividad}</td>
-                    <td>${e.rubro.name}</td>
-                    <td>${ parseInt(e.saldo).toLocaleString('de-DE')} $</td>
+                    <td>${e.rubro_find[0].rubro.cod} - ${e.rubro}</td>
+                    <td>${ parseInt(e.rubro_find[0].saldo).toLocaleString('de-DE')} $</td>
                     <td><input type="number" class="form-control" min="0" value="0" max="${valueControl}" name="valUsedActividad[]"></td>
                 </tr>
             `);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrativo\Cdp;
 
 use App\BPin;
+use App\bpinVigencias;
 use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
@@ -234,10 +235,22 @@ class CdpController extends Controller
         if (!isset($infoRubro)) $infoRubro = [];
 
         //BPINS
-        $bpins = BPin::where('rubro_id','!=',0)->where('vigencia_id',$vigencia_id)->get();
+        $bpinVigencia = bpinVigencias::where('vigencia_id',$vigencia_id)->get();
+        $allBpins = BPin::all();
+        foreach ($allBpins as $data){
+            $exist = false;
+            foreach ($bpinVigencia as $BVigen){
+                if ($data->id == $BVigen->bpin_id) $exist = true;
+            }
+            if ($exist) $bpins = collect([$data]);
+        }
         foreach ($bpins as $bpin){
-            if ($bpin->rubro_id != 0) $bpin['rubro'] = $bpin->rubro->name;
-            else $bpin['rubro'] = "No";
+            $bpin['rubro'] = "No";
+            if (count($bpin->rubroFind) > 0) {
+                foreach ($bpin->rubroFind as $rub){
+                    if ($rub->vigencia_id == $V) $bpin['rubro'] = $rub->rubro->name;
+                }
+            }
         }
 
         //dd($cdp->rubrosCdp[0]->rubros->fontsRubro[0]->sourceFunding->description);

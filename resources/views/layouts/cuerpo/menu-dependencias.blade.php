@@ -1,4 +1,5 @@
 @include('modal.updateSoftware')
+@if(auth()->user()->roles->first()->id != 6)
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    NOMINA
@@ -232,6 +233,7 @@
             <li><a class="item-menu" href="{{ url('/administrativo/impuestospredial/liquidador') }}">Liquidador</a></li>
             <li><a class="item-menu" href="{{ url('/administrativo/impuestos/muellaje') }}">Muellaje</a></li>
             <li><a class="item-menu" href="{{ url('#') }}">Delineación y Urbanismo</a></li>
+            <li><a class="item-menu" href="{{url('/administrativo/impuestos/admin')}}">Administración Impuestos</a></li>
             <li><a class="item-menu" href="{{url('/administrativo/contabilidad/impumuni')}}">Impuestos Municipales</a></li>
             <li><a class="item-menu" href="{{url('/administrativo/impuestos/pagos')}}">Pagos</a></li>
          </ul>
@@ -302,6 +304,7 @@
       <li><a class="item-menu" tabindex="-1" href="{{route('audits.index')}}">Logs</a></li>
    </ul>
 </li>
+@endif
  <li class="dropdown messages-menu">
                
     @include('layouts.cuerpo.perfil')
