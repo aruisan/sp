@@ -238,6 +238,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('cdp/{id}/{rol}/{fecha}/{valor}/{estado}', 'Administrativo\Cdp\CdpController@updateEstado');
         Route::put('cdp/r/{id}/{vigen}', 'Administrativo\Cdp\CdpController@rechazar');
         Route::post('cdp/{id}/anular/{vigen}', 'Administrativo\Cdp\CdpController@anular');
+        Route::post('cdp/check', 'Administrativo\Cdp\CdpController@check');
         //pdf cdp
 		Route::get('cdp/pdf/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdf')->name('cpd-pdf');
 		Route::get('cdp/pdfBorrador/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdfBorrador')->name('cpd-pdf-borrador');

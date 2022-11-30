@@ -118,6 +118,7 @@ class PredialController extends Controller
         $predial->fechaPago = $request->fechaPago;
         $predial->tasaDesc = $request->tasaDesc;
         $predial->año = $request->año;
+        $predial->añoInicio = $request->añoInicio;
         $predial->user_id  = Auth::user()->id;
 
         //TOTALES IMPUESTO
@@ -127,6 +128,7 @@ class PredialController extends Controller
         $predial->save();
 
         $añoPago = Carbon::parse($request->fechaPago)->format('Y');
+        $predial->año = $predial->año +1;
 
         for ($i = 0; $i < $añoPago - $predial->año +1; $i++) {
 

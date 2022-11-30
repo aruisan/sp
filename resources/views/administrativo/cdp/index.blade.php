@@ -12,7 +12,7 @@
                 Volver a Presupuesto</a>
         </li>
         <li class="nav-item active">
-            <a class="nav-link" data-toggle="pill" href="#tabTareas">TAREAS</a>
+            <a class="nav-link" data-toggle="pill" href="#tabTareas">PENDIENTES</a>
         </li>
         @if(count($cdProcess) > 0)
             <li class="nav-item">
@@ -34,98 +34,109 @@
             <br>
             <div class="table-responsive">
                 @if(count($cdpTarea) > 0)
-                    <table class="table table-bordered" id="tabla_CDP">
-                        <thead>
-                        <tr>
-                            <th class="text-center">#</th>
-                            <th class="text-center">Objeto</th>
-                            <th class="text-center">Tipo</th>
-                            <th class="text-center">Estado Secretaria</th>
-                            <th class="text-center">Estado Alcalde</th>
-                            <th class="text-center">Estado Jefe</th>
-                            <th class="text-center">Valor</th>
-                            @if($rol == 2)
-                                <th class="text-center"><i class="fa fa-usd"></i></th>
-                                <th class="text-center"><i class="fa fa-edit"></i></th>
-                            @elseif ($rol == 3)
-                                <th class="text-center">Ver</th>
-                            @elseif ($rol == 5)
-                                <th class="text-center">Ver</th>
-                            @endif
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($cdpTarea as $index => $cdp)
+                    <form class="form-valide" action="{{url('/administrativo/cdp/check')}}" method="POST" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="countCDPs" value="{{count($cdpTarea)}}">
+                        <table class="table table-bordered" id="tabla_CDP">
+                            <thead>
                             <tr>
-                                <td class="text-center">{{ $cdp->code }}</td>
-                                <td class="text-center">{{ $cdp->name }}</td>
-                                <td class="text-center">{{ $cdp->tipo }}</td>
-                                <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
-                                        @if($cdp->secretaria_e == "0")
-                                            Pendiente
-                                        @elseif($cdp->secretaria_e == "1")
-                                            Rechazado
-                                        @elseif($cdp->secretaria_e == "2")
-                                            Anulado
-                                        @else
-                                            Enviado
-                                        @endif
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
-                                        @if($cdp->alcalde_e == "0")
-                                            Pendiente
-                                        @elseif($cdp->alcalde_e == "1")
-                                            Rechazado
-                                        @elseif($cdp->alcalde_e == "2")
-                                            Anulado
-                                        @else
-                                            Enviado
-                                        @endif
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
-                                        @if($cdp->jefe_e == "0")
-                                            Pendiente
-                                        @elseif($cdp->jefe_e == "1")
-                                            Rechazado
-                                        @elseif($cdp->jefe_e == "2")
-                                            Anulado
-                                        @elseif($cdp->jefe_e == "3")
-                                            Aprobado
-                                        @else
-                                            En Espera
-                                        @endif
-                                    </span>
-                                </td>
-                                @if($cdp->valor == 0)
-                                    <td class="text-center">$<?php echo number_format($cdp->rubrosCdpValor->sum('valor_disp'),0) ?></td>
-                                @else
-                                    <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
-                                @endif
+                                <th class="text-center">#</th>
+                                <th class="text-center">Objeto</th>
+                                <th class="text-center">Tipo</th>
+                                <th class="text-center">Estado Secretaria</th>
+                                <th class="text-center">Estado Alcalde</th>
+                                <th class="text-center">Estado Jefe</th>
+                                <th class="text-center">Valor</th>
                                 @if($rol == 2)
-                                    <td class="text-center">
-                                        <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ingresar Dinero al CDP" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id.'/edit') }}" title="Editar CDP" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                    </td>
-                                @elseif($rol == 3)
-                                    <td class="text-center">
-                                        <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                    </td>
-                                @elseif($rol == 5)
-                                    <td class="text-center">
-                                        <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                    </td>
+                                    <th class="text-center"><i class="fa fa-usd"></i></th>
+                                    <th class="text-center"><i class="fa fa-edit"></i></th>
+                                @elseif ($rol == 3)
+                                    <th class="text-center">Ver</th>
+                                    <th class="text-center"><label>Aprobar &nbsp;<input type="checkbox" onclick="approve(this.checked, {{count($cdpTarea)}}, {{$cdpTarea}})"></label> </th>
+                                @elseif ($rol == 5)
+                                    <th class="text-center">Ver</th>
+                                    <th class="text-center"><label>Aprobar &nbsp;<input type="checkbox" onclick="approve(this.checked, {{count($cdpTarea)}}, {{$cdpTarea}})"></label></th>
                                 @endif
                             </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            @foreach($cdpTarea as $index => $cdp)
+                                <tr>
+                                    <td class="text-center">{{ $cdp->code }}</td>
+                                    <td class="text-center">{{ $cdp->name }}</td>
+                                    <td class="text-center">{{ $cdp->tipo }}</td>
+                                    <td class="text-center">
+                                        <span class="badge badge-pill badge-danger">
+                                            @if($cdp->secretaria_e == "0")
+                                                Pendiente
+                                            @elseif($cdp->secretaria_e == "1")
+                                                Rechazado
+                                            @elseif($cdp->secretaria_e == "2")
+                                                Anulado
+                                            @else
+                                                Enviado
+                                            @endif
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-pill badge-danger">
+                                            @if($cdp->alcalde_e == "0")
+                                                Pendiente
+                                            @elseif($cdp->alcalde_e == "1")
+                                                Rechazado
+                                            @elseif($cdp->alcalde_e == "2")
+                                                Anulado
+                                            @else
+                                                Enviado
+                                            @endif
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-pill badge-danger">
+                                            @if($cdp->jefe_e == "0")
+                                                Pendiente
+                                            @elseif($cdp->jefe_e == "1")
+                                                Rechazado
+                                            @elseif($cdp->jefe_e == "2")
+                                                Anulado
+                                            @elseif($cdp->jefe_e == "3")
+                                                Aprobado
+                                            @else
+                                                En Espera
+                                            @endif
+                                        </span>
+                                    </td>
+                                    @if($cdp->valor == 0)
+                                        <td class="text-center">$<?php echo number_format($cdp->rubrosCdpValor->sum('valor_disp'),0) ?></td>
+                                    @else
+                                        <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
+                                    @endif
+                                    @if($rol == 2)
+                                        <td class="text-center">
+                                            <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ingresar Dinero al CDP" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id.'/edit') }}" title="Editar CDP" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    @elseif($rol == 3)
+                                        <td class="text-center">
+                                            <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                        </td>
+                                        <td class="text-center"><input type="checkbox" id="check{{$index}}" onclick="approveUnidad(this.checked, {{$index}}, {{$cdp->id}})"><input type="hidden" id="checkInput{{$index}}" name="checkInput{{$index}}"></td>
+                                    @elseif($rol == 5)
+                                        <td class="text-center">
+                                            <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                        </td>
+                                        <td class="text-center"><input type="checkbox" id="check{{$index}}" onclick="approveUnidad(this.checked, {{$index}}, {{$cdp->id}})"><input type="hidden" id="checkInput{{$index}}" name="checkInput{{$index}}"></td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <button class="btn btn-sm btn-primary">APROBAR CDPS</button>
+                        </div>
+                    </form>
                 @else
                     <div class="alert alert-danger">
                         <center>
@@ -296,6 +307,34 @@
     </script>
 
     <script>
+
+        function approve(value, num, cdps){
+            if (value == true){
+                for (var i = 0; i < num; i++) {
+                    var id = "check"+i;
+                    var input = "checkInput"+i;
+                    document.getElementById(id).checked = value;
+                    document.getElementById(input).value = cdps[i]['id'];
+                }
+            } else{
+                for (var i = 0; i < num; i++) {
+                    var id = "check"+i;
+                    var input = "checkInput"+i;
+                    document.getElementById(id).checked = value;
+                    document.getElementById(input).value = null;
+                }
+            }
+        }
+
+        function approveUnidad(value, num, cdpId){
+            var id = "checkInput"+num;
+            if (value == true){
+                document.getElementById(id).value = cdpId;
+            } else {
+                document.getElementById(id).value = null;
+            }
+        }
+
         $('#tabla_CDP').DataTable( {
             responsive: true,
             "searching": true,

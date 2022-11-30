@@ -618,4 +618,66 @@ class CdpController extends Controller
         Session::flash('success','El CDP ha sido reiniciado, seleccione nuevamente el proyecto a asignar');
         return redirect('/administrativo/cdp/'.$CDP->vigencia_id.'/'.$id);
     }
+
+    public function check(Request $request){
+        $flag = true;
+        $rol = auth()->user()->roles->first()->id;
+
+        for ($i = 0; $i < $request->countCDPs; $i++){
+            $input = "checkInput".$i;
+            if ($request->$input != null){
+                $flag = false;
+                //HAY CDP POR APROBAR
+                $update = Cdp::findOrFail($request->$input);
+                if ($rol == 5){
+                    $update->alcalde_e = '3';
+                    $update->secretaria_e = '3';
+                    $update->jefe_e = '0';
+                    $update->ff_alcalde_e = Carbon::today();
+                    $update->save();
+                } elseif ($rol == 3) {
+                    if ($update->tipo == "Funcionamiento"){
+                        foreach ($update->rubrosCdpValor as $fuentes) {
+                            if ($fuentes->fontsRubro->valor_disp >= $fuentes->valor) {
+                                $update->jefe_e = '3';
+                                $update->ff_jefe_e = Carbon::today();
+                                $update->saldo = $update->valor;
+
+                                $this->actualizarValorRubro($request->$input);
+
+                                $update->save();
+                            } else {
+                                Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en el rubro');
+                                return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $request->$input);
+                            }
+                        }
+                    } else{
+                        //VALIDACION DEL CDP CUANDO ES DE INVERSION
+                        foreach ($update->bpinsCdpValor as $actividad) {
+                            if ($actividad->actividad->saldo >= $actividad->valor){
+                                $update->jefe_e = '3';
+                                $update->ff_jefe_e = Carbon::today();
+                                $update->saldo = $update->valor;
+
+                                $this->actualizarValorActividad($request->$input);
+
+                                $update->save();
+                            } else{
+                                Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la actividad');
+                                return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $request->$input);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        if ($flag == true){
+            Session::flash('warning','No se seleccionaron CDPs para aprobar');
+            return back();
+        } else{
+            Session::flash('sucess','CDPs aprobados exitosamente');
+            return back();
+        }
+    }
 }

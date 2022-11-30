@@ -362,6 +362,7 @@
                                                             <a href="{{url('/administrativo/cdp/'.$cdp->id.'/'.$rol.'/'.$fechaActual.'/'.$cdp->rubrosCdpValor->sum('valor_disp').'/3')}}" class="btn btn-success">
                                                                 Enviar CDP
                                                             </a>
+                                                            <a class="btn btn-success" onclick="validarFormulario({{$cdp->id}}, {{$rol}}, '{{$fechaActual}}', {{$cdp->rubrosCdpValor->sum('valor_disp')}}, {{$cdp->valueControl}})">Enviar CDP</a>
                                                         @endif
                                                     @elseif($rol == 5)
                                                         @if($cdp->jefe_e == "2" and $cdp->secretaria_e == "3")
@@ -752,6 +753,15 @@
 
 @section('js')
     <script>
+
+        function validarFormulario(id, rol, fecha, valor, control ) {
+            if(valor > control){
+                var opcion = confirm("El valor asignado es superior al valor de control, esta seguro de enviar el CDP?");
+                if (opcion == true) {
+                    window.location.href = "/administrativo/cdp/"+id+"/"+rol+"/"+fecha+"/"+valor+"/3";
+                }
+            }else window.location.href = "/administrativo/cdp/"+id+"/"+rol+"/"+fecha+"/"+valor+"/3";
+        }
 
         new Vue({
             el: '#prog',
