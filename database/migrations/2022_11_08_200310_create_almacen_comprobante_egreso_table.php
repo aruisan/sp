@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlmacenArticuloOwnersTable extends Migration
+class CreateAlmacenComprobanteEgresoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateAlmacenArticuloOwnersTable extends Migration
      */
     public function up()
     {
-        Schema::create('almacen_articulo_owners', function (Blueprint $table) {
+        Schema::create('almacen_comprobante_egresos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('responsable');
-            $table->integer('almacen_factura_articulo_id');
+            $table->date('fecha');
+            $table->integer('dependencia_id');
+            $table->integer('responsable_id');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateAlmacenArticuloOwnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('almacen_articulo_owners');
+        Schema::dropIfExists('almacen_comprobante_egresos');
     }
 }

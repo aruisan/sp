@@ -9,6 +9,8 @@ class Cdp extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
+    protected $fillable = ['secretaria_e', 'alcalde_e', 'jefe_e'];
+
     public function dependencia(){
         return $this->belongsTo('App\Model\Admin\Dependencia');
     }

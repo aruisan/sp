@@ -8,7 +8,6 @@ use App\AlmacenFactura;
 
 class FacturaController extends Controller
 {
-
     public function update(Request $request, AlmacenFactura $factura){
         $data_factura_update = $request->except(['nombre_articulo', 'codigo', 'referencia', 'cantidad', 'valor_unitario', 'ccd', 'ccc', 'tipo']);
         $factura->update($data_factura_update);
@@ -25,7 +24,6 @@ class FacturaController extends Controller
                 'dependencia_id' => 1
             ]);
         endforeach;
-
         return redirect()->route('almacen.index');
     }
 

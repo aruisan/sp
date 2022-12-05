@@ -13,6 +13,7 @@ class CreateDependenciaRubroFontsTable extends Migration
      */
     public function up()
     {
+        /*
         Schema::create('dependencia_rubro_fonts', function (Blueprint $table) {
             $table->increments('id');
 
@@ -33,6 +34,7 @@ class CreateDependenciaRubroFontsTable extends Migration
 
             $table->timestamps();
         });
+        */
     }
 
     /**

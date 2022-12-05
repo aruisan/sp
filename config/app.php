@@ -194,6 +194,8 @@ return [
         Milon\Barcode\BarcodeServiceProvider::class,
         //hgoogle charts
         Scopdrag\LaravelGoogleChart\LaravelGoogleChartServiceProvider::class,
+        //jwt
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
     ],
 
@@ -255,6 +257,10 @@ return [
         //barcodes
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
+
+        //jwt
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
     ],
 
 ];

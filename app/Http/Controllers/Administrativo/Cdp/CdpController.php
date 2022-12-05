@@ -24,11 +24,13 @@ use Illuminate\Support\Facades\DB;
 use PDF;
 use Carbon\Carbon;
 Use App\Traits\ConteoTraits;
+use App\Traits\FirebaseNotificationTraits;
 
 
 use Session;
 class CdpController extends Controller
 {
+    use FirebaseNotificationTraits;
     /**
      * Display a listing of the resource.
      *
@@ -176,6 +178,9 @@ class CdpController extends Controller
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
         $cdp->save();
+
+
+
         Session::flash('success','El CDP se ha creado exitosamente');
         return redirect('/administrativo/cdp/'.$request->vigencia_id.'/'.$cdp->id);
     }
@@ -294,6 +299,8 @@ class CdpController extends Controller
             $update->save();
 
             Session::flash('success','El CDP ha sido enviado exitosamente');
+
+            $this->sendTokenMovil("Nuevo Cdp", "{$update->name}.", "Alcalde");
             return redirect('/administrativo/cdp/'.$update->vigencia_id);
         }
         if ($rol == 3) {
@@ -347,6 +354,7 @@ class CdpController extends Controller
                 $update->save();
 
                 Session::flash('success','El CDP ha sido enviado al jefe exitosamente');
+                $this->sendTokenMovil("Nuevo Cdp", "{$update->name}.", "Jefe");
                 return redirect('/administrativo/cdp/'.$update->vigencia_id);
             }
         }

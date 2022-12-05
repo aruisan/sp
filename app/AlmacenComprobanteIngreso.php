@@ -5,16 +5,21 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Persona;
 
-class AlmacenFactura extends Model
+class AlmacenComprobanteIngreso extends Model
 {
     protected $fillable= [
-        'numero_factura',
-        'comprobante_ingreso',
-        'comprobante_egreso',
-        'ff_ingreso',
-        'ff_egreso',
+        'fecha',
+        'factura',
+        'fecha_factura',
+        'contrato',
+        'fecha_contrato',
+        'ccd',
+        'ccc',
         'owner_id',
-        'proovedor_id'
+        'proovedor_id',
+        'ccc',
+        'ccd'
+
     ];
 
     public function owner(){
@@ -25,6 +30,6 @@ class AlmacenFactura extends Model
     }
 
     public function articulos() {
-        return $this->hasMany(AlmacenFacturaArticulo::class, 'almacen_factura_id');
+        return $this->hasMany(AlmacenArticulo::class, 'almacen_comprobante_ingreso_id');
     }
 }

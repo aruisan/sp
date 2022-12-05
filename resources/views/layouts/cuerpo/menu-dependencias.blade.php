@@ -1,4 +1,9 @@
 @include('modal.updateSoftware')
+<li >
+   <a class="btn btn-default btn-sm item-menu" href="{{ route('coso.individuo.index') }}">
+    COSO
+   </a>
+</li>
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    NOMINA
@@ -136,11 +141,11 @@
    <span class="caret"></span>
    </a>
    <ul class="dropdown-menu">
-      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.index')}}">Inventorio</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.inventario')}}">Inventorio</a></li>
       
-      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.ingreso')}}">Comprobante de Ingreso</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso')}}">Comprobante de Ingreso</a></li>
       
-      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.egreso')}}">Comprobante de egresos</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso')}}">Comprobante de egresos</a></li>
    </ul>
 {{--
    <ul class="dropdown-menu">

@@ -13,8 +13,25 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/personas/predios/{numdc}', 'Cobro\PredioController@prediosApi');
+
+//autenticacion con token
+Route::group(['prefix' => 'auth', 'namespace' => 'Api'], function ($router) {
+    Route::post('login', 'AuthController@login');
 });
 
-Route::get('/personas/predios/{numdc}', 'Cobro\PredioController@prediosApi');
+Route::group(['prefix' => 'auth', 'middleware' => 'jwt.auth', 'namespace' => 'Api'], function () {
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+});
+
+//app notificaciones 
+Route::group(['prefix' => 'firebase', 'middleware' => 'jwt.auth', 'namespace' => 'Api\Firebase'], function (){
+    Route::post('/notification/device_token', 'NotificationController@saveToken');// api/firebase/notification/device_token post {device_token}
+});
+
+Route::group(['prefix' => 'presupuesto', 'middleware' => 'jwt.auth', 'namespace' => 'Api\Presupuesto'], function (){
+    Route::get('/cdps', 'CdpController@list'); //api/presupuesto/cdps get
+    Route::post('/cdps/update-status', 'CdpController@updateStatus');//api/presupuesto/cdps/update-status post $cdps = [[id, status[0,1,2,3]]] post
+});

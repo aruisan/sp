@@ -9,13 +9,13 @@
         </strong>
     </div>
     <div class="row">
-        <form action="{{route('almacen.ingreso.update', $factura->id)}}" method="post">
+        <form action="{{route('almacen.ingreso.update', $ingreso->id)}}" method="post">
             {{ csrf_field() }}
             {!! method_field('PUT') !!}
             <div class="row">
                 <div class="col-md-12 align-self-center">
                     <div class="form-group">
-                        <label class="col-lg-4 col-form-label text-right" for="nombre">Comprobante de Ingreso No. {{$factura->id}}<span class="text-danger">*</span></label>
+                        <label class="col-lg-4 col-form-label text-right" for="nombre">Comprobante de Ingreso No. {{$ingreso->id}}<span class="text-danger">*</span></label>
                     </div>
                 </div>
             </div><br>
@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-form-label text-right" for="nombre">No. Factura:<span class="text-danger">*</span></label>
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="numero_factura" required>
+                            <input type="text" class="form-control" name="factura" required>
                         </div>
                     </div>
                 </div>
@@ -79,6 +79,26 @@
                     </div>
                 </div>
             </div><br>
+            <div class="row">
+                <div class="col-md-12 align-self-center">
+                    <div class="form-group">
+                        <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Debito:<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="ccd" required>
+                        </div>
+                    </div>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-md-12 align-self-center">
+                    <div class="form-group">
+                        <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Credito:<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" name="ccc" required>
+                        </div>
+                    </div>
+                </div>
+            </div><br>
 
             <div>
                 <center>
@@ -96,8 +116,7 @@
                         <th>Referencia</th>
                         <th>Cantidad</th>
                         <th>Valor Unitario</th>
-                        <th>ccd</th>
-                        <th>ccc</th>
+                        <th>estado</th>
                         <th>tipo</th>
                     </thead>
                     <tbody id="body"></tbody>
@@ -134,14 +153,19 @@
                     <td><input type="text" class="form-control" name="referencia[]" required></td>
                     <td><input type="text" class="form-control" name="cantidad[]" required></td>
                     <td><input type="text" class="form-control" name="valor_unitario[]" required></td>
-                    <td><input type="text" class="form-control" name="ccd[]" required></td>
-                    <td><input type="text" class="form-control" name="ccc[]" required></td>
+                    <td> 
+                        <select class="form-control" name="estado[]">
+                            <option>Bueno</option>
+                            <option>Regular</option>
+                            <option>Malo</option>
+                        </select>
+                    </td>
                     <td> 
                         <select class="form-control" name="tipo[]">
                             <option>Devolutivo</option>
                             <option>Consumo</option>
-                            <option>Inmueble</option>
-                            <option>Terreno</option>
+                            <option>Inmueble Terreno</option>
+                            <option>Inmueble Edificio</option>
                         </select>
                     </td>
 
