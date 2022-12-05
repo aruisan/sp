@@ -14,11 +14,14 @@
                     <div id="selectedT"></div>
                     <input type="hidden"  name="actividadCode" id="actividadCode"/>
                     <input type="hidden"  name="vigencia_id" id="vigencia_id"/>
-                    <select class="select-tercero" style="width: 100%" name="rubro_id" required>
+                    <select class="form-control" style="width: 100%" name="rubro_id" required>
                         @foreach($rubBPIN as $Rubro)
-                            <option value="{{$Rubro['id_rubro']}}">{{ $Rubro['codigo'] }} - {{ $Rubro['name'] }}</option>
+                            <option value="{{$Rubro['id_rubro']}}">{{ $Rubro['cod'] }} - {{ $Rubro['name'] }}</option>
                         @endforeach
                     </select>
+                    <br>
+                    <h4>Valor a tomar de la actividad. Dinero disponible:<b><div id="dispActividad"></div></b>  </h4>
+                    <input type="number" name="valueAsignarRubro" id="valueAsignarRubro" min="1" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <center>

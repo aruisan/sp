@@ -123,7 +123,7 @@
                     <i>United For A Social Work</i><br>
                 </div>
                 <div class="col-md-4 s57">
-                    {!! DNS1D::getBarcodeHTML('(415)7709998144460(8020)'.$numFacturaCodebar.'(3900)'.$newValue.'(96)'. \Carbon\Carbon::parse($predial->presentacion)->format('Ymd'), 'C128') !!}
+                    {!! DNS1D::getBarcodeHTML('(415)7709998144460(8020)'.$numFacturaCodebar.'(3900)'.$newValue.'(96)'. \Carbon\Carbon::parse($predial->presentacion)->format('Ymd'), 'C128',1.07,45) !!}
                     <br><br>
                     (415)7709998144460(8020){{$numFacturaCodebar}}(3900){{$newValue}}(96){{ \Carbon\Carbon::parse($predial->presentacion)->format('Ymd') }}
                     <br>

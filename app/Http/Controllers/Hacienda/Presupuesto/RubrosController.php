@@ -150,13 +150,35 @@ class RubrosController extends Controller
         foreach ($roles as $role) $rol= $role->id;
         $rubro = Rubro::findOrFail($id);
         $rubros = Rubro::where('id', '!=', $id)->where('vigencia_id', $rubro->vigencia_id)->get();
-        $fuentesR = $rubro->Fontsrubro;
+        if ($rol != 2){
+            $fuentesR = $rubro->Fontsrubro;
+            $valor = $fuentesR->sum('valor');
+            $valorDisp = $fuentesR->sum('valor_disp');
+        } else {
+            $fuentesRubro = $rubro->Fontsrubro;
+            foreach ($fuentesRubro as $fuente){
+                foreach ($fuente->dependenciaFont as $fontDep){
+                    if (auth()->user()->dependencia_id == $fontDep->dependencia_id){
+                        $valoresFontDep[] = $fontDep->value;
+                        $saldoFontDep[] = $fontDep->saldo;
+                        $fShow = $fontDep->fontRubro->first();
+                        $fShow->valor = $fontDep->value;
+                        $fShow->valor_disp = $fontDep->saldo;
+                        $fuentesR[] = $fShow;
+                    }
+                }
+            }
+            if (!isset($valoresFontDep)) $valor = 0;
+            else $valor = array_sum($valoresFontDep);
+
+            if (!isset($saldoFontDep)) $valorDisp = 0;
+            else $valorDisp = array_sum($saldoFontDep);
+        }
         $add = rubrosMov::where([['rubro_id','=',$id],['movimiento','=','2']])->get();
         $red = rubrosMov::where([['rubro_id','=',$id],['movimiento','=','3']])->get();
         $vigens = Vigencia::findOrFail($rubro->vigencia_id);
         $fuentesAll = SourceFunding::all();
-        $valor = $fuentesR->sum('valor');
-        $valorDisp = $fuentesR->sum('valor_disp');
+
         $dependencias = Dependencia::all();
 
         foreach ($fuentesR as $fuente){

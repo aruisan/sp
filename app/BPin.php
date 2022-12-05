@@ -13,8 +13,8 @@ class BPin extends Model
     ];
 
 
-    public function rubro(){
-        return $this->belongsTo('App\Model\Hacienda\Presupuesto\Rubro', 'rubro_id');
+    public function rubroFind(){
+        return $this->hasMany('App\bpinVigencias','bpin_id');
     }
 
     public function vigencia(){

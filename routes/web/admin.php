@@ -238,6 +238,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('cdp/{id}/{rol}/{fecha}/{valor}/{estado}', 'Administrativo\Cdp\CdpController@updateEstado');
         Route::put('cdp/r/{id}/{vigen}', 'Administrativo\Cdp\CdpController@rechazar');
         Route::post('cdp/{id}/anular/{vigen}', 'Administrativo\Cdp\CdpController@anular');
+        Route::post('cdp/check', 'Administrativo\Cdp\CdpController@check');
         //pdf cdp
 		Route::get('cdp/pdf/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdf')->name('cpd-pdf');
 		Route::get('cdp/pdfBorrador/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdfBorrador')->name('cpd-pdf-borrador');
@@ -341,6 +342,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::resource('impuestos/delineacion','Administrativo\Impuestos\DelineacionController');
         Route::delete('impuestos/delineacion/vecino/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteVecino');
         Route::delete('impuestos/delineacion/titular/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteTitular');
+
+        //ADMINISTRACION DE IMPUESTOS
+        Route::resource('impuestos/admin','Administrativo\Impuestos\ImpAdminController');
 
         //LIBROS
         Route::post('contabilidad/libros/rubros_puc','Administrativo\Contabilidad\LibrosController@getRubrosPUC');

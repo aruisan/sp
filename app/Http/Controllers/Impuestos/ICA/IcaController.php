@@ -366,10 +366,10 @@ class IcaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function facturaContri($id_ica){
-        $user = User::find(Auth::user()->id);
+        $ica = IcaContri::find($id_ica);
+        $user = User::find($ica->user_id);
         $rit = $user->rit;
         $rit->natJuridiContri = $this->nameNaturalezaJuridica($rit->natJuridiContri);
-        $ica = IcaContri::find($id_ica);
         $ica->presentacion = Carbon::parse($ica->presentacion)->format('d-m-Y');
         $pdf = PDF::loadView('impuestos.ica.contribuyente.pdf', compact('rit','ica'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
@@ -381,10 +381,10 @@ class IcaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function formContri($id_ica){
-        $user = User::find(Auth::user()->id);
+        $formulario = IcaContri::find($id_ica);
+        $user = User::find($formulario->user_id);
         $rit = $user->rit;
         $rit->natJuridiContri = $this->nameNaturalezaJuridica($rit->natJuridiContri);
-        $formulario = IcaContri::find($id_ica);
         $formulario->presentacion = Carbon::parse($formulario->presentacion)->format('d-m-Y');
         $pdf = PDF::loadView('impuestos.ica.contribuyente.formulario', compact('rit','formulario'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
@@ -396,10 +396,10 @@ class IcaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function facturaRetenedor($id_ica){
-        $user = User::find(Auth::user()->id);
+        $ica = IcaRetenedor::find($id_ica);
+        $user = User::find($ica->user_id);
         $rit = $user->rit;
         $rit->natJuridiContri = $this->nameNaturalezaJuridica($rit->natJuridiContri);
-        $ica = IcaRetenedor::find($id_ica);
         $ica->presentacion = Carbon::parse($ica->presentacion)->format('d-m-Y');
         $pdf = PDF::loadView('impuestos.ica.retenedor.pdf', compact('rit','ica'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
@@ -411,10 +411,10 @@ class IcaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function formRetenedor($id_ica){
-        $user = User::find(Auth::user()->id);
+        $formulario = IcaRetenedor::find($id_ica);
+        $user = User::find($formulario->user_id);
         $rit = $user->rit;
         $rit->natJuridiContri = $this->nameNaturalezaJuridica($rit->natJuridiContri);
-        $formulario = IcaRetenedor::find($id_ica);
         $formulario->presentacion = Carbon::parse($formulario->presentacion)->format('d-m-Y');
         $pdf = PDF::loadView('impuestos.ica.retenedor.formulario', compact('rit','formulario'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();

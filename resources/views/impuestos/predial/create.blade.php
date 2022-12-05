@@ -103,7 +103,7 @@
                                     <td><input type="text" class="form-control" name="tarifaBomb" value="0" id="tarifaBomb" required onchange="operation()"></td>
                                 </tr>
                                 <tr>
-                                    <td style="vertical-align: middle">Fecha de pago:</td>
+                                    <td style="vertical-align: middle">Fecha de Pago:</td>
                                     <td><input type="date" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this)"></td>
                                 </tr>
                                 <tr>
@@ -113,14 +113,26 @@
                                         <input type="hidden" name="tasaDesc" id="tasaDesc" value="-1">
                                     </td>
                                 </tr>
-                                <tr id="añoTR" style="display: none">
+                                <tr id="ultimoAñoPagado" style="display: none">
                                     <td style="vertical-align: middle">Año de Inicio:</td>
                                     @php($año = date('Y'))
                                     <td>
-                                        <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
+                                        <select id="añoInicio" style="width: 100px" class="form-control" name="añoInicio">
                                             @while($año >= 2005)
                                                 <option value="{{$año}}">{{$año}}</option>
                                                 @php($año = ($año-1))
+                                            @endwhile
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="añoTR" style="display: none">
+                                    <td style="vertical-align: middle">Año Inicial para Pago:</td>
+                                    @php($año2 = date('Y'))
+                                    <td>
+                                        <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
+                                            @while($año2 >= 2005)
+                                                <option value="{{$año2}}">{{$año2}}</option>
+                                                @php($año2 = ($año2-1))
                                             @endwhile
                                         </select>
                                     </td>
@@ -151,7 +163,7 @@
                             </div>
 
                             {{-- TABLA E. FIRMAS --}}
-                            <table id="TABLA7" class="table text-center table-bordered">
+                            <table id="TABLA7" style="display: none" class="table text-center table-bordered">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
                                     <th scope="row" colspan="2">Pagar</th>
@@ -177,8 +189,6 @@
 @section('scripts')
     <script>
 
-
-
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("formulario").addEventListener('submit', validarFormulario);
         });
@@ -191,7 +201,7 @@
                 alert('El valor a pagar no puede ser menor a 0');
                 return;
             }
-            //this.submit();
+            this.submit();
         }
 
         const formatter = new Intl.NumberFormat('en-US', {
@@ -209,6 +219,7 @@
                 if(parseInt(tarifaBomb) != 0){
                     if(parseInt(tasaDesc) != -1){
                         $("#añoTR").show();
+                        $("#ultimoAñoPagado").show();
                     }
                 }
             }
@@ -274,6 +285,7 @@
 
         function totales(){
             var año = document.getElementById("año").value;
+            año = parseInt(año) +1;
             const hoy = new Date();
             const numRows = hoy.getFullYear() - parseInt(año) +1;
 
@@ -306,7 +318,9 @@
 
         function listarAños(año){
             $("#costeo").show();
+            $("#TABLA7").show();
             $("#cuerpo tr").remove();
+            año = parseInt(año) + 1;
             const hoy = new Date();
             const numRows = hoy.getFullYear() - parseInt(año) +1;
 

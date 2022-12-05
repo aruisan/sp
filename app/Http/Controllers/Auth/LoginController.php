@@ -40,6 +40,8 @@ class LoginController extends Controller
         //REDIRECCION DEL USUARIO DE IMPUESTOS
         if (auth()->user()->roles[0]->id == 4) {
             return '/impuestos';
+        } elseif (auth()->user()->roles[0]->id == 6){
+            return '/administrativo/impuestos/muellaje';
         }
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
