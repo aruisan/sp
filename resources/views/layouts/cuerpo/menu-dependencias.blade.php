@@ -1,13 +1,10 @@
 @include('modal.updateSoftware')
-<<<<<<< HEAD
 <li >
    <a class="btn btn-default btn-sm item-menu" href="{{ route('coso.individuo.index') }}">
     COSO
    </a>
 </li>
-=======
 @if(auth()->user()->roles->first()->id != 6)
->>>>>>> 32cece6bcca554c461c8f456e9f4da101fbd2325
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    NOMINA

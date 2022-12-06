@@ -57,7 +57,7 @@ class ImpuestosController extends Controller
         $rit->claEntidadContri = $this->nameClaseEntidad($rit->claEntidadContri);
         $actividades = $rit->actividades;
         foreach ($actividades as $actividad){
-            $ciuu = Ciuu::find($actividad->codCIIU);
+            $ciuu = Ciuu::where('code_ciuu',$actividad->codCIIU)->first();
             $actividad['code'] = $ciuu->code_ciuu;
             $actividad['description'] = $ciuu->description;
         }
