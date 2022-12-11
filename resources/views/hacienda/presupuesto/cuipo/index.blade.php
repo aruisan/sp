@@ -223,9 +223,10 @@
 
 			$("#bodySF").html("");
 			for(var i=0; i<rubro['fonts_rubro'].length; i++){
+				var id = rubro['fonts_rubro'][i]['source_fundings_id'] - 1;
 				var tr = `<tr>
-          <td>`+ Fuentes[rubro['fonts_rubro'][i]['source_fundings_id']]['code']+`</td>
-          <td>`+ Fuentes[rubro['fonts_rubro'][i]['source_fundings_id']]['description']+`</td>
+          <td>`+ Fuentes[id]['code']+`</td>
+          <td>`+ Fuentes[id]['description']+`</td>
           <td><input type="number" class="form-control" name="value" min="0" max="`+ valueVigen +`" value="`+ rubro['fonts_rubro'][i]['valor']+`"/><input type="hidden" name="idFontRubro" value="`+rubro['fonts_rubro'][i]['id'] +`"/></td>
           <td><button title="Actualizar Valor Inicial Fuente" type="submit" class="btn-sm btn-danger" ><i class="fa fa-refresh"></i></button>
 			<a href="/presupuesto/rubro/CUIPO/SourceFundings/` +rubro['fonts_rubro'][i]['id'] +`/`+ rubro['vigencia_id']+`/DELETE" title="Eliminar Fuente" pe="button" class="btn-sm btn-danger" ><i class="fa fa-trash"></i></a></td>

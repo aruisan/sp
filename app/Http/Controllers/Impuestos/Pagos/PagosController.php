@@ -7,6 +7,7 @@ use App\Traits\NaturalezaJuridicaTraits;
 use App\Http\Controllers\Controller;
 use App\Model\Impuestos\IcaContri;
 use App\Model\Impuestos\Pagos;
+use App\Traits\ResourceTraits;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Model\User;
@@ -89,5 +90,34 @@ class PagosController extends Controller
 
         Session::flash('success', 'Formulario '.$pago->modulo.' declaración de contribuyente presentado exitosamente.');
         return redirect('/impuestos/Pagos');
+    }
+
+
+    /**
+     * Update pay with the new date and state.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function Constancia(Request $request){
+        if (!$request->hasFile('constanciaPago')){
+            Session::flash('warning', 'Hay algun error en el archivo, intente de nuevo por favor.');
+            return redirect('/impuestos/Pagos');
+        } else {
+
+            $file = new ResourceTraits;
+            $resource = $file->resource($request->constanciaPago, 'public/Impuestos/ConstanciaPagos');
+
+            $pago = Pagos::find($request->regId);
+            $pago->estado = "Pagado";
+            $pago->fechaPago = Carbon::today();
+            $pago->resource_id = $resource;
+            $pago->user_pago_id = Auth::user()->id;
+            $pago->save();
+
+            Session::flash('success', 'Pago aplicado exitosamente.');
+            return redirect('/impuestos/Pagos');
+
+        }
     }
 }

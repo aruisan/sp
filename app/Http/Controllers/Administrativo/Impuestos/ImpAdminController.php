@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Impuestos;
 
+use App\Model\Impuestos\Comunicado;
 use App\Model\Impuestos\Pagos;
 use App\Model\Impuestos\PredialContribuyentes;
 use App\Model\Impuestos\RIT;
@@ -23,7 +24,8 @@ class ImpAdminController extends Controller
         $usersPredial = PredialContribuyentes::all();
         $pagos = Pagos::all();
         $rits = RIT::all();
-        return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits'));
+        $comunicados = Comunicado::all();
+        return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits', 'comunicados'));
     }
 
     /**
@@ -31,9 +33,10 @@ class ImpAdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function makeComunicado()
     {
-        //
+        $rits = RIT::all();
+        return view('administrativo.impuestos.admin.createcomunicado', compact('rits'));
     }
 
     /**
@@ -42,9 +45,21 @@ class ImpAdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function generateComunicado(Request $request)
     {
-        //
+        for ($i = 0; $i < count($request->users); $i++) {
+            $comunicado = new Comunicado();
+            $comunicado->estado = "Enviado";
+            $comunicado->enviado = Carbon::today();
+            $comunicado->comunicado_title = $request->titulo;
+            $comunicado->comunicado_body = $request->mensaje;
+            $comunicado->destinatario_id = $request->users[$i];
+            $comunicado->remitente_id = auth()->user()->id;
+            $comunicado->save();
+        }
+
+        Session::flash('success','Los comunicados han sido enviados exitosamente');
+        return redirect('/administrativo/impuestos/comunicado/create');
     }
 
     /**
@@ -53,9 +68,11 @@ class ImpAdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showComunicado($id)
     {
-        //
+        $comunicado = Comunicado::find($id);
+
+        return view('administrativo.impuestos.admin.showcomunicado', compact('comunicado'));
     }
 
     /**

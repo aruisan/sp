@@ -45,11 +45,20 @@
                                     <td>Nombre Embarcación</td>
                                     <td colspan="3"><input class="form-control" type="text" name="name" id="name" required></td>
                                     <td>Bandera</td>
-                                    <td><input class="form-control" type="text" name="bandera" id="bandera" required></td>
+                                    <td><select class="form-control" id="bandera" name="bandera">
+                                            <option value="NACIONAL">NACIONAL</option>
+                                            <option value="INTERNACIONAL">INTERNACIONAL</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Tipo de Embarcación</td>
-                                    <td colspan="3"><input class="form-control" type="text" name="tipo" id="tipo" required></td>
+                                    <td colspan="3">
+                                        <select class="form-control" id="tipo" name="tipo">
+                                            <option value="0">TIPO 0</option>
+                                            <option value="1">TIPO 1</option>
+                                        </select>
+                                    </td>
                                     <td>Pies de Eslora</td>
                                     <td><input class="form-control" type="number" min="1" value="1" name="piesEslora" id="piesEslora" required></td>
                                 </tr>

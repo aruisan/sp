@@ -44,6 +44,7 @@ class CdpController extends Controller
         }
         if ($rol == 2)
         {
+            //ROL DE SECRETARIA
             $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('secretaria_e', '0')->orWhere('jefe_e','1')->get();
             $cdProcess = Cdp::where('vigencia_id', $vigencia_id)->where('secretaria_e', '3')->where('jefe_e','0')->get();
             $cdps = Cdp::where('vigencia_id', $id)
@@ -55,6 +56,7 @@ class CdpController extends Controller
 
         }elseif ($rol == 3)
         {
+            //ROL DE JEFE
             $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e','0')->where('alcalde_e','3')->get();
             $cdProcess = null;
             $cdps = Cdp::where('vigencia_id', $id)
@@ -308,6 +310,7 @@ class CdpController extends Controller
     {
         $update = Cdp::findOrFail($id);
         if ($rol == 2){
+            $update->valor = $valor;
             $update->secretaria_e = $estado;
             $update->alcalde_e = "0";
             $update->ff_alcalde_e = $fecha;

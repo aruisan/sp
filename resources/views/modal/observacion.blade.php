@@ -1,7 +1,7 @@
 
 <div id="observacion" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
-      <form class="form" action="{{url('/administrativo/registros/r/'.$registro->id.'/'.$rol.'/1')}}" method="POST">
+      <form class="form" action="{{url('/administrativo/registros/r/'.$registro->id.'/'.$rol.'/1/'.$vigencia)}}" method="POST">
           {!! method_field('PUT') !!}
           {{ csrf_field() }}
     <div class="modal-content">

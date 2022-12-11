@@ -10,7 +10,7 @@
                     </td>
                 </tr>
                 <tr style="font-size: 18px">
-                    <td>Liquidacion Número: {{$numFacturaCodebar}}</td>
+                    <td>Formulario Número: {{$numFacturaCodebar}}</td>
                 </tr>
                 </tbody>
             </table>

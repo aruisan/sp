@@ -11,10 +11,11 @@
         <li class="nav-item active"><a class="nav-link" data-toggle="pill" href="#tabUsersPred">Usuarios Predial</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabPagos">Pagos</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabRIT">RIT</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabComunicados">Comunicados</a></li>
     </ul>
 
     <div class="tab-content">
-        <div id="tabUsersPred" class="tab-pane fade in active"><br>
+        <div id="tabUsersPred" class="tab-pane fade in active">
             <br>
             <div class="table-responsive">
                 @if(count($usersPredial) > 0)
@@ -65,6 +66,7 @@
             </div>
         </div>
         <div id="tabPagos" class="tab-pane fade">
+            <br>
             <div class="table-responsive">
                 @if(count($pagos) > 0)
                     <table class="table table-bordered" id="tabla_pagos">
@@ -130,6 +132,7 @@
         </div>
         <div id="tabRIT" class="tab-pane fade">
             <div class="table-responsive">
+                <br>
                 @if(count($rits) > 0)
                     <table class="table table-bordered" id="tabla_RIT">
                         <thead>
@@ -173,6 +176,48 @@
                     <div class="alert alert-danger">
                         <center>
                             No hay RITs registrados en el sistema.
+                        </center>
+                    </div>
+                @endif
+            </div>
+        </div>
+        <div id="tabComunicados" class="tab-pane fade">
+            <div class="table-responsive">
+                <br>
+                @if(count($comunicados) > 0)
+                        <a href="{{ url('administrativo/impuestos/comunicado/create') }}" class="btn btn-primary btn-block m-b-6"><i class="fa fa-plus"></i>
+                            <i class="fa fa-envelope"></i> NUEVO COMUNICADO</a>
+                        <br><br>
+                    <table class="table table-bordered" id="tabla_Comunicados">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Enviado</th>
+                            <th class="text-center">Destinatario</th>
+                            <th class="text-center">Remitente</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center"><i class="fa fa-eye"></i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($comunicados as $index => $comunicado)
+                            <tr>
+                                <td class="text-center">{{ $index + 1 }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($comunicado->enviado)->format('d-m-Y') }}</td>
+                                <td class="text-center">{{ $comunicado->destinatario->name}} - {{$comunicado->destinatario->email}}</td>
+                                <td class="text-center">{{ $comunicado->remitente->name}} - {{$comunicado->remitente->email}}</td>
+                                <td class="text-center"> {{ $comunicado->estado }}</td>
+                                <td class="text-center">
+                                    <a href="{{ url('administrativo/impuestos/comunicado/'.$comunicado->id) }}" title="Ver Comunicado" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="alert alert-danger">
+                        <center>
+                            No hay comunicados registrados en el sistema.
                         </center>
                     </div>
                 @endif
@@ -291,6 +336,60 @@
         } );
 
         $('#tabla_RIT').DataTable( {
+            language: {
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "No se encontraron resultados",
+                "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast":"Último",
+                    "sNext":"Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "sProcessing":"Procesando...",
+            },
+            //para usar los botones
+
+            responsive: "true",
+            "ordering": true,
+            dom: 'Bfrtilp',
+            buttons:[
+                {
+                    extend:    'copyHtml5',
+                    text:      '<i class="fa fa-clone"></i> ',
+                    titleAttr: 'Copiar',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'excelHtml5',
+                    text:      '<i class="fa fa-file-excel-o"></i> ',
+                    titleAttr: 'Exportar a Excel',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'pdfHtml5',
+                    text:      '<i class="fa fa-file-pdf-o"></i> ',
+                    titleAttr: 'Exportar a PDF',
+                    message : 'SIEX-Providencia',
+                    header :true,
+                    orientation : 'landscape',
+                    pageSize: 'LEGAL',
+                    className: 'btn btn-primary',
+                },
+                {
+                    extend:    'print',
+                    text:      '<i class="fa fa-print"></i> ',
+                    titleAttr: 'Imprimir',
+                    className: 'btn btn-primary'
+                },
+            ]
+
+        } );
+
+        $('#tabla_Comunicados').DataTable( {
             language: {
                 "lengthMenu": "Mostrar _MENU_ registros",
                 "zeroRecords": "No se encontraron resultados",

@@ -38,7 +38,7 @@
                 @else
                     <div class="row">
                         <div class="col-md-8">
-                            <button class="btn btn-impuesto" ><i class="fa fa-envelope"></i></button>
+                            <a class="btn btn-impuesto" href="/impuestos/comunicados" ><i class="fa fa-envelope"></i></a>
                         </div>
                         <div class="col-md-4">
                             <h4>A su correo electrónico</h4>
@@ -76,7 +76,6 @@
                     <tr><td><a href="impuestos/download/Formulario_de_Retenciones_Industria_y_Comercio_2020.xlsx"><i class="fa fa-file-excel-o"></i> Formulario de Retenciones Industria y Comercio 2020</a></td></tr>
                     <tr><td><a href="impuestos/download/FORMULARIOUNICODECLARACIONPAGOINDUSTRIACOMERCIO.pdf"><i class="fa fa-file-pdf-o"></i> FORMULARIOUNICODECLARACIONPAGOINDUSTRIACOMERCIO</a></td></tr>
                     <tr><td><a href="impuestos/download/RUT_MUNICIPIO.pdf"><i class="fa fa-file-pdf-o"></i> RUT MUNICIPIO</a></td></tr>
-
                     </tbody>
                 </table>
             </div>
@@ -94,7 +93,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="col-md-8">
-                                        <a class="btn btn-impuesto" href="#"><i class="fa fa-usd"></i></a>
+                                        <a class="btn btn-impuesto" href="/impuestos/Pagos"><i class="fa fa-usd"></i></a>
                                     </div>
                                     <div class="col-md-4">
                                         <h4>Pagos</h4>

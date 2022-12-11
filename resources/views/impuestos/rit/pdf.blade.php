@@ -156,11 +156,11 @@
 			<br>
 			<table class="table text-left table-bordered table-condensed">
 				<tr style="background-color: #0e7224; color: white">
-					<td colspan="4" class="text-center">V. DATOS DE ACTIVIDADES ECONÓMICAS</td>
+					<td class="text-center">V. DATOS DE ACTIVIDADES ECONÓMICAS</td>
 				</tr>
 				@foreach($actividades as $actividad)
 					<tr>
-						<td><div style="width: auto; word-wrap: break-word; overflow: hidden;">{{ $actividad->code }} - {{ $actividad->description }}</div></td>
+						<td class="text-center"><div style="width: auto; word-wrap: break-word; overflow: hidden;">{{ $actividad->code }} - {{ $actividad->description }}</div></td>
 					</tr>
 				@endforeach
 			</table>

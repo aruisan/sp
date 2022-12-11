@@ -435,6 +435,7 @@
                                         <th style="vertical-align: middle">26. Dirección del establecimiento</th>
                                         <th style="vertical-align: middle">27. Barrio</th>
                                         <th style="vertical-align: middle">28. Fecha solicitada de cancelación</th>
+                                        <th style="vertical-align: middle">Clasificación</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -449,6 +450,7 @@
                                                 <td style="vertical-align: middle">{{ $establecimiento->direccion }}</td>
                                                 <td style="vertical-align: middle">{{ $establecimiento->barrio }}</td>
                                                 <td style="vertical-align: middle">{{ $establecimiento->fechaCancel }}</td>
+                                                <td style="vertical-align: middle">{{ $establecimiento->clasificacion }}</td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -460,7 +462,13 @@
                                             <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaInicio[]" required></td>
                                             <td style="vertical-align: middle"><input type="text" class="form-control" name="direccion[]" required></td>
                                             <td style="vertical-align: middle"><input type="text" class="form-control" name="barrio[]" required></td>
-                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaCancel[]" required></td>
+                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaCancel[]"></td>
+                                            <td style="vertical-align: middle">
+                                                <select style="width: 100%" class="form-control" name="clasificacion[]" required>
+                                                        <option value="Servicio Comercial">Servicio Comercial</option>
+                                                        <option value="Servicio Industrial">Servicio Industrial</option>
+                                                </select>
+                                            </td>
                                         </tr>
                                     @endif
 
@@ -816,7 +824,8 @@
                         '<td><input type="date" class="form-control" name="fechaInicio[]" required></td>\n'+
                         '<td><input type="text" class="form-control" name="direccion[]" required></td>\n'+
                         '<td><input type="text" class="form-control" name="barrio[]" required></td>\n'+
-                        '<td><input type="date" class="form-control" name="fechaCancel[]" required></td>' +
+                        '<td><input type="date" class="form-control" name="fechaCancel[]"></td>\n' +
+                        '<td style="vertical-align: middle"><select style="width: 100%" class="form-control" name="clasificacion[]"><option value="Servicio Comercial">Servicio Comercial</option><option value="Servicio Industrial">Servicio Industrial</option></select></td>\n' +
                         '</tr>\n');
                 },
 

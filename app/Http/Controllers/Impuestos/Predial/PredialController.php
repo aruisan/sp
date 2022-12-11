@@ -128,7 +128,6 @@ class PredialController extends Controller
         $predial->save();
 
         $añoPago = Carbon::parse($request->fechaPago)->format('Y');
-        $predial->año = $predial->año +1;
 
         for ($i = 0; $i < $añoPago - $predial->año +1; $i++) {
 

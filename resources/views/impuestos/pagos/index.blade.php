@@ -1,5 +1,6 @@
 @extends('impuestos.layout')
 @section('container')
+    @include('modal.impuestos.constanciapago')
     <div class="container" style="background-color: white">
         <div class="col-md-12 align-self-center">
             <div class="breadcrumb text-center">
@@ -38,6 +39,7 @@
                                     <th class="text-center">Formulario</th>
                                     <th class="text-center">Pago Codigo de Barras</th>
                                     <th class="text-center">Pago PSE</th>
+                                    <th class="text-center">Cargar Pago </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -66,6 +68,9 @@
                                             @endif
                                         </td>
                                         <td class="text-center"><a href="" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-credit-card"></i></a></td>
+                                        <td class="text-center">
+                                            <button onclick="getModalPago('{{$pago->modulo}}', '{{\Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y')}}','$<?php echo number_format($pago->valor,0) ?>', {{$pago->id}})" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></button>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -128,7 +133,8 @@
                                     <th class="text-center">Fecha Presentación</th>
                                     <th class="text-center">Fecha de Pago</th>
                                     <th class="text-center">Valor</th>
-                                    <th class="text-center">Ver</th>
+                                    <th class="text-center">Formulario</th>
+                                    <th class="text-center">Constancia Pago</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -140,7 +146,16 @@
                                         <td class="text-center"> {{ \Carbon\Carbon::parse($pago->fechaPago)->format('d-m-Y') }}</td>
                                         <td class="text-center">$<?php echo number_format($pago->valor,0) ?></td>
                                         <td class="text-center">
-                                            <a href="{{ url('impuestos/ICA/PDF/'.$pago->id) }}" title="Ver Factura" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-eye"></i></a>
+                                            @if($pago->modulo == "ICA-Contribuyente")
+                                                <a href="{{ url('impuestos/ICA/contri/form/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                            @elseif($pago->modulo == "PREDIAL")
+                                                <a href="{{ url('impuestos/PREDIAL/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                            @elseif($pago->modulo == "ICA-AgenteRetenedor")
+                                                <a href="{{ url('impuestos/ICA/retenedor/form/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{Storage::url($pago->resource_id)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-eye"></i>&nbsp;<i class="fa fa-usd"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -262,5 +277,13 @@
                 },
             ]
         } );
+
+        function getModalPago(form, fecha, value, id){
+            $('#formConstanciaPago').modal('show');
+            $('#regId').val(id);
+            document.getElementById("form").innerHTML = form;
+            document.getElementById("fecha").innerHTML = fecha;
+            document.getElementById("value").innerHTML = value;
+        }
     </script>
 @stop

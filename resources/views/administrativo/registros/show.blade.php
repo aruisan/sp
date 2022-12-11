@@ -113,9 +113,31 @@
                             </div>
                         </div>
                     @endif
+                    @if($rol != 2 )
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <label>Fecha Envio Secretaria: </label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                    {{ \Carbon\Carbon::parse($registro->ff_secretaria_e)->format('d-m-Y') }}
+                                </div>
+                                <small class="form-text text-muted">Fecha de Enviado Secretaria a Alcalde</small>
+                            </div>
+                            @if($rol == 3)
+                                <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <label>Fecha Envio Alcalde: </label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                                        {{ \Carbon\Carbon::parse($registro->ff_alccalde_e)->format('d-m-Y') }}
+                                    </div>
+                                    <small class="form-text text-muted">Fecha de Enviado Alcalde a Jefe</small>
+                                </div>
+
+                            @endif
+                        </div>
+                    @endif
                     <div class="row">
-                        @if($registro->observacion == "" or $registro->jcontratacion_e == 0)
-                        @else
+                        @if($registro->alcalde_e == 1 or $registro->jefe_e == 1)
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label>Observación del Rechazo </label>
                                 <div class="input-group">
@@ -369,7 +391,23 @@
                                     @if($registro->cdpRegistroValor->sum('valor') > 0 )
                                         @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
                                         <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
+                                            Enviar Registro al Alcalde
+                                        </a>
+                                    @endif
+                                @elseif($rol == 3 and $registro->jefe_e != 3)
+                                    <a data-toggle="modal" data-target="#observacion" class="btn btn-success">Rechazar Registro</a>
+                                    @if($registro->cdpRegistroValor->sum('valor') > 0 )
+                                        @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
+                                        <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
                                             Finalizar Registro
+                                        </a>
+                                    @endif
+                                @elseif($rol == 5 and $registro->alcalde_e != 3)
+                                    <a data-toggle="modal" data-target="#observacion" class="btn btn-success">Rechazar Registro</a>
+                                    @if($registro->cdpRegistroValor->sum('valor') > 0 )
+                                        @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
+                                        <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
+                                            Enviar Registro al Jefe
                                         </a>
                                     @endif
                                 @endif
@@ -434,7 +472,7 @@
                 @elseif($registro->secretaria_e == 2)
                     <br><div class="alert alert-danger"><center>El Registro ha sido anulado</center></div><br>
                 @endif
-                @if($ordenesPago->count() == 0 and $rol == 2 and $registro->secretaria_e == 3)
+                @if($ordenesPago->count() == 0 and $rol == 2 and $registro->jefe_e == 3)
                     <form action="{{url('/administrativo/registros/'.$registro->id.'/anular')}}" method="POST" class="form">
                         {{method_field('POST')}}
                         {{ csrf_field() }}

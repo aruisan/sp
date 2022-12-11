@@ -64,7 +64,7 @@
 			{{ csrf_field() }}
 			<input type="hidden" id="vigencia_id" name="vigencia_id" value="{{ $vigencia_id }}">
 			<div class="table-responsive">   <br><br>
-				<table class="table table-bordered" id="tabla">
+				<table class="table table-bordered table-hover" id="tabla">
 					<thead>
 					<th class="text-center">Codigo</th>
 					<th class="text-center">Nombre</th>
@@ -113,40 +113,33 @@
 @section('js')
 <script>
 
-$(document).ready(function() {
-$('#tabla').DataTable( {
-	responsive: true,
-	"searching": false,
-	paging: false,
-	"oLanguage": {"sZeroRecords": "", "sEmptyTable": ""
-	}
-} );
-} );
+	$(document).ready(function() {
+		$('#tabla').DataTable( {
+			responsive: true,
+			"searching": false,
+			paging: false,
+			"oLanguage": {"sZeroRecords": "", "sEmptyTable": ""
+			}
+		} );
+	} );
 
-//funcion para borrar una celda
-$(document).on('click', '.borrar', function (event) {
-event.preventDefault();
-$(this).closest('tr').remove();
-});
+	//funcion para borrar una celda
+	$(document).on('click', '.borrar', function (event) {
+		event.preventDefault();
+		$(this).closest('tr').remove();
+	});
 
-new Vue({
-el: '#crud',
-
-methods:{
-
-eliminarDatos: function(dato, vigencia){
- var urlVigencia = '/presupuesto/rubro/'+dato+'/'+vigencia;
- axios.delete(urlVigencia).then(response => {
-     toastr.error('Rubro eliminado correctamente');
-	 document.location.reload(true);
- });
-},
-
-nuevaFila: function(){
-
- $('#tabla tr:last').after("<tr><td><select name='register_id[]' class='form-control'>@foreach($registers as $register)<option value='{{ $register->id }}'>@foreach($codigos as $codigo)@if($codigo['id'] == $register->id) {{$codigo['codigo'] }} @endif @endforeach - {{ $register->name }}</option>@endforeach</select></td><td><select name='subproyecto_id[]'  class='form-control'>@foreach($subProy as $subProys)<option value='{{ $subProys->id }}'>{{ $subProys->name }}</option>@endforeach</select></td><td><input type='hidden' name='rubro_id[]'><input type='text' name='code[]'></td><td><input type='text' name='nombre[]'></td></td><td></td><td></td><td style='vertical-align:middle;' class='text-center'><input type='button' class='borrar btn-sm btn-danger' value='-'/></td></tr>");
-}
-}
-});
+	new Vue({
+	el: '#crud',
+		methods:{
+			eliminarDatos: function(dato, vigencia){
+				 var urlVigencia = '/presupuesto/rubro/'+dato+'/'+vigencia;
+				 axios.delete(urlVigencia).then(response => {
+					 toastr.error('Rubro eliminado correctamente');
+					 document.location.reload(true);
+				 });
+			}
+		}
+	});
 </script>
 @stop

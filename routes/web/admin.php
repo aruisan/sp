@@ -93,6 +93,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //PAGOS
         Route::resource('/Pagos', 'Impuestos\Pagos\PagosController');
         Route::post('/Pagos/Send', 'Impuestos\Pagos\PagosController@Send');
+        Route::post('/Pagos/constancia', 'Impuestos\Pagos\PagosController@Constancia');
 
         //EMAIL
         Route::get('/sparkpost', function () {
@@ -218,7 +219,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::resource('cdpsRegistro/valor','Administrativo\Registro\CdpsRegistroValorController');
         Route::get('registros/{id}/{fecha}/{valor}/{estado}/{valTot}', 'Administrativo\Registro\RegistrosController@updateEstado');
         Route::post('registros/{id}/anular/', 'Administrativo\Registro\RegistrosController@anular');
-        //Route::put('registros/r/{id}/{rol}/{estado}', 'Administrativo\Registro\RegistrosController@rechazar');
+        Route::put('registros/r/{id}/{rol}/{estado}/{vigencia}', 'Administrativo\Registro\RegistrosController@rechazar');
 
             //pdf registros
 		Route::get('/registro/pdf/{id}/{vigen}', 'Administrativo\Registro\RegistrosController@pdf')->name('registro-pdf');
@@ -345,6 +346,11 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //ADMINISTRACION DE IMPUESTOS
         Route::resource('impuestos/admin','Administrativo\Impuestos\ImpAdminController');
+
+        //COMUNICADOS
+        Route::get('impuestos/comunicado/create','Administrativo\Impuestos\ImpAdminController@makeComunicado');
+        Route::post('impuestos/comunicado/make','Administrativo\Impuestos\ImpAdminController@generateComunicado');
+        Route::get('impuestos/comunicado/{id}','Administrativo\Impuestos\ImpAdminController@showComunicado');
 
         //LIBROS
         Route::post('contabilidad/libros/rubros_puc','Administrativo\Contabilidad\LibrosController@getRubrosPUC');

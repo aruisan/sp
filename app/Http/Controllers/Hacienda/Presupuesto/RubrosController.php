@@ -27,36 +27,6 @@ class RubrosController extends Controller
     public function create($vigencia_id)
     {
         $vigencia = Vigencia::findOrFail($vigencia_id);
-        $fonts = FontsVigencia::where('vigencia_id', $vigencia_id)->get();
-        $niveles = Level::where('vigencia_id', $vigencia_id)->get();
-        $subProy = SubProyecto::all();
-        $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
-        $registers = Register::where('level_id', $ultimoLevel['id'])->get();
-
-        foreach ($registers as $register){
-            $register_id = $register->code_padre->registers->id;
-            $code = $register->code_padre->registers->code.$register->code;
-            $ultimo = $register->code_padre->registers->level->level;
-            while($ultimo > 1){
-                $registro = Register::findOrFail($register_id);
-                $register_id = $registro->code_padre->registers->id;
-                $code = $registro->code_padre->registers->code.$code;
-
-                $ultimo =  $registro->code_padre->registers->level->level;
-
-            }
-            $codigos[] = collect(['id' => $register->id , 'codigo' => $code]);
-        }
-
-
-        $levels = Rubro::where('vigencia_id', $vigencia_id)->count();
-        if($levels == 0){
-            $fila = $vigencia->ultimo;
-        }else if($levels >= $vigencia->ultimo){
-            $fila = 0;
-        }else if( $vigencia->ultimo > $levels){
-            $fila = $vigencia->ultimo - $levels;
-        }
 
         // PLANTILLA PARA EGRESOS E INGRESOS
         if ($vigencia->tipo == 0) $plantilla = PlantillaCuipo::where('id','>=',318)->get();
@@ -65,13 +35,7 @@ class RubrosController extends Controller
         $rubrosChecked = Rubro::where('plantilla_cuipos_id','!=',null)->where('vigencia_id', $vigencia_id)->select(['plantilla_cuipos_id'])->get();
         $validate = false;
 
-        if (!isset($codigos)){
-            $codigos[] = null;
-            unset($codigos[0]);
-        }
-
-        return view('hacienda.presupuesto.vigencia.createRubros', compact('vigencia', 'fonts', 'subProy', 'fila', 'niveles', 'registers', 'codigos','vigencia_id',
-            'plantilla','rubrosChecked','validate'));
+        return view('hacienda.presupuesto.vigencia.createRubros', compact('vigencia','vigencia_id','plantilla','rubrosChecked','validate'));
     }
 
     /**

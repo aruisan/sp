@@ -3424,6 +3424,10 @@ class PresupuestoController extends Controller
             $bpinSave->saldo = $request->valueAsignarRubro;
             $bpinSave->save();
 
+            $rubro = Rubro::find($request->rubro_id);
+            $rubro->bpin_id = $bpinFind->id;
+            $rubro->save();
+
             $bpinFind->saldo = $bpinFind->saldo - $request->valueAsignarRubro;
             $bpinFind->save();
 

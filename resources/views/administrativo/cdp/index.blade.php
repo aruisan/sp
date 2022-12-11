@@ -133,9 +133,11 @@
                             @endforeach
                             </tbody>
                         </table>
-                        <div class="text-center">
-                            <button class="btn btn-sm btn-primary">APROBAR CDPS</button>
-                        </div>
+                        @if($rol != 2)
+                            <div class="text-center">
+                                <button class="btn btn-sm btn-primary">APROBAR CDPS</button>
+                            </div>
+                        @endif
                     </form>
                 @else
                     <div class="alert alert-danger">

@@ -44,18 +44,68 @@ class RegistrosController extends Controller
         foreach ($roles as $role){
             $rol= $role->id;
         }
-        $regT = Registro::where('secretaria_e','0')->orderBy('id','DESC')->get();
-        foreach ($regT as $dataT){
-            if ($dataT->cdpsRegistro[0]->cdp->vigencia_id == $vigencia){
-                $registros[] = collect(['id' => $dataT->id, 'code' => $dataT->code , 'objeto' => $dataT->objeto, 'nombre' => $dataT->persona->nombre, 'valor' => $dataT->val_total, 'saldo' => $dataT->saldo, 'estado' => $dataT->secretaria_e]);
+        if ($rol == 2) {
+            //ROL DE SECRETARIA
+            $regT = Registro::where('secretaria_e', '0')->orWhere('jefe_e','1')->orderBy('id', 'DESC')->get();
+            foreach ($regT as $dataT) {
+                if ($dataT->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
+                    $registros[] = collect(['id' => $dataT->id, 'code' => $dataT->code, 'objeto' => $dataT->objeto, 'nombre' => $dataT->persona->nombre, 'valor' => $dataT->val_total, 'saldo' => $dataT->saldo, 'secretaria_e' => $dataT->secretaria_e,
+                        'ff_secretaria_e' => $dataT->ff_secretaria_e, 'alcalde_e' => $dataT->alcalde_e, 'ff_alcalde_e' => $dataT->ff_alcalde_e, 'jefe_e' => $dataT->jefe_e, 'ff_jefe_e' => $dataT->ff_jefe_e ]);
+                }
+            }
+            $regP = Registro::where('secretaria_e', '3')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
+            foreach ($regP as $dataP) {
+                if ($dataP->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
+                    $registrosProcess[] = collect(['id' => $dataP->id, 'code' => $dataP->code, 'objeto' => $dataP->objeto, 'nombre' => $dataP->persona->nombre, 'valor' => $dataP->val_total, 'saldo' => $dataP->saldo, 'secretaria_e' => $dataP->secretaria_e,
+                        'ff_secretaria_e' => $dataP->ff_secretaria_e, 'alcalde_e' => $dataP->alcalde_e, 'ff_alcalde_e' => $dataP->ff_alcalde_e, 'jefe_e' => $dataP->jefe_e, 'ff_jefe_e' => $dataP->ff_jefe_e]);
+                }
+            }
+
+        }elseif ($rol == 3){
+            //ROL DE JEFE
+            $regT = Registro::where('secretaria_e', '3')->where('alcalde_e','3')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
+            foreach ($regT as $dataT) {
+                if ($dataT->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
+                    $registros[] = collect(['id' => $dataT->id, 'code' => $dataT->code, 'objeto' => $dataT->objeto, 'nombre' => $dataT->persona->nombre, 'valor' => $dataT->val_total, 'saldo' => $dataT->saldo, 'secretaria_e' => $dataT->secretaria_e,
+                        'ff_secretaria_e' => $dataT->ff_secretaria_e, 'alcalde_e' => $dataT->alcalde_e, 'ff_alcalde_e' => $dataT->ff_alcalde_e, 'jefe_e' => $dataT->jefe_e, 'ff_jefe_e' => $dataT->ff_jefe_e]);
+                }
+            }
+            $regP = Registro::where('secretaria_e', '3')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
+            foreach ($regP as $dataP) {
+                if ($dataP->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
+                    $registrosProcess[] = collect(['id' => $dataP->id, 'code' => $dataP->code, 'objeto' => $dataP->objeto, 'nombre' => $dataP->persona->nombre, 'valor' => $dataP->val_total, 'saldo' => $dataP->saldo, 'secretaria_e' => $dataP->secretaria_e,
+                        'ff_secretaria_e' => $dataP->ff_secretaria_e, 'alcalde_e' => $dataP->alcalde_e, 'ff_alcalde_e' => $dataP->ff_alcalde_e, 'jefe_e' => $dataP->jefe_e, 'ff_jefe_e' => $dataP->ff_jefe_e]);
+                }
+            }
+        } elseif ($rol == 5){
+            //ROL DE ALCALDE
+            $regT = Registro::where('secretaria_e', '3')->where('alcalde_e','0')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
+            foreach ($regT as $dataT) {
+                if ($dataT->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
+                    $registros[] = collect(['id' => $dataT->id, 'code' => $dataT->code, 'objeto' => $dataT->objeto, 'nombre' => $dataT->persona->nombre, 'valor' => $dataT->val_total, 'saldo' => $dataT->saldo, 'secretaria_e' => $dataT->secretaria_e,
+                        'ff_secretaria_e' => $dataT->ff_secretaria_e, 'alcalde_e' => $dataT->alcalde_e, 'ff_alcalde_e' => $dataT->ff_alcalde_e, 'jefe_e' => $dataT->jefe_e, 'ff_jefe_e' => $dataT->ff_jefe_e]);
+                }
+            }
+            $regP = Registro::where('secretaria_e', '3')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
+            foreach ($regP as $dataP) {
+                if ($dataP->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
+                    $registrosProcess[] = collect(['id' => $dataP->id, 'code' => $dataP->code, 'objeto' => $dataP->objeto, 'nombre' => $dataP->persona->nombre, 'valor' => $dataP->val_total, 'saldo' => $dataP->saldo, 'secretaria_e' => $dataP->secretaria_e,
+                        'ff_secretaria_e' => $dataP->ff_secretaria_e, 'alcalde_e' => $dataP->alcalde_e, 'ff_alcalde_e' => $dataP->ff_alcalde_e, 'jefe_e' => $dataP->jefe_e, 'ff_jefe_e' => $dataP->ff_jefe_e]);
+                }
             }
         }
-        $regH = Registro::where('secretaria_e','!=','0')->orderBy('id','DESC')->get();
-        foreach ($regH as $data){
-            if ($data->cdpsRegistro[0]->cdp->vigencia_id == $vigencia){
-                $registrosHistorico[] = collect(['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto, 'nombre' => $data->persona->nombre, 'valor' => $data->val_total, 'saldo' => $data->saldo, 'estado' => $data->secretaria_e]);
+
+        $regH = Registro::where(function ($query) {
+            $query->where('jefe_e','3')
+                ->orWhere('jefe_e','2');
+        })->orderBy('id', 'DESC')->get();
+        foreach ($regH as $data) {
+            if ($data->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
+                $registrosHistorico[] = collect(['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto, 'nombre' => $data->persona->nombre, 'valor' => $data->val_total, 'saldo' => $data->saldo, 'secretaria_e' => $data->secretaria_e,
+                    'ff_secretaria_e' => $data->ff_secretaria_e, 'alcalde_e' => $data->alcalde_e, 'ff_alcalde_e' => $data->ff_alcalde_e, 'jefe_e' => $data->jefe_e, 'ff_jefe_e' => $data->ff_jefe_e]);
             }
         }
+
         if (!isset($registros)){
             $registros[] = null;
             unset($registros[0]);
@@ -64,8 +114,12 @@ class RegistrosController extends Controller
             $registrosHistorico[] = null;
             unset($registrosHistorico[0]);
         }
+        if (!isset($registrosProcess)){
+            $registrosProcess[] = null;
+            unset($registrosProcess[0]);
+        }
 
-        return  view('administrativo.registros.index', compact('registros','rol', 'registrosHistorico','vigencia'))->with('i', ($request->input('page', 1) - 1) * 5);
+        return view('administrativo.registros.index', compact('registros','rol', 'registrosHistorico','vigencia','registrosProcess'))->with('i', ($request->input('page', 1) - 1) * 5);
 
     }
  
@@ -256,63 +310,94 @@ class RegistrosController extends Controller
     {
         $update = Registro::findOrFail($id);
 
-        //Validación del valor total frente a el valor disponible de los CDP's
+        $roles = auth()->user()->roles;
+        foreach ($roles as $role){
+            $rol= $role->id;
+        }
 
+        //Validación del valor total frente a el valor disponible de los CDP's
         foreach ($update->cdpsRegistro as $cdps){
             $d[] =$cdps->cdp->saldo;
         }
         $valD = array_sum($d);
         if ($valD >= $valTot){
-            $update->secretaria_e = $estado;
-            $update->ff_secretaria_e = $fecha;
-            $update->valor = $valor;
-            $update->saldo = $valTot;
-            $update->val_total = $valTot;
-            $update->save();
+            if ($rol == 2) {
+                //ROL DE SECRETARIA
+                $update->secretaria_e = $estado;
+                $update->ff_secretaria_e = $fecha;
+                $update->alcalde_e = '0';
+                $update->jefe_e = '0';
+                $update->valor = $valor;
+                $update->saldo = 0;
+                $update->val_total = $valTot;
+                $update->save();
 
-            $cdpsRegistroValor = CdpsRegistroValor::where('registro_id', $id)->get();
-            foreach ($cdpsRegistroValor as $value){
-                $cdp = Cdp::findOrFail($value->cdp_id);
-                $cdp->saldo = $cdp->saldo - $value->valor;
-                $cdp->save();
-                foreach ($cdp->rubrosCdp as $RCDP){
-                    $RCDP->rubrosCdpValor->first()->valor_disp = $RCDP->rubrosCdpValor->first()->valor_disp - $value->valor;
-                    $RCDP->rubrosCdpValor->first()->save();
+                Session::flash('success','Secretaria, su registro ha sido enviado al alcalde exitosamente.');
+                return redirect('/administrativo/registros/show/'.$id);
+
+            } elseif ($rol == 3){
+                //ROL DE JEFE
+                $update->jefe_e = $estado;
+                $update->ff_jefe_e = $fecha;
+                $update->saldo = $valTot;
+                $update->save();
+
+                $cdpsRegistroValor = CdpsRegistroValor::where('registro_id', $id)->get();
+                foreach ($cdpsRegistroValor as $value){
+                    $cdp = Cdp::findOrFail($value->cdp_id);
+                    $cdp->saldo = $cdp->saldo - $value->valor;
+                    $cdp->save();
+                    foreach ($cdp->rubrosCdp as $RCDP){
+                        $RCDP->rubrosCdpValor->first()->valor_disp = $RCDP->rubrosCdpValor->first()->valor_disp - $value->valor;
+                        $RCDP->rubrosCdpValor->first()->save();
+                    }
                 }
-            }
 
-            Session::flash('success','Secretaria, su registro ha sido finalizado exitosamente.');
-            return redirect('/administrativo/registros/show/'.$id);
+                Session::flash('success','El registro ha sido finalizado exitosamente.');
+                return redirect('/administrativo/registros/show/'.$id);
+
+            } elseif($rol == 5){
+                //ROL DE ALCALDE
+                $update->alcalde_e = $estado;
+                $update->ff_alcalde_e = $fecha;
+                $update->jefe_e = '0';
+                $update->save();
+
+                Session::flash('success','El registro ha sido enviado al jefe exitosamente.');
+                return redirect('/administrativo/registros/show/'.$id);
+            }
         } else{
             Session::flash('error','Secretaria, esta sobrepasando el valor disponible de los CDPs, verifique las sumas asignadas y el valor del iva.');
             return back();
         }
     }
 
-    public function rechazar(Request $request, $id,$rol,$estado)
+    public function rechazar(Request $request, $id,$rol,$estado,$vigencia)
     {
         if ($rol == 3){
             if ($estado == 1){
                 $update = Registro::findOrFail($id);
                 $update->observacion = $request->observacion;
-                $update->jcontratacion_e = $estado;
+                $update->jefe_e = $estado;
+                $update->ff_jefe_e = Carbon::today();
                 $update->secretaria_e = "0";
                 $update->save();
 
-                Session::flash('error','El registro ha sido rechazado');
-                return redirect('/administrativo/registros');
+                Session::flash('error','Jefe, el registro ha sido rechazado');
+                return redirect('/administrativo/registros/'.$vigencia);
             }
         }
-        if ($rol == 4){
+        if ($rol == 5){
             if ($estado == 1){
                 $update = Registro::findOrFail($id);
                 $update->observacion = $request->observacion;
-                $update->jpresupuesto_e = $estado;
-                $update->jcontratacion_e = "0";
+                $update->alcalde_e = $estado;
+                $update->ff_alcalde_e = Carbon::today();
+                $update->secretaria_e = "0";
                 $update->save();
 
-                Session::flash('error','El registro ha sido rechazado');
-                return redirect('/administrativo/registros');
+                Session::flash('error','Alcalde, el registro ha sido rechazado');
+                return redirect('/administrativo/registros/'.$vigencia);
             }
         }
     }

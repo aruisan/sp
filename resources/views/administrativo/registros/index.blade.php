@@ -36,6 +36,11 @@
         <li class="nav-item active">
             <a class="nav-link " data-toggle="pill" href="#tabTareas">TAREAS</a>
         </li>
+        @if(count($registrosProcess) > 0)
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tabProcess">EN PROCESO</a>
+            </li>
+        @endif
         <li class="nav-item">
             <a class="nav-link" data-toggle="pill" href="#tabHistorico">HISTORICO</a>
         </li>
@@ -56,7 +61,10 @@
                             <th class="text-center">Nombre Registro</th>
                             <th class="text-center">Nombre Tercero</th>
                             <th class="text-center">Valor</th>
-                            <th class="text-center">Estado</th>
+                            <th class="text-center">Estado Secretaria</th>
+                            @if($rol == 3)
+                                <th class="text-center">Estado Alcalde</th>
+                            @endif
                             <th class="text-center"><i class="fa fa-usd"></i></th>
                             <th class="text-center"><i class="fa fa-edit"></i></th>
                         </tr>
@@ -69,26 +77,41 @@
                                 <td class="text-center">{{ $data['nombre'] }}</td>
                                 <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
                                 <td class="text-center">
-                            <span class="badge badge-pill badge-danger">
-                                @if($data['estado'] == "0")
-                                    Pendiente
-                                @elseif($data['estado'] == "1")
-                                    Rechazado
-                                @elseif($data['estado'] == "2")
-                                    Anulado
-                                @else
-                                    Aprobado
-                                @endif
-                            </span>
+                                    <span class="badge badge-pill badge-danger">
+                                        @if($data['secretaria_e'] == "0")
+                                            Pendiente
+                                        @elseif($data['secretaria_e'] == "1")
+                                            Rechazado
+                                        @elseif($data['secretaria_e'] == "2")
+                                            Anulado
+                                        @else
+                                            Enviado - {{ \Carbon\Carbon::parse($data['ff_secretaria_e'])->format('d-m-Y') }}
+                                        @endif
+                                    </span>
                                 </td>
+                                @if($rol == 3)
+                                    <td class="text-center">
+                                        <span class="badge badge-pill badge-danger">
+                                            @if($data['alcalde_e'] == "0")
+                                                Pendiente
+                                            @elseif($data['alcalde_e'] == "1")
+                                                Rechazado
+                                            @elseif($data['alcalde_e'] == "2")
+                                                Anulado
+                                            @else
+                                                Enviado - {{ \Carbon\Carbon::parse($data['ff_alcalde_e'])->format('d-m-Y') }}
+                                            @endif
+                                        </span>
+                                    </td>
+                                @endif
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/registros/show',$data['id']) }}" title="Asignar Dinero al Registro" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
                                 </td>                <td class="text-center">
-                                    @if($data['estado'] == 0)
+                                    @if($data['secretaria_e'] == 0)
                                         <a href="{{ url('administrativo/registros/'.$data['id'].'/edit') }}" class="btn-sm btn-info" title="Editar">
                                             <i class="fa fa-edit"></i>
                                         </a>
-                                    @elseif($data['estado'] == 3)
+                                    @elseif($data['secretaria_e'] == 3)
                                         <a href="{{ url('administrativo/registros/show',$data['id']) }}" class="btn-sm btn-info" title="Visualizar">
                                             <i class="fa fa-eye"></i>
                                         </a>
@@ -108,6 +131,85 @@
                 @endif
             </div>
         </div>
+        <div id="tabProcess" class="tab-pane fade"><br>
+            <br>
+            <div class="table-responsive">
+                @if(count($registrosProcess) > 0)
+                    <table class="table table-bordered" id="tabla_registrosP">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Objeto</th>
+                            <th class="text-center">Nombre Tercero</th>
+                            <th class="text-center">Estado Secretaria</th>
+                            <th class="text-center">Estado Alcalde</th>
+                            <th class="text-center">Estado Jefe</th>
+                            <th class="text-center">Valor</th>
+                            <th class="text-center">Ver Registro</th>
+                            <th class="text-center">Borrador</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($registrosProcess as $registro)
+                            <tr>
+                                <td class="text-center">{{ $registro['code'] }}</td>
+                                <td class="text-center">{{ $registro['objeto'] }}</td>
+                                <td class="text-center">{{ $registro['nombre'] }}</td>
+                                <td class="text-center">
+                                    <span class="badge badge-pill badge-danger">
+                                        @if($registro['secretaria_e'] == "0")
+                                            Pendiente
+                                        @elseif($registro['secretaria_e'] == "1")
+                                            Rechazado
+                                        @elseif($registro['secretaria_e'] == "2")
+                                            Anulado
+                                        @else
+                                            Enviado - {{ \Carbon\Carbon::parse($registro['ff_secretaria_e'])->format('d-m-Y') }}
+                                        @endif
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-pill badge-danger">
+                                        @if($registro['alcalde_e'] == "0")
+                                            Pendiente
+                                        @elseif($registro['alcalde_e'] == "1")
+                                            Rechazado
+                                        @elseif($registro['alcalde_e'] == "2")
+                                            Anulado
+                                        @else
+                                            Enviado - {{ \Carbon\Carbon::parse($registro['ff_alcalde_e'])->format('d-m-Y') }}
+                                        @endif
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-pill badge-danger">
+                                        @if($registro['jefe_e'] == "0")
+                                            Pendiente
+                                        @elseif($registro['jefe_e'] == "1")
+                                            Rechazado
+                                        @elseif($registro['jefe_e'] == "2")
+                                            Anulado
+                                        @elseif($registro['jefe_e'] == "3")
+                                            Aprobado
+                                        @else
+                                            En Espera
+                                        @endif
+                                    </span>
+                                </td>
+                                <td class="text-center">$<?php echo number_format($registro['valor'],0) ?></td>
+                                <td class="text-center">
+                                    <a href="{{ url('administrativo/registros/show/'.$registro['id']) }}" title="Ver" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ url('administrativo/cdp/pdfBorrador/'.$registro['id'].'/'.$vigencia) }}" target="_blank" title="File" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+        </div>
         <div id="tabHistorico" class="tab-pane fade">
             <br>
             <div class="table-responsive">
@@ -120,7 +222,9 @@
                             <th class="text-center">Nombre Tercero</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
-                            <th class="text-center">Estado</th>
+                            <th class="text-center">Estado Secretaria</th>
+                            <th class="text-center">Estado Alcalde</th>
+                            <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Ver</th>
                             <th class="text-center">PDF</th>
                         </tr>
@@ -135,14 +239,42 @@
                                 <td class="text-center">$<?php echo number_format($data['saldo'],0) ?></td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
-                                        @if($data['estado'] == "0")
+                                        @if($data['secretaria_e'] == "0")
                                             Pendiente
-                                        @elseif($data['estado'] == "1")
+                                        @elseif($data['secretaria_e'] == "1")
                                             Rechazado
-                                        @elseif($data['estado'] == "2")
+                                        @elseif($data['secretaria_e'] == "2")
                                             Anulado
                                         @else
-                                            Aprobado
+                                            Enviado - {{ \Carbon\Carbon::parse($data['ff_secretaria_e'])->format('d-m-Y') }}
+                                        @endif
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-pill badge-danger">
+                                        @if($data['alcalde_e'] == "0")
+                                            Pendiente
+                                        @elseif($data['alcalde_e'] == "1")
+                                            Rechazado
+                                        @elseif($data['alcalde_e'] == "2")
+                                            Anulado
+                                        @else
+                                            Enviado - {{ \Carbon\Carbon::parse($data['ff_alcalde_e'])->format('d-m-Y') }}
+                                        @endif
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-pill badge-danger">
+                                        @if($data['jefe_e'] == "0")
+                                            Pendiente
+                                        @elseif($data['jefe_e'] == "1")
+                                            Rechazado
+                                        @elseif($data['jefe_e'] == "2")
+                                            Anulado
+                                        @elseif($data['jefe_e'] == "3")
+                                            Finalizado - {{ \Carbon\Carbon::parse($data['ff_jefe_e'])->format('d-m-Y') }}
+                                        @else
+                                            En Espera
                                         @endif
                                     </span>
                                 </td>
@@ -150,7 +282,7 @@
                                     <a href="{{ url('administrativo/registros/show',$data['id']) }}" title="Ver Registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
                                 <td class="text-center">
-                                    @if($data['estado'] != 2)
+                                    @if($data['secretaria_e'] != 2)
                                         <a href="{{ url('administrativo/registro/pdf/'.$data['id'].'/'.$vigencia) }}" title="Ver Archivo" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
@@ -180,8 +312,35 @@
                 responsive: true,
                 "searching": false,
                 dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'print'
+                buttons:[
+                    {
+                        extend:    'copyHtml5',
+                        text:      '<i class="fa fa-clone"></i> ',
+                        titleAttr: 'Copiar',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'excelHtml5',
+                        text:      '<i class="fa fa-file-excel-o"></i> ',
+                        titleAttr: 'Exportar a Excel',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'pdfHtml5',
+                        text:      '<i class="fa fa-file-pdf-o"></i> ',
+                        titleAttr: 'Exportar a PDF',
+                        message : 'SIEX-Providencia',
+                        header :true,
+                        orientation : 'landscape',
+                        pageSize: 'LEGAL',
+                        className: 'btn btn-primary',
+                    },
+                    {
+                        extend:    'print',
+                        text:      '<i class="fa fa-print"></i> ',
+                        titleAttr: 'Imprimir',
+                        className: 'btn btn-primary'
+                    },
                 ]
             } );
 
@@ -189,8 +348,71 @@
                 responsive: true,
                 "searching": true,
                 dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'print'
+                buttons:[
+                    {
+                        extend:    'copyHtml5',
+                        text:      '<i class="fa fa-clone"></i> ',
+                        titleAttr: 'Copiar',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'excelHtml5',
+                        text:      '<i class="fa fa-file-excel-o"></i> ',
+                        titleAttr: 'Exportar a Excel',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'pdfHtml5',
+                        text:      '<i class="fa fa-file-pdf-o"></i> ',
+                        titleAttr: 'Exportar a PDF',
+                        message : 'SIEX-Providencia',
+                        header :true,
+                        orientation : 'landscape',
+                        pageSize: 'LEGAL',
+                        className: 'btn btn-primary',
+                    },
+                    {
+                        extend:    'print',
+                        text:      '<i class="fa fa-print"></i> ',
+                        titleAttr: 'Imprimir',
+                        className: 'btn btn-primary'
+                    },
+                ]
+            } );
+
+            $('#tabla_registrosP').DataTable( {
+                responsive: true,
+                "searching": true,
+                dom: 'Bfrtip',
+                buttons:[
+                    {
+                        extend:    'copyHtml5',
+                        text:      '<i class="fa fa-clone"></i> ',
+                        titleAttr: 'Copiar',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'excelHtml5',
+                        text:      '<i class="fa fa-file-excel-o"></i> ',
+                        titleAttr: 'Exportar a Excel',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'pdfHtml5',
+                        text:      '<i class="fa fa-file-pdf-o"></i> ',
+                        titleAttr: 'Exportar a PDF',
+                        message : 'SIEX-Providencia',
+                        header :true,
+                        orientation : 'landscape',
+                        pageSize: 'LEGAL',
+                        className: 'btn btn-primary',
+                    },
+                    {
+                        extend:    'print',
+                        text:      '<i class="fa fa-print"></i> ',
+                        titleAttr: 'Imprimir',
+                        className: 'btn btn-primary'
+                    },
                 ]
             } );
 

@@ -56,10 +56,12 @@ class ImpuestosController extends Controller
         $rit->tipEntidadContri = $this->nameTipoEntidad($rit->tipEntidadContri);
         $rit->claEntidadContri = $this->nameClaseEntidad($rit->claEntidadContri);
         $actividades = $rit->actividades;
-        foreach ($actividades as $actividad){
-            $ciuu = Ciuu::find($actividad->codCIIU);
-            $actividad['code'] = $ciuu->code_ciuu;
-            $actividad['description'] = $ciuu->description;
+        if (count($rit->actividades) > 0){
+            foreach ($actividades as $actividad){
+                $ciuu = Ciuu::where('code_ciuu',$actividad->codCIIU)->first();
+                $actividad['code'] = $ciuu->code_ciuu;
+                $actividad['description'] = $ciuu->description;
+            }
         }
         $establecimientos = $rit->establecimientos;
         $pdf = PDF::loadView('impuestos.rit.pdf', compact('rit','actividades','establecimientos'))->setOptions(['images' => true,'isRemoteEnabled' => true]);

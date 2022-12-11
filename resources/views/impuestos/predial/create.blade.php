@@ -114,15 +114,11 @@
                                     </td>
                                 </tr>
                                 <tr id="ultimoAñoPagado" style="display: none">
-                                    <td style="vertical-align: middle">Año de Inicio:</td>
+                                    <td style="vertical-align: middle">Ultimo Año Pagado:</td>
                                     @php($año = date('Y'))
+                                    @php($año = $año - 1 - $contribuyente->años_deuda)
                                     <td>
-                                        <select id="añoInicio" style="width: 100px" class="form-control" name="añoInicio">
-                                            @while($año >= 2005)
-                                                <option value="{{$año}}">{{$año}}</option>
-                                                @php($año = ($año-1))
-                                            @endwhile
-                                        </select>
+                                        {{$año}}<input type="hidden" name="añoInicio" id="añoInicio" value="{{$año}}">
                                     </td>
                                 </tr>
                                 <tr id="añoTR" style="display: none">
@@ -131,7 +127,7 @@
                                     <td>
                                         <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
                                             @while($año2 >= 2005)
-                                                <option value="{{$año2}}">{{$año2}}</option>
+                                                <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
                                                 @php($año2 = ($año2-1))
                                             @endwhile
                                         </select>
@@ -220,6 +216,7 @@
                     if(parseInt(tasaDesc) != -1){
                         $("#añoTR").show();
                         $("#ultimoAñoPagado").show();
+                        listarAños(document.getElementById("año").value);
                     }
                 }
             }
@@ -285,7 +282,6 @@
 
         function totales(){
             var año = document.getElementById("año").value;
-            año = parseInt(año) +1;
             const hoy = new Date();
             const numRows = hoy.getFullYear() - parseInt(año) +1;
 
@@ -320,7 +316,6 @@
             $("#costeo").show();
             $("#TABLA7").show();
             $("#cuerpo tr").remove();
-            año = parseInt(año) + 1;
             const hoy = new Date();
             const numRows = hoy.getFullYear() - parseInt(año) +1;
 

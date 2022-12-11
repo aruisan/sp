@@ -12,7 +12,11 @@ class Comunicado extends Model implements Auditable
 
     protected $table = 'imp_comunicados';
 
-    public function user(){
-        return $this->belongsTo('App\User','id');
+    public function destinatario(){
+        return $this->belongsTo('App\User','destinatario_id');
+    }
+
+    public function remitente(){
+        return $this->belongsTo('App\User','remitente_id');
     }
 }
