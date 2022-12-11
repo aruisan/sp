@@ -61,7 +61,6 @@
 					<b>
 					DEPARTAMENTO DE SAN ANDRES, PROVIDENCIA Y STA CATALINA <br>
 					MUNICIPIO DE PROVIDENCIA Y SANTA CATALINA ISLAS <br>
-					CONCEJO MUNICIPAL 		NIT: 827000209- 2. 
 					</b>
 				</p>
 			</div>
@@ -73,8 +72,8 @@
 		<div style="margin-top: 160px; font-size: 17px;">
 			<center>
                 _____________________ <br>
-                {!! Instituto::secretaria( !empty($cdp) ? $cdp->fecha : $registro->ff_expedicion) !!}<br>
-                Secretaria General.
+                JORGE NORBERTO GARI HOOKER<br>
+                ALCALDE MUNICIPAL
             </center>
 		</div>
 		<hr class="hrFecha br-black-1" style="margin-bottom: 0px;">

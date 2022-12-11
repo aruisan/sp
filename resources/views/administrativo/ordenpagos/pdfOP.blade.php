@@ -206,10 +206,11 @@
 							<center>
 								_____________________ <br>
 								<!-- Presidente 2020 Léri Aniseto Henry Taylor  -->
-								{{ $name_pres }}<br>
-								Presidente
+								JORGE NORBERTO GARI HOOKER<br>
+								ALCALDE MUNICIPAL
 							</center>
 						</td>
+						<!---
 						<td>
 							<center>
 								_____________________ <br>
@@ -217,6 +218,7 @@
 								Contador
 							</center>
 						</td>
+						---->
 					</tr>
 				</table>
 			</div>

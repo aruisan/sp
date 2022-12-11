@@ -35,3 +35,8 @@ Route::group(['prefix' => 'presupuesto', 'middleware' => 'jwt.auth', 'namespace'
     Route::get('/cdps', 'CdpController@list'); //api/presupuesto/cdps get
     Route::post('/cdps/update-status', 'CdpController@updateStatus');//api/presupuesto/cdps/update-status post $cdps = [[id, status[0,1,2,3]]] post
 });
+
+Route::group(['prefix' => 'presupuesto', 'middleware' => 'jwt.auth'], function (){
+    Route::get('cdps/pdf/{id}/{vigen}', 'Api\Presupuesto\CdpController@pdf')->name('cpd-pdf-api');
+    Route::get('cdp/pdfBorrador/{id}/{vigen}', 'Api\Presupuesto\CdpController@pdfBorrador')->name('cpd-pdf-borrador-api');
+});

@@ -206,8 +206,8 @@
 						<td>
 							<center>
 								_____________________ <br>
-								{{$name_contador}} 	<br>
-								Contador
+								JORGE NORBERTO GARI HOOKER 	<br>
+								ALCALDE MUNICIPAL
 							</center>
 						</td>
 						<td>

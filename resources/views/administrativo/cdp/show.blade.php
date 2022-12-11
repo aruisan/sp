@@ -256,7 +256,7 @@
                                                                 @endif
                                                                 <div class="col-lg-6">
                                                                     @if($cdp->jefe_e == "3")
-                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:
+                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:1
                                                                         @if($fuentesRubro->rubrosCdpValor->count() != 0)
                                                                             @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                 @php($id_rubrosCdp = $rubrosCdpData->id )
@@ -283,12 +283,12 @@
                                                                             @foreach($fuentesRubro->dependenciaFont as $dep)
                                                                                 @if($dep->dependencia_id == $user->dependencia_id)
                                                                                     <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
-                                                                                    <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
+                                                                                    <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm valorFuenteUsar" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
                                                                                 @endif
                                                                             @endforeach
                                                                         @endif
                                                                     @elseif($fuentesRubro->valor_disp != 0)
-                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:
+                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:2
                                                                         @foreach($fuentesRubro->dependenciaFont as $dep)
                                                                             @if($dep->dependencia_id == $user->dependencia_id)
                                                                                 @if($dep->rubroCdpValor->count() != 0)
@@ -358,7 +358,7 @@
                                                     @if($rol == 2 and $cdp->secretaria_e != "3")
                                                         <button type="button" v-on:click.prevent="nuevaFilaPrograma" class="btn btn-success">Agregar Fila</button>
                                                         <button type="submit" class="btn btn-primary">Guardar Rubros</button>
-                                                        @if($cdp->rubrosCdp->count() > 0 )
+                                                        @if($cdp->rubrosCdpValor->sum('valor_disp') > 0 )
                                                             <a class="btn btn-success" onclick="validarFormulario({{$cdp->id}}, {{$rol}}, '{{$fechaActual}}', {{$cdp->rubrosCdpValor->sum('valor_disp')}}, {{$cdp->valueControl}})">Enviar CDP</a>
                                                         @endif
                                                     @elseif($rol == 5)
@@ -752,12 +752,18 @@
     <script>
 
         function validarFormulario(id, rol, fecha, valor, control ) {
-            if(valor > control){
-                var opcion = confirm("El valor asignado es superior al valor de control, esta seguro de enviar el CDP?");
-                if (opcion == true) {
-                    window.location.href = "/administrativo/cdp/"+id+"/"+rol+"/"+fecha+"/"+valor+"/3";
-                }
-            }else window.location.href = "/administrativo/cdp/"+id+"/"+rol+"/"+fecha+"/"+valor+"/3";
+            console.log('vu', [id, rol, fecha, valor, control ]);
+
+            if(valor != 0){
+                if(valor > control){
+                    var opcion = confirm("El valor asignado es superior al valor de control, esta seguro de enviar el CDP?");
+                    if (opcion == true) {
+                        window.location.href = "/administrativo/cdp/"+id+"/"+rol+"/"+fecha+"/"+valor+"/3";
+                    }
+                }else window.location.href = "/administrativo/cdp/"+id+"/"+rol+"/"+fecha+"/"+valor+"/3";
+            }else{
+                confirm("El Cdp esta en 0 no sirve continuar");
+            }
         }
 
         new Vue({

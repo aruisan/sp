@@ -57,7 +57,7 @@ class CdpsRegistroController extends Controller
                                 $cdpsRegistroValor->fontsRubro_id = $fuenteRubroId[$i];
                                 $cdpsRegistroValor->registro_id = $registro_id;
                                 $cdpsRegistroValor->cdp_id = $cdps[$i];
-                                $cdpsRegistroValor->rubro_id = $rubroId[$i];
+                                //$cdpsRegistroValor->rubro_id = $rubroId[$i];
                                 $cdpsRegistroValor->cdps_registro_id = $rubrosCdpId[$i];
                                 $cdpsRegistroValor->save();
                             }
@@ -84,7 +84,7 @@ class CdpsRegistroController extends Controller
                                 $cdpsRegistroValor->fontsRubro_id = $request->bpin_id[$i];
                                 $cdpsRegistroValor->registro_id = $registro_id;
                                 $cdpsRegistroValor->cdp_id = $cdps[$i];
-                                $cdpsRegistroValor->rubro_id = $rubroId[$i];
+                                //$cdpsRegistroValor->rubro_id = $rubroId[$i];
                                 $cdpsRegistroValor->cdps_registro_id = $rubrosCdpId[$i];
                                 $cdpsRegistroValor->save();
                             }

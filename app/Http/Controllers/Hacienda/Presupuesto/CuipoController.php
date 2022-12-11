@@ -49,6 +49,10 @@ class CuipoController extends Controller
                     foreach ($item->fontsRubro as $itemFont) $value[] = $itemFont->valor;
                 } else $value[] = 0;
             }
+	    if (!isset($value)){
+                $value[] = null;
+                unset($value[0]);
+            }
             $maxValue = $vigencia->presupuesto_inicial - array_sum($value);
             return view('hacienda.presupuesto.cuipo.index', compact('vigencia', 'rubros','terceros','paso','vigencia','tipoNormas','fuentes','fontRubro','publicPolitics','maxValue'));
         } elseif ($paso == "3"){
@@ -137,21 +141,19 @@ class CuipoController extends Controller
             $fontRubro->save();
 
             Session::flash('success','Se ha actualizado correctamente el valor de la fuente');
-            return redirect('/presupuesto/rubro/CUIPO/2/'.$request->vigencia_id);
+            return back();
         } else {
-            $fontVigen = FontsVigencia::where('vigencia_id',$request->vigencia_id)->first();
             foreach ($request->code as $item){
                 $sourcefunding = new FontsRubro();
                 $sourcefunding->source_fundings_id = $item;
                 $sourcefunding->rubro_id = $request->rubroID;
                 $sourcefunding->valor = 1;
                 $sourcefunding->valor_disp = 1;
-                $sourcefunding->font_vigencia_id = $fontVigen['id'];
                 $sourcefunding->save();
             }
 
             Session::flash('success','Se han asignado las fuentes de financiación al rubro correctamente');
-            return redirect('/presupuesto/rubro/CUIPO/2/'.$request->vigencia_id);
+            return back();
         }
     }
 

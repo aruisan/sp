@@ -31,15 +31,8 @@
 				<table style="margin: 5px 10px;">
 					<tbody>
 						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Proyecto: </td>
-							<td> {{$rubrosCdp->rubros->subProyecto->proyecto->name}}</td>
-						</tr>
-						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Sub-Proyecto: </td>
-							<td> {{$rubrosCdp->rubros->subProyecto->name}}</td>
-						</tr>
-						<tr style="font-size: 16px;">
 							<td style="width: 30px;">Programa: </td>
+					
 							@foreach($infoRubro as $rubro)
 								@if($rubro['name'] == $rubrosCdp->rubros->name)
 									<td>{{$rubro['last_code']}} - {{$rubro['register']}}</td>
@@ -54,6 +47,8 @@
 								@endif
 							@endforeach
 						</tr>
+						{{--
+						--}}
 						<tr style="font-size: 16px;">
 							<td style="width: 30px;">Tipo: </td>
 							<td> {{$cdp->tipo}}</td>
@@ -107,7 +102,7 @@
 					</tr>
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">SOLICITADO POR: </td>
-						<td> {{$cdp->cdpsSecretaria->name}}</td>
+						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->name : ''}}</td>
 					</tr>
 				</tbody>
 			</table>
