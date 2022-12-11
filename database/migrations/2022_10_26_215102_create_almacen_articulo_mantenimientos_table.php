@@ -15,8 +15,8 @@ class CreateAlmacenArticuloMantenimientosTable extends Migration
     {
         Schema::create('almacen_articulo_mantenimientos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('responsable');
-            $table->integer('almacen_factura_articulo_id');
+            $table->integer('responsable_id');
+            $table->integer('almacen_articulo_id');
             $table->text('descripcion')->nullable();
             $table->timestamps();
         });

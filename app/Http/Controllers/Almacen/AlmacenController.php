@@ -5,24 +5,26 @@ namespace App\Http\Controllers\Almacen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Almacen;
-use App\AlmacenFacturaArticulo;
-use App\AlmacenFactura;
+use App\AlmacenArticulo;
 use App\Model\Admin\Dependencia;
 use App\Model\Persona;
+use App\User;
 
 class AlmacenController extends Controller
 {
     public function index(){
-        $articulos = AlmacenFacturaArticulo::get();
+        $articulos = AlmacenArticulo::get();
         return view('almacen.inventario', compact('articulos'));
     }
 
+    /*
     public function ingresos(){
         $dependencias = Dependencia::all();
         $proovedores = Persona::all();
         $factura = AlmacenFactura::create(['owner_id' => auth()->id()]);
         return view('almacen.ingresos', compact('dependencias', 'factura', 'proovedores'));
     }
+ 
 
     public function egresos(){
         $dependencias = Dependencia::all();
@@ -49,4 +51,5 @@ class AlmacenController extends Controller
         $articulo->update($request->all());
         return redirect()->route('almacen.index');
     }
+       */
 }

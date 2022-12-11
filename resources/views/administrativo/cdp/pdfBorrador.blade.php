@@ -102,7 +102,7 @@
 					</tr>
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">SOLICITADO POR: </td>
-						<td> {{$cdp->cdpsSecretaria->name}}</td>
+						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->name : ''}}</td>
 					</tr>
 				</tbody>
 			</table>

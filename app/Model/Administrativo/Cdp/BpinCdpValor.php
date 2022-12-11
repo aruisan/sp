@@ -12,7 +12,7 @@ class BpinCdpValor extends Model implements Auditable
     protected $table = 'bpin_cdp_valors';
 
     public function actividad(){
-        return $this->hasOne('App\Bpin','cod_actividad','cod_actividad');
+        return $this->hasOne('App\BPin','cod_actividad','cod_actividad');
     }
 
     public function cdp(){

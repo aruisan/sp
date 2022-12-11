@@ -47,13 +47,30 @@
                                 <td>{{ $item->stock}}</td>
                                 <td>{{ $item->valor_unitario}}</td>
                                 <td>{{ $item->total}}</td>
-                                <td>{{ $item->factura->numero_factura}}</td>
-                                <td>{{ $item->factura->proovedor->nombre}}</td>
-                                <td>{{ $item->ccd}}</td>
-                                <td>{{ $item->ccc}}</td>
-                                <td></td>
+                                <td>{{ $item->comprobante_ingreso->factura}}</td>
+                                <td>{{ $item->comprobante_ingreso->proovedor->nombre}}</td>
+                                <td>{{ $item->comprobante_ingreso->ccd}}</td>
+                                <td>{{ $item->comprobante_ingreso->ccc}}</td>
+                                <td><a href="{{ route('almacen.ingreso.show', $item->comprobante_ingreso->id)}}" target="_blank">{{ $item->comprobante_ingreso->id}}</a></td>
                                 <td>
-                                    <a class="btn btn-success" href="{{route('almacen.edit', $item->id)}}">Editar</a>
+                                    @foreach($item->comprobante_egresos as $egreso)
+                                        - <a href="{{ route('almacen.egreso.show', $egreso->id)}}" target="_blank">{{ $egreso->id}}</a> </br>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach($item->comprobante_egresos as $egreso)
+                                        - {{$egreso->dependencia->name}} </br>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach($item->comprobante_egresos as $egreso)
+                                        - {{$egreso->responsable->nombre}} </br>
+                                    @endforeach
+                                </td>
+                                <td>{{ $item->estado}}</td>
+                                <td>
+                                    <a class="btn btn-success" href="{{route('almacen.articulo.mantenimiento', $item->id)}}" title="Mantenimientos"><i class="fa fa-cogs" aria-hidden="true"></i></a>
+                                    <a class="btn btn-success" href="{{route('almacen.edit', $item->id)}}" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         @endforeach

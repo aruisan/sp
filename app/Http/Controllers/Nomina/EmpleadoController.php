@@ -40,8 +40,8 @@ class EmpleadoController extends Controller
         $newEmployee->certificado_cuenta_bancaria = "";
         $newEmployee->save();
 
-        $savedEmployeeAptoAdministrativeFile = uploadFile($request->employee_apto_administrative_file, 'empleados/'.$newEmployee->id);
-        $savedEployeeBankAccountCertificate =  uploadFile($request->employee_bank_account_certificate, 'empleados/'.$newEmployee->id);
+        $savedEmployeeAptoAdministrativeFile = $this->uploadFile($request->employee_apto_administrative_file, 'empleados/'.$newEmployee->id);
+        $savedEployeeBankAccountCertificate =  $this->uploadFile($request->employee_bank_account_certificate, 'empleados/'.$newEmployee->id);
 
 
         $newEmployee->apto_administrativo_archivo = $savedEmployeeAptoAdministrativeFile;

@@ -49,6 +49,7 @@ class CuipoController extends Controller
                     foreach ($item->fontsRubro as $itemFont) $value[] = $itemFont->valor;
                 } else $value[] = 0;
             }
+
             if (!isset($value)){
                 $value[] = null;
                 unset($value[0]);

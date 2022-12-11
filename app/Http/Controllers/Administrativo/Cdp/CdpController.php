@@ -25,11 +25,13 @@ use Illuminate\Support\Facades\DB;
 use PDF;
 use Carbon\Carbon;
 Use App\Traits\ConteoTraits;
+use App\Traits\FirebaseNotificationTraits;
 
 
 use Session;
 class CdpController extends Controller
 {
+    use FirebaseNotificationTraits;
     /**
      * Display a listing of the resource.
      *
@@ -204,6 +206,7 @@ class CdpController extends Controller
             }
         }
 
+
         //codigo de rubros
 
         $vigens = Vigencia::findOrFail($vigencia);
@@ -256,7 +259,7 @@ class CdpController extends Controller
         }
 
         //dd($cdp->rubrosCdp[0]->rubros->fontsRubro[0]->sourceFunding->description);
-
+	
         return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins', 'user'));
     }
 
@@ -319,6 +322,8 @@ class CdpController extends Controller
             $update->save();
 
             Session::flash('success','El CDP ha sido enviado exitosamente');
+
+            $this->sendTokenMovil("Nuevo Cdp", "{$update->name}.", "Alcalde");
             return redirect('/administrativo/cdp/'.$update->vigencia_id);
         }
         if ($rol == 3) {
@@ -372,6 +377,7 @@ class CdpController extends Controller
                 $update->save();
 
                 Session::flash('success','El CDP ha sido enviado al jefe exitosamente');
+                $this->sendTokenMovil("Nuevo Cdp", "{$update->name}.", "Jefe");
                 return redirect('/administrativo/cdp/'.$update->vigencia_id);
             }
         }
@@ -453,10 +459,12 @@ class CdpController extends Controller
             $vigencia = Vigencia::find($vigencia_id);
 
             $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
+            //dd(Level::all());
+            $rubroz = Rubro::where('vigencia_id', $vigencia_id)->get();
+            /*
             $registers = Register::where('level_id', $ultimoLevel->id)->get();
             $registers2 = Register::where('level_id', '<', $ultimoLevel->id)->get();
             $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
-            $rubroz = Rubro::where('vigencia_id', $vigencia_id)->get();
 
             global $lastLevel;
             $lastLevel = $ultimoLevel->id;
@@ -500,7 +508,8 @@ class CdpController extends Controller
                     $codigoLast = $codigoEnd;
                 }
             }
-
+*/
+$infoRubro = [];
             $fecha = Carbon::createFromTimeString($cdp->created_at);
 
 
