@@ -26,42 +26,29 @@
 		</div>
 		<?php $sumRubros = 0;?>
 		@if($cdp->tipo == "Funcionamiento")
-			@foreach($cdp->rubrosCdp as $rubrosCdp)
 			<div class="br-black-1">
-				<table style="margin: 5px 10px;">
+				<table class="table table-condensed" style="margin: 5px 10px;">
+					<thead>
+					<tr>
+						<th style="font-size: 19px;" class="text-center" colspan="3">RUBROS ASIGNADOS</th>
+					</tr>
+					<tr>
+						<th style="font-size: 16px;" class="text-center">Codigo</th>
+						<th style="font-size: 16px;" class="text-center">Nombre</th>
+						<th style="font-size: 16px;" class="text-center">Valor</th>
+					</tr>
+					</thead>
 					<tbody>
-						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Programa: </td>
-					
-							@foreach($infoRubro as $rubro)
-								@if($rubro['name'] == $rubrosCdp->rubros->name)
-									<td>{{$rubro['last_code']}} - {{$rubro['register']}}</td>
-								@endif
-							@endforeach
+					@foreach($infoRubro as $rubro)
+						<tr class="text-center" style="font-size: 16px;">
+							<td>{{$rubro['codigo']}} </td>
+							<td> {{$rubro['name']}}</td>
+							<td>${{number_format($rubro['value'])}}</td>
 						</tr>
-						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Sub Programa: </td>
-							@foreach($infoRubro as $rubro)
-								@if($rubro['name'] == $rubrosCdp->rubros->name)
-									<td>{{$rubro['codigo']}} - {{$rubro['name']}}</td>
-								@endif
-							@endforeach
-						</tr>
-						{{--
-						--}}
-						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Tipo: </td>
-							<td> {{$cdp->tipo}}</td>
-						</tr>
-						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Valor: </td>
-							<td> {{number_format($rubrosCdp->rubrosCdpValor->sum('valor'))}}</td>
-						</tr>
+					@endforeach
 					</tbody>
 				</table>
 			</div>
-			<?php $sumRubros = $sumRubros+$rubrosCdp->rubrosCdpValor->sum('valor');?>
-			@endforeach
 		@else
 			@foreach($cdp->bpinsCdpValor as $bpinsCDP)
 				<div class="br-black-1">
@@ -93,8 +80,12 @@
 			<table style="margin: 5px 10px;">
 				<tbody>
 					<tr style="font-size: 16px;">
+						<td style="width: 30px;">Tipo: </td>
+						<td> {{$cdp->tipo}}</td>
+					</tr>
+					<tr style="font-size: 16px;">
 						<td style="width: 30px;">VALOR TOTAL: </td>
-						<td> {{number_format($sumRubros)}} ({{\NumerosEnLetras::convertir($sumRubros)}})</td>
+						<td> $ {{number_format($sumRubros)}} ({{\NumerosEnLetras::convertir($sumRubros)}})</td>
 					</tr>
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">Objeto: </td>

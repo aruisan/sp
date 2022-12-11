@@ -241,6 +241,7 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Objeto</th>
+                            <th class="text-center">Tipo</th>
                             <th class="text-center">Estado</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
@@ -253,6 +254,7 @@
                             <tr>
                                 <td class="text-center">{{ $cdp->code }}</td>
                                 <td class="text-center">{{ $cdp->name }}</td>
+                                <td class="text-center">{{ $cdp->tipo }}</td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
                                         @if($cdp->jefe_e == "0")
@@ -378,6 +380,7 @@
             responsive: true,
             "searching": true,
             dom: 'Bfrtip',
+            order: [[0, 'desc']],
             buttons: [
                 'copy', 'csv', 'excel', 'print'
             ]
@@ -387,6 +390,7 @@
             responsive: true,
             "searching": true,
             dom: 'Bfrtip',
+            order: [[0, 'desc']],
             buttons: [
                 'copy', 'csv', 'excel', 'print'
             ]

@@ -312,6 +312,7 @@
                 responsive: true,
                 "searching": false,
                 dom: 'Bfrtip',
+                order: [[0, 'desc']],
                 buttons:[
                     {
                         extend:    'copyHtml5',
@@ -348,6 +349,7 @@
                 responsive: true,
                 "searching": true,
                 dom: 'Bfrtip',
+                order: [[0, 'desc']],
                 buttons:[
                     {
                         extend:    'copyHtml5',
@@ -384,6 +386,7 @@
                 responsive: true,
                 "searching": true,
                 dom: 'Bfrtip',
+                order: [[0, 'desc']],
                 buttons:[
                     {
                         extend:    'copyHtml5',
