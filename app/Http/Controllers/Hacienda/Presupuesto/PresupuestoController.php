@@ -759,7 +759,9 @@ class PresupuestoController extends Controller
             foreach ($presupuesto as $item){
                 if ($item['id_rubro'] != ""){
                     $bpin = bpinVigencias::where('rubro_id', $item['id_rubro'])->where('vigencia_id', $V)->first();
-                    if (!$bpin) $rubBPIN[] = collect($item);
+                    if (!$bpin) {
+                        if ($item['tipo'] == "Inversion") $rubBPIN[] = collect($item);
+                    }
                 }
             }
 

@@ -796,6 +796,7 @@
     <!-- tabla de proyectos -->
     <script>
         const bpins = @json($bpins);
+        const rubInvDisp = @json($rubBPIN);
         //console.log('bpins', bpins)
 
         const show_proyecto = cod_proyecto =>{
@@ -805,7 +806,10 @@
             $('#input-cod-proyecto').val(cod_proyecto);
             bpins.filter(r => r.cod_proyecto == cod_proyecto).forEach(e =>{
                 if (e.rubro != "No") var button = e.rubro+`<br> Dinero Asignado: `+e.rubro_find[0].propios.toLocaleString();
-                else var button = `<button onclick="getModalAsignaRubro(${e.cod_actividad})" class="btn btn-primary">Asignar Rubro a la Actividad</button>`;
+                else {
+                    if(rubInvDisp.length == 0) var button = `<b>No hay rubros de inversión disponibles para asignar.</b>`;
+                    else var button = `<button onclick="getModalAsignaRubro(${e.cod_actividad})" class="btn btn-primary">Asignar Rubro a la Actividad</button>`;
+                }
                 $('#tbody-actividades').append(`
                 <tr>
                     <td>${e.cod_actividad}</td>
