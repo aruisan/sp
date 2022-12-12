@@ -258,8 +258,13 @@ class CdpController extends Controller
             }
         }
 
-        //dd($cdp->rubrosCdp[0]->rubros->fontsRubro[0]->sourceFunding->description);
-	
+        foreach ($cdp->bpinsCdpValor as $data){
+            $bpinVig = bpinVigencias::where('bpin_id', $data->actividad->id)->first();
+            $data->actividad->rubro = $bpinVig->rubro;
+        }
+
+        //dd($cdp->bpinsCdpValor);
+
         return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins', 'user'));
     }
 
@@ -350,7 +355,8 @@ class CdpController extends Controller
                 } else{
                     //VALIDACION DEL CDP CUANDO ES DE INVERSION
                     foreach ($update->bpinsCdpValor as $actividad) {
-                        if ($actividad->actividad->saldo >= $actividad->valor){
+                        $validateVig = bpinVigencias::where('bpin_id',$actividad->actividad->id)->first();
+                        if ($validateVig->saldo >= $actividad->valor){
                             $update->jefe_e = $estado;
                             $update->ff_jefe_e = $fecha;
                             $update->valor = $valor;
@@ -427,11 +433,11 @@ class CdpController extends Controller
     {
         $cdp = Cdp::findOrFail($id);
         foreach ($cdp->bpinsCdpValor as $actividad){
+            $validateVig = bpinVigencias::where('bpin_id',$actividad->actividad->id)->first();
             $valor = $actividad->valor;
-            $total = $actividad->actividad->saldo - $valor;
-            $bpin = BPin::findOrFail($actividad->actividad->id);
-            $bpin->saldo = $total;
-            $bpin->save();
+            $total = $validateVig->saldo - $valor;
+            $validateVig->saldo = $total;
+            $validateVig->save();
         }
     }
 

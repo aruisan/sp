@@ -137,7 +137,7 @@
                         </div>
                     @endif
                     <div class="row">
-                        @if($registro->alcalde_e == 1 or $registro->jefe_e == 1)
+                        @if($registro->jefe_e == 1)
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label>Observación del Rechazo </label>
                                 <div class="input-group">
@@ -227,7 +227,7 @@
                                                                 <input type="hidden" name="registro_id" value="{{ $registro->id }}">
                                                                 <input type="hidden" name="fuente_id[]" value="{{ $RCV->fontsRubro->id }}">
                                                                 <input type="hidden" name="cdp_id_s[]" value="{{ $RCV->cdp_id }}">
-                                                                <input type="hidden" name="rubro_id[]" value="{{ $RCV->fontsRubro->rubro->id }}">
+                                                                <input type="hidden" name="rubro_id[]" value="{{ $RCV->fontsRubro->rubro_id }}">
                                                                 <input type="hidden" name="rubros_cdp_id[]" value="{{ $cdpsRegistroData->id }}">
                                                                 @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
                                                                 <li style="list-style-type: none;">
@@ -243,7 +243,7 @@
                                                                     @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
                                                                         @php($id_rubrosCdp = $cdpsRegistroData->id )
                                                                         @if($valoresRV->registro_id == $registro->id)
-                                                                            @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro->id == $valoresRV->rubro_id)
+                                                                            @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro_id == $valoresRV->rubro_id)
                                                                                 <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
                                                                                 @if($registro->secretaria_e == "0")
                                                                                     <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
@@ -267,7 +267,7 @@
                                                                     @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
                                                                         @php($id_rubrosCdp = $cdpsRegistroData->id )
                                                                         @if($valoresRV->registro_id == $registro->id)
-                                                                            @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro->id == $valoresRV->rubro_id)
+                                                                            @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro_id == $valoresRV->rubro_id)
                                                                                 <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
                                                                                 @if($registro->secretaria_e == "0")
                                                                                     <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
@@ -294,7 +294,11 @@
                                                             <div class="col-lg-6">
                                                                 <input type="hidden" name="registro_id" value="{{ $registro->id }}">
                                                                 <input type="hidden" name="cdp_id_s[]" value="{{ $item->cdp_id }}">
-                                                                <input type="hidden" name="rubro_id[]" value="{{ $item->actividad->rubro_id }}">
+                                                                @foreach($item->actividad->rubroFind as $data)
+                                                                    @if($data->vigencia_id == $vigencia)
+                                                                        <input type="hidden" name="rubro_id[]" value="{{ $data->rubro_id }}">
+                                                                    @endif
+                                                                @endforeach
                                                                 <input type="hidden" name="rubros_cdp_id[]" value="{{ $cdpsRegistroData->id }}">
                                                                 <input type="hidden" name="bpin_id[]" value="{{ $item->actividad->id }}">
                                                                 @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
@@ -391,7 +395,7 @@
                                     @if($registro->cdpRegistroValor->sum('valor') > 0 )
                                         @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
                                         <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
-                                            Enviar Registro al Alcalde
+                                            Enviar Registro al Jefe
                                         </a>
                                     @endif
                                 @elseif($rol == 3 and $registro->jefe_e != 3)
@@ -400,14 +404,6 @@
                                         @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
                                         <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
                                             Finalizar Registro
-                                        </a>
-                                    @endif
-                                @elseif($rol == 5 and $registro->alcalde_e != 3)
-                                    <a data-toggle="modal" data-target="#observacion" class="btn btn-success">Rechazar Registro</a>
-                                    @if($registro->cdpRegistroValor->sum('valor') > 0 )
-                                        @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
-                                        <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
-                                            Enviar Registro al Jefe
                                         </a>
                                     @endif
                                 @endif

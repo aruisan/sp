@@ -62,9 +62,6 @@
                             <th class="text-center">Nombre Tercero</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Estado Secretaria</th>
-                            @if($rol == 3)
-                                <th class="text-center">Estado Alcalde</th>
-                            @endif
                             <th class="text-center"><i class="fa fa-usd"></i></th>
                             <th class="text-center"><i class="fa fa-edit"></i></th>
                         </tr>
@@ -89,21 +86,6 @@
                                         @endif
                                     </span>
                                 </td>
-                                @if($rol == 3)
-                                    <td class="text-center">
-                                        <span class="badge badge-pill badge-danger">
-                                            @if($data['alcalde_e'] == "0")
-                                                Pendiente
-                                            @elseif($data['alcalde_e'] == "1")
-                                                Rechazado
-                                            @elseif($data['alcalde_e'] == "2")
-                                                Anulado
-                                            @else
-                                                Enviado - {{ \Carbon\Carbon::parse($data['ff_alcalde_e'])->format('d-m-Y') }}
-                                            @endif
-                                        </span>
-                                    </td>
-                                @endif
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/registros/show',$data['id']) }}" title="Asignar Dinero al Registro" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
                                 </td>                <td class="text-center">
@@ -142,7 +124,6 @@
                             <th class="text-center">Objeto</th>
                             <th class="text-center">Nombre Tercero</th>
                             <th class="text-center">Estado Secretaria</th>
-                            <th class="text-center">Estado Alcalde</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Ver Registro</th>
@@ -165,19 +146,6 @@
                                             Anulado
                                         @else
                                             Enviado - {{ \Carbon\Carbon::parse($registro['ff_secretaria_e'])->format('d-m-Y') }}
-                                        @endif
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
-                                        @if($registro['alcalde_e'] == "0")
-                                            Pendiente
-                                        @elseif($registro['alcalde_e'] == "1")
-                                            Rechazado
-                                        @elseif($registro['alcalde_e'] == "2")
-                                            Anulado
-                                        @else
-                                            Enviado - {{ \Carbon\Carbon::parse($registro['ff_alcalde_e'])->format('d-m-Y') }}
                                         @endif
                                     </span>
                                 </td>
@@ -223,7 +191,6 @@
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
                             <th class="text-center">Estado Secretaria</th>
-                            <th class="text-center">Estado Alcalde</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Ver</th>
                             <th class="text-center">PDF</th>
@@ -252,19 +219,6 @@
                                 </td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
-                                        @if($data['alcalde_e'] == "0")
-                                            Pendiente
-                                        @elseif($data['alcalde_e'] == "1")
-                                            Rechazado
-                                        @elseif($data['alcalde_e'] == "2")
-                                            Anulado
-                                        @else
-                                            Enviado - {{ \Carbon\Carbon::parse($data['ff_alcalde_e'])->format('d-m-Y') }}
-                                        @endif
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
                                         @if($data['jefe_e'] == "0")
                                             Pendiente
                                         @elseif($data['jefe_e'] == "1")
@@ -283,7 +237,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($data['secretaria_e'] != 2)
-                                        <a href="{{ url('administrativo/registro/pdf/'.$data['id'].'/'.$vigencia) }}" title="Ver Archivo" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                        <a href="{{ url('administrativo/registro/pdf/'.$data['id'].'/'.$vigencia) }}" target="_blank" title="Ver Archivo" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
                             </tr>

@@ -23,51 +23,53 @@
 			</center>
 		</div>
 		<div class="br-black-1">
-			<table style="margin: 5px 10px;">
-				<tbody>
-					@if($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento")
+			@if($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento")
+				<table class="table table-condensed" style="margin: 5px 10px;">
+					<thead>
+					<tr>
+						<th style="font-size: 19px;" class="text-center" colspan="5">RUBROS ASIGNADOS A CDPs</th>
+					</tr>
+					<tr>
+						<th style="font-size: 16px;" class="text-center"># CDP</th>
+						<th style="font-size: 16px;" class="text-center">Nombre CDP</th>
+						<th style="font-size: 16px;" class="text-center">Codigo</th>
+						<th style="font-size: 16px;" class="text-center">Nombre</th>
+						<th style="font-size: 16px;" class="text-center">Valor</th>
+					</tr>
+					</thead>
+					<tbody>
+					@foreach($infoRubro as $rubro)
+						<tr class="text-center" style="font-size: 16px;">
+							<td>{{$rubro['codCDP']}} </td>
+							<td>{{$rubro['nameCDP']}} </td>
+							<td>{{$rubro['codigo']}} </td>
+							<td> {{$rubro['name']}}</td>
+							<td>${{number_format($rubro['value'])}}</td>
+						</tr>
+					@endforeach
+					</tbody>
+				</table>
+			@else
+				<table style="margin: 5px 10px;">
+					<tbody>
+					@foreach($bpins as $bpin)
 						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Por valor de : </td>
-							<td>{{number_format($registro->valor)}}</td>
+							<td style="width: 30px;">Proyecto: </td>
+							<td>{{$bpin->actividad->cod_proyecto}} - {{$bpin->actividad->nombre_proyecto}}</td>
 						</tr>
 						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Programa: </td>
-							@foreach($infoRubro as $rubro)
-								@if($rubro['name'] == $rubroNameCDP)
-									<td>{{$rubro['last_code']}} - {{$rubro['register']}}</td>
-								@endif
-							@endforeach
+							<td style="width: 30px;">Actividad: </td>
+							<td>{{$bpin->actividad->cod_actividad}} - {{$bpin->actividad->actividad}}</td>
 						</tr>
 						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Sub Programa: </td>
-							@foreach($infoRubro as $rubro)
-								@if($rubro['name'] == $rubroNameCDP)
-									<td>{{$rubro['codigo']}} - {{$rubro['name']}}</td>
-								@endif
-							@endforeach
+							<td style="width: 30px;">Valor usado: </td>
+							<td>$ {{number_format($bpin->valor)}} ({{\NumerosEnLetras::convertir($bpin->valor)}})</td>
 						</tr>
-						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Objeto: </td>
-							<td> {{$registro->objeto}}</td>
-						</tr>
-					@else
-						@foreach($bpins as $bpin)
-							<tr style="font-size: 16px;">
-								<td style="width: 30px;">Proyecto: </td>
-								<td>{{$bpin->actividad->cod_proyecto}} - {{$bpin->actividad->nombre_proyecto}}</td>
-							</tr>
-							<tr style="font-size: 16px;">
-								<td style="width: 30px;">Actividad: </td>
-								<td>{{$bpin->actividad->cod_actividad}} - {{$bpin->actividad->actividad}}</td>
-							</tr>
-							<tr style="font-size: 16px;">
-								<td style="width: 30px;">Valor usado: </td>
-								<td>$ {{number_format($bpin->valor)}} ({{\NumerosEnLetras::convertir($bpin->valor)}})</td>
-							</tr>
-						@endforeach
-					@endif
-				</tbody>
-			</table>
+					@endforeach
+					</tbody>
+				</table>
+			@endif
+
 		</div>
 		<div class="br-black-1">
 			<table style="margin: 5px 10px;">

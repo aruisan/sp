@@ -82,7 +82,17 @@ class PresupuestoController extends Controller
                     $ordenPagos[] = collect(['id' => $ord->id, 'code' => $ord->code, 'nombre' => $ord->nombre, 'persona' => $ord->registros->persona->nombre, 'valor' => $ord->valor, 'estado' => $ord->estado]);
                     foreach ($ord->rubros as $rubroOP){
                         //SE LLENAN LAS ORDENES DE PAGO CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
-                        if ($rubroOP->orden_pago->estado == "1") $valores[] = ['id' => $rubroOP->cdps_registro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro->plantilla_cuipos_id];
+                        if ($rubroOP->orden_pago->estado == "1") {
+                            if ($ord->registros->cdpsRegistro->first()->cdp->tipo == "Funcionamiento"){
+                                $valores[] = ['id' => $rubroOP->cdps_registro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro->plantilla_cuipos_id];
+                            } else {
+                                $bpinCdpValue = $rubroOP->cdps_registro->cdps->bpinsCdpValor->first();
+                                $bpinID = BPin::where('cod_actividad', $bpinCdpValue->cod_actividad )->first();
+                                $idRub = bpinVigencias::where('bpin_id', $bpinID->id)->where('vigencia_id', $V)->first();
+
+                                $valores[] = ['id' => $idRub->rubro->id, 'val' => $rubroOP->valor, 'code' => $idRub->rubro->plantilla_cuipos_id];
+                            }
+                        }
                     }
                 }
             }

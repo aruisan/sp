@@ -632,7 +632,7 @@
                                                     <tr>
                                                         <td>{{$item->actividad->cod_actividad}}</td>
                                                         <td>{{$item->actividad->actividad}}</td>
-                                                        <td>{{$item->actividad->rubro->name}}</td>
+                                                        <td>{{$item->actividad->rubro->cod}} - {{$item->actividad->rubro->name}}</td>
                                                         <td>$<?php echo number_format( $item->valor ,0) ?></td>
                                                     </tr>
                                                 @endforeach

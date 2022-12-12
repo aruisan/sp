@@ -149,7 +149,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @for($i = 0; $i < $R->cdpRegistroValor->count(); $i++)
+                                    @for($i = 0; $i < $R->cdpRegistroValor->count(); $i++)>
                                         <tr class="text-center">
                                             <td>
                                                 @for($x = 0; $x < count($infoRubro); $x++)
