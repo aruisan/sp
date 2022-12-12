@@ -242,30 +242,48 @@ class CdpController extends Controller
         //BPINS
         $bpinVigencia = bpinVigencias::where('vigencia_id',$vigencia_id)->get();
         $allBpins = BPin::all();
+        $exist = false;
         foreach ($allBpins as $data){
-            $exist = false;
             foreach ($bpinVigencia as $BVigen){
                 if ($data->id == $BVigen->bpin_id) $exist = true;
             }
-            if ($exist) $bpins = collect([$data]);
+            if ($exist) {
+                $bpins[] = $data;
+                $exist = false;
+            }
         }
         foreach ($bpins as $bpin){
             $bpin['rubro'] = "No";
             if (count($bpin->rubroFind) > 0) {
                 foreach ($bpin->rubroFind as $rub){
-                    if ($rub->vigencia_id == $V) $bpin['rubro'] = $rub->rubro->name;
+                    if ($rub->vigencia_id == $V) $bpin['rubro'] = $rub;
                 }
             }
         }
+
+        $unicoBpins = $this->unique_multidim_array($bpins, 'cod_proyecto');
 
         foreach ($cdp->bpinsCdpValor as $data){
             $bpinVig = bpinVigencias::where('bpin_id', $data->actividad->id)->first();
             $data->actividad->rubro = $bpinVig->rubro;
         }
 
-        //dd($cdp->bpinsCdpValor);
+        return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins', 'user','unicoBpins'));
+    }
 
-        return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins', 'user'));
+    public function unique_multidim_array($array, $key) {
+        $temp_array = array();
+        $i = 0;
+        $key_array = array();
+
+        foreach($array as $val) {
+            if (!in_array($val[$key], $key_array)) {
+                $key_array[$i] = $val[$key];
+                $temp_array[$i] = $val;
+            }
+            $i++;
+        }
+        return $temp_array;
     }
 
     /**
@@ -539,25 +557,32 @@ class CdpController extends Controller
     }
 
     public function cdpActividad(Request $request, $cdp, $vigencia){
-        for ($i = 0; $i < count($request->codActividad); $i++) {
-            $bpinCdpValor = new BpinCdpValor();
-            $bpinCdpValor->valor = $request->valUsedActividad[$i];
-            $bpinCdpValor->valor_disp = $request->valUsedActividad[$i];
-            $bpinCdpValor->cdp_id = $cdp;
-            $bpinCdpValor->cod_actividad = $request->codActividad[$i];
-            $bpinCdpValor->save();
+        if (array_sum($request->valUsedActividad) == 0){
+            Session::flash('warning','El CDP no se puede enviar en $0');
+            return back();
+        } else {
+            for ($i = 0; $i < count($request->codActividad); $i++) {
+                if ( $request->valUsedActividad[$i] > 0){
+                    $bpinCdpValor = new BpinCdpValor();
+                    $bpinCdpValor->valor = $request->valUsedActividad[$i];
+                    $bpinCdpValor->valor_disp = $request->valUsedActividad[$i];
+                    $bpinCdpValor->cdp_id = $cdp;
+                    $bpinCdpValor->cod_actividad = $request->codActividad[$i];
+                    $bpinCdpValor->save();
+                }
+            }
+
+            $CDP = Cdp::findOrFail($cdp);
+            $CDP->valor = array_sum($request->valUsedActividad);
+            $CDP->saldo = array_sum($request->valUsedActividad);
+            $CDP->secretaria_e = '3';
+            $CDP->jefe_e = "0";
+            $CDP->ff_secretaria_e = Carbon::today();
+            $CDP->save();
+
+            Session::flash('success','El CDP ha sido enviado exitosamente');
+            return redirect('/administrativo/cdp/'.$vigencia);
         }
-
-        $CDP = Cdp::findOrFail($cdp);
-        $CDP->valor = array_sum($request->valUsedActividad);
-        $CDP->saldo = array_sum($request->valUsedActividad);
-        $CDP->secretaria_e = '3';
-        $CDP->jefe_e = "0";
-        $CDP->ff_secretaria_e = Carbon::today();
-        $CDP->save();
-
-        Session::flash('success','El CDP ha sido enviado exitosamente');
-        return redirect('/administrativo/cdp/'.$vigencia);
     }
 
     public function DeleteInv($id){
@@ -573,8 +598,8 @@ class CdpController extends Controller
 
     public function restaurarInv($id){
         $CDP = Cdp::findOrFail($id);
-        $bpindCdp = BpinCdpValor::where('cdp_id', $id)->first();
-        $bpindCdp->delete();
+        $bpindCdp = BpinCdpValor::where('cdp_id', $id)->get();
+        foreach ($bpindCdp as $data) $data->delete();
 
         $CDP->valor = 0;
         $CDP->ff_secretaria_e = null;

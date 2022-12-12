@@ -24,7 +24,6 @@
 				</p>
 			</center>
 		</div>
-		<?php $sumRubros = 0;?>
 		@if($cdp->tipo == "Funcionamiento")
 			<div class="br-black-1">
 				<table class="table table-condensed" style="margin: 5px 10px;">
@@ -73,7 +72,6 @@
 						</tbody>
 					</table>
 				</div>
-					<?php $sumRubros = $cdp->valor;?>
 			@endforeach
 		@endif
 		<div class="br-black-1">
@@ -85,7 +83,7 @@
 					</tr>
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">VALOR TOTAL: </td>
-						<td> $ {{number_format($sumRubros)}} ({{\NumerosEnLetras::convertir($sumRubros)}})</td>
+						<td> $ {{number_format($cdp->valor)}} ({{\NumerosEnLetras::convertir($cdp->valor)}})</td>
 					</tr>
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">Objeto: </td>

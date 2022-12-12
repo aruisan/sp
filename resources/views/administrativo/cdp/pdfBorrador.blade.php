@@ -27,7 +27,6 @@
 				@endif
 			</center>
 		</div>
-		<?php $sumRubros = 0;?>
 		@if($cdp->tipo == "Funcionamiento")
 			@foreach($cdp->rubrosCdp as $rubrosCdp)
 			<div class="br-black-1">
@@ -60,7 +59,6 @@
 					</tbody>
 				</table>
 			</div>
-			<?php $sumRubros = $sumRubros+$rubrosCdp->rubrosCdpValor->sum('valor');?>
 			@endforeach
 		@else
 			@foreach($cdp->bpinsCdpValor as $bpinsCDP)
@@ -86,7 +84,6 @@
 						</tbody>
 					</table>
 				</div>
-					<?php $sumRubros = $cdp->valor;?>
 			@endforeach
 		@endif
 		<div class="br-black-1">
@@ -94,7 +91,7 @@
 				<tbody>
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">VALOR TOTAL: </td>
-						<td> {{number_format($sumRubros)}} ({{\NumerosEnLetras::convertir($sumRubros)}})</td>
+						<td> {{number_format($cdp->valor)}} ({{\NumerosEnLetras::convertir($cdp->valor)}})</td>
 					</tr>
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">Objeto: </td>

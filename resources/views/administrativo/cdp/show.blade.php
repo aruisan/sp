@@ -486,7 +486,7 @@
                                                         <br><br><hr><center><h3>SELECCIONE EL PROYECTO</h3></center><hr>
                                                         <div class="table-light">
                                                             <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
-                                                            <table class="table table-borderless">
+                                                            <table class="table table-borderless table-hover">
                                                                 <thead>
                                                                 <tr>
                                                                     <th class="text-center">Cod.</th>
@@ -494,7 +494,8 @@
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                @foreach($bpins->unique('cod_proyecto') as $item)
+
+                                                                @foreach($unicoBpins as $item)
                                                                     <tr onclick="showActividades({{$item->cod_proyecto}})" style="cursor: pointer">
                                                                         <td>{{ $item->cod_proyecto }}</td>
                                                                         <td>{{ $item->nombre_proyecto }}</td>
@@ -509,7 +510,6 @@
                                                                 <tr>
                                                                     <th class="text-center">Cod.</th>
                                                                     <th class="text-center">Nombre</th>
-                                                                    <th class="text-center">Rubro</th>
                                                                     <th class="text-center">Dinero Disp</th>
                                                                     <th class="text-center">Dinero a Usar</th>
                                                                 </tr>
@@ -530,7 +530,6 @@
                                                     <tr>
                                                         <th class="text-center">Cod.</th>
                                                         <th class="text-center">Nombre</th>
-                                                        <th class="text-center">Rubro</th>
                                                         <th class="text-center">Dinero Usado</th>
                                                     </tr>
                                                     </thead>
@@ -539,11 +538,6 @@
                                                             <tr>
                                                                 <td>{{$item->actividad->cod_actividad}}</td>
                                                                 <td>{{$item->actividad->actividad}}</td>
-                                                                @foreach($item->actividad->rubroFind as $rubBpin)
-                                                                    @if($rubBpin->bpin_id == $item->actividad->id)
-                                                                        <td>{{$rubBpin->rubro->cod}} - {{$rubBpin->rubro->name}}</td>
-                                                                    @endif
-                                                                @endforeach
                                                                 <td>$<?php echo number_format( $item->valor ,0) ?></td>
                                                             </tr>
                                                         @endforeach
@@ -819,7 +813,6 @@
                 <tr>
                     <td>${e.cod_actividad} <input type="hidden" name="codActividad[]" value="${e.cod_actividad}"></td>
                     <td>${e.actividad}</td>
-                    <td>${e.rubro_find[0].rubro.cod} - ${e.rubro}</td>
                     <td>${ parseInt(e.rubro_find[0].saldo).toLocaleString('de-DE')} $</td>
                     <td><input type="number" class="form-control" min="0" value="0" max="${valueControl}" name="valUsedActividad[]"></td>
                 </tr>
