@@ -104,7 +104,7 @@ class CdpController extends Controller
             if(!is_null($cdp)):
                 $cdp[$tipo]= $item[1];//alcalde_e $cdp->secretaria_e
                 $cdp->save();
-                $cdps->push($this->estructura($cdp, $roles));
+                $cdps->push($this->estructura($cdp, $roles, TRUE));
             endif;
         endforeach;
 

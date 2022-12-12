@@ -406,12 +406,22 @@ class RegistrosController extends Controller
         //TOCA EMPEZAR A CUADRAR LA INTERFAZ DEL PRESUPUESTO MOSTRANDO LOS CUIPO
 
         if ($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento") {
+
+	   foreach ($registro->cdpRegistroValor as $cdpReg){
+            	$cdp = $cdpReg->cdps;
+           	 foreach($cdp->rubrosCdp as $rubro){
+                	$infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,'id_rubro' => $rubro->id ,'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name, 'value' => $rubro->rubrosCdpValor->first()->valor];
+        	    }
+	        }
+
             $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->rubrosCdp->first()->rubros->name;
             $bpins = [];
         }else {
             $bpins = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor;
             $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor[0]->actividad->actividad;
         }
+
+	if (!isset($infoRubro)) $infoRubro = [];
 
         $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");

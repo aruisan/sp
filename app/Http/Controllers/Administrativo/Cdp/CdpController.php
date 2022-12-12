@@ -47,8 +47,8 @@ class CdpController extends Controller
         if ($rol == 2)
         {
             //ROL DE SECRETARIA
-            $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('secretaria_e', '0')->orWhere('jefe_e','1')->get();
-            $cdProcess = Cdp::where('vigencia_id', $vigencia_id)->where('secretaria_e', '3')->where('jefe_e','0')->get();
+            $cdpTarea = Cdp::where('vigencia_id', $id)->where('secretaria_e', '0')->get();
+            $cdProcess = Cdp::where('vigencia_id', $id)->where('secretaria_e', '3')->where('jefe_e','0')->get();
             $cdps = Cdp::where('vigencia_id', $id)
                 ->where(function ($query) {
                     $query->where('jefe_e','3')

@@ -75,6 +75,10 @@
 			<table style="margin: 5px 10px;">
 				<tbody>
 					<tr style="font-size: 16px;">
+						<td style="width: 30px;">OBJETO: </td>
+						<td> {{$registro->objeto}} </td>
+					</tr>
+					<tr style="font-size: 16px;">
 						<td style="width: 30px;">VALOR TOTAL: </td>
 						<td> $ {{number_format($registro->valor)}} ({{\NumerosEnLetras::convertir($registro->valor)}})</td>
 					</tr>
