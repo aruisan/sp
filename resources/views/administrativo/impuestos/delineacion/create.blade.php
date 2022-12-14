@@ -772,7 +772,7 @@
                 return;
             }
 
-            //this.submit();
+            this.submit();
         }
 
         function cambioTipoTramite(value){

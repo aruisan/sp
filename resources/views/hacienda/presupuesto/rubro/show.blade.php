@@ -217,7 +217,7 @@
                             <tbody>
                             @foreach($dependencias as  $dependencia)
                                 <tr>
-                                    <td>{{ $dependencia->num }} - {{ $dependencia->name }}</td>
+                                    <td>{{ $dependencia->sec }}.{{ $dependencia->num }} - {{ $dependencia->name }}</td>
                                     <td class="text-center">
                                         @foreach($fuentesR as  $fuentes)
                                             {{ $fuentes->sourceFunding->code }}

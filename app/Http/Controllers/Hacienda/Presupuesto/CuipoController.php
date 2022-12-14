@@ -139,6 +139,7 @@ class CuipoController extends Controller
             $fontRubro = FontsRubro::findOrFail($request->idFontRubro);
             $fontRubro->valor = $request->value;
             $fontRubro->valor_disp = $request->value;
+            $fontRubro->valor_disp_asign = $request->value;
             $fontRubro->save();
 
             Session::flash('success','Se ha actualizado correctamente el valor de la fuente');
@@ -150,6 +151,7 @@ class CuipoController extends Controller
                 $sourcefunding->rubro_id = $request->rubroID;
                 $sourcefunding->valor = 1;
                 $sourcefunding->valor_disp = 1;
+                $sourcefunding->valor_disp_asign = 1;
                 $sourcefunding->save();
             }
 
