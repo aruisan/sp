@@ -14,9 +14,9 @@
                     <div id="selectedT"></div>
                     <input type="hidden"  name="actividadCode" id="actividadCode"/>
                     <input type="hidden"  name="vigencia_id" id="vigencia_id"/>
-                    <select class="form-control" style="width: 100%" name="rubro_id" required>
+                    <select class="asignarRubroSelect" style="width: 100%" name="depRubroID" required>
                         @foreach($rubBPIN as $Rubro)
-                            <option value="{{$Rubro['id_rubro']}}">{{ $Rubro['cod'] }} - {{ $Rubro['name'] }}</option>
+                            <option value="{{$Rubro['depRubID']}}">{{ $Rubro['cod'] }} - {{ $Rubro['name'] }} - {{ $Rubro['codDep'] }}.{{ $Rubro['dep'] }}</option>
                         @endforeach
                     </select>
                     <br>

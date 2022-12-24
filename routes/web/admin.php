@@ -423,7 +423,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
     //// HISTORICO
     Route::get('presupuesto/historico/{id}', 'Hacienda\Presupuesto\VigenciaController@historico');
-    Route::Resource('presupuesto', 'Hacienda\Presupuesto\PresupuestoController');
+    Route::get('presupuesto', 'Hacienda\Presupuesto\Egresos\IndexController@index')->name('presupuesto.index');
 	Route::get('presupuesto/vigencia/create/{tipo}', 'Hacienda\Presupuesto\VigenciaController@create');
 	Route::resource('presupuesto/vigencia', 'Hacienda\Presupuesto\VigenciaController');
 	Route::get('presupuesto/level/create/{vigencia}', 'Hacienda\Presupuesto\LevelController@create');
@@ -439,7 +439,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 	Route::resource('presupuesto/FontRubro', 'Hacienda\Presupuesto\FontRubroController');
 	Route::resource('presupuesto/FontRubro/saldo', 'Hacienda\Presupuesto\FontRubroController@saldoFont');
         //ASIGNAR ACTIVIDAD AL PROYECTO
-        Route::post('presupuesto/proyectos/asignaRubroActiv','Hacienda\Presupuesto\PresupuestoController@asignaRubroProyecto');
+        Route::post('presupuesto/proyectos/asignaRubroActiv','Hacienda\Presupuesto\Egresos\IndexController@asignaRubroProyecto');
 
     //INFORMES PRESUPUESTO EGRESOS
     Route::resource('presupuesto/informes','Hacienda\Presupuesto\Informes\ReportsController');

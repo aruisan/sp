@@ -157,6 +157,10 @@
                                     <th class="text-center">Pagos</th>
                                     <th class="text-center">Cuentas Por Pagar</th>
                                     <th class="text-center">Reservas</th>
+                                    @if(auth()->user()->roles->first()->id != 2)
+                                        <th class="text-center">Cod Dependencia</th>
+                                        <th class="text-center">Dependencia</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -165,7 +169,7 @@
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codBpin']}}</td>
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codActiv']}}</td>
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['nameActiv']}}</td>
-                                        <td class="text-dark" style="vertical-align:middle;">@if($codigo['id_rubro'] != 0) <a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}"> @endif{{ $codigo['cod']}}</a></td>
+                                        <td class="text-dark" style="vertical-align:middle;">@if($codigo['id_rubro'] != 0) <a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}"> @endif{{ str_replace('.',',',$codigo['cod']) }}</a></td>
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['name']}}</td>
                                         <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['presupuesto_inicial'],0);?></td>
                                         <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['adicion'],0);?></td>
@@ -181,6 +185,10 @@
                                         <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['pagos'],0);?></td>
                                         <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['cuentas_pagar'],0);?></td>
                                         <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['reservas'],0);?></td>
+                                        @if(auth()->user()->roles->first()->id != 2)
+                                            <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codDep']}}</td>
+                                            <td class="text-dark" style="vertical-align:middle;">{{ $codigo['dep']}}</td>
+                                        @endif
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -205,6 +213,10 @@
                                     <th class="text-center">Pagos</th>
                                     <th class="text-center">Cuentas Por Pagar</th>
                                     <th class="text-center">Reservas</th>
+                                    @if(auth()->user()->roles->first()->id != 2)
+                                        <th class="text-center">Cod Dependencia</th>
+                                        <th class="text-center">Dependencia</th>
+                                    @endif
                                 </tr>
                                 </tfoot>
                             </table>
@@ -798,6 +810,8 @@
         const bpins = @json($bpins);
         const rubInvDisp = @json($rubBPIN);
         //console.log('bpins', bpins)
+
+        $('.asignarRubroSelect').select2();
 
         const show_proyecto = cod_proyecto =>{
             $('#tabla_bpins').hide();
