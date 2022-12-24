@@ -16,7 +16,7 @@
                     <input type="hidden"  name="vigencia_id" id="vigencia_id"/>
                     <select class="asignarRubroSelect" style="width: 100%" name="depRubroID" required>
                         @foreach($rubBPIN as $Rubro)
-                            <option value="{{$Rubro['depRubID']}}">{{ $Rubro['cod'] }} - {{ $Rubro['name'] }} - {{ $Rubro['codDep'] }}.{{ $Rubro['dep'] }}</option>
+                            <option value="{{$Rubro['depRubID']}}">{{ $Rubro['cod'] }} - {{ $Rubro['name'] }} - {{ $Rubro['codDep'] }}.{{ $Rubro['dep'] }} - $ <?php echo number_format($Rubro['presupuesto_inicial'],0);?></option>
                         @endforeach
                     </select>
                     <br>
