@@ -171,14 +171,17 @@ class CdpController extends Controller
         $cdp->code = $count + 1;
         $cdp->valueControl = $request->valueControl;
         $cdp->valor = 0;
-        $cdp->fecha = $request->fecha;
+        //$cdp->fecha = $request->fecha;
+        $cdp->fecha = '2023-01-02';
         $cdp->dependencia_id = $request->dependencia_id;
         $cdp->observacion = $request->observacion;
         $cdp->saldo = 0;
         $cdp->secretaria_e = $request->secretaria_e;
-        $cdp->ff_secretaria_e = $request->fecha;
+        //$cdp->ff_secretaria_e = $request->fecha;
+        $cdp->ff_secretaria_e = '2023-01-02';
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
+        $cdp->created_at = '2023-01-02';
         $cdp->save();
 
         Session::flash('success','El CDP se ha creado exitosamente');
@@ -335,6 +338,7 @@ class CdpController extends Controller
     public function updateEstado($id,$rol,$fecha,$valor,$estado)
     {
         $update = Cdp::findOrFail($id);
+        $fecha = '2023-01-02';
         if ($rol == 2){
             $update->valor = $valor;
             $update->secretaria_e = $estado;
@@ -409,13 +413,16 @@ class CdpController extends Controller
 
     public function rechazar(Request $request, $id, $vigen)
     {
+        $fecha = '2023-01-02';
         if ($request->rol == "3"){
             $update = Cdp::findOrFail($id);
             $update->jefe_e = "1";
             $update->secretaria_e = "0";
-            $update->ff_jefe_e = $request->fecha;
+            $update->ff_jefe_e = $fecha;
+            //$update->ff_jefe_e = $request->fecha;
             $update->alcalde_e = "0";
-            $update->ff_alcalde_e = $request->fecha;
+            $update->ff_alcalde_e = $fecha;
+            //$update->ff_alcalde_e = $request->fecha;
             $update->motivo = $request->motivo;
             $update->save();
 
@@ -426,7 +433,8 @@ class CdpController extends Controller
             $update = Cdp::findOrFail($id);
             $update->alcalde_e = "1";
             $update->secretaria_e = "0";
-            $update->ff_alcalde_e = $request->fecha;
+            $update->ff_alcalde_e = $fecha;
+            //$update->ff_alcalde_e = $request->fecha;
             $update->motivo = $request->motivo;
             $update->save();
 

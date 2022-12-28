@@ -720,7 +720,6 @@ class IndexController extends Controller
                                         //PRESUPUESTO DEFINITIVO
                                         if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($value) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                                         else $PDef = array_sum($value) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
-
                                         $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
 
                                         $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro[0]->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => array_sum($value),
@@ -897,7 +896,7 @@ class IndexController extends Controller
                         $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro->first()->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => 0,
                             'adicion' => 0, 'reduccion' => 0, 'credito' => 0, 'ccredito' => 0, 'presupuesto_def' => 0, 'cdps' => 0, 'registros' => 0,
                             'saldo_disp' => 0, 'ordenes_pago' => 0, 'pagos' => 0, 'cuentas_pagar' => 0, 'reservas' => 0, 'rubros_disp' => 0, 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '',
-                            'codDep' => '', 'dep' => ''];
+                            'codDep' => '', 'dep' => '', 'depRubID' => ''];
                     }
                 }
                 if ($data->hijo == 0) {
@@ -926,7 +925,11 @@ class IndexController extends Controller
             //Rubros no asignados a alguna actividad
             foreach ($presupuesto as $item){
                 if ($item['id_rubro'] != ""){
-                    if ($item['tipo'] == "Inversion") $rubBPIN[] = collect($item);
+                    if ($item['tipo'] == "Inversion") {
+                        $validationUsed = bpinVigencias::where('vigencia_id', $V)->where('dep_rubro_id', $item['depRubID'])->get();
+                        //SE VALIDA SI EL RUBRO DE LA DEPENDENCIA HA SIDO USADO
+                        if (count($validationUsed) == 0) $rubBPIN[] = collect($item);
+                    }
                 }
             }
 
