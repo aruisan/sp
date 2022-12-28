@@ -504,7 +504,7 @@
                                                             </table>
                                                         </div>
                                                         <div id="actividades" style="display: none">
-                                                            <hr><center><h3>SELECCIONE LA ACTIVIDAD</h3></center><hr>
+                                                            <hr><center><h3>ACTIVIDADES</h3></center><hr>
                                                             <table class="table table-borderless">
                                                                 <thead>
                                                                 <tr>
