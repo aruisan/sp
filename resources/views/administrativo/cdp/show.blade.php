@@ -256,7 +256,7 @@
                                                                 @endif
                                                                 <div class="col-lg-6">
                                                                     @if($cdp->jefe_e == "3")
-                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:1
+                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                         @if($fuentesRubro->rubrosCdpValor->count() != 0)
                                                                             @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                 @php($id_rubrosCdp = $rubrosCdpData->id )
@@ -288,7 +288,7 @@
                                                                             @endforeach
                                                                         @endif
                                                                     @elseif($fuentesRubro->valor_disp != 0)
-                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}:2
+                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                         @foreach($fuentesRubro->dependenciaFont as $dep)
                                                                             @if($dep->dependencia_id == $user->dependencia_id)
                                                                                 @if($dep->rubroCdpValor->count() != 0)
