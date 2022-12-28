@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\Cdp;
 
 use App\BPin;
 use App\bpinVigencias;
+use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
@@ -449,9 +450,14 @@ class CdpController extends Controller
         foreach ($cdp->rubrosCdpValor as $fuentes){
             $valor = $fuentes->valor;
             $total = $fuentes->fontsRubro->valor_disp - $valor;
+
             $fontRubro = FontsRubro::findOrFail($fuentes->fontsRubro->id);
             $fontRubro->valor_disp = $total;
             $fontRubro->save();
+
+            $depFont = DependenciaRubroFont::find($fuentes->fontsDep_id);
+            $depFont->saldo = $depFont->saldo - $cdp->valor;
+            $depFont->save();
         }
     }
 
@@ -464,6 +470,10 @@ class CdpController extends Controller
             $total = $validateVig->saldo - $valor;
             $validateVig->saldo = $total;
             $validateVig->save();
+
+            $depRubroFont = DependenciaRubroFont::find($validateVig->dep_rubro_id);
+            $depRubroFont->saldo = $depRubroFont->saldo - $cdp->valor;
+            $depRubroFont->save();
         }
     }
 
