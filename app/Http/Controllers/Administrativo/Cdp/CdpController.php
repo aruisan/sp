@@ -42,15 +42,16 @@ class CdpController extends Controller
     {
         $vigencia_id = $id;
         $roles = auth()->user()->roles;
+        $dep = auth()->user()->dependencia->id;
         foreach ($roles as $role){
             $rol= $role->id;
         }
         if ($rol == 2)
         {
             //ROL DE SECRETARIA
-            $cdpTarea = Cdp::where('vigencia_id', $id)->where('secretaria_e', '0')->get();
-            $cdProcess = Cdp::where('vigencia_id', $id)->where('secretaria_e', '3')->where('jefe_e','0')->get();
-            $cdps = Cdp::where('vigencia_id', $id)
+            $cdpTarea = Cdp::where('vigencia_id', $id)->where('secretaria_e', '0')->where('dependencia_id', $dep)->get();
+            $cdProcess = Cdp::where('vigencia_id', $id)->where('secretaria_e', '3')->where('jefe_e','0')->where('dependencia_id', $dep)->get();
+            $cdps = Cdp::where('vigencia_id', $id)->where('dependencia_id', $dep)
                 ->where(function ($query) {
                     $query->where('jefe_e','3')
                         ->orWhere('jefe_e','2');

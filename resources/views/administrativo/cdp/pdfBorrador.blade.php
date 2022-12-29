@@ -33,14 +33,6 @@
 				<table style="margin: 5px 10px;">
 					<tbody>
 						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Proyecto: </td>
-							<td> {{$rubrosCdp->rubros->subProyecto->proyecto->name}}</td>
-						</tr>
-						<tr style="font-size: 16px;">
-							<td style="width: 30px;">Sub-Proyecto: </td>
-							<td> {{$rubrosCdp->rubros->subProyecto->name}}</td>
-						</tr>
-						<tr style="font-size: 16px;">
 							<td style="width: 30px;">Rubro: </td>
 							@foreach($infoRubro as $rubro)
 								@if($rubro['name'] == $rubrosCdp->rubros->name)
@@ -100,6 +92,10 @@
 					<tr style="font-size: 16px;">
 						<td style="width: 30px;">SOLICITADO POR: </td>
 						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->name : ''}}</td>
+					</tr>
+					<tr style="font-size: 16px;">
+						<td style="width: 30px;">DEPENDENCIA: </td>
+						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->dependencia->name : ''}}</td>
 					</tr>
 				</tbody>
 			</table>

@@ -93,6 +93,10 @@
 						<td style="width: 30px;">SOLICITADO POR: </td>
 						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->name : ''}}</td>
 					</tr>
+					<tr style="font-size: 16px;">
+						<td style="width: 30px;">DEPENDENCIA: </td>
+						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->dependencia->name : ''}}</td>
+					</tr>
 				</tbody>
 			</table>
 			

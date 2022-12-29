@@ -51,9 +51,11 @@
                                     <th class="text-center"><i class="fa fa-usd"></i></th>
                                     <th class="text-center"><i class="fa fa-edit"></i></th>
                                 @elseif ($rol == 3)
+                                    <th class="text-center">Dependencia</th>
                                     <th class="text-center">Ver</th>
                                     <th class="text-center"><label>Aprobar &nbsp;<input type="checkbox" onclick="approve(this.checked, {{count($cdpTarea)}}, {{$cdpTarea}})"></label> </th>
                                 @elseif ($rol == 5)
+                                    <th class="text-center">Dependencia</th>
                                     <th class="text-center">Ver</th>
                                     <th class="text-center"><label>Aprobar &nbsp;<input type="checkbox" onclick="approve(this.checked, {{count($cdpTarea)}}, {{$cdpTarea}})"></label></th>
                                 @endif
@@ -119,11 +121,13 @@
                                             <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id.'/edit') }}" title="Editar CDP" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                         </td>
                                     @elseif($rol == 3)
+                                        <td class="text-center">{{ $cdp->dependencia->name }}</td>
                                         <td class="text-center">
                                             <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                         </td>
                                         <td class="text-center"><input type="checkbox" id="check{{$index}}" onclick="approveUnidad(this.checked, {{$index}}, {{$cdp->id}})"><input type="hidden" id="checkInput{{$index}}" name="checkInput{{$index}}"></td>
                                     @elseif($rol == 5)
+                                        <td class="text-center">{{ $cdp->dependencia->name }}</td>
                                         <td class="text-center">
                                             <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                         </td>
@@ -163,6 +167,7 @@
                             <th class="text-center">Estado Alcalde</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
+                            <th class="text-center">Dependencia</th>
                             <th class="text-center">Ver CDP</th>
                             <th class="text-center">Borrador</th>
                         </tr>
@@ -220,6 +225,7 @@
                                 @else
                                     <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
                                 @endif
+                                <td class="text-center">{{ $cdp->dependencia->name }}</td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
@@ -245,6 +251,7 @@
                             <th class="text-center">Estado</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
+                            <th class="text-center">Dependencia</th>
                             <th class="text-center">Ver</th>
                             <th class="text-center">PDF</th>
                         </tr>
@@ -272,6 +279,7 @@
                                 </td>
                                 <td class="text-center">$<?php echo number_format($cdp->valor,0) ?></td>
                                 <td class="text-center">$<?php echo number_format($cdp->saldo,0) ?></td>
+                                <td class="text-center">{{ $cdp->dependencia->name }}</td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>

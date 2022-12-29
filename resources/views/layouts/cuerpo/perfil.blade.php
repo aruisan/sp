@@ -24,6 +24,13 @@
             </div>
         </div>
     </li>
+    <li class="item-perfil">
+        <a class="item-perfil">
+            <i class="fa fa-institution" aria-hidden="true"></i>
+            <label> Dependencia:</label>
+            {{Auth::user()->dependencia->name}}
+        </a>
+    </li>
    <li class="item-perfil">
        <a class="item-perfil">
             <i class="fa fa-suitcase" aria-hidden="true"></i>
