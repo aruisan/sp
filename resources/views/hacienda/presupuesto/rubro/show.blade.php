@@ -266,6 +266,9 @@
                         <tr>
                             <th class="text-center">Id</th>
                             <th class="text-center">Nombre</th>
+                            @if( $rol == 3 or $rol == 1)
+                                <th class="text-center">Dependencia</th>
+                            @endif
                             <th class="text-center">Estado Actual</th>
                             <th class="text-center">Valor Inicial</th>
                             <th class="text-center">Valor Disponible</th>
@@ -276,6 +279,9 @@
                             <tr class="text-center">
                                 <td><a href="{{ url('administrativo/cdp/'. $data->cdps->vigencia_id.'/'.$data->cdps->id) }}">{{ $data->cdps->code }}</a></td>
                                 <td>{{ $data->cdps->name }}</td>
+                                @if( $rol == 3 or $rol == 1)
+                                    <td>{{ $data->cdps->dependencia->name }}</td>
+                                @endif
                                 <td>
                                     <span class="badge badge-pill badge-danger">
                                         @if( $data->cdps->jefe_e == "0")
