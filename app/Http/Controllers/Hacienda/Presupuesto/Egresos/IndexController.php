@@ -32,8 +32,7 @@ class IndexController extends Controller
 
     public function index(){
 
-        //$añoActual = Carbon::now()->year;
-        $añoActual = 2023;
+        $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
         $rubros = Rubro::where('vigencia_id', $vigens->first()->id)->get();

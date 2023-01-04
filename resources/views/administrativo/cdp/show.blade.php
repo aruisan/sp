@@ -818,6 +818,8 @@
                 </tr>
             `);
             });
+
+            window.scrollTo(0,document.body.scrollHeight);
         }
 
         var count1 = '<?php echo $cdp->rubrosCdp->count(); ?>';
