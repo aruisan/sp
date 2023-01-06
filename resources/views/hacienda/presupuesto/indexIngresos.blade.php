@@ -92,54 +92,47 @@
                                 <tr>
                                     <th class="text-center">Rubro</th>
                                     <th class="text-center">Nombre</th>
-                                    <th class="text-center">PPTO. Inicial</th>
+                                    <th class="text-center">INICIAL</th>
+                                    <th class="text-center">Adición</th>
+                                    <th class="text-center">Reducción</th>
+                                    <th class="text-center">Anulados</th>
+                                    <th class="text-center">DEFINITIVO</th>
                                     <th class="text-center">Total Recaudado</th>
                                     <th class="text-center">Saldo Por Recaudar</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($codigos as $codigo)
+                                @foreach($prepIng as $rubro)
                                     <tr>
-                                        @if($codigo['valor'])
-                                            <td class="text-dark" style="vertical-align:middle;"><a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}">{{ $codigo['codigo']}}</a></td>
+                                        @if($rubro->hijo == 1)
+                                            <td class="text-dark" style="vertical-align:middle;"><a href="{{ url('presupuesto/rubro/'.$rubro->rubro_id) }}">{{ $rubro->code }}</a></td>
                                         @else
-                                            <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codigo']}}</td>
+                                            <td class="text-dark" style="vertical-align:middle;">{{ $rubro->code}}</td>
                                         @endif
-                                        <td class="text-dark" style="vertical-align:middle;">{{ $codigo['name']}}</td>
-                                        <!-- PRESUPUESTO INICIAL-->
-                                        @foreach($valoresIniciales as $valorInicial)
-                                            @if($valorInicial['id'] == $codigo['id'])
-                                                <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($valorInicial['valor'],0);?></td>
-                                            @endif
-                                        @endforeach
-                                        @if($codigo['valor'])
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['valor'],0);?></td>
-                                        @endif
-                                    <!-- TOTAL RECAUDADO-->
-                                        @foreach($valoresFinRec as $valorFinRec)
-                                            @if($valorFinRec['id'] == $codigo['id'])
-                                                <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($valorFinRec['valor'],0);?></td>
-                                            @endif
-                                        @endforeach
-                                        @foreach($totalRecaud as $totalR)
-                                            @if($codigo['id_rubro'] == $totalR['id'])
-                                                <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($totalR['valor'],0);?></td>
-                                            @endif
-                                        @endforeach
-                                    <!-- SALDO POR RECAUDAR -->
-                                        @foreach($valoresFinSald as $valorFinSald)
-                                            @if($valorFinSald['id'] == $codigo['id'])
-                                                <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($valorFinSald['valor'],0);?></td>
-                                            @endif
-                                        @endforeach
-                                        @foreach($saldoRecaudo as $saldoR)
-                                            @if($codigo['id_rubro'] == $saldoR['id'])
-                                                <td class="text-center text-dark" style="vertical-align:middle;">$0</td>
-                                            @endif
-                                        @endforeach
+                                            <td class="text-dark" style="vertical-align:middle;">{{ $rubro->name}}</td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->inicial,0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->adicion,0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->reduccion,0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->anulados,0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->definitivo,0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->recaudado,0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->porRecaudar,0);?></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th class="text-center">Rubro</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">INICIAL</th>
+                                    <th class="text-center">Adición</th>
+                                    <th class="text-center">Reducción</th>
+                                    <th class="text-center">Anulados</th>
+                                    <th class="text-center">DEFINITIVO</th>
+                                    <th class="text-center">Total Recaudado</th>
+                                    <th class="text-center">Saldo Por Recaudar</th>
+                                </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -214,12 +207,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($Rubros as  $Rubro)
+                                @foreach($rubros as  $Rubro)
                                     <tr>
-                                        <td>{{ $Rubro['codigo'] }}</td>
+                                        <td>{{ $Rubro['cod'] }}</td>
                                         <td>{{ $Rubro['name'] }}</td>
                                         <td class="text-center">
-                                            <a href="{{ url('presupuesto/rubro/'.$Rubro['id_rubro']) }}" class="btn-sm btn-success"><i class="fa fa-info"></i></a>
+                                            <a href="{{ url('presupuesto/rubro/'.$Rubro['id']) }}" class="btn-sm btn-success"><i class="fa fa-info"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
