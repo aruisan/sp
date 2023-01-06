@@ -7,6 +7,7 @@ use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\FontsVigencia;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
+use App\Model\Hacienda\Presupuesto\PlantillaCuipoIngresos;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\SourceFunding;
 use Illuminate\Support\Collection;
@@ -29,8 +30,11 @@ class RubrosController extends Controller
         $vigencia = Vigencia::findOrFail($vigencia_id);
 
         // PLANTILLA PARA EGRESOS E INGRESOS
+        // TIPO 1 -> PRESUPUESTO INGRESOS
+        // TIPO 0 -> PRESUPUESTO EGRESOS
+
         if ($vigencia->tipo == 0) $plantilla = PlantillaCuipo::where('id','>=',318)->get();
-        else $plantilla = PlantillaCuipo::where('id','<',318)->get();
+        else $plantilla = PlantillaCuipoIngresos::all();
 
         $rubrosChecked = Rubro::where('plantilla_cuipos_id','!=',null)->where('vigencia_id', $vigencia_id)->select(['plantilla_cuipos_id'])->get();
         $validate = false;
@@ -47,6 +51,7 @@ class RubrosController extends Controller
     public function store(Request $request)
     {
         $rubrosChecked = Rubro::where('plantilla_cuipos_id','!=',null)->where('vigencia_id', $request->vigencia_id)->get();
+        $vigencia = Vigencia::find($request->vigencia_id);
 
         foreach ($request->checkedIDs as $checked){
             $validate = false;
@@ -58,7 +63,8 @@ class RubrosController extends Controller
             }
             if ($validate == false){
 
-                $dataPlantilla = PlantillaCuipo::findOrFail($checked);
+                if ($vigencia->tipo == 0) $dataPlantilla = PlantillaCuipo::findOrFail($checked);
+                else $dataPlantilla = PlantillaCuipoIngresos::findOrFail($checked);
 
                 $rubro = new Rubro();
                 $rubro->name =  $dataPlantilla->name;
