@@ -99,24 +99,28 @@
                                     <th class="text-center">DEFINITIVO</th>
                                     <th class="text-center">Total Recaudado</th>
                                     <th class="text-center">Saldo Por Recaudar</th>
+                                    <th class="text-center">Codigo fuente</th>
+                                    <th class="text-center">Nombre fuente</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($prepIng as $rubro)
                                     <tr>
-                                        @if($rubro->hijo == 1)
-                                            <td class="text-dark" style="vertical-align:middle;"><a href="{{ url('presupuesto/rubro/'.$rubro->rubro_id) }}">{{ $rubro->code }}</a></td>
+                                        @if($rubro['hijo'] == 1)
+                                            <td class="text-dark" style="vertical-align:middle;"><a href="{{ url('presupuesto/rubro/'.$rubro['id']) }}">{{ $rubro['code'] }}</a></td>
                                         @else
-                                            <td class="text-dark" style="vertical-align:middle;">{{ $rubro->code}}</td>
+                                            <td class="text-dark" style="vertical-align:middle;">{{ $rubro['code']}}</td>
                                         @endif
-                                            <td class="text-dark" style="vertical-align:middle;">{{ $rubro->name}}</td>
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->inicial,0);?></td>
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->adicion,0);?></td>
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->reduccion,0);?></td>
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->anulados,0);?></td>
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->definitivo,0);?></td>
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->recaudado,0);?></td>
-                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro->porRecaudar,0);?></td>
+                                            <td class="text-dark" style="vertical-align:middle;">{{ $rubro['name']}}</td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['inicial'],0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['adicion'],0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['reduccion'],0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['anulados'],0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['definitivo'],0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['recaudado'],0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['porRecaudar'],0);?></td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">{{$rubro['cod_fuente']}}</td>
+                                            <td class="text-center text-dark" style="vertical-align:middle;">{{$rubro['name_fuente']}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -131,6 +135,8 @@
                                     <th class="text-center">DEFINITIVO</th>
                                     <th class="text-center">Total Recaudado</th>
                                     <th class="text-center">Saldo Por Recaudar</th>
+                                    <th class="text-center">Codigo fuente</th>
+                                    <th class="text-center">Nombre fuente</th>
                                 </tr>
                                 </tfoot>
                             </table>

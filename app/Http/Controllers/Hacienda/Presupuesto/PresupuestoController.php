@@ -64,25 +64,125 @@ class PresupuestoController extends Controller
             $V = $vigens[0]->id;
             $vigencia_id = $V;
             $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$vigencia_id)->where('estado','3')->get();
-            $prepIng = PlantillaCuipoIngresos::all();
-            foreach ($prepIng as $data){
+            $plantillaIng = PlantillaCuipoIngresos::all();
+            foreach ($plantillaIng as $data){
                 //AL PRIMER CAMPO SE LE ASIGNA TODO EL DINERO
                 if ($data->id == 1){
-                    $data->inicial = $vigens[0]->presupuesto_inicial;
-                    $data->adicion = 0;
-                    $data->reduccion = 0;
-                    $data->anulados = 0;
-                    $data->definitivo = $vigens[0]->presupuesto_inicial;
-                    $data->recaudado = 0;
-                    $data->porRecaudar = 0;
-                }
-                //SE VALIDA SI ES UN RUBRO HIJO PARA EMPEZAR A INGRESAR VALORES
-                if ($data->hijo == "1"){
-                    $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
-                    if (count($rubro) > 0){
-                        //dd($data, count($rubro));
-                    } else{
-
+                    $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $vigens[0]->presupuesto_inicial, 'adicion' => 0, 'reduccion' => 0,
+                        'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $vigens[0]->presupuesto_inicial,
+                        'hijo' => 0, 'cod_fuente' => '', 'name_fuente' => '']);
+                } else {
+                    $hijos1 = PlantillaCuipoIngresos::where('padre_id', $data->id)->get();
+                    if (count($hijos1) > 0){
+                        foreach ($hijos1 as $h1){
+                            $hijos2 = PlantillaCuipoIngresos::where('padre_id', $h1->id)->get();
+                            if (count($hijos2) > 0){
+                                foreach ($hijos2 as $h2){
+                                    $hijos3 = PlantillaCuipoIngresos::where('padre_id', $h2->id)->get();
+                                    if (count($hijos3) > 0){
+                                        foreach ($hijos3 as $h3){
+                                            $hijos4 = PlantillaCuipoIngresos::where('padre_id', $h3->id)->get();
+                                            if (count($hijos4) > 0){
+                                                foreach ($hijos4 as $h4){
+                                                    $hijos5 = PlantillaCuipoIngresos::where('padre_id', $h4->id)->get();
+                                                    if (count($hijos5) > 0){
+                                                        foreach ($hijos5 as $h5){
+                                                            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h5->id)->get();
+                                                            if (count($rubro) > 0){
+                                                                if (count($rubro) == 1){
+                                                                    $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                                } else {
+                                                                    foreach ($rubro as $rb){
+                                                                        $sum[] = $rb->fontsRubro->sum('valor');
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h4->id)->get();
+                                                        if (count($rubro) > 0){
+                                                            if (count($rubro) == 1){
+                                                                $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                            } else {
+                                                                foreach ($rubro as $rb){
+                                                                    $sum[] = $rb->fontsRubro->sum('valor');
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } else{
+                                                $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h3->id)->get();
+                                                if (count($rubro) > 0){
+                                                    if (count($rubro) == 1){
+                                                        $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                    } else {
+                                                        foreach ($rubro as $rb){
+                                                            $sum[] = $rb->fontsRubro->sum('valor');
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }else{
+                                        $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h2->id)->get();
+                                        if (count($rubro) > 0){
+                                            if (count($rubro) == 1){
+                                                $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                            } else {
+                                                foreach ($rubro as $rb){
+                                                    $sum[] = $rb->fontsRubro->sum('valor');
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else{
+                                $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h1->id)->get();
+                                if (count($rubro) > 0){
+                                    if (count($rubro) == 1){
+                                        $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                    } else {
+                                        foreach ($rubro as $rb){
+                                            $sum[] = $rb->fontsRubro->sum('valor');
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (isset($sum)){
+                            $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => 0, 'reduccion' => 0,
+                                'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => array_sum($sum),
+                                'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
+                            unset($sum);
+                        }
+                    } else {
+                        //AL NO TENER HIJOS SE TOMA COMO SI FUERA YA EL RUBRO HIJO CON LOS VALORES
+                        $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+                        if (count($rubro) > 0){
+                            if (count($rubro) == 1){
+                                if (count($rubro[0]->fontsRubro) > 1){
+                                    foreach ($rubro[0]->fontsRubro as $font){
+                                        $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name,
+                                            'inicial' => $font->valor, 'adicion' => 0, 'reduccion' => 0, 'anulados' => 0,
+                                            'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $font->valor,'hijo' => $data->hijo,
+                                            'cod_fuente' => $font->sourceFunding->code, 'name_fuente' => $font->sourceFunding->description]);
+                                    }
+                                } else {
+                                    $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => 0, 'reduccion' => 0,
+                                        'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $rubro[0]->fontsRubro->sum('valor'),
+                                        'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->description]);
+                                }
+                            } else {
+                                //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
+                                foreach ($rubro as $rb){
+                                    $sum[] = $rb->fontsRubro->sum('valor');
+                                    $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => 0, 'reduccion' => 0,
+                                        'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $rb->fontsRubro->sum('valor'),
+                                        'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->description]);
+                                }
+                            }
+                        }
                     }
                 }
             }
