@@ -75,7 +75,7 @@
                                                     <td>&nbsp;</td>
                                                     <td class="text-center">
                                                         <input type="hidden" name="comprobante_id" value="{{ $comprobante->id }}">
-                                                        <select name="rubro_id[]" class="form-group-lg" required>
+                                                        <select name="rubro_id[]" class="form-control" required>
                                                             @foreach($infoRubro as $rubro)
                                                                 <option value="{{ $rubro['id_rubro'] }}">{{ $rubro['codigo'] }} - {{ $rubro['name'] }}</option>
                                                             @endforeach
@@ -148,7 +148,7 @@
                                                                         <input type="hidden" name="comprobante_id" value="{{ $comprobante->id }}">
                                                                         @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
                                                                         <li style="list-style-type: none;">
-                                                                            {{ $fuentesRubro->fontVigencia->font->name }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
+                                                                            {{ $fuentesRubro->sourceFunding->description }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
                                                                         </li>
                                                                     </div>
                                                                 @elseif($fuentesRubro->valor_disp != 0)
@@ -157,13 +157,13 @@
                                                                         <input type="hidden" name="comprobante_id" value="{{ $comprobante->id }}">
                                                                         @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
                                                                         <li style="list-style-type: none;">
-                                                                            {{ $fuentesRubro->fontVigencia->font->name }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
+                                                                            {{ $fuentesRubro->sourceFunding->description }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
                                                                         </li>
                                                                     </div>
                                                                 @endif
                                                                 <div class="col-lg-6">
                                                                     @if($comprobante->estado == "3")
-                                                                        Valor ingresado a {{ $fuentesRubro->fontVigencia->font->name}}:
+                                                                        Valor ingresado a {{ $fuentesRubro->sourceFunding->description}}:
                                                                         @if($comprobante->rubros != null)
                                                                             @foreach($comprobante->rubros as  $valoresFR)
                                                                                 @php($id_rubros = $rubrosData->id )
@@ -185,7 +185,7 @@
                                                                             <input type="number" required  name="valor[]" class="form-group-sm" value="0" min="0" style="text-align: center">
                                                                         @endif
                                                                     @elseif($fuentesRubro->valor_disp != 0)
-                                                                        Valor ingresado a {{ $fuentesRubro->fontVigencia->font->name}}:
+                                                                        Valor ingresado a {{ $fuentesRubro->sourceFunding->description}}:
                                                                         @if($comprobante->rubros != null)
                                                                             @foreach($comprobante->rubros as  $valoresFR)
                                                                                 @php($id_rubros = $rubrosData->id )
@@ -297,6 +297,8 @@
         }
 
         $(document).ready(function() {
+
+            //$('.select-rubro').select2();
 
             $('#tabla_rubrosCdp').DataTable( {
                 responsive: true,

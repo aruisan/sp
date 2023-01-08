@@ -66,10 +66,9 @@ class PresupuestoController extends Controller
             $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$vigencia_id)->where('estado','3')->get();
             $plantillaIng = PlantillaCuipoIngresos::all();
             foreach ($plantillaIng as $data){
-                //AL PRIMER CAMPO SE LE ASIGNA TODO EL DINERO
                 if ($data->id == 1){
                     $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $vigens[0]->presupuesto_inicial, 'adicion' => 0, 'reduccion' => 0,
-                        'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $vigens[0]->presupuesto_inicial,
+                        'anulados' => 0, 'recaudado' => $comprobanteIng->sum('val_total') , 'porRecaudar' => $vigens[0]->presupuesto_inicial - $comprobanteIng->sum('val_total'), 'definitivo' => $vigens[0]->presupuesto_inicial,
                         'hijo' => 0, 'cod_fuente' => '', 'name_fuente' => '']);
                 } else {
                     $hijos1 = PlantillaCuipoIngresos::where('padre_id', $data->id)->get();
@@ -91,9 +90,11 @@ class PresupuestoController extends Controller
                                                             if (count($rubro) > 0){
                                                                 if (count($rubro) == 1){
                                                                     $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                                    if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                                                 } else {
                                                                     foreach ($rubro as $rb){
                                                                         $sum[] = $rb->fontsRubro->sum('valor');
+                                                                        if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                                                     }
                                                                 }
                                                             }
@@ -103,9 +104,11 @@ class PresupuestoController extends Controller
                                                         if (count($rubro) > 0){
                                                             if (count($rubro) == 1){
                                                                 $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                                if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                                             } else {
                                                                 foreach ($rubro as $rb){
                                                                     $sum[] = $rb->fontsRubro->sum('valor');
+                                                                    if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                                                 }
                                                             }
                                                         }
@@ -116,9 +119,11 @@ class PresupuestoController extends Controller
                                                 if (count($rubro) > 0){
                                                     if (count($rubro) == 1){
                                                         $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                        if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                                     } else {
                                                         foreach ($rubro as $rb){
                                                             $sum[] = $rb->fontsRubro->sum('valor');
+                                                            if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                                         }
                                                     }
                                                 }
@@ -129,9 +134,11 @@ class PresupuestoController extends Controller
                                         if (count($rubro) > 0){
                                             if (count($rubro) == 1){
                                                 $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                             } else {
                                                 foreach ($rubro as $rb){
                                                     $sum[] = $rb->fontsRubro->sum('valor');
+                                                    if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                                 }
                                             }
                                         }
@@ -142,43 +149,52 @@ class PresupuestoController extends Controller
                                 if (count($rubro) > 0){
                                     if (count($rubro) == 1){
                                         $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                        if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                     } else {
                                         foreach ($rubro as $rb){
                                             $sum[] = $rb->fontsRubro->sum('valor');
+                                            if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                         }
                                     }
                                 }
                             }
                         }
                         if (isset($sum)){
+                            $compIngValue = 0;
+                            if (isset($civ)) $compIngValue = array_sum($civ);
                             $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => 0, 'reduccion' => 0,
-                                'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => array_sum($sum),
+                                'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => array_sum($sum) - $compIngValue, 'definitivo' => array_sum($sum),
                                 'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
                             unset($sum);
+                            if (isset($civ)) unset($civ);
                         }
                     } else {
                         //AL NO TENER HIJOS SE TOMA COMO SI FUERA YA EL RUBRO HIJO CON LOS VALORES
                         $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
                         if (count($rubro) > 0){
                             if (count($rubro) == 1){
+                                $compIngValue = 0;
+                                if (count($rubro[0]->compIng) > 0) $compIngValue = $rubro[0]->compIng->sum('valor');
                                 if (count($rubro[0]->fontsRubro) > 1){
                                     foreach ($rubro[0]->fontsRubro as $font){
                                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name,
                                             'inicial' => $font->valor, 'adicion' => 0, 'reduccion' => 0, 'anulados' => 0,
-                                            'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $font->valor,'hijo' => $data->hijo,
+                                            'recaudado' => $compIngValue, 'porRecaudar' => $font->valor - $compIngValue, 'definitivo' => $font->valor,'hijo' => $data->hijo,
                                             'cod_fuente' => $font->sourceFunding->code, 'name_fuente' => $font->sourceFunding->description]);
                                     }
                                 } else {
                                     $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => 0, 'reduccion' => 0,
-                                        'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $rubro[0]->fontsRubro->sum('valor'),
-                                        'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->description]);
+                                        'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $rubro[0]->fontsRubro->sum('valor') - $compIngValue, 'definitivo' => $rubro[0]->fontsRubro->sum('valor'),
+                                        'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro, 'name_fuente' => $rubro[0]->fontsRubro]);
                                 }
                             } else {
                                 //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
                                 foreach ($rubro as $rb){
+                                    $compIngValue = 0;
+                                    if (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                     $sum[] = $rb->fontsRubro->sum('valor');
                                     $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => 0, 'reduccion' => 0,
-                                        'anulados' => 0, 'recaudado' => 0, 'porRecaudar' => 0, 'definitivo' => $rb->fontsRubro->sum('valor'),
+                                        'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $rb->fontsRubro->sum('valor') - $compIngValue, 'definitivo' => $rb->fontsRubro->sum('valor'),
                                         'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->description]);
                                 }
                             }
