@@ -142,7 +142,7 @@
                         <label>Número de Documento</label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-hashtag" aria-hidden="true"></i></span>
-                            <input type="number" class="form-control" name="num_tipo_doc" placeholder="Número de Documento">
+                            <input type="text" class="form-control" name="num_tipo_doc" placeholder="Número de Documento">
                         </div>
                         <small class="form-text text-muted"> Número del Tipo de Documento</small>
                     </div>
