@@ -76,7 +76,6 @@
                 JEFE DE PRESUPUESTO
             </center>
 		</div>
-		<hr class="hrFecha br-black-1" style="margin-bottom: 0px;">
 	</div>
 
 </body>
