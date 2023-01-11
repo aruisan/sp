@@ -15,7 +15,7 @@
 		<div class="br-black-1">
 			<br>
 			<center>
-				<h2>CERTIFICA</h2>
+				<h3>CERTIFICA</h3>
 				<br>
 				<p>
 					Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} se le ha efectuado Registro Presupuestal por:
@@ -31,10 +31,10 @@
 					</tr>
 					<tr>
 						<th class="text-center"># CDP</th>
-						<th style="font-size: 16px;" class="text-center">Nombre CDP</th>
-						<th style="font-size: 16px;" class="text-center">Codigo</th>
-						<th style="font-size: 16px;" class="text-center">Nombre</th>
-						<th style="font-size: 16px;" class="text-center">Valor</th>
+						<th class="text-center">Nombre CDP</th>
+						<th class="text-center">Codigo</th>
+						<th class="text-center">Nombre</th>
+						<th class="text-center">Valor</th>
 					</tr>
 					</thead>
 					<tbody>
