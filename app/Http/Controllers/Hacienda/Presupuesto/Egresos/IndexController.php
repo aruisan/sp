@@ -928,7 +928,11 @@ class IndexController extends Controller
             }
 
             //CDPS
-            $cdps= Cdp::where('vigencia_id', $V)->get();
+            if (auth()->user()->roles->first()->id != 2){
+                $cdps= Cdp::where('vigencia_id', $V)->get();
+            } else {
+                $cdps= Cdp::where('vigencia_id', $V)->where('dependencia_id', auth()->user()->dependencia->id)->get();
+            }
 
             //REGISTROS
             $allReg = Registro::all();
@@ -959,7 +963,9 @@ class IndexController extends Controller
                 unset($rubBPIN[0]);
             }
 
-            return view('hacienda.presupuesto.indexCuipo', compact('V', 'presupuesto', 'añoActual', 'mesActual', 'years', 'fonts', 'cdps', 'registros','ordenPagos', 'pagos', 'bpins','codeCon','lastDay','actuallyDay','rubBPIN'));
+            return view('hacienda.presupuesto.indexCuipo', compact('V', 'presupuesto',
+                'añoActual', 'mesActual', 'years', 'fonts', 'cdps', 'registros','ordenPagos', 'pagos', 'bpins',
+                'codeCon','lastDay','actuallyDay','rubBPIN'));
         }
     }
 
