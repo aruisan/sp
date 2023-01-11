@@ -65,7 +65,7 @@
 				</p>
 			</div>
 			<div class="col-md-6 s17">
-				SIEX
+				<img src="https://www.siex-concejoprovidenciaislas.com.co/img/logoSiex.png"  height="50">
 			</div>
 		</div>
 
