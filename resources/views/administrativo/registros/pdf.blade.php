@@ -27,10 +27,10 @@
 				<table class="table table-condensed" style="margin: 5px 10px;">
 					<thead>
 					<tr>
-						<th style="font-size: 19px;" class="text-center" colspan="5">RUBROS ASIGNADOS A CDPs</th>
+						<th class="text-center" colspan="5">RUBROS ASIGNADOS A CDPs</th>
 					</tr>
 					<tr>
-						<th style="font-size: 16px;" class="text-center"># CDP</th>
+						<th class="text-center"># CDP</th>
 						<th style="font-size: 16px;" class="text-center">Nombre CDP</th>
 						<th style="font-size: 16px;" class="text-center">Codigo</th>
 						<th style="font-size: 16px;" class="text-center">Nombre</th>
@@ -39,7 +39,7 @@
 					</thead>
 					<tbody>
 					@foreach($infoRubro as $rubro)
-						<tr class="text-center" style="font-size: 16px;">
+						<tr class="text-center">
 							<td>{{$rubro['codCDP']}} </td>
 							<td>{{$rubro['nameCDP']}} </td>
 							<td>{{$rubro['codigo']}} </td>
