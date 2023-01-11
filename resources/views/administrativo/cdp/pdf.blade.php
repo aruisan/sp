@@ -15,10 +15,8 @@
 		</div>
 				
 		<div class="br-black-1">
-			<br>
 			<center>
-				<h2>CERTIFICA</h2>
-				<br>
+				<h4>CERTIFICA</h4>
 				Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} Existe Disponibilidad Presupuestal por:
 			</center>
 		</div>
