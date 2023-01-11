@@ -71,7 +71,7 @@
 			<table style="margin: 5px 10px;">
 				<tbody>
 					<tr>
-						<td>Número de Documento: </td>
+						<td># Documento: </td>
 						<td>{{$registro->num_doc}}</td>
 					</tr>
 					<tr>
