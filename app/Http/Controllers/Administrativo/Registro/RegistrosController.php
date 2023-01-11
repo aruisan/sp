@@ -401,20 +401,10 @@ class RegistrosController extends Controller
         $vigencia = $vigens;
         //codigo de rubros
 
-        foreach ($registro->cdpRegistroValor as $cdpReg){
-            $cdp = $cdpReg->cdps;
-            foreach($cdp->rubrosCdp as $rubro){
-                $infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,'id_rubro' => $rubro->id ,'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name, 'value' => $rubro->rubrosCdpValor->first()->valor];
-            }
-        }
-
-        //TOCA EMPEZAR A CUADRAR LA INTERFAZ DEL PRESUPUESTO MOSTRANDO LOS CUIPO
-
         if ($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento") {
-
-	   foreach ($registro->cdpRegistroValor as $cdpReg){
-            	$cdp = $cdpReg->cdps;
-           	 foreach($cdp->rubrosCdp as $rubro){
+            foreach ($registro->cdpRegistroValor as $cdpReg){
+                $cdp = $cdpReg->cdps;
+                foreach($cdp->rubrosCdp as $rubro){
                 	$infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,'id_rubro' => $rubro->id ,'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name, 'value' => $rubro->rubrosCdpValor->first()->valor];
         	    }
 	        }
