@@ -61,7 +61,7 @@ class RegistrosController extends Controller
                 if ($dataP->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
                     $registrosProcess[] = collect(['id' => $dataP->id, 'code' => $dataP->code, 'objeto' => $dataP->objeto, 'nombre' => $dataP->persona->nombre, 'valor' => $dataP->val_total, 'saldo' => $dataP->saldo, 'secretaria_e' => $dataP->secretaria_e,
                         'ff_secretaria_e' => $dataP->ff_secretaria_e, 'jefe_e' => $dataP->jefe_e, 'ff_jefe_e' => $dataP->ff_jefe_e,
-                        'num_doc' => $regP->num_doc]);
+                        'num_doc' => $dataP->num_doc]);
                 }
             }
 
@@ -72,7 +72,7 @@ class RegistrosController extends Controller
                 if ($dataT->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
                     $registros[] = collect(['id' => $dataT->id, 'code' => $dataT->code, 'objeto' => $dataT->objeto, 'nombre' => $dataT->persona->nombre, 'valor' => $dataT->val_total, 'saldo' => $dataT->saldo, 'secretaria_e' => $dataT->secretaria_e,
                         'ff_secretaria_e' => $dataT->ff_secretaria_e, 'jefe_e' => $dataT->jefe_e, 'ff_jefe_e' => $dataT->ff_jefe_e,
-                        'num_doc' => $regT->num_doc]);
+                        'num_doc' => $dataT->num_doc]);
                 }
             }
             $regP = Registro::where('secretaria_e', '3')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
@@ -80,7 +80,7 @@ class RegistrosController extends Controller
                 if ($dataP->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
                     $registrosProcess[] = collect(['id' => $dataP->id, 'code' => $dataP->code, 'objeto' => $dataP->objeto, 'nombre' => $dataP->persona->nombre, 'valor' => $dataP->val_total, 'saldo' => $dataP->saldo, 'secretaria_e' => $dataP->secretaria_e,
                         'ff_secretaria_e' => $dataP->ff_secretaria_e, 'jefe_e' => $dataP->jefe_e, 'ff_jefe_e' => $dataP->ff_jefe_e,
-                        'num_doc' => $regP->num_doc]);
+                        'num_doc' => $dataP->num_doc]);
                 }
             }
         }
@@ -93,7 +93,7 @@ class RegistrosController extends Controller
             if ($data->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
                 $registrosHistorico[] = collect(['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto, 'nombre' => $data->persona->nombre, 'valor' => $data->val_total, 'saldo' => $data->saldo, 'secretaria_e' => $data->secretaria_e,
                     'ff_secretaria_e' => $data->ff_secretaria_e, 'jefe_e' => $data->jefe_e, 'ff_jefe_e' => $data->ff_jefe_e,
-                    'num_doc' => $regH->num_doc]);
+                    'num_doc' => $data->num_doc]);
             }
         }
 
