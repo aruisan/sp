@@ -19,9 +19,7 @@
 			<center>
 				<h2>CERTIFICA</h2>
 				<br>
-				<p>
-					Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} Existe Disponibilidad Presupuestal por:
-				</p>
+				Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} Existe Disponibilidad Presupuestal por:
 			</center>
 		</div>
 		@if($cdp->tipo == "Funcionamiento")
@@ -29,17 +27,17 @@
 				<table class="table table-condensed" style="margin: 5px 10px;">
 					<thead>
 					<tr>
-						<th style="font-size: 19px;" class="text-center" colspan="3">RUBROS ASIGNADOS</th>
+						<th class="text-center" colspan="3">RUBROS ASIGNADOS</th>
 					</tr>
 					<tr>
-						<th style="font-size: 16px;" class="text-center">Codigo</th>
-						<th style="font-size: 16px;" class="text-center">Nombre</th>
-						<th style="font-size: 16px;" class="text-center">Valor</th>
+						<th class="text-center">Codigo</th>
+						<th class="text-center">Nombre</th>
+						<th class="text-center">Valor</th>
 					</tr>
 					</thead>
 					<tbody>
 					@foreach($infoRubro as $rubro)
-						<tr class="text-center" style="font-size: 16px;">
+						<tr class="text-center">
 							<td>{{$rubro['codigo']}} </td>
 							<td> {{$rubro['name']}}</td>
 							<td>${{number_format($rubro['value'])}}</td>
@@ -53,19 +51,19 @@
 				<div class="br-black-1">
 					<table style="margin: 5px 10px;">
 						<tbody>
-						<tr style="font-size: 16px;">
+						<tr>
 							<td style="width: 30px;">Proyecto: </td>
 							<td>{{$bpinsCDP->actividad->cod_proyecto}} - {{$bpinsCDP->actividad->nombre_proyecto}}</td>
 						</tr>
-						<tr style="font-size: 16px;">
+						<tr>
 							<td style="width: 30px;">Actividad: </td>
 							<td>{{$bpinsCDP->actividad->cod_actividad}} - {{$bpinsCDP->actividad->actividad}}</td>
 						</tr>
-						<tr style="font-size: 16px;">
+						<tr>
 							<td style="width: 30px;">Tipo: </td>
 							<td> {{$cdp->tipo}}</td>
 						</tr>
-						<tr style="font-size: 16px;">
+						<tr>
 							<td style="width: 30px;">Valor: </td>
 							<td> {{number_format($bpinsCDP->valor)}}</td>
 						</tr>
@@ -77,23 +75,23 @@
 		<div class="br-black-1">
 			<table style="margin: 5px 10px;">
 				<tbody>
-					<tr style="font-size: 16px;">
+					<tr>
 						<td style="width: 30px;">Tipo: </td>
 						<td> {{$cdp->tipo}}</td>
 					</tr>
-					<tr style="font-size: 16px;">
+					<tr>
 						<td style="width: 30px;">VALOR TOTAL: </td>
 						<td> $ {{number_format($cdp->valor)}} ({{\NumerosEnLetras::convertir($cdp->valor)}})</td>
 					</tr>
-					<tr style="font-size: 16px;">
-						<td style="width: 30px;">Objeto: </td>
+					<tr>
+						<td style="	width: 30px;">Objeto: </td>
 						<td>{{$cdp->name}}</td>
 					</tr>
-					<tr style="font-size: 16px;">
+					<tr>
 						<td style="width: 30px;">SOLICITADO POR: </td>
 						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->name : ''}}</td>
 					</tr>
-					<tr style="font-size: 16px;">
+					<tr>
 						<td style="width: 30px;">DEPENDENCIA: </td>
 						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->dependencia->name : ''}}</td>
 					</tr>

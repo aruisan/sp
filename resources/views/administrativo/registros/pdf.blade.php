@@ -17,9 +17,7 @@
 			<center>
 				<h3>CERTIFICA</h3>
 				<br>
-				<p>
-					Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} se le ha efectuado Registro Presupuestal por:
-				</p>
+				Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} se le ha efectuado Registro Presupuestal por:
 			</center>
 		</div>
 		<div class="br-black-1">
