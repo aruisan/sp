@@ -258,143 +258,142 @@ class IndexController extends Controller
                         unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
                         unset($valueOrdenPago);unset($valuePagos);
                     } else {
-                        if(auth()->user()->roles->first()->id != 2){
-                            $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$data->code.".')");
+                        //FILTRO PARA MOSTRAR POR DEPENDENCIA
+                        $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$data->code.".')");
 
-                            foreach ($otherRubs as $other) {
-                                $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
+                        foreach ($otherRubs as $other) {
+                            $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
 
-                                if($rubroOtherFind->first()) {
+                            if($rubroOtherFind->first()) {
 
-                                    if($rubroOtherFind->first()->fontsRubro){
-                                        foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) $valueRubros[] = $fuenteRubro->valor;
-                                    } else $valueRubros[] = 0;
-                                    //2 ADD - 3 RED  - 1 CRED
+                                if($rubroOtherFind->first()->fontsRubro){
+                                    foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) $valueRubros[] = $fuenteRubro->valor;
+                                } else $valueRubros[] = 0;
+                                //2 ADD - 3 RED  - 1 CRED
 
-                                    if(count($rubroOtherFind->first()->rubrosMov) > 0){
-                                        foreach ($rubroOtherFind->first()->rubrosMov as $mov){
-                                            if ($mov->valor > 0 ){
-                                                if ($mov->movimiento == "1") {
-                                                    $valueRubrosCred[] = $mov->valor;
-                                                    $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
-                                                    $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
-                                                }
-                                                elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
-                                                elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
+                                if(count($rubroOtherFind->first()->rubrosMov) > 0){
+                                    foreach ($rubroOtherFind->first()->rubrosMov as $mov){
+                                        if ($mov->valor > 0 ){
+                                            if ($mov->movimiento == "1") {
+                                                $valueRubrosCred[] = $mov->valor;
+                                                $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
+                                                $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                             }
-                                        }
-                                    } else {
-                                        $valueRubrosAdd[] = 0;
-                                        $valueRubrosRed[] = 0;
-                                        $valueRubrosCred[] = 0;
-                                        $valueRubrosCCred[] = 0;
-                                    }
-
-                                    //VALORES CONTRA CREDITO
-                                    if (isset($rubrosCC)) foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
-
-                                    //CDPS
-                                    if(count($rubroOtherFind->first()->rubrosCdp) > 0){
-                                        foreach ($rubroOtherFind->first()->rubrosCdp as $cdp) if ($cdp->cdps->jefe_e == "3") $valueCDPs[] = $cdp->cdps->valor;
-                                    } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
-
-                                    //REGISTROS
-                                    if(count($rubroOtherFind->first()->cdpRegistroValor) > 0){
-                                        foreach ($rubroOtherFind->first()->cdpRegistroValor as $reg) if ($reg->registro->secretaria_e == "3") $valueRegistros[] = $reg->registro->valor;
-                                    } else $valueRegistros[] = 0;
-
-                                    //ORDENES DE PAGO
-                                    if (isset($valores)){
-                                        foreach ($valores as $dataOP) {
-                                            if ($dataOP['code'] == $other->id) {
-                                                $valueOrdenPago[] = $dataOP['val'];
-                                            }
+                                            elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
+                                            elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
                                         }
                                     }
-
-                                    //PAGOS
-                                    if (isset($valoresPagos)){
-                                        foreach ($valoresPagos as $dataP) {
-                                            if ($dataP['code'] == $other->id) {
-                                                $valuePagos[] = $dataP['val'];
-                                            }
-                                        }
-                                    }
-
                                 } else {
-                                    $valueRubros[] = 0;
                                     $valueRubrosAdd[] = 0;
                                     $valueRubrosRed[] = 0;
                                     $valueRubrosCred[] = 0;
                                     $valueRubrosCCred[] = 0;
-                                    $valueCDPs[] = 0;
-                                    $valueRegistros[] = 0;
-                                    $valueOrdenPago[] = 0;
-                                    $valuePagos[] = 0;
                                 }
+
+                                //VALORES CONTRA CREDITO
+                                if (isset($rubrosCC)) foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
+
+                                //CDPS
+                                if(count($rubroOtherFind->first()->rubrosCdp) > 0){
+                                    foreach ($rubroOtherFind->first()->rubrosCdp as $cdp) if ($cdp->cdps->jefe_e == "3") $valueCDPs[] = $cdp->cdps->valor;
+                                } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+
+                                //REGISTROS
+                                if(count($rubroOtherFind->first()->cdpRegistroValor) > 0){
+                                    foreach ($rubroOtherFind->first()->cdpRegistroValor as $reg) if ($reg->registro->secretaria_e == "3") $valueRegistros[] = $reg->registro->valor;
+                                } else $valueRegistros[] = 0;
+
+                                //ORDENES DE PAGO
+                                if (isset($valores)){
+                                    foreach ($valores as $dataOP) {
+                                        if ($dataOP['code'] == $other->id) {
+                                            $valueOrdenPago[] = $dataOP['val'];
+                                        }
+                                    }
+                                }
+
+                                //PAGOS
+                                if (isset($valoresPagos)){
+                                    foreach ($valoresPagos as $dataP) {
+                                        if ($dataP['code'] == $other->id) {
+                                            $valuePagos[] = $dataP['val'];
+                                        }
+                                    }
+                                }
+
+                            } else {
+                                $valueRubros[] = 0;
+                                $valueRubrosAdd[] = 0;
+                                $valueRubrosRed[] = 0;
+                                $valueRubrosCred[] = 0;
+                                $valueRubrosCCred[] = 0;
+                                $valueCDPs[] = 0;
+                                $valueRegistros[] = 0;
+                                $valueOrdenPago[] = 0;
+                                $valuePagos[] = 0;
                             }
-
-                            //PRESUPUESTO DEFINITIVO
-                            if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($valueRubros) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
-                            else $PDef = array_sum($valueRubros) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
-
-                            $presupuesto[] = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code, 'name' => $data->name, 'presupuesto_inicial' => array_sum($valueRubros),
-                                'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
-                                'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
-                                'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
-                                'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
-                                'rubros_disp' => 0, 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '','codDep' => '', 'dep' => '', 'depRubID' => ''];
-
-                            if (!isset($valueRubros)) {
-                                $valueRubros[] = null;
-                                unset($valueRubros[0]);
-                            } else unset($valueRubros);
-
-                            if (!isset($valueRubrosAdd)) {
-                                $valueRubrosAdd[] = null;
-                                unset($valueRubrosAdd[0]);
-                            } else unset($valueRubrosAdd);
-
-                            if (!isset($valueRubrosRed)) {
-                                $valueRubrosRed[] = null;
-                                unset($valueRubrosRed[0]);
-                            } else unset($valueRubrosRed);
-
-                            if (!isset($valueRubrosCred)) {
-                                $valueRubrosCred[] = null;
-                                unset($valueRubrosCred[0]);
-                            } else unset($valueRubrosCred);
-
-                            if (!isset($valueRubrosCCred)) {
-                                $valueRubrosCCred[] = null;
-                                unset($valueRubrosCCred[0]);
-                            } else unset($valueRubrosCCred);
-
-                            if (!isset($rubrosCC)) {
-                                $rubrosCC[] = null;
-                                unset($rubrosCC[0]);
-                            } else unset($rubrosCC);
-
-                            if (!isset($valueCDPs)) {
-                                $valueCDPs[] = null;
-                                unset($valueCDPs[0]);
-                            } else unset($valueCDPs);
-
-                            if (!isset($valueRegistros)) {
-                                $valueRegistros[] = null;
-                                unset($valueRegistros[0]);
-                            } else unset($valueRegistros);
-
-                            if (!isset($valueOrdenPago)) {
-                                $valueOrdenPago[] = null;
-                                unset($valueOrdenPago[0]);
-                            } else unset($valueOrdenPago);
-
-                            if (!isset($valuePagos)) {
-                                $valuePagos[] = null;
-                                unset($valuePagos[0]);
-                            } else unset($valuePagos);
                         }
+
+                        //PRESUPUESTO DEFINITIVO
+                        if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($valueRubros) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+                        else $PDef = array_sum($valueRubros) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+
+                        $presupuesto[] = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code, 'name' => $data->name, 'presupuesto_inicial' => array_sum($valueRubros),
+                            'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                            'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                            'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                            'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                            'rubros_disp' => 0, 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '','codDep' => '', 'dep' => '', 'depRubID' => ''];
+
+                        if (!isset($valueRubros)) {
+                            $valueRubros[] = null;
+                            unset($valueRubros[0]);
+                        } else unset($valueRubros);
+
+                        if (!isset($valueRubrosAdd)) {
+                            $valueRubrosAdd[] = null;
+                            unset($valueRubrosAdd[0]);
+                        } else unset($valueRubrosAdd);
+
+                        if (!isset($valueRubrosRed)) {
+                            $valueRubrosRed[] = null;
+                            unset($valueRubrosRed[0]);
+                        } else unset($valueRubrosRed);
+
+                        if (!isset($valueRubrosCred)) {
+                            $valueRubrosCred[] = null;
+                            unset($valueRubrosCred[0]);
+                        } else unset($valueRubrosCred);
+
+                        if (!isset($valueRubrosCCred)) {
+                            $valueRubrosCCred[] = null;
+                            unset($valueRubrosCCred[0]);
+                        } else unset($valueRubrosCCred);
+
+                        if (!isset($rubrosCC)) {
+                            $rubrosCC[] = null;
+                            unset($rubrosCC[0]);
+                        } else unset($rubrosCC);
+
+                        if (!isset($valueCDPs)) {
+                            $valueCDPs[] = null;
+                            unset($valueCDPs[0]);
+                        } else unset($valueCDPs);
+
+                        if (!isset($valueRegistros)) {
+                            $valueRegistros[] = null;
+                            unset($valueRegistros[0]);
+                        } else unset($valueRegistros);
+
+                        if (!isset($valueOrdenPago)) {
+                            $valueOrdenPago[] = null;
+                            unset($valueOrdenPago[0]);
+                        } else unset($valueOrdenPago);
+
+                        if (!isset($valuePagos)) {
+                            $valuePagos[] = null;
+                            unset($valuePagos[0]);
+                        } else unset($valuePagos);
 
                     }
 
@@ -415,6 +414,7 @@ class IndexController extends Controller
                                 if($rubroOtherFind->first()) {
 
                                     $exit = false;
+                                    //VALIDACION DE ROL
                                     if (auth()->user()->roles->first()->id != 2){
                                         if($rubroOtherFind->first()->fontsRubro){
                                             foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) $valueRubros[] = $fuenteRubro->valor; $valueRubrosDisp[] = $fuenteRubro->valor_disp;

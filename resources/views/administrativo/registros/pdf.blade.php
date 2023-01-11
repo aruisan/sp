@@ -13,10 +13,8 @@
 			</div> 
 		</div>
 		<div class="br-black-1">
-			<br>
 			<center>
-				<h3>CERTIFICA</h3>
-				<br>
+				<h4>CERTIFICA</h4>
 				Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año {{$vigencia->vigencia}} se le ha efectuado Registro Presupuestal por:
 			</center>
 		</div>
@@ -72,6 +70,10 @@
 		<div class="br-black-1">
 			<table style="margin: 5px 10px;">
 				<tbody>
+					<tr>
+						<td>Número de Documento: </td>
+						<td>{{$registro->num_doc}}</td>
+					</tr>
 					<tr>
 						<td>OBJETO: </td>
 						<td> {{$registro->objeto}} </td>
