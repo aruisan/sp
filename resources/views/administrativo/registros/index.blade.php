@@ -61,6 +61,7 @@
                             <th class="text-center">Numero Documento</th>
                             <th class="text-center">Nombre Registro</th>
                             <th class="text-center">Nombre Tercero</th>
+                            <th class="text-center">Num Identi Tercero</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Estado Secretaria</th>
                             <th class="text-center"><i class="fa fa-usd"></i></th>
@@ -74,6 +75,7 @@
                                 <td class="text-center">{{ $data['num_doc'] }}</td>
                                 <td class="text-center">{{ $data['objeto'] }}</td>
                                 <td class="text-center">{{ $data['nombre'] }}</td>
+                                <td class="text-center">{{ $data['cc'] }}</td>
                                 <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
@@ -126,6 +128,7 @@
                             <th class="text-center">Numero Documento</th>
                             <th class="text-center">Objeto</th>
                             <th class="text-center">Nombre Tercero</th>
+                            <th class="text-center">Num Identi Tercero</th>
                             <th class="text-center">Estado Secretaria</th>
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Valor</th>
@@ -140,6 +143,7 @@
                                 <td class="text-center">{{ $registro['num_doc'] }}</td>
                                 <td class="text-center">{{ $registro['objeto'] }}</td>
                                 <td class="text-center">{{ $registro['nombre'] }}</td>
+                                <td class="text-center">{{ $registro['cc'] }}</td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
                                         @if($registro['secretaria_e'] == "0")
@@ -193,6 +197,7 @@
                             <th class="text-center">Numero Documento</th>
                             <th class="text-center">Nombre Registro</th>
                             <th class="text-center">Nombre Tercero</th>
+                            <th class="text-center">Num Identi Tercero</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
                             <th class="text-center">Estado Secretaria</th>
@@ -208,6 +213,7 @@
                                 <td class="text-center">{{ $data['num_doc'] }}</td>
                                 <td class="text-center">{{ $data['objeto'] }}</td>
                                 <td class="text-center">{{ $data['nombre'] }}</td>
+                                <td class="text-center">{{ $data['cc'] }}</td>
                                 <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
                                 <td class="text-center">$<?php echo number_format($data['saldo'],0) ?></td>
                                 <td class="text-center">

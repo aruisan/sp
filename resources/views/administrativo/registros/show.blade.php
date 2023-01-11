@@ -125,12 +125,12 @@
                             </div>
                             @if($rol == 3)
                                 <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                    <label>Fecha Envio Alcalde: </label>
+                                    <label>Fecha Finalización: </label>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                        {{ \Carbon\Carbon::parse($registro->ff_alccalde_e)->format('d-m-Y') }}
+                                        {{ \Carbon\Carbon::parse($registro->ff_jefe_e)->format('d-m-Y') }}
                                     </div>
-                                    <small class="form-text text-muted">Fecha de Enviado Alcalde a Jefe</small>
+                                    <small class="form-text text-muted">Fecha de finalizado por el Jefe</small>
                                 </div>
 
                             @endif
