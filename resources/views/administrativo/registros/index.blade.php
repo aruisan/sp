@@ -58,6 +58,7 @@
                         <thead>
                         <tr>
                             <th class="text-center">Id</th>
+                            <th class="text-center">Numero Documento</th>
                             <th class="text-center">Nombre Registro</th>
                             <th class="text-center">Nombre Tercero</th>
                             <th class="text-center">Valor</th>
@@ -70,6 +71,7 @@
                         @foreach ($registros as $data)
                             <tr>
                                 <td class="text-center">{{ $data['code'] }}</td>
+                                <td class="text-center">{{ $data['num_doc'] }}</td>
                                 <td class="text-center">{{ $data['objeto'] }}</td>
                                 <td class="text-center">{{ $data['nombre'] }}</td>
                                 <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
