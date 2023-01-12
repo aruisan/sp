@@ -218,6 +218,7 @@
          <ul class="dropdown-menu">
             <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/4') }}">2020</a></li>
             <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/8') }}">2022</a></li>
+            <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/12') }}">2023</a></li>
          </ul>
       </li>
       <li class="dropdown-submenu">
@@ -226,9 +227,17 @@
             <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/3') }}">2020</a></li>
             <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/5') }}">2021</a></li>
             <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/7') }}">2022</a></li>
+            <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/11') }}">2023</a></li>
          </ul>
       </li>
-      <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/retefuente')}}">Retención en la Fuente</a></li>
+      <li class="dropdown-submenu">
+         <a class="dropdown-item item-menu" >Retención en la Fuente</a>
+         <ul class="dropdown-menu">
+            <li><a class="item-menu" href="{{ url('/administrativo/contabilidad/declaracion') }}">Declaración</a></li>
+            <li><a class="item-menu" href="{{ url('/administrativo/contabilidad/certificado') }}">Certificado</a></li>
+         </ul>
+      </li>
+      <!-- <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/retefuente')}}">Retención en la Fuente</a></li> -->
       <li><a class="item-menu" tabindex="-1" href="#">Informes</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
