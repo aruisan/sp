@@ -410,59 +410,16 @@ class OrdenPagosController extends Controller
 
         //codigo de rubros
 
-        $vigens = Vigencia::where('id', '>',0)->get();
-        foreach ($vigens as $vigen) {
-            $V = $vigen->id;
-        }
+        $vigens = Vigencia::findOrFail($R->cdpsRegistro[0]->cdp->vigencia_id);
+        $V = $vigens->id;
         $vigencia_id = $V;
 
-        $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
-        $registers = Register::where('level_id', $ultimoLevel->id)->get();
-        $registers2 = Register::where('level_id', '<', $ultimoLevel->id)->get();
-        $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
-        $rubroz = Rubro::where('vigencia_id', $vigencia_id)->get();
-
-        global $lastLevel;
-        $lastLevel = $ultimoLevel->id;
-        $lastLevel2 = $ultimoLevel2->level_id;
-        foreach ($registers2 as $register2) {
-            global $codigoLast;
-            if ($register2->register_id == null) {
-                $codigoEnd = $register2->code;
-            } elseif ($codigoLast > 0) {
-                if ($lastLevel2 == $register2->level_id) {
-                    $codigo = $register2->code;
-                    $codigoEnd = "$codigoLast$codigo";
-                    foreach ($registers as $register) {
-                        if ($register2->id == $register->register_id) {
-                            $register_id = $register->code_padre->registers->id;
-                            $code = $register->code_padre->registers->code . $register->code;
-                            $ultimo = $register->code_padre->registers->level->level;
-                            while ($ultimo > 1) {
-                                $registro = Register::findOrFail($register_id);
-                                $register_id = $registro->code_padre->registers->id;
-                                $code = $registro->code_padre->registers->code . $code;
-
-                                $ultimo = $registro->code_padre->registers->level->level;
-                            }
-                            if ($register->level_id == $lastLevel) {
-                                foreach ($rubroz as $rub) {
-                                    if ($register->id == $rub->register_id) {
-                                        $newCod = "$code$rub->cod";
-                                        $infoRubro[] = collect(['id_rubro' => $rub->id, 'id' => '', 'codigo' => $newCod, 'name' => $rub->name, 'code' => $rub->code]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }else {
-                $codigo = $register2->code;
-                $newRegisters = Register::findOrFail($register2->register_id);
-                $codigoNew = $newRegisters->code;
-                $codigoEnd = "$codigoNew$codigo";
-                $codigoLast = $codigoEnd;
-            }
+        //NEW PRESUPUESTO
+        $plantilla = PlantillaCuipo::where('id', '>', 317)->get();
+        foreach ($plantilla as $data) {
+            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+            if ($data->id < '324') {
+            } elseif (count($rubro) > 0) $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
         }
 
         $fecha = Carbon::createFromTimeString($OrdenPago->created_at);
@@ -498,7 +455,10 @@ class OrdenPagosController extends Controller
             $name_contador = "POR DEFINIR";
         }
 
-        $pdf = PDF::loadView('administrativo.ordenpagos.pdfOP', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro', 'dias', 'meses', 'fecha','fechaR','name_pres', 'name_contador'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        $pdf = PDF::loadView('administrativo.ordenpagos.pdfOP', compact('OrdenPago',
+            'OrdenPagoDescuentos','R','infoRubro', 'dias', 'meses', 'fecha','fechaR','name_pres',
+            'name_contador'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+
         return $pdf->stream();
     }
 
