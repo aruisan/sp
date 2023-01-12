@@ -274,7 +274,7 @@ class RitController extends Controller
 
         foreach ($actividades as $actividad){
             $ciuu = Ciuu::find($actividad->codCIIU);
-            if (count($ciuu) > 0){
+            if ($ciuu){
                 $actividad['code'] = $ciuu->code_ciuu;
                 $actividad['description'] = $ciuu->description;
             }
