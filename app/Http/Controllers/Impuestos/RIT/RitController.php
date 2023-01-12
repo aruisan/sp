@@ -271,9 +271,10 @@ class RitController extends Controller
         if ($rit->ResourceCC)  $rit->rutaFileCC = $rit->ResourceCC->ruta;
         else $rit->rutaFileCC = null;
         $actividades = $rit->actividades;
-        if (count($actividades) > 0){
-            foreach ($actividades as $actividad){
-                $ciuu = Ciuu::find($actividad->codCIIU);
+
+        foreach ($actividades as $actividad){
+            $ciuu = Ciuu::find($actividad->codCIIU);
+            if (count($ciuu) > 0){
                 $actividad['code'] = $ciuu->code_ciuu;
                 $actividad['description'] = $ciuu->description;
             }
