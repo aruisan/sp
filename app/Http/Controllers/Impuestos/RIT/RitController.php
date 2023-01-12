@@ -271,11 +271,14 @@ class RitController extends Controller
         if ($rit->ResourceCC)  $rit->rutaFileCC = $rit->ResourceCC->ruta;
         else $rit->rutaFileCC = null;
         $actividades = $rit->actividades;
-        foreach ($actividades as $actividad){
-            $ciuu = Ciuu::find($actividad->codCIIU);
-            $actividad['code'] = $ciuu->code_ciuu;
-            $actividad['description'] = $ciuu->description;
+        if (count($actividades) > 0){
+            foreach ($actividades as $actividad){
+                $ciuu = Ciuu::find($actividad->codCIIU);
+                $actividad['code'] = $ciuu->code_ciuu;
+                $actividad['description'] = $ciuu->description;
+            }
         }
+
         $establecimientos = $rit->establecimientos;
         return view('impuestos.rit.create', compact('action','rit','actividades','establecimientos','ciius'));
     }
