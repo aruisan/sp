@@ -443,7 +443,13 @@ class IndexController extends Controller
 
                 } elseif (count($rubro) > 0) {
 
-                    
+                    //LLENADO PARA LAS FUENTES DEL PRESUPUESTO
+                    foreach ($rubro->first()->fontsRubro as $fuente){
+                        $sourceFund = SourceFunding::findOrFail($fuente->source_fundings_id);
+                        $fonts[] = ['id' => $rubro[0]->cod ,'idFont' => $sourceFund->id, 'code' => $sourceFund->code, 'description' => $sourceFund->description, 'value' => $fuente->valor ];
+                    }
+
+                    //$key = array_search($oldId, array_column($presupuesto, 'id'));
                     if($rubro->first()->fontsRubro){
                         //RUBROS HIJOS
                         //EN ESTA VALIDACION SE MUESTRAN LOS VALORES DE RUBROS USADOS DEPENDIENDO LA DEP DEL USUARIO
