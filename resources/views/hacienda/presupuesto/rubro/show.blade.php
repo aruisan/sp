@@ -191,8 +191,8 @@
                         <tbody>
                         @foreach($fuentesR as  $fuentes)
                             <tr>
-                                <td>{{ $fuentes->sourceFunding->code }}</td>
-                                <td>{{ $fuentes->sourceFunding->description }}</td>
+                                <td>{{ $fuentes->sourceFunding }}</td>
+                                <td>{{ $fuentes->sourceFunding }}</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
                                 @if( $rol == 3 or $rol == 1)
@@ -220,8 +220,8 @@
                                     <td>{{ $dependencia->sec }}.{{ $dependencia->num }} - {{ $dependencia->name }}</td>
                                     <td class="text-center">
                                         @foreach($fuentesR as  $fuentes)
-                                            {{ $fuentes->sourceFunding->code }}
-                                            {{ $fuentes->sourceFunding->description }}<br>
+                                            {{ $fuentes->sourceFunding }}
+                                            {{ $fuentes->sourceFunding }}<br>
                                             @if(count($fuentes->dependenciaFont) > 0)
                                                 @foreach($fuentes->dependenciaFont as $depFont)
                                                     @if($depFont->dependencia_id == $dependencia->id)
