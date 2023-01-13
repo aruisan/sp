@@ -191,17 +191,28 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($fuentesR as  $fuentes)
-                            <tr>
-                                <td>{{ $fuentes->sourceFunding->code }}</td>
-                                <td>{{ $fuentes->sourceFunding->description }}</td>
-                                <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
-                                <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
-                                @if( $rol == 3 or $rol == 1)
-                                    <td class="text-center">$ <?php echo number_format($fuentes['valor_disp_asign'],0);?>.00</td>
-                                @endif
-                            </tr>
-                        @endforeach
+                        @if($rol != 2)
+                            @foreach($fuentesR as  $fuentes)
+                                <tr>
+                                    <td>{{ $fuentes->sourceFunding->code }}</td>
+                                    <td>{{ $fuentes->sourceFunding->description }}</td>
+                                    <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
+                                    <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
+                                    @if( $rol == 3 or $rol == 1)
+                                        <td class="text-center">$ <?php echo number_format($fuentes['valor_disp_asign'],0);?>.00</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @else
+                            @foreach($fuentesR as  $fuentes)
+                                <tr>
+                                    <td>{{ $fuentes->fontRubro }}</td>
+                                    <td>{{ $fuentes->fontRubro }}</td>
+                                    <td class="text-center">$ <?php echo number_format($fuentes->value,0);?>.00</td>
+                                    <td class="text-center">$ <?php echo number_format($fuentes->saldo,0);?>.00</td>
+                                </tr>
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>
