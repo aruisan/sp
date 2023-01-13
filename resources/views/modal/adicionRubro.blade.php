@@ -15,7 +15,7 @@
                             <thead>
                             <tr>
                                 @foreach($fuentesR as $data)
-                                    <th class="text-center">Dinero a la fuente: {{ $data->sourceFunding }}</th>
+                                    <th class="text-center">Dinero a la fuente: {{ $data->sourceFunding->description }}</th>
                                 @endforeach
                                 <th scope="col" class="text-center">Archivo</th>
                             </tr>
