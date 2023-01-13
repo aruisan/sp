@@ -294,14 +294,15 @@
                         </thead>
                         <tbody>
                         @foreach($rubro->rubrosCdp as  $data)
-                            @if($data->cdps->dependencia_id == auth()->user()->dependencia->id)
-                                <tr class="text-center">
-                                    <td><a href="{{ url('administrativo/cdp/'. $data->cdps->vigencia_id.'/'.$data->cdps->id) }}">{{ $data->cdps->code }}</a></td>
-                                    <td>{{ $data->cdps->name }}</td>
-                                    @if( $rol == 3 or $rol == 1)
-                                        <td>{{ $data->cdps->dependencia->name }}</td>
-                                    @endif
-                                    <td>
+                            @if($rol == 2)
+                                @if($data->cdps->dependencia_id == auth()->user()->dependencia->id)
+                                    <tr class="text-center">
+                                        <td><a href="{{ url('administrativo/cdp/'. $data->cdps->vigencia_id.'/'.$data->cdps->id) }}">{{ $data->cdps->code }}</a></td>
+                                        <td>{{ $data->cdps->name }}</td>
+                                        @if( $rol == 3 or $rol == 1)
+                                            <td>{{ $data->cdps->dependencia->name }}</td>
+                                        @endif
+                                        <td>
                                     <span class="badge badge-pill badge-danger">
                                         @if( $data->cdps->jefe_e == "0")
                                             Pendiente
@@ -315,11 +316,38 @@
                                             En Espera
                                         @endif
                                     </span>
+                                        </td>
+                                        <td>$ <?php echo number_format($data->cdps->valor,0);?>.00</td>
+                                        <td>$ <?php echo number_format( $data->cdps->saldo,0);?>.00</td>
+                                    </tr>
+                                @endif
+                            @else
+                                <tr class="text-center">
+                                    <td><a href="{{ url('administrativo/cdp/'. $data->cdps->vigencia_id.'/'.$data->cdps->id) }}">{{ $data->cdps->code }}</a></td>
+                                    <td>{{ $data->cdps->name }}</td>
+                                    @if( $rol == 3 or $rol == 1)
+                                        <td>{{ $data->cdps->dependencia->name }}</td>
+                                    @endif
+                                    <td>
+                                <span class="badge badge-pill badge-danger">
+                                    @if( $data->cdps->jefe_e == "0")
+                                        Pendiente
+                                    @elseif( $data->cdps->jefe_e == "1")
+                                        Rechazado
+                                    @elseif( $data->cdps->jefe_e == "2")
+                                        Anulado
+                                    @elseif( $data->cdps->jefe_e == "3")
+                                        Aprobado
+                                    @else
+                                        En Espera
+                                    @endif
+                                </span>
                                     </td>
                                     <td>$ <?php echo number_format($data->cdps->valor,0);?>.00</td>
                                     <td>$ <?php echo number_format( $data->cdps->saldo,0);?>.00</td>
                                 </tr>
                             @endif
+
                         @endforeach
                         </tbody>
                     </table>
@@ -354,7 +382,7 @@
                     </table>
                 </div>
             </div>
-     
+
             <div id="movimientos" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tab-pane">
                 <center><h2>Movimientos del Rubro</h2></center>
                 <br>
