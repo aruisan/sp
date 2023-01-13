@@ -127,9 +127,7 @@
                 <div class="modal-footer">
                     @if($contadorRubDisp > 0)
                         <center>
-                            @if($rol == 2)
                                 <button type="submit" class="btn-sm btn-primary">Guardar Credito</button>
-                            @endif
                         </center>
                     @endif
                 </div>
