@@ -134,7 +134,7 @@ class RubrosController extends Controller
                         $fShow = $fontDep->fontRubro->first();
                         $fShow->valor = $fontDep->value;
                         $fShow->valor_disp = $fontDep->saldo;
-                        $fuentesR[] = $fShow;
+                        $fuentesR[] = $fontDep;
                     }
                 }
             }
@@ -157,7 +157,7 @@ class RubrosController extends Controller
             $resta[] = null;
             $restaC[] = null;
 
-            if ($rubro->rubrosMov->count() > 0){
+            if (count($rubro->rubrosMov) > 0){
                 foreach($rubro->rubrosMov as $RM){
                     if ($RM->fonts_rubro_id == $fuente->id){
                         if ($RM->movimiento == 1){
@@ -179,7 +179,7 @@ class RubrosController extends Controller
             }
             $val = array_sum($suma);
             $Cred = array_sum($sumaC);
-            if ($fuente->rubrosMov->count() > 0){
+            if (count($fuente->rubrosMov) > 0){
                 foreach ($fuente->rubrosMov as $item) {
                     if ($item->movimiento == 1){
                         $resta[] = $item->valor;
