@@ -76,6 +76,7 @@ class RubrosMovController extends Controller
      */
     public function update($id, $idF, $valor, $idFR, $idR)
     {
+        //SE TIENE QUE ACTUALIZAR TODO EL MODULO DE REALIZAR EL TRASLADO AL RUBRO
         $movim = RubrosMov::findOrFail($id);
         $valorAnterior = $movim->valor;
         $idFAnterior = $movim->font_vigencia_id;
