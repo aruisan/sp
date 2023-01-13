@@ -643,13 +643,13 @@ class IndexController extends Controller
                                     $rubroMov = RubrosMov::where('fonts_rubro_id', $depFont->id)->get();
 
                                     //VALORES DE CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
-                                    $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id')->get();
+                                    $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
                                     dd($rubrosCredMov);
                                     if(count($rubrosCredMov) > 0) $valueRubrosCred[] = $rubrosCredMov->sum('valor');
                                     else $valueRubrosCred[] = 0;
 
                                     //VALORES DE CONTRA CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
-                                    $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id')->get();
+                                    $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)->get();
                                     if(count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
                                     else $valueRubrosCCred[] = 0;
 
