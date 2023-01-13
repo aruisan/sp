@@ -294,13 +294,14 @@
                         </thead>
                         <tbody>
                         @foreach($rubro->rubrosCdp as  $data)
-                            <tr class="text-center">
-                                <td><a href="{{ url('administrativo/cdp/'. $data->cdps->vigencia_id.'/'.$data->cdps->id) }}">{{ $data->cdps->code }}</a></td>
-                                <td>{{ $data->cdps->name }}</td>
-                                @if( $rol == 3 or $rol == 1)
-                                    <td>{{ $data->cdps->dependencia->name }}</td>
-                                @endif
-                                <td>
+                            @if($data->cdps->dependencia_id == auth()->user()->dependencia->id)
+                                <tr class="text-center">
+                                    <td><a href="{{ url('administrativo/cdp/'. $data->cdps->vigencia_id.'/'.$data->cdps->id) }}">{{ $data->cdps->code }}</a></td>
+                                    <td>{{ $data->cdps->name }}</td>
+                                    @if( $rol == 3 or $rol == 1)
+                                        <td>{{ $data->cdps->dependencia->name }}</td>
+                                    @endif
+                                    <td>
                                     <span class="badge badge-pill badge-danger">
                                         @if( $data->cdps->jefe_e == "0")
                                             Pendiente
@@ -314,10 +315,11 @@
                                             En Espera
                                         @endif
                                     </span>
-                                </td>
-                                <td>$ <?php echo number_format($data->cdps->valor,0);?>.00</td>
-                                <td>$ <?php echo number_format( $data->cdps->saldo,0);?>.00</td>
-                            </tr>
+                                    </td>
+                                    <td>$ <?php echo number_format($data->cdps->valor,0);?>.00</td>
+                                    <td>$ <?php echo number_format( $data->cdps->saldo,0);?>.00</td>
+                                </tr>
+                            @endif
                         @endforeach
                         </tbody>
                     </table>
