@@ -72,7 +72,7 @@ class CdpController extends Controller
         elseif ($rol == 5)
         {
             //ROL DE ALCALDE
-            $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('alcalde_e','0')->get();
+            $cdpTarea = Cdp::where('vigencia_id', $vigencia_id)->where('secretaria_e', '3')->where('alcalde_e','0')->get();
             $cdProcess = null;
             $cdps = Cdp::where('vigencia_id', $id)
                 ->where(function ($query) {
