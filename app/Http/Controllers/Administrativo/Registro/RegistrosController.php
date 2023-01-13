@@ -167,6 +167,7 @@ class RegistrosController extends Controller
         $registro->ff_doc = $request->fecha_tipo_doc;
         $registro->secretaria_e = $request->secretaria_e;
         $registro->ff_secretaria_e = $request->fecha;
+        $registro->created_at = '2023-01-02';
         $registro->save();
 
         $fuenteRubroId = $request->fuente_id;

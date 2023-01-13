@@ -184,6 +184,7 @@ class CdpController extends Controller
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
         $cdp->created_at = '2023-01-02';
+        $cdp->secretaria_user_id = auth()->user()->id;
         $cdp->save();
 
         Session::flash('success','El CDP se ha creado exitosamente');

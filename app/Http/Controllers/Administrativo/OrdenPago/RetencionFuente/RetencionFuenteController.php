@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Administrativo\OrdenPago\RetencionFuente;
 
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
+use App\Model\Hacienda\Presupuesto\Terceros;
+use App\Model\Persona;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -109,5 +111,26 @@ class RetencionFuenteController extends Controller
 
         Session::flash('error','La retención en la fuente se ha eliminado exitosamente');
         return redirect('/administrativo/contabilidad/retefuente');
+    }
+
+    /**
+     * Display a form to create the declaracion.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function declaracion()
+    {
+        return view('administrativo.contabilidad.retencionfuente.declaracion');
+    }
+
+    /**
+     * Display a form to create the declaracion.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function certificado()
+    {
+        $personas = Persona::all();
+        return view('administrativo.contabilidad.retencionfuente.certificado', compact('personas'));
     }
 }

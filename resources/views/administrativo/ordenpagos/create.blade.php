@@ -33,7 +33,7 @@
                                         <th class="text-center"><i class="fa fa-hashtag"></i></th>
                                         <th class="text-center">Objeto</th>
                                         <th class="text-center">Tercero</th>
-                                        <th class="text-center hidden">NIT/CED</th>
+                                        <th class="text-center">NIT/CED</th>
                                         <th class="text-center">Valor Total</th>
                                         <th class="text-center">Saldo Disponible</th>
                                         <th class="text-center hidden">Valor</th>
@@ -49,7 +49,7 @@
                                             <td class="text-center">{{ $data['info']->code }}</td>
                                             <td id="Obj{{$data['info']->objeto}}" class="text-center">{{ $data['info']->objeto }}</td>
                                             <td id="Name{{$data['info']->persona->nombre}}" class="text-center">{{ $data['info']->persona->nombre }}</td>
-                                            <td id="Cc{{$data['info']->persona->num_dc}}" class="text-center hidden">{{ $data['info']->persona->num_dc }}</td>
+                                            <td id="Cc{{$data['info']->persona->num_dc}}" class="text-center">{{ $data['info']->persona->num_dc }}</td>
                                             <td class="text-center">$<?php echo number_format($data['info']->val_total,0) ?></td>
                                             <td class="text-center">$<?php echo number_format($data['info']->saldo,0) ?></td>
                                             <td id="Sal{{$data['info']->saldo}}" class="text-center hidden">{{ $data['info']->saldo }}</td>
@@ -194,68 +194,59 @@
 
                             <br> <br>
                             <div class="row">
-                            <div class="col-md-3">
-                                <h4 class="formularioOrdenLabel"><b>Fecha:</b></h4>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="date" name="fecha" style="text-align: center" class="form-control formularioOrdenLabel" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" disabled>
-                            </div>
+                                <div class="col-md-3">
+                                    <h4 class="formularioOrdenLabel"><b>Fecha:</b></h4>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="date" name="fecha" style="text-align: center" class="form-control formularioOrdenLabel" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" disabled>
+                                </div>
                             </div>
 
                             <div class="row">
-                            <div class="col-md-3">
-                                <h4 class="formularioOrdenLabel"><b>Concepto:</b></h4>
-                            </div>
-                            <div class="col-md-9">
-                                <textarea type="text" class="form-control formularioOrdenLabel" id="concepto" name="concepto" rows="5" required></textarea>
-                            </div>
+                                <div class="col-md-3">
+                                    <h4 class="formularioOrdenLabel"><b>Concepto:</b></h4>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea type="text" class="form-control formularioOrdenLabel" id="concepto" name="concepto" rows="5" required></textarea>
+                                </div>
                             </div>
                             <br>
 
                             <div class="row">
-                            <div class="col-md-7">
-                                <h4 class="formularioOrdenLabel"><b>Valor Orden de Pago sin IVA:</b></h4>
-                            </div>
-                            <div class="col-md-5">
-                                <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValOP" id="ValOP" required onchange="sumar()">
-                            </div>
-                            </div>
-
-                            <div class="row">
-                            <div class="col-md-7 ">
-                                <h4 class="formularioOrdenLabel"><b>Valor IVA:</b></h4>
-                            </div>
-                            <div class="col-md-5">
-                                <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValIOP" id="ValIOP" required onchange="sumar()">
-                            </div>
+                                <div class="col-md-7">
+                                    <h4 class="formularioOrdenLabel"><b>Valor Orden de Pago sin IVA:</b></h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValOP" id="ValOP" required onchange="sumar()">
+                                </div>
                             </div>
 
                             <div class="row">
-                            <div class="col-md-7">
-                                <h4 class="formularioOrdenLabel"><b>Valor Total Orden de Pago:</b></h4>
-                            </div>
-                            <div class="col-md-5">
-                                <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValTOP" id="ValTOP" required>
-                            </div>
+                                <div class="col-md-7 ">
+                                    <h4 class="formularioOrdenLabel"><b>Valor IVA:</b></h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValIOP" id="ValIOP" required onchange="sumar()">
+                                </div>
+                                </div>
+
+                                <div class="row">
+                                <div class="col-md-7">
+                                    <h4 class="formularioOrdenLabel"><b>Valor Total Orden de Pago:</b></h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValTOP" id="ValTOP" required>
+                                </div>
                             </div>
                         </div>
-
-                   </div>
-                        
-                      
-                            <input type="hidden" class="form-control" name="estado" value="0">
-                           
-                            <center>
-                                <div class="form-group row">
-                                    <div class="col-lg-12 ml-auto">
-                                    <br>
-                                        <button type="submit" class="btn btn-primary">Guardar</button>
-                                    </div>
-                                </div>
-                            </center>
-
-
-
+                      </div>
+                        <input type="hidden" class="form-control" name="estado" value="0">
+                        <div class="form-group row">
+                            <div class="col-lg-12 ml-auto text-right">
+                            <br>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -361,6 +352,7 @@
                 $("#IdR").val(content.innerHTML);
                 $("#ValTOP").val(Sal.innerHTML);
                 $("#ValS").val(Val.innerHTML);
+                $("#concepto").val(Obj.innerHTML);
 
                 document.getElementById("concepto").focus(); 
                 

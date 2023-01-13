@@ -147,23 +147,23 @@ class OrdenPagosController extends Controller
 
             foreach ($R1 as $r1) {
                 $codigoEnd = $r1->code;
-                $codigos[] = collect(['id' => $r1->id, 'codigo' => $codigoEnd, 'name' => $r1->name, 'register_id' => $r1->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
+                //$codigos[] = collect(['id' => $r1->id, 'codigo' => $codigoEnd, 'name' => $r1->name, 'register_id' => $r1->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
                 foreach ($r1->codes as $data1){
                     $reg0 = RegistersPuc::findOrFail($data1->registers_puc_id);
                     $codigo = $reg0->code;
                     $codigoEnd = "$r1->code$codigo";
-                    $codigos[] = collect(['id' => $reg0->id, 'codigo' => $codigoEnd, 'name' => $reg0->name, 'register_id' => $reg0->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
+                    //$codigos[] = collect(['id' => $reg0->id, 'codigo' => $codigoEnd, 'name' => $reg0->name, 'register_id' => $reg0->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
                     if ($reg0->codes){
                         foreach ($reg0->codes as $data3){
                             $reg = RegistersPuc::findOrFail($data3->registers_puc_id);
                             $codigo = $reg->code;
                             $codigoF = "$codigoEnd$codigo";
-                            $codigos[] = collect(['id' => $reg->id, 'codigo' => $codigoF, 'name' => $reg->name, 'register_id' => $reg->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
+                            //$codigos[] = collect(['id' => $reg->id, 'codigo' => $codigoF, 'name' => $reg->name, 'register_id' => $reg->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
                             foreach ($reg->codes as $data4){
                                 $reg1 = RegistersPuc::findOrFail($data4->registers_puc_id);
                                 $codigo = $reg1->code;
                                 $code = "$codigoF$codigo";
-                                $codigos[] = collect(['id' => $reg1->id, 'codigo' => $code, 'name' => $reg1->name, 'register_id' => $reg1->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
+                                //$codigos[] = collect(['id' => $reg1->id, 'codigo' => $code, 'name' => $reg1->name, 'register_id' => $reg1->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
                                 foreach ($reg1->rubro as $rubro){
                                     $codigo = $rubro->codigo;
                                     $code1 = "$code$codigo";
@@ -179,7 +179,8 @@ class OrdenPagosController extends Controller
             $Pagos = OrdenPagos::where('estado','=',1);
             $SumPagos = $Pagos->sum('valor');
 
-            return view('administrativo.ordenpagos.createLiquidacion', compact('ordenPago','registro','SumPagos','ordenPagoDesc','Usuarios','codigos','vigencia'));
+            return view('administrativo.ordenpagos.createLiquidacion', compact('ordenPago',
+                'registro','SumPagos','ordenPagoDesc','Usuarios','codigos','vigencia'));
         }
     }
 

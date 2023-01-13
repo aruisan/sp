@@ -49,16 +49,18 @@
                     <h3>Calendario Tributario</h3>
                     <table class="table">
                         <tbody>
-                        <tr>
-                            <th scope="row"><i class="fa fa-calendar"></i></th>
-                            <td>Jul-08</td>
-                            <td>Retefuente AG 2021 y Siguientes</td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><i class="fa fa-calendar"></i></th>
-                            <td>Ago-09</td>
-                            <td>Retefuente AG 2021 y Siguientes</td>
-                        </tr>
+                        <!--
+                            <tr>
+                                <th scope="row"><i class="fa fa-calendar"></i></th>
+                                <td>Jul-08</td>
+                                <td>Retefuente AG 2021 y Siguientes</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><i class="fa fa-calendar"></i></th>
+                                <td>Ago-09</td>
+                                <td>Retefuente AG 2021 y Siguientes</td>
+                            </tr>
+                        -->
                         </tbody>
                     </table>
                 @endif
@@ -69,13 +71,12 @@
                 <h3>Documentación de Ayuda</h3>
                 <table class="table">
                     <tbody>
-                    <tr><td><a href="impuestos/download/RESOLUCION_210_2.pdf"><i class="fa fa-file-pdf-o"></i> RESOLUCION 210 2</a></td></tr>
                     <tr><td><a href="impuestos/download/BANCO_BOGOTA.pdf"><i class="fa fa-file-pdf-o"></i> BANCO BOGOTA</a></td></tr>
-                    <tr><td><a href="impuestos/download/calendario.pdf"><i class="fa fa-file-pdf-o"></i> calendario</a></td></tr>
                     <tr><td><a href="impuestos/download/Formato_Exogena_ICA_providencia_islas.xls"><i class="fa fa-file-excel-o"></i> Formato Exogena ICA providencia islas</a></td></tr>
                     <tr><td><a href="impuestos/download/Formulario_de_Retenciones_Industria_y_Comercio_2020.xlsx"><i class="fa fa-file-excel-o"></i> Formulario de Retenciones Industria y Comercio 2020</a></td></tr>
                     <tr><td><a href="impuestos/download/FORMULARIOUNICODECLARACIONPAGOINDUSTRIACOMERCIO.pdf"><i class="fa fa-file-pdf-o"></i> FORMULARIOUNICODECLARACIONPAGOINDUSTRIACOMERCIO</a></td></tr>
                     <tr><td><a href="impuestos/download/RUT_MUNICIPIO.pdf"><i class="fa fa-file-pdf-o"></i> RUT MUNICIPIO</a></td></tr>
+                    <tr><td><a href="impuestos/download/ACUERDO 015 - ESTATUTO DE RENTAS[1] 2022 NUEVO.pdf"><i class="fa fa-file-pdf-o"></i> NUEVO ESTATUTO</a></td></tr>
                     </tbody>
                 </table>
             </div>

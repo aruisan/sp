@@ -174,6 +174,7 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
                       <ul class="dropdown-menu">
                         <li style="cursor: pointer"><a data-toggle="modal" data-target="#modal-ingresar">Contribuyente Registrado</a></li>
                         <li><a href="{{url('/register')}}">Nuevo Contribuyente</a></li>
+                        <li><a href="files/impuestos/download/MANUAL_REGISTRO_CONTRIBUYENTE.pdf">Manual de Registro Contribuyente</a></li>
                         <li><a href="#">Información</a></li>
                       </ul>
                     </li>
