@@ -220,6 +220,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('registros/{id}/{fecha}/{valor}/{estado}/{valTot}', 'Administrativo\Registro\RegistrosController@updateEstado');
         Route::post('registros/{id}/anular/', 'Administrativo\Registro\RegistrosController@anular');
         Route::put('registros/r/{id}/{rol}/{estado}/{vigencia}', 'Administrativo\Registro\RegistrosController@rechazar');
+        Route::post('registros/{id}/anular/', 'Administrativo\Registro\RegistrosController@anular');
 
             //pdf registros
 		Route::get('/registro/pdf/{id}/{vigen}', 'Administrativo\Registro\RegistrosController@pdf')->name('registro-pdf');
@@ -294,9 +295,17 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::resource('contabilidad/config','Administrativo\Contabilidad\ContaConfigController');
 
             //Retención en la Fuente
+                //DECLARACION DE LA RETENCION EN LA FUENTE
+        Route::get('contabilidad/retefuente/declaracion','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@declaracion');
+
+                //GENERAR CERTIFICADO DE LA RETENCION EN LA FUENTE
+        Route::get('contabilidad/retefuente/certificado','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@certificado');
+
 
         Route::resource('contabilidad/retefuente','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController');
         Route::get('contabilidad/retefuente/create','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@create');
+
+
 
             //Impuestos Municipales
 

@@ -27,7 +27,6 @@
     <li class="item-perfil">
         <a class="item-perfil">
             <i class="fa fa-institution" aria-hidden="true"></i>
-            <label> Dependencia:</label>
             {{Auth::user()->dependencia->name}}
         </a>
     </li>
