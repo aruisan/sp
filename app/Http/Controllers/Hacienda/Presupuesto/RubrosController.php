@@ -179,7 +179,7 @@ class RubrosController extends Controller
             }
             $val = array_sum($suma);
             $Cred = array_sum($sumaC);
-            if (count($fuente->rubrosMov) > 0){
+            if ($fuente->rubrosMov){
                 foreach ($fuente->rubrosMov as $item) {
                     if ($item->movimiento == 1){
                         $resta[] = $item->valor;
