@@ -368,43 +368,45 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($fuentesR as $fuentes)
-                                <tr>
-                                    <td>{{ $fuentes->id }}</td>
-                                    <td>{{ $fuentes->sourceFunding->description }}</td>
-                                    <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
-                                    <td class="text-center">
-                                        @foreach($valores as $valAdd)
-                                            @if($fuentes->font_vigencia_id == $valAdd['id'])
-                                                $ <?php echo number_format($valAdd['adicion'],0);?>.00
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                    <td class="text-center">
-                                        @foreach($valores as $valAdd)
-                                            @if($fuentes->font_vigencia_id == $valAdd['id'])
-                                                $ <?php echo number_format($valAdd['reduccion'],0);?>.00
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                    @if($vigens->tipo != 1)
+                            @if($rol != 2)
+                                @foreach($fuentesR as $fuentes)
+                                    <tr>
+                                        <td>{{ $fuentes->id }}</td>
+                                        <td>{{ $fuentes->sourceFunding->description }}</td>
+                                        <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                         <td class="text-center">
                                             @foreach($valores as $valAdd)
                                                 @if($fuentes->font_vigencia_id == $valAdd['id'])
-                                                    $ <?php echo number_format($valAdd['credito'],0);?>.00
+                                                    $ <?php echo number_format($valAdd['adicion'],0);?>.00
                                                 @endif
                                             @endforeach
                                         </td>
                                         <td class="text-center">
                                             @foreach($valores as $valAdd)
                                                 @if($fuentes->font_vigencia_id == $valAdd['id'])
-                                                    $ <?php echo number_format($valAdd['ccredito'],0);?>.00
+                                                    $ <?php echo number_format($valAdd['reduccion'],0);?>.00
                                                 @endif
                                             @endforeach
                                         </td>
-                                    @endif
-                                </tr>
-                            @endforeach
+                                        @if($vigens->tipo != 1)
+                                            <td class="text-center">
+                                                @foreach($valores as $valAdd)
+                                                    @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                        $ <?php echo number_format($valAdd['credito'],0);?>.00
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td class="text-center">
+                                                @foreach($valores as $valAdd)
+                                                    @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                        $ <?php echo number_format($valAdd['ccredito'],0);?>.00
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>
