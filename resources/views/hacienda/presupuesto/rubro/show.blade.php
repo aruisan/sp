@@ -240,14 +240,14 @@
                                                 @foreach($fuentes->dependenciaFont as $depFont)
                                                     @if($depFont->dependencia_id == $dependencia->id)
                                                         @php($bandera = true)
-                                                        <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', {{ $depFont->value }}, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, {{$depFont->id}})" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
+                                                        <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', {{ $depFont->value }}, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, {{$depFont->id}})" class="btn btn-success">{{ $fuentes->sourceFunding }}</button>
                                                     @endif
                                                 @endforeach
                                                 @if($bandera == false and $fuentes->valor_disp_asign > 0)
-                                                    <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
+                                                    <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding }}</button>
                                                 @endif
                                             @else
-                                                <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
+                                                <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding }}</button>
                                             @endif
                                         @endforeach
                                     </td>
@@ -358,7 +358,7 @@
                             @foreach($fuentesR as $fuentes)
                                 <tr>
                                     <td>{{ $fuentes->id }}</td>
-                                    <td>{{ $fuentes->sourceFunding->description }}</td>
+                                    <td>{{ $fuentes->sourceFunding }}</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                     <td class="text-center">
                                         @foreach($valores as $valAdd)
