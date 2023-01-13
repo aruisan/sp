@@ -69,7 +69,6 @@
                 <a class="nav-link" data-toggle="pill" href="#movimientos"> Movimientos del Rubro </a>
             </li>
         @endif
-        @if( $rol == 2)
             <li class="dropdown">
                 <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                 <ul class="dropdown-menu">
@@ -86,7 +85,6 @@
                     @endif
                 </ul>
             </li>
-        @endif
     </ul>
 
     <div class="col-lg-12 " style="background-color:white;">
@@ -191,8 +189,8 @@
                         <tbody>
                         @foreach($fuentesR as  $fuentes)
                             <tr>
-                                <td>{{ $fuentes->sourceFunding }}</td>
-                                <td>{{ $fuentes->sourceFunding }}</td>
+                                <td>{{ $fuentes->sourceFunding->code }}</td>
+                                <td>{{ $fuentes->sourceFunding->description }}</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                 <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
                                 @if( $rol == 3 or $rol == 1)
@@ -220,8 +218,8 @@
                                     <td>{{ $dependencia->sec }}.{{ $dependencia->num }} - {{ $dependencia->name }}</td>
                                     <td class="text-center">
                                         @foreach($fuentesR as  $fuentes)
-                                            {{ $fuentes->sourceFunding }}
-                                            {{ $fuentes->sourceFunding }}<br>
+                                            {{ $fuentes->sourceFunding->code }}
+                                            {{ $fuentes->sourceFunding->description }}<br>
                                             @if(count($fuentes->dependenciaFont) > 0)
                                                 @foreach($fuentes->dependenciaFont as $depFont)
                                                     @if($depFont->dependencia_id == $dependencia->id)
@@ -240,14 +238,14 @@
                                                 @foreach($fuentes->dependenciaFont as $depFont)
                                                     @if($depFont->dependencia_id == $dependencia->id)
                                                         @php($bandera = true)
-                                                        <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', {{ $depFont->value }}, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, {{$depFont->id}})" class="btn btn-success">{{ $fuentes->sourceFunding }}</button>
+                                                        <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', {{ $depFont->value }}, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, {{$depFont->id}})" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
                                                     @endif
                                                 @endforeach
                                                 @if($bandera == false and $fuentes->valor_disp_asign > 0)
-                                                    <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding }}</button>
+                                                    <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
                                                 @endif
                                             @else
-                                                <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding }}</button>
+                                                <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
                                             @endif
                                         @endforeach
                                     </td>
@@ -358,7 +356,7 @@
                             @foreach($fuentesR as $fuentes)
                                 <tr>
                                     <td>{{ $fuentes->id }}</td>
-                                    <td>{{ $fuentes->sourceFunding }}</td>
+                                    <td>{{ $fuentes->sourceFunding->description }}</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                     <td class="text-center">
                                         @foreach($valores as $valAdd)
