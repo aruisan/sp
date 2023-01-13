@@ -640,8 +640,6 @@ class IndexController extends Controller
                                         }
                                     }
 
-                                    $rubroMov = RubrosMov::where('fonts_rubro_id', $depFont->id)->get();
-
                                     //VALORES DE CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
                                     $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
                                     if(count($rubrosCredMov) > 0) $valueRubrosCred[] = $rubrosCredMov->sum('valor');
@@ -652,27 +650,18 @@ class IndexController extends Controller
                                     if(count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
                                     else $valueRubrosCCred[] = 0;
 
+                                    $rubroMov = RubrosMov::where('fonts_rubro_id', $depFont->id)->get();
+
                                     if(count($rubroMov) > 0){
                                         foreach ($rubroMov as $mov){
                                             if ($mov->valor > 0 ){
-                                                $rubAfectado = Rubro::find($mov->rubro_id);
-
-                                                //VALORES CONTRA CREDITO
-                                                $rubrosCC[] = ['id'=> $depFont->id, 'value'=> $mov->valor];
-
-                                                if ($mov->movimiento == "1") {
-                                                    $valueRubrosCred[] = $mov->valor;
-                                                    $rubrosCC[] = ['id'=> $rubAfectado->plantilla_cuipos_id, 'value'=> $mov->valor];
-                                                }
-                                                elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
+                                                if ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
                                                 elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
                                             }
                                         }
                                     } else {
                                         $valueRubrosAdd[] = 0;
                                         $valueRubrosRed[] = 0;
-                                        $valueRubrosCred[] = 0;
-                                        $valueRubrosCCred[] = 0;
                                     }
 
                                     //BPIN
