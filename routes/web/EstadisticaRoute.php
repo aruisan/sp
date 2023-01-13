@@ -20,6 +20,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
     Route::get('/hospital', 'Estadistica\HospitalController@index')->name('hospital.index');
     Route::get('/bomberos', 'Estadistica\BomberoController@index')->name('bomberos.index');
     Route::get('/ludoteca', 'Estadistica\LudotecaController@index')->name('ludoteca.index');
+    Route::get('/proyecto', 'Estadistica\ProyectoController@index')->name('estadistica.proyectos');
 
     Route::post('store/colecciones', 'Estadistica\EstadisticaController@store_colecciones')->name('colecciones.store');
     Route::post('data/colecciones', 'Estadistica\EstadisticaController@load_data_collection')->name('colecciones.data');

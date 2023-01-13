@@ -56,6 +56,23 @@
     <div class="col-sm-3 col-md-4">
     </div>
     <div class="col-sm-6 col-md-4 input-group">
+        <label for="employee_email">
+            Salario $
+        </label>
+        <input 
+            type="text" 
+            value="{{isset($employee)? $employee->salario : "" }}" 
+            class="form-control short-input"  
+            name="salario"
+        />
+    </div>
+    <div class="col-sm-3 col-md-4">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 col-md-4">
+    </div>
+    <div class="col-sm-6 col-md-4 input-group">
         <label for="employee_address">
             Dirección
         </label>

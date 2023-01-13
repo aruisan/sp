@@ -17,10 +17,15 @@ class EmpleadoController extends Controller
         return view('nomina.empleados.index', compact('empleados'));
     }
 
-    public function create(Request $request){
+    public function create(){
+        return view('nomina.empleados.create');
+    }
+
+    public function store(Request $request){
         $newEmployee = new NominaEmpleado();
         $newEmployee->num_dc = $request->employee_doc_number;
         $newEmployee->nombre = $request->employee_name;
+        $newEmployee->salario = $request->salario;
         $newEmployee->email = $request->employee_email;
         $newEmployee->direccion = $request->employee_address;
         $newEmployee->fecha_nacimiento = $request->employee_birth_date;
@@ -51,16 +56,15 @@ class EmpleadoController extends Controller
         return redirect()->route('nomina.empleados.index');
     }
 
-    public function edit($id){
-        $employee = NominaEmpleado::find($id);
+    public function edit(NominaEmpleado $employee){
         return view('nomina.empleados.edit', compact('employee'));
     }
 
-    public function update(Request $request, $id){
-        $employee = NominaEmpleado::find($id);
+    public function update(Request $request, NominaEmpleado $employee){
         $employee->num_dc = $request->employee_doc_number;
         $employee->nombre = $request->employee_name;
         $employee->email = $request->employee_email;
+        $employee->salario = $request->salario;
         $employee->direccion = $request->employee_address;
         $employee->fecha_nacimiento = $request->employee_birth_date;
         $employee->telefono = $request->employee_phone;
@@ -78,7 +82,6 @@ class EmpleadoController extends Controller
         $employee->banco_cuenta_bancaria = $request->employee_bank_account_bank;
         //$employee->certificado_cuenta_bancaria = $request->employee_bank_account_certificate;
         $employee->save();
-        return redirect()->route('nomina.empleados.index')
-                ->with('empleados', NominaEmpleado::all());
+        return redirect()->route('nomina.empleados.index');
     }
 }

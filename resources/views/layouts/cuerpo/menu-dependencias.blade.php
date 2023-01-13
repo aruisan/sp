@@ -4,6 +4,11 @@
     COSO
    </a>
 </li>
+<li class="dropdown ">
+   <a class="btn btn-default btn-sm item-menu" href="{{route('estadistica.index')}}">
+   ESTADISTICA
+   </a>
+</li>
 @if(auth()->user()->roles->first()->id != 6)
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">

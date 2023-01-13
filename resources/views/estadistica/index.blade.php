@@ -6,7 +6,7 @@
    <div class="row">
         <div class="col-sm-3">
             <div class="row">
-                <a href="#"><h4>PRESUPUESTO</h4></a>
+                <a href=""><h4>PRESUPUESTO</h4></a>
             </div>
             <div class="row">
                 <h4>Ejecución de Ingresos___%</h4>
@@ -19,7 +19,7 @@
         </div>
         <div class="col-sm-3">
             <div class="row">
-                <a href="#"><h4>PROYECTOS</h4></a>
+                <a href="{{route('estadistica.proyectos')}}"><h4>PROYECTOS</h4></a>
             </div>
             <div class="row">
                 <p>Avance plan de desarrollo___%</p>
