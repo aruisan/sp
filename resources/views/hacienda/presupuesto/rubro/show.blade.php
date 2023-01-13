@@ -211,8 +211,8 @@
                         @else
                             @foreach($fuentesR as  $fuentes)
                                 <tr>
-                                    <td>{{ $fuentes->fontRubro }}</td>
-                                    <td>{{ $fuentes->fontRubro }}</td>
+                                    <td>{{ $fuentes->fontRubro->sourceFunding }}</td>
+                                    <td>{{ $fuentes->fontRubro->sourceFunding }}</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes->value,0);?>.00</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes->saldo,0);?>.00</td>
                                 </tr>
