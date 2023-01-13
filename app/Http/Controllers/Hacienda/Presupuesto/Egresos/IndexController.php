@@ -644,10 +644,7 @@ class IndexController extends Controller
 
                                     //VALORES DE CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
                                     $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
-                                    if(count($rubrosCredMov) > 0) {
-                                        $valueRubrosCred[] = $rubrosCredMov->sum('valor');
-                                        dd($valueRubrosCred);
-                                    }
+                                    if(count($rubrosCredMov) > 0) $valueRubrosCred[] = $rubrosCredMov->sum('valor');
                                     else $valueRubrosCred[] = 0;
 
                                     //VALORES DE CONTRA CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
