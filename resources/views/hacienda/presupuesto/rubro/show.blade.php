@@ -91,6 +91,8 @@
                     </ul>
                 </li>
             @endif
+        @else
+            @include('modal.asignarDineroDep')
         @endif
     </ul>
 
@@ -444,7 +446,6 @@
             </div>
         </div>
     </div>
-    @include('modal.asignarDineroDep')
     @stop
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
