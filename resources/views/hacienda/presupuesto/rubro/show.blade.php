@@ -70,6 +70,9 @@
             </li>
         @endif
         @if( $rol == 2 )
+            @include('modal.adicionRubro')
+            @include('modal.reduccionRubro')
+            @include('modal.creditoRubro')
             @if(auth()->user()->dependencia->id == 15 or auth()->user()->dependencia->id == 1)
                 <li class="dropdown">
                     <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
@@ -441,9 +444,6 @@
             </div>
         </div>
     </div>
-    @include('modal.adicionRubro')
-    @include('modal.reduccionRubro')
-    @include('modal.creditoRubro')
     @include('modal.asignarDineroDep')
     @stop
 @section('js')
