@@ -623,7 +623,6 @@ class CdpController extends Controller
             return back();
         } else {
             for ($i = 0; $i < count($request->codActividad); $i++) {
-                dd("inside");
                 if ( $request->valUsedActividad[$i] > 0){
                     $bpinCdpValor = new BpinCdpValor();
                     $bpinCdpValor->valor = $request->valUsedActividad[$i];
