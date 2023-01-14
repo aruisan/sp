@@ -814,7 +814,7 @@
                     <td>${e.cod_actividad} <input type="hidden" name="codActividad[]" value="${e.cod_actividad}"></td>
                     <td>${e.actividad}</td>
                     <td>${ parseInt(e.rubro_find[0].saldo).toLocaleString('de-DE')} $</td>
-                    <td><input type="number" class="form-control" min="0" value="0" max="${valueControl}" name="valUsedActividad[]"></td>
+                    <td><input type="number" class="form-control" min="0" value="0" max="${e.rubro_find[0].saldo}" name="valUsedActividad[]"></td>
                 </tr>
             `);
             });
