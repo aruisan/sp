@@ -251,9 +251,12 @@ class CdpController extends Controller
         $exist = false;
         foreach ($allBpins as $data){
             foreach ($bpinVigencia as $BVigen){
-                if ($data->id == $BVigen->bpin_id) $exist = true;
+                if ($data->id == $BVigen->bpin_id) {
+                    $exist = true;
+                }
             }
             if ($exist) {
+                $data->saldo = $BVigen->saldo;
                 $bpins[] = $data;
                 $exist = false;
             }
@@ -341,8 +344,30 @@ class CdpController extends Controller
     public function updateEstado($id,$rol,$fecha,$valor,$estado)
     {
         $update = Cdp::findOrFail($id);
+
         $fecha = '2023-01-02';
         if ($rol == 2){
+
+            //SE VALIDA QUE SE TENGA DINERO EN LA FUENTE PARA EL ENVIO DEL CDP
+
+            if ($update->tipo == "Funcionamiento"){
+                foreach ($update->rubrosCdp as $data){
+                    foreach ($data->rubros->fontsRubro as $fuentesRubro){
+                        foreach($fuentesRubro->dependenciaFont as $dep){
+                            if($dep->dependencia_id == auth()->user()->dependencia_id){
+                                if ($dep->saldo < $valor){
+
+                                    Session::flash('success','El CDP enviado tiene asignado un valor superior al
+                                    disponible en el rubro.');
+                                    return back();
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             $update->valor = $valor;
             $update->secretaria_e = $estado;
             $update->alcalde_e = "0";
@@ -359,6 +384,22 @@ class CdpController extends Controller
         if ($rol == 3) {
             if ($estado == 3) {
                 if ($update->tipo == "Funcionamiento"){
+
+                    //SE REALIZA LA VALIDACION DEL VALOR DEL CDP AL MOMENTO DE FINALIZARLO
+                    foreach ($update->rubrosCdp as $data){
+                        foreach ($data->rubros->fontsRubro as $fuentesRubro){
+                            foreach($fuentesRubro->dependenciaFont as $dep){
+                                if($dep->dependencia_id == $update->dependencia_id){
+                                    if ($dep->saldo < $update->valor){
+                                        Session::flash('success','El CDP enviado tiene asignado un valor superior al
+                                            disponible en el rubro.');
+                                        return back();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     foreach ($update->rubrosCdpValor as $fuentes) {
                         if ($fuentes->fontsRubro->valor_disp >= $fuentes->valor) {
                             $update->jefe_e = $estado;
@@ -582,6 +623,7 @@ class CdpController extends Controller
             return back();
         } else {
             for ($i = 0; $i < count($request->codActividad); $i++) {
+                dd("inside");
                 if ( $request->valUsedActividad[$i] > 0){
                     $bpinCdpValor = new BpinCdpValor();
                     $bpinCdpValor->valor = $request->valUsedActividad[$i];
@@ -651,6 +693,21 @@ class CdpController extends Controller
                     $update->save();
                 } elseif ($rol == 3) {
                     if ($update->tipo == "Funcionamiento"){
+                        //SE REALIZA LA VALIDACION DEL VALOR DEL CDP AL MOMENTO DE FINALIZARLO
+                        foreach ($update->rubrosCdp as $data){
+                            foreach ($data->rubros->fontsRubro as $fuentesRubro){
+                                foreach($fuentesRubro->dependenciaFont as $dep){
+                                    if($dep->dependencia_id == $update->dependencia_id){
+                                        if ($dep->saldo < $update->valor){
+                                            Session::flash('success','El CDP enviado tiene asignado un valor superior al
+                                            disponible en el rubro.');
+                                            return back();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         foreach ($update->rubrosCdpValor as $fuentes) {
                             if ($fuentes->fontsRubro->valor_disp >= $fuentes->valor) {
                                 $update->jefe_e = '3';
