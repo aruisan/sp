@@ -298,7 +298,7 @@
                                                                                         @if($valoresFR->cdp_id == $cdp->id)
                                                                                             <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresFR->id }}">
                                                                                             @if($cdp->secretaria_e == "0")
-                                                                                                <input type="number" required  name="valorFuenteUsar[]" id="id{{$fuentesRubro->font_id}}" class="valor{{ $valoresFR->rubrosCdp_id }}" value="{{ $valoresFR->valor }}" max="{{ $fuentesRubro->valor_disp }}" style="text-align: center">
+                                                                                                <input type="number" required  name="valorFuenteUsar[]" id="id{{$fuentesRubro->font_id}}" class="valor{{ $valoresFR->rubrosCdp_id }}" value="{{ $valoresFR->valor }}" max="{{ $dep->saldo }}" style="text-align: center">
                                                                                             @else
                                                                                                 $<?php echo number_format( $valoresFR->valor,0) ?>
                                                                                             @endif
