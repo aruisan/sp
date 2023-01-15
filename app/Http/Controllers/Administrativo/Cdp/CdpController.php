@@ -277,7 +277,8 @@ class CdpController extends Controller
             $data->actividad->rubro = $bpinVig->rubro;
         }
 
-        return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol','infoRubro', 'conteo', 'bpins', 'user','unicoBpins'));
+        return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol',
+            'infoRubro', 'conteo', 'bpins', 'user','unicoBpins'));
     }
 
     public function unique_multidim_array($array, $key) {
