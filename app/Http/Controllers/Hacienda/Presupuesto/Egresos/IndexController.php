@@ -827,6 +827,11 @@ class IndexController extends Controller
             //CDPS
             if (auth()->user()->roles->first()->id != 2){
                 $cdps= Cdp::where('vigencia_id', $V)->get();
+
+                //REGISTROS
+                $allReg = Registro::all();
+                foreach ($allReg as $reg) if ($reg->cdpsRegistro[0]->cdp->vigencia_id == $V) $registros[] = ['id' => $reg->id, 'code' => $reg->code, 'objeto' => $reg->objeto, 'nombre' => $reg->persona->nombre, 'valor' => $reg->valor, 'estado' => $reg->secretaria_e];
+                
             } else {
                 $cdps= Cdp::where('vigencia_id', $V)->where('dependencia_id', auth()->user()->dependencia->id)->get();
 

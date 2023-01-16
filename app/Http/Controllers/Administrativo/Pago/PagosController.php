@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Pago;
 
+use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Pago\Pagos;
@@ -103,6 +104,10 @@ class PagosController extends Controller
             $Pago->valor = $request->Monto;
             $Pago->estado = "0";
             $Pago->save();
+
+            //BUSQUEDA DEL ID DEL RUBRO
+            $rubroid = DependenciaRubroFont::find($Pago->orden_pago->registros->cdpRegistroValor[0]->cdps->rubrosCdpValor[0]->fontsDep_id);
+            $Pago->orden_pago->rubros[0]->cdps_registro->rubro_id = $rubroid->fontRubro->rubro_id;
 
             if (count($Pago->orden_pago->rubros) == 1){
                 $pagoRubros = new PagoRubros();
