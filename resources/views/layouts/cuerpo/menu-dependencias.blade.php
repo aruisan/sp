@@ -361,7 +361,6 @@
          </ul>
       </li>
    @endif
-@endif
 <li class="dropdown messages-menu">
     @include('layouts.cuerpo.perfil')
 </li>
