@@ -14,7 +14,7 @@
                 <li class="nav-item pillPri">
                     <a href="{{ url('/newPre/0',$añoActual+1) }}" class="nav-link"><span class="hide-menu"> Presupuesto de Egresos {{ $añoActual + 1 }}</span></a>
                 </li>
-            @elseif($mesActual == 1 or $mesActual == 2)
+            @elseif($mesActual == 1 or $mesActual == 2 and auth()->user()->roles->first()->id == 1)
                 <li class="nav-item pillPri">
                     <a href="{{ url('/newPre/0',$añoActual-1) }}" class="nav-link"><span class="hide-menu"> Presupuesto de Egresos {{ $añoActual - 1 }}</span></a>
                 </li>
@@ -25,8 +25,12 @@
                 <li class="nav-item pillPri">
                     <a class="nav-link "  href="{{ url('/presupuestoIng') }}">Presupuesto de Ingresos {{ $añoActual }}</a>
                 </li>
-                @if($V != "Vacio")
-                    <li class="nav-item pillPri"> <a class="nav-link "href="{{ url('/presupuesto/level/create/'.$V) }}" class="btn btn-success"><i class="fa fa-edit"></i><span class="hide-menu">&nbsp;Editar Presupuesto</span></a></li>
+                @if($V != "Vacio" and auth()->user()->roles->first()->id == 1)
+                    <li class="nav-item pillPri">
+                        <a class="nav-link "href="{{ url('/presupuesto/level/create/'.$V) }}" class="btn btn-success">
+                            <i class="fa fa-edit"></i><span class="hide-menu">&nbsp;Editar Presupuesto</span>
+                        </a>
+                    </li>
                 @endif
                 <li class="nav-item pillPri">
                     <a data-toggle="modal" data-target="#ejecucionPresupuestal" class="nav-link" style="cursor: pointer">Ejecución Presupuestal</a>
