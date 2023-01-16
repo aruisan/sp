@@ -26,7 +26,8 @@ class CdpController extends Controller
     use ApiResponserTraits,  FirebaseNotificationTraits;
 
     public function list(){
-        $age_actual = date("Y");
+        $age_actual = 2023;//date("Y");
+        //$cdps = Cdp::whereYear('created_at', '>=', $age_actual)->whereYear('created_at', '<=', $age_actual+1)->orderBy('created_at', 'desc')->get();
         $cdps = Cdp::whereYear('created_at', $age_actual)->orderBy('created_at', 'desc')->get();
         $new = collect();
         $old = collect();
@@ -46,10 +47,11 @@ class CdpController extends Controller
             $cdps_new = $cdps->filter(function($c){
                 return  $c['secretaria_e'] == 3 && $c['alcalde_e'] == 0;
             });
-    
+            
             $cdps_old = $cdps->filter(function($c){
                 return  $c['secretaria_e'] == 3 && $c['alcalde_e'] != 0;
             });
+            //return response()->json([$cdps->count(), $cdps_new->count(), $cdps_old->count()]);
         }
 
         if(in_array('Jefe', $roles)){
@@ -61,6 +63,7 @@ class CdpController extends Controller
                 return  $c['secretaria_e'] == 3 && $c['alcalde_e'] == 3 && $c['jefe_e'] != 0;
             });
         }
+
 
         foreach($cdps_new as $cdp):
             $new->push($this->estructura($cdp, $roles, FALSE)); 

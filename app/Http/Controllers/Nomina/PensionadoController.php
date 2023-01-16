@@ -7,18 +7,18 @@ use App\Http\Controllers\Controller;
 use App\NominaEmpleado;
 use App\Traits\StorageTraits;
 
-class EmpleadoController extends Controller
+class PensionadoController extends Controller
 {
     use StorageTraits;
 
     public function index(){
-        $empleados =  $empleados = NominaEmpleado::where('activo', True)->where('tipo', 'empleado')->get();
+        $pensionados =  $pensionados = NominaEmpleado::where('activo', True)->where('tipo', 'pensionado')->get();
         //dd($empleados);
-        return view('nomina.empleados.index', compact('empleados'));
+        return view('nomina.pensionados.index', compact('pensionados'));
     }
 
     public function create(){
-        return view('nomina.empleados.create');
+        return view('nomina.pensionados.create');
     }
 
     public function store(Request $request){
@@ -43,22 +43,22 @@ class EmpleadoController extends Controller
         $newEmployee->numero_cuenta_bancaria = $request->employee_bank_account_num;
         $newEmployee->banco_cuenta_bancaria = $request->employee_bank_account_bank;
         $newEmployee->certificado_cuenta_bancaria = "";
-        $newEmployee->tipo = 'empleado';
+        $newEmployee->tipo = 'pensionado';
         $newEmployee->save();
 
-        $savedEmployeeAptoAdministrativeFile = $this->uploadFile($request->employee_apto_administrative_file, 'empleados/'.$newEmployee->id);
-        $savedEployeeBankAccountCertificate =  $this->uploadFile($request->employee_bank_account_certificate, 'empleados/'.$newEmployee->id);
+        $savedEmployeeAptoAdministrativeFile = $this->uploadFile($request->employee_apto_administrative_file, 'pensionadoss/'.$newEmployee->id);
+        $savedEployeeBankAccountCertificate =  $this->uploadFile($request->employee_bank_account_certificate, 'pensionadoss/'.$newEmployee->id);
 
 
         $newEmployee->apto_administrativo_archivo = $savedEmployeeAptoAdministrativeFile;
         $newEmployee->certificado_cuenta_bancaria = $savedEployeeBankAccountCertificate;
         $newEmployee->save();
 
-        return redirect()->route('nomina.empleados.index');
+        return redirect()->route('nomina.pensionados.index');
     }
 
     public function edit(NominaEmpleado $employee){
-        return view('nomina.empleados.edit', compact('employee'));
+        return view('nomina.pensionados.edit', compact('employee'));
     }
 
     public function update(Request $request, NominaEmpleado $employee){
@@ -83,6 +83,6 @@ class EmpleadoController extends Controller
         $employee->banco_cuenta_bancaria = $request->employee_bank_account_bank;
         //$employee->certificado_cuenta_bancaria = $request->employee_bank_account_certificate;
         $employee->save();
-        return redirect()->route('nomina.empleados.index');
+        return redirect()->route('nomina.pensionados.index');
     }
 }

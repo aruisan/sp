@@ -1,4 +1,28 @@
 @include('modal.updateSoftware')
+<li >
+   <a class="btn btn-default btn-sm item-menu" href="{{ route('coso.individuo.index') }}">
+    COSO
+   </a>
+</li>
+<li class="dropdown ">
+   <a class="btn btn-default btn-sm item-menu" href="{{route('estadistica.index')}}">
+   ESTADISTICA
+   </a>
+</li>
+@if(auth()->user()->roles->first()->id != 6)
+<li class="dropdown ">
+   <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
+   NOMINA
+   <span class="caret"></span>
+   </a>
+   <ul class="dropdown-menu">
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.pensionados.index')}}">Pensionados</a></li>
+   </ul>
+
+{{--
+   <li class="dropdown-submenu">
+         <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
 @if(auth()->user()->roles->first()->id == 1)
    <li >
       <a class="btn btn-default btn-sm item-menu" href="{{ route('coso.individuo.index') }}">
