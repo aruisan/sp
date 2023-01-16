@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrativo\Pago;
 
 use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Pago\Pagos;
@@ -183,8 +184,9 @@ class PagosController extends Controller
         $pago = Pagos::findOrFail($id);
         if (count($pago->rubros) > 0){
             $PUCS = RubrosPuc::where('naturaleza','1')->get();
+            $hijosPUC = PucAlcaldia::where('hijo', '1')->get();
 
-            return view('administrativo.pagos.createBanks', compact('pago','PUCS'));
+            return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC'));
         } else {
             Session::flash('warning','El pago no ha recibido la asignación del monto, por favor realizarla');
             return redirect('administrativo/pagos/asignacion/'.$pago->id);

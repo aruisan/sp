@@ -117,8 +117,8 @@
                                     <tbody>
                                     @for($y = 0; $y < count($pago->banks); $y++)
                                         <tr class="text-center">
-                                            <td>{{ $pago->banks[$y]->data_puc->codigo }}</td>
-                                            <td>{{ $pago->banks[$y]->data_puc->nombre_cuenta }}</td>
+                                            <td>{{ $pago->banks[$y]->data_puc->code }}</td>
+                                            <td>{{ $pago->banks[$y]->data_puc->concepto }}</td>
                                             @if($pago->type_pay == "ACCOUNT")
                                                 @php( $date = strftime("%d of %B %Y", strtotime($pago->banks[$y]->created_at)))
                                                 <td> Núm Cuenta: {{$pago->num}} - Fecha: {{$date}}</td>

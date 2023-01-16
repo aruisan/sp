@@ -186,8 +186,8 @@
 				@endforeach
 				@for($z = 0; $z < $OrdenPago->pucs->count(); $z++)
 					<tr class="text-center">
-						<td>{{$OrdenPago->pucs[$z]->data_puc->codigo}}</td>
-						<td>{{$OrdenPago->pucs[$z]->data_puc->nombre_cuenta}}</td>
+						<td>{{$OrdenPago->pucs[$z]->data_puc->code}}</td>
+						<td>{{$OrdenPago->pucs[$z]->data_puc->concepto}}</td>
 						<td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
 						<td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_debito,0);?></td>
 						<td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_credito,0);?></td>

@@ -101,8 +101,8 @@
 				<tbody>
 				@for($y = 0; $y < count($OrdenPago->pago->banks); $y++)
 					<tr class="text-center">
-						<td>{{ $OrdenPago->pago->banks[$y]->data_puc->codigo }}</td>
-						<td>{{ $OrdenPago->pago->banks[$y]->data_puc->nombre_cuenta }}</td>
+						<td>{{ $OrdenPago->pago->banks[$y]->data_puc->code }}</td>
+						<td>{{ $OrdenPago->pago->banks[$y]->data_puc->concepto }}</td>
 						@if($OrdenPago->pago->type_pay == "ACCOUNT")
 							@php( $date = strftime("%d of %B %Y", strtotime($OrdenPago->pago->created_at)))
 							<td> Núm Cuenta: {{$OrdenPago->pago->num}} - Fecha: {{$date}}</td>
@@ -187,8 +187,8 @@
 				@endforeach
 				@for($z = 0; $z < $OrdenPago->pucs->count(); $z++)
 					<tr class="text-center">
-						<td>{{$OrdenPago->pucs[$z]->data_puc->codigo}}</td>
-						<td>{{$OrdenPago->pucs[$z]->data_puc->nombre_cuenta}}</td>
+						<td>{{$OrdenPago->pucs[$z]->data_puc->code}}</td>
+						<td>{{$OrdenPago->pucs[$z]->data_puc->concepto}}</td>
 						<td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
 						<td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_debito,0);?></td>
 						<td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_credito,0);?></td>
