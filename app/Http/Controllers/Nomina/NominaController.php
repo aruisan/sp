@@ -7,19 +7,22 @@ use App\Http\Controllers\Controller;
 use App\Nomina;
 use App\NominaEmpleado;
 use App\NominaEmpleadoNomina;
+use App\Model\Persona;
 
 class NominaController extends Controller
 {
     private $view = "nomina";
 
-    public function index(){
-        $nominas = Nomina::all();
-        return view("{$this->view}.index", compact('nominas'));
+    public function index($tipo){
+        $nominas = Nomina::where('tipo', $tipo)->get();
+        return view("{$this->view}.index_{$tipo}", compact('nominas'));
     }
 
-    public function create(){
-        $empleados = NominaEmpleado::all();
-        return view("{$this->view}.create", compact('empleados'));
+    public function create($tipo){
+        //$empleados = NominaEmpleado::where('id', '<', 3)->get();
+        $empleados = NominaEmpleado::where('activo', True)->where('tipo', $tipo)->get();
+        $terceros = Persona::where('tipo_tercero', 'especial')->get();
+        return view("{$this->view}.create_{$tipo}", compact('empleados', 'terceros'));
     }
 
     public function store(Request $request){
@@ -34,7 +37,9 @@ class NominaController extends Controller
             'cesantias' => '8.33',
             'interes_cesantias' => 1,
             'prima_navidad' => '8.33',
-            'vacaciones' => '4.17'
+            'vacaciones' => '4.17',
+            'tipo' => $request->tipo,
+            'mes' => $request->mes
         ]);
 
         foreach($request->empleado_id as $k => $empleado):
@@ -56,6 +61,27 @@ class NominaController extends Controller
             endif;
         endforeach;
 
-        return redirect()->route('nomina.show', $nomina->id);
+        if($request->accion == 'finalizar'):
+            Session::flash('success', 'se ha finalizado la nomina.');
+            return redirect()->route('nomina.show', $nomina->id);
+        else:
+            Session::flash('success', 'se ha guardado los cambios.');
+            return redirect()->route('nomina.edit', $nomina->id);
+        endif;
     }
+
+    public function edit(Nomina $nomina){
+        return view("{$this->view}.edit", compact('nomina'));
+    }
+
+    public function show(Nomina $nomina){
+        return view("{$this->view}.show", compact('nomina'));
+    }
+
+    public function update(Request $request, Nomina $nomina){
+        $nomina->update($request->all());
+        return response()->json(200);
+    }
+
+
 }

@@ -16,13 +16,13 @@
 
 <ul class="nav nav-pills">
     <li class="nav-item">
-		<a class="nav-link" data-toggle="pill" href="{{route('nomina.empleados.index')}}"> Empleados</a>
+		<a class="nav-link"  href="{{route('nomina.pensionados.index')}}"> pensionados</a>
 	</li>
 	<li class="nav-item active">
 		<a class="nav-link" data-toggle="pill" href="#personas"> Nominas</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link"  href="{{route('nomina.create')}}">Nueva Nomina</a>
+		<a class="nav-link"  href="{{route('nomina.create', 'pensionado')}}">Nueva Nomina</a>
 	</li>
 </ul>
      
@@ -74,6 +74,8 @@
 
 @section('js')
 <script>
+	
+
 	$('#example').DataTable( {
 		language: {
 			"lengthMenu": "Mostrar _MENU_ registros",

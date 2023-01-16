@@ -30,7 +30,7 @@
 <script>
     var container = document.getElementById('example');
     var hot = new Handsontable(container, {
-        data: Handsontable.helper.createSpreadsheetData(7,7),
+        data: Handsontable.helper.createSpreadsheetData(2,2),
         rowHeaders: true,
         colHeaders: true,
         filters: true,

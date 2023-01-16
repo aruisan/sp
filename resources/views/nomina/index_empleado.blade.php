@@ -15,29 +15,21 @@
 
 
 <ul class="nav nav-pills">
+    <li class="nav-item">
+		<a class="nav-link" href="{{route('nomina.empleados.index')}}"> Empleados</a>
+	</li>
 	<li class="nav-item active">
-		<a class="nav-link" data-toggle="pill" href="#personas"> Empleados</a>
+		<a class="nav-link" data-toggle="pill" href="#personas"> Nominas</a>
 	</li>
-	<li class="nav-item ">
-		<a class="nav-link"  href="{{route('nomina.empleados.create')}}">Nuevo Empleado</a>
-	</li>
-	<li class="dropdown-submenu">
-		<a class="dropdown-item item-menu">Nomina</a>
-		<ul class="dropdown-menu">
-			<li><a class="item-menu" href="{{route('nomina.index', 'empleado')}}">Sueldo</a></li>
-			<li><a class="item-menu" href="">Prima Navidad</a></li>
-			<li><a class="item-menu" href="">Vacaciones</a></li>
-			<li><a class="item-menu" href="">Prima de Vacaciones</a></li>
-			<li><a class="item-menu" href="">Prima de Antiguedad</a></li>
-			<li><a class="item-menu" href="">Bonificación</a></li>
-		</ul>
+	<li class="nav-item">
+		<a class="nav-link"  href="{{route('nomina.create', 'empleado')}}">Nueva Nomina</a>
 	</li>
 </ul>
      
 <div class="tab-content" style="background-color: white">
 	<div id="lista" class="tab-pane active"> <div class="breadcrumb text-center">
 		<strong>
-			<h3><b>Empleados</b></h3>
+			<h3><b>Nomina</b></h3>
 		</strong>
 	</div>
 	<div class="container-fluid">
@@ -47,43 +39,24 @@
 						<table class="table table-bordered cell-border table-hover" id="example"  data-form="deleteForm">
 							<thead>
 								<tr class="active">
-									<th class="text-center">Nombre</th>
-									<th class="text-center">Numero Documento</th>
-									<th class="text-center">Email</th>
-									<th class="text-center">Direccion</th>
-									<th class="text-center">Telefono</th>
-									<th class="text-center">Edad</th>
-									<th class="text-center">Cargo</th>
-									<th class="text-center">Código cargo</th>
-									<th class="text-center">Tipo cargo</th>
-									<th class="text-center">Salario</th>
-									<th class="text-center">Grado</th>
-									<th class="text-center">Certificado bancario</th>
-									<th class="text-center"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
-									<th class="text-center">Hv</th>
+									<th class="text-center">#</th>
+									<th class="text-center">Nomina</th>
+									<th class="text-center"># Pagos</th>
+									<th class="text-center">Valor Total</th>
 								</tr>
 							</thead>
 
 							<tbody>
-							@foreach($empleados as $persona)
+							@foreach($nominas as $key => $nomina)
 								<tr>
-									<td>{{$persona->nombre}}</td>
-									<td>{{$persona->num_dc}}</td>
-									<td>{{$persona->email}}</td>
-									<td>{{$persona->direccion}}</td>
-									<td>{{$persona->telefono}}</td>
-									<td>{{$persona->edad}}</td>
-									<td>{{$persona->cargo}}</td>
-									<td>{{$persona->codigo_cargo}}</td>
-									<td>{{$persona->tipo_cargo}}</td>
-									<td>${{$persona->salario}}</td>
-									<td>{{$persona->grado}}</td>
-									<td>{{$persona->certificado_cuenta_bancaria}}</td>
-									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger">
-									<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
-									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger" title="Hoja de vida">
-										<i class="fa fa-book" aria-hidden="true"></i>
-									</td>
+									<td>{{$key+1}}</td>
+									@php
+										setlocale(LC_ALL,"es_ES"); 
+										\Carbon\Carbon::setLocale('es');
+									@endphp
+									<td>{{$nomina->created_at->format('Y-m')}}</td>
+									<td>0</td>
+									<td>$0</td>
 								</tr>
 							@endforeach
 							</tbody>
@@ -101,6 +74,8 @@
 
 @section('js')
 <script>
+	
+
 	$('#example').DataTable( {
 		language: {
 			"lengthMenu": "Mostrar _MENU_ registros",

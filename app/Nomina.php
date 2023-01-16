@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Nomina extends Model
 {
-    protected $fillable = ['salud', 'pension', 'riesgos', 'sena','icbf','caja_compensacion','cesantias','interes_cesantias','prima_navidad','vacaciones'];
+    protected $fillable = ['salud', 'pension', 'riesgos', 'sena','icbf','caja_compensacion','cesantias','interes_cesantias','prima_navidad','vacaciones', 'mes', 'tipo'];
 
 
     public function empleados_nominas(){

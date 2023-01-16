@@ -24,10 +24,10 @@
 
 <ul class="nav nav-pills">
 	<li class="nav-item">
-		<a class="nav-link" data-toggle="pill" href="{{route('nomina.empleados.index')}}"> Empleados</a>
+		<a class="nav-link" href="{{route('nomina.pensionados.index')}}"> Pensionados</a>
 	</li>
-	<li class="nav-item ">
-		<a class="nav-link"  href="{{route('nomina.index')}}">Nominas</a>
+	<li class="nav-item">
+		<a class="nav-link"  href="{{route('nomina.index', 'pensionado')}}">Nominas</a>
 	</li>
 	<li class="nav-item active">
 		<a class="nav-link">Crear Nomina</a>
@@ -37,13 +37,22 @@
 <div class="tab-content" style="background-color: white">
 	<div id="lista" class="tab-pane active"> <div class="breadcrumb text-center">
 		<strong>
-			<h3><b>Nueva Nomina</b></h3>
+			<h3>
+                <b>Nueva Nomina</b>
+                <select name="mes" id="select_mes" class="form_control">
+                </select>
+                <b>{{date('Y')}}</b>
+            </h3>
+
 		</strong>
 	</div>
 	<div class="container-fluid">
         <div class="col-md-6 col-md-offset-3">
             <form id="formulario" class="form-inline" method="post" action="{{route('nomina.store')}}">
                 {{ csrf_field() }}
+                <input name="mes" id="input_mes" type="hidden">
+                <input name="accion" id="input_accion" type="hidden">
+                <input name="tipo" value="empleado" type="hidden">
             </form>
             <div class="btn-group" id="btn_anterior_siguiente">
             </div>
@@ -57,11 +66,16 @@
 
 @section('js')
     <script>
+        const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+        const terceros = {!!$terceros!!};
 		let empleados = {!!$empleados!!};
         let contador = 0;
+        let options_terceros =  terceros.map(t => `<option value="${t.id}">${t.nombre}</option>`)
+
 
         $(document).ready(function(){
            pintar_empleados();
+           pintar_meses({{date('m')}});
         })
 
 
@@ -88,37 +102,8 @@
                     </div>
                     <div  class="row"> 
                         <div class="col-md-12">
-                            <label>Cargo: ${e.cargo}</label>
-                        </div>
-                    </div>
-                    <div  class="row"> 
-                        <div class="col-md-12">
                             <label>Sueldo: ${e.salario}</label>
                             <input name="sueldo[]" type="hidden" value="${e.salario}">
-                        </div>
-                    </div>
-                    <div  class="row"> 
-                        <div class="col-md-12"> 
-                            <div class="form-group">
-                                <label class="col-md-4">Dias laborados:</label>
-                                <input name="dias_laborados[]" class="form-control" type="integer">
-                            </div>
-                        </div>
-                    </div>
-                    <div  class="row"> 
-                        <div class="col-md-12"> 
-                            <div class="form-group">
-                                <label class="col-md-4">Horas Extras:</label>
-                                <input name="horas_extras[]" class="form-control" type="integer">
-                            </div>
-                        </div>
-                    </div>
-                    <div  class="row"> 
-                        <div class="col-md-12"> 
-                            <div class="form-group">
-                                <label class="col-md-4">Recargos Nocturnos:</label>
-                                <input name="recargos_nocturnos[]" class="form-control" type="integer">
-                            </div>
                         </div>
                     </div>
                     <br><br><br>
@@ -129,6 +114,7 @@
                     <div  class="row"> 
                         <table class="table">
                             <thead>
+                                <th>Tercero</th>
                                 <th>Descuento</th>
                                 <th>Valor</th>
                             </thead>
@@ -156,9 +142,15 @@
                 $('#btn_anterior_siguiente').append(
                     `<button type="button" class="btn btn-primary" onclick="paginar(${parseInt(contador)+1})">Siguiente</button>`
                 );
-            }else{
+            }
+
+            $('#btn_anterior_siguiente').append(
+                `<button class="btn btn-primary" onclick="formulario_submit('guardar')">Guardar</button>`
+            );
+            
+            if(contador+1 == empleados.length){
                 $('#btn_anterior_siguiente').append(
-                    `<button class="btn btn-primary" onclick="formulario.submit()">Finalizar</button>`
+                    `<button class="btn btn-primary" onclick="formulario_submit('finalizar')">Finalizar</button>`
                 );
             }
         }
@@ -166,6 +158,11 @@
         const agregar_descuento = index =>{
             let item = `
                 <tr>
+                    <td>
+                        <select name="descuento_tercero_${index}[]" class="form_control">
+                            ${options_terceros}
+                        </select>
+                    </td>
                     <td>
                         <input name="descuento_${index}[]" class="form_control">
                     </td>
@@ -176,6 +173,30 @@
             `;
 
             $(`#descuentos_${index}`).append(item);
+        }
+
+        $('#select_mes').change(function(){
+            mes_seleccionado()
+        });
+
+        const mes_seleccionado = () => {
+            let index =  $('#select_mes').val();
+            $('#input_mes').val(meses[index]);
+        }
+
+        const pintar_meses = () => {
+            $('#select_mes').empty();
+            meses.forEach((e,i) => {
+                let item = `<option value="${i}">${e}</option>`;
+                $('#select_mes').append(item);
+            });
+            mes_seleccionado();
+        }
+
+        const formulario_submit = action => {
+            $('#input_accion').val(action);
+            $('#formulario').submit();
+            
         }
 
         const paginar = pagina => {

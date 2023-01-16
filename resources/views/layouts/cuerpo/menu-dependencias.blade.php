@@ -17,7 +17,7 @@
    </a>
    <ul class="dropdown-menu">
       <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
-      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Pensionados</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.pensionados.index')}}">Pensionados</a></li>
    </ul>
 
 {{--
