@@ -175,8 +175,8 @@
                         '                                <td>\n' +
                         '                                    <select class="form-control" id="PUC[]" name="PUC[]" required>\n' +
                         '                                        <option>Selecciona un PUC</option>\n' +
-                        '                                        @foreach($codigos as $code)\n' +
-                        '                                            <option value="{{$code['id']}}">{{$code['codigo']}} - {{$code['name']}}</option>\n' +
+                        '                                        @foreach($hijosPUC as $hijo)\n' +
+                        '                                            <option value="{{ $hijo->id }}">{{ $hijo->code }} - {{ $hijo->concepto }}</option>\n' +
                         '                                        @endforeach\n' +
                         '                                    </select>\n' +
                         '                                </td>\n' +
