@@ -405,7 +405,7 @@
                     <div id="tabReg" class=" tab-pane fade"><br>
                         <div class="table-responsive">
                             @if(count($registros) >= 1)
-                                @if(auth()->user()->id == 50 or auth()->user()->id == 45)
+                                @if(auth()->user()->id == 50 or auth()->user()->id == 45 or auth()->user()->roles->first()->id != 2)
                                     <a href="{{ url('administrativo/registros/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a Registros</a>
                                 @endif
                                 <br><br>
