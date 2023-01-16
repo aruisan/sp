@@ -836,7 +836,7 @@ class IndexController extends Controller
                         if(count($cdp->cdpsRegistro) > 0){
                             foreach($cdp->cdpsRegistro as $data){
                                 $registros[] = ['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto,
-                                    'nombre' => $data->persona->nombre, 'valor' => $data->valor, 'estado' => $data->secretaria_e];
+                                    'nombre' => $data->persona, 'valor' => $data->valor, 'estado' => $data->secretaria_e];
                             }
                         }
                     }
