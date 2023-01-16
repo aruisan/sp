@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\OrdenPago;
 
 use App\Model\Admin\ConfigGeneral;
 use App\Model\Administrativo\Contabilidad\LevelPUC;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Pago\Pagos;
@@ -145,6 +146,8 @@ class OrdenPagosController extends Controller
 
             $R1 = RegistersPuc::where('register_puc_id', NULL)->get();
 
+            $hijosPUC = PucAlcaldia::where('hijo',1)->get();
+
             foreach ($R1 as $r1) {
                 $codigoEnd = $r1->code;
                 //$codigos[] = collect(['id' => $r1->id, 'codigo' => $codigoEnd, 'name' => $r1->name, 'register_id' => $r1->register_puc_id, 'code_N' =>  '', 'name_N' => '', 'naturaleza' => '','per_id' => '']);
@@ -180,7 +183,7 @@ class OrdenPagosController extends Controller
             $SumPagos = $Pagos->sum('valor');
 
             return view('administrativo.ordenpagos.createLiquidacion', compact('ordenPago',
-                'registro','SumPagos','ordenPagoDesc','Usuarios','codigos','vigencia'));
+                'registro','SumPagos','ordenPagoDesc','Usuarios','codigos','vigencia','hijosPUC'));
         }
     }
 

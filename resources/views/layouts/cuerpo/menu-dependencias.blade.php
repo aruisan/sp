@@ -256,8 +256,8 @@
       <li class="dropdown-submenu">
          <a class="dropdown-item item-menu" >Retención en la Fuente</a>
          <ul class="dropdown-menu">
-            <li><a class="item-menu" href="{{ url('/administrativo/contabilidad/retefuente/declaracion') }}">Declaración</a></li>
-            <li><a class="item-menu" href="{{ url('/administrativo/contabilidad/retefuente/certificado') }}">Certificado</a></li>
+            <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/declaracion') }}">Declaración</a></li>
+            <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/certificado') }}">Certificado</a></li>
          </ul>
       </li>
       <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago a Terceros</a></li>

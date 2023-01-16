@@ -107,12 +107,12 @@
                                                     <button type="button" class="btn-sm btn-danger" v-on:click.prevent="eliminarPUC({{$pucs->id}})" ><i class="fa fa-trash-o"></i></button>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <b> {{ $pucs->data_puc->codigo }}</b>
+                                                    <b> {{ $pucs->data_puc->code }}</b>
                                                 </div>
                                             </div>
 
                                         </td>
-                                        <td class="text-center"><b>{{ $pucs->data_puc->nombre_cuenta }}</b></td>
+                                        <td class="text-center"><b>{{ $pucs->data_puc->concepto }}</b></td>
                                         <td class="text-center"><b>$<?php echo number_format($pucs->valor_debito,0) ?></b></td>
                                         <td class="text-center"><b>$<?php echo number_format($pucs->valor_credito,0) ?></b></td>
                                     </tr>
@@ -122,8 +122,8 @@
                                 <td colspan="2">
                                     <select class="form-control" id="PUC[]" name="PUC[]" required>
                                         <option>Selecciona un PUC</option>
-                                        @foreach($codigos as $code)
-                                            <option value="{{$code['id']}}">{{$code['codigo']}} - {{$code['name']}}</option>
+                                        @foreach($hijosPUC as $hijo)
+                                            <option value="{{ $hijo->id }}">{{ $hijo->code }} - {{ $hijo->concepto }}</option>
                                         @endforeach
                                     </select>
                                 </td>
