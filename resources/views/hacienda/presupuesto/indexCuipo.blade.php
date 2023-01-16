@@ -15,9 +15,11 @@
                     <a href="{{ url('/newPre/0',$añoActual+1) }}" class="nav-link"><span class="hide-menu"> Presupuesto de Egresos {{ $añoActual + 1 }}</span></a>
                 </li>
             @elseif($mesActual == 1 or $mesActual == 2 and auth()->user()->roles->first()->id == 1)
-                <li class="nav-item pillPri">
-                    <a href="{{ url('/newPre/0',$añoActual-1) }}" class="nav-link"><span class="hide-menu"> Presupuesto de Egresos {{ $añoActual - 1 }}</span></a>
-                </li>
+                @if(auth()->user()->roles->first()->id == 1)
+                    <li class="nav-item pillPri">
+                        <a href="{{ url('/newPre/0',$añoActual-1) }}" class="nav-link"><span class="hide-menu"> Presupuesto de Egresos {{ $añoActual - 1 }}</span></a>
+                    </li>
+                @endif
             @endif
                 <li class="nav-item principal">
                     <a class="nav-link"  href="#editar"> Presupuesto de Egresos {{ $añoActual }}</a>
