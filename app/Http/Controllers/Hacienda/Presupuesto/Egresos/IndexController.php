@@ -830,13 +830,18 @@ class IndexController extends Controller
             } else {
                 $cdps= Cdp::where('vigencia_id', $V)->where('dependencia_id', auth()->user()->dependencia->id)->get();
 
-                //REGISTROS
-                foreach ($cdps as $cdp){
-                    foreach($cdp->cdpsRegistro as $data){
-                        $registros[] = ['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto,
-                            'nombre' => $data->persona->nombre, 'valor' => $data->valor, 'estado' => $data->secretaria_e];
+                if (count($cdps) > 0){
+                    //REGISTROS
+                    foreach ($cdps as $cdp){
+                        if(count($cdp->cdpsRegistro) > 0){
+                            foreach($cdp->cdpsRegistro as $data){
+                                $registros[] = ['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto,
+                                    'nombre' => $data->persona->nombre, 'valor' => $data->valor, 'estado' => $data->secretaria_e];
+                            }
+                        }
                     }
                 }
+
             }
 
             //CODE CONTRACTUALES
@@ -858,6 +863,11 @@ class IndexController extends Controller
             if (!isset($rubBPIN)){
                 $rubBPIN[] = null;
                 unset($rubBPIN[0]);
+            }
+
+            if (!isset($registros)){
+                $registros[] = null;
+                unset($registros[0]);
             }
 
             return view('hacienda.presupuesto.indexCuipo', compact('V', 'presupuesto',
