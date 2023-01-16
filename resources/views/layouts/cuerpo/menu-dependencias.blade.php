@@ -9,7 +9,6 @@
    ESTADISTICA
    </a>
 </li>
-@if(auth()->user()->roles->first()->id != 6)
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    NOMINA
@@ -23,20 +22,6 @@
 {{--
    <li class="dropdown-submenu">
          <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
-@if(auth()->user()->roles->first()->id == 1)
-   <li >
-      <a class="btn btn-default btn-sm item-menu" href="{{ route('coso.individuo.index') }}">
-         COSO
-      </a>
-   </li>
-@endif
-@if(auth()->user()->roles->first()->id != 6)
-   @if(auth()->user()->roles->first()->id == 1)
-      <li class="dropdown ">
-         <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-         NOMINA
-         <span class="caret"></span>
-         </a>
          <ul class="dropdown-menu">
             <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
             <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Pensionados</a></li>
@@ -122,7 +107,6 @@
          </a>
       </li>
       --}}
-   @endif
 <li >
    <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto') }}">
     PRESUPUESTO
@@ -361,7 +345,6 @@
          </ul>
       </li>
    @endif
-@endif
 <li class="dropdown messages-menu">
     @include('layouts.cuerpo.perfil')
 </li>
