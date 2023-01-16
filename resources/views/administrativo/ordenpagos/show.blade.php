@@ -159,7 +159,8 @@
                                                 @endfor
                                             </td>
                                             <td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
-                                            <td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding }}</td>
+                                            <td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} -
+                                                {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
                                             <td>{{ $OrdenPago->registros->objeto }}</td>
                                             <td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
                                         </tr>
@@ -187,8 +188,8 @@
                                     <tbody>
                                     @for($z = 0; $z < $OrdenPago->pucs->count(); $z++)
                                         <tr class="text-center">
-                                            <td>{{$OrdenPago->pucs[$z]->data_puc->codigo}}</td>
-                                            <td>{{$OrdenPago->pucs[$z]->data_puc->nombre_cuenta}}</td>
+                                            <td>{{$OrdenPago->pucs[$z]->data_puc->code}}</td>
+                                            <td>{{$OrdenPago->pucs[$z]->data_puc->concepto}}</td>
                                             <td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
                                             <td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_debito,0);?></td>
                                             <td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_credito,0);?></td>
