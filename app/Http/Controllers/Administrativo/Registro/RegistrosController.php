@@ -110,7 +110,12 @@ class RegistrosController extends Controller
             unset($registrosProcess[0]);
         }
 
-        return view('administrativo.registros.index', compact('registros','rol', 'registrosHistorico','vigencia','registrosProcess'))->with('i', ($request->input('page', 1) - 1) * 5);
+        if (auth()->user()->id == 50 or auth()->user()->id == 45){
+            return view('administrativo.registros.index', compact('registros','rol', 'registrosHistorico','vigencia','registrosProcess'))->with('i', ($request->input('page', 1) - 1) * 5);
+        } else{
+            Session::flash('error','No tiene permisos para acceder al modulo de registros');
+            return back();
+        }
 
     }
  
@@ -128,7 +133,14 @@ class RegistrosController extends Controller
         $registros = Registro::all();
         $registrocount = 0;
         foreach ($registros as $registro) if ($registro->cdpsRegistro[0]->cdp->vigencia_id == $id) $registrocount = $registrocount +1;
-        if(count($cdps) > 0) return view('administrativo.registros.create', compact('rol','personas','cdps', 'id','registrocount'));
+        if(count($cdps) > 0) {
+            if (auth()->user()->id == 50 or auth()->user()->id == 45){
+                return view('administrativo.registros.create', compact('rol','personas','cdps', 'id','registrocount'));
+            } else{
+                Session::flash('error','No tiene permisos para crear registros');
+                return back();
+            }
+        }
         else Session::flash('error','Actualmente no existen CDPs disponibles para crear registros.');return back();
     }
  

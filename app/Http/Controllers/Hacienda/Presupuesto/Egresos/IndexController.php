@@ -829,14 +829,14 @@ class IndexController extends Controller
                 $cdps= Cdp::where('vigencia_id', $V)->get();
             } else {
                 $cdps= Cdp::where('vigencia_id', $V)->where('dependencia_id', auth()->user()->dependencia->id)->get();
-            }
 
-            //REGISTROS
-            $allReg = Registro::all();
-            foreach ($allReg as $reg) if ($reg->cdpsRegistro[0]->cdp->vigencia_id == $V) $registros[] = ['id' => $reg->id, 'code' => $reg->code, 'objeto' => $reg->objeto, 'nombre' => $reg->persona->nombre, 'valor' => $reg->valor, 'estado' => $reg->secretaria_e];
-            if (!isset($registros)){
-                $registros[] = null;
-                unset($registros[0]);
+                //REGISTROS
+                foreach ($cdps as $cdp){
+                    foreach($cdp->cdpsRegistro as $data){
+                        $registros[] = ['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto,
+                            'nombre' => $data->persona->nombre, 'valor' => $data->valor, 'estado' => $data->secretaria_e];
+                    }
+                }
             }
 
             //CODE CONTRACTUALES
