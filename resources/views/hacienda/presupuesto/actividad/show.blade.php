@@ -10,9 +10,9 @@
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills">
-                <li class="nav-item regresar"><a class="nav-link "  href="{{ url('/presupuesto/actividades/'.$vigencia->id) }}">Volver a Actividades</a></li>
+                <li class="nav-item regresar"><a class="nav-link" href="{{ url('/presupuesto/actividades/'.$vigencia->id) }}">Volver a Actividades</a></li>
                 <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Actividad {{ $bpin->cod_actividad }}</a></li>
-                @if(auth()->user()->roles->first()->id == 1)
+                @if(auth()->user()->roles->first()->id != 2) 
                     <li class="dropdown">
                         <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                         <ul class="dropdown-menu">

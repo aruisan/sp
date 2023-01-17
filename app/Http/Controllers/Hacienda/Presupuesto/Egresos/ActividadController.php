@@ -32,7 +32,8 @@ class ActividadController extends Controller
 
     public function index($vigencia_id){
         $vigencia = Vigencia::find($vigencia_id);
-        dd("INDEX", $vigencia);
+
+        return back();
     }
 
     public function show($id, $vigencia_id){
