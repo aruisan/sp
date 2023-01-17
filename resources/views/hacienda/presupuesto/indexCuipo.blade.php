@@ -838,7 +838,7 @@
                     <td>${e.cod_actividad}</td>
                     <td>${e.actividad}</td>
                     <td>${button}</td>
-                    <td><a href="/presupuesto/actividad/{{e.cod_actividad}}">{{e.id}}</a></td>
+                    <td><a href="/presupuesto/actividad/${e.cod_actividad}">${e}</a></td>
                 </tr>
             `);
             });
