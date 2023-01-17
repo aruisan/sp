@@ -109,11 +109,13 @@
          </li>
          --}}
 @endif
-<li >
-   <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto') }}">
-    PRESUPUESTO
-   </a>
-</li>
+@if(auth()->user()->id != 54)
+   <li >
+      <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto') }}">
+       PRESUPUESTO
+      </a>
+   </li>
+@endif
 
 {{-- <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown" data-submenu="">
