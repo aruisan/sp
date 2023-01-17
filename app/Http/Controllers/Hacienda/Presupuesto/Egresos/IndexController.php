@@ -32,6 +32,10 @@ class IndexController extends Controller
 
     public function index(){
 
+        if (auth()->user()->roles->first()->id == 4){
+            return redirect('/impuestos');
+        }
+
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
