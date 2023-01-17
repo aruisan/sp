@@ -450,6 +450,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //ASIGNAR ACTIVIDAD AL PROYECTO
         Route::post('presupuesto/proyectos/asignaRubroActiv','Hacienda\Presupuesto\Egresos\IndexController@asignaRubroProyecto');
 
+        //VER ACTIVIDAD
+        Route::get('presupuesto/actividad/{id}/{vigencia}','Hacienda\Presupuesto\Egresos\ActividadController@show');
+
     //INFORMES PRESUPUESTO EGRESOS
     Route::resource('presupuesto/informes','Hacienda\Presupuesto\Informes\ReportsController');
     Route::get('presupuesto/informes/lvl/{id}/{vigencia}','Hacienda\Presupuesto\Informes\ReportsController@lvl');

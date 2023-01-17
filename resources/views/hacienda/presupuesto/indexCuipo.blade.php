@@ -818,6 +818,7 @@
     <script>
         const bpins = @json($bpins);
         const rubInvDisp = @json($rubBPIN);
+        const vigencia_id = @json($V);
         //console.log('bpins', bpins)
 
         $('.asignarRubroSelect').select2();
@@ -838,7 +839,7 @@
                     <td>${e.cod_actividad}</td>
                     <td>${e.actividad}</td>
                     <td>${button}</td>
-                    <td><a href="/presupuesto/actividad/${e.id}" class="btn btn-primary"><i class="fa fa-info-circle"></i></a></td>
+                    <td><a href="/presupuesto/actividad/${e.id}/${vigencia_id}" class="btn btn-primary"><i class="fa fa-info-circle"></i></a></td>
                 </tr>
             `);
             });
