@@ -737,6 +737,7 @@
                                     <th class="text-center">Codigo Actividad</th>
                                     <th class="text-center">Nombre Actividad</th>
                                     <th class="text-center">Rubro</th>
+                                    <th class="text-center"><i class="fa fa-info-circle"></i></th>
                                 </tr>
                                 </thead>
                                 <tbody id="tbody-actividades">
@@ -837,6 +838,7 @@
                     <td>${e.cod_actividad}</td>
                     <td>${e.actividad}</td>
                     <td>${button}</td>
+                    <td><a href="/presupuesto/actividad/{{e.cod_actividad}}">{{e}}</a></td>
                 </tr>
             `);
             });
