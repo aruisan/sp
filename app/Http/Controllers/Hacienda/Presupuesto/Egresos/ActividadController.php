@@ -30,29 +30,17 @@ class ActividadController extends Controller
         $this->middleware('permission:presupuesto-list');
     }
 
-    public function show($id, $vigencia){
+    public function index($vigencia_id){
+        $vigencia = Vigencia::find($vigencia_id);
+        dd("INDEX", $vigencia);
+    }
+
+    public function show($id, $vigencia_id){
 
         $bpin = BPin::find($id);
+        $vigencia = Vigencia::find($vigencia_id);
 
-        dd($bpin, $vigencia);
-
-        return view('hacienda.presupuesto.actividad.show', compact('bpin'));
+        return view('hacienda.presupuesto.actividad.show', compact('bpin','vigencia'));
     }
 
-    public function asignaRubroProyecto(Request $request)
-    {
-        $bpinFind = BPin::where('cod_actividad', $request->actividadCode)->first();
-
-        $bpinSave = new bpinVigencias();
-        $bpinSave->bpin_id = $bpinFind->id;
-        $bpinSave->dep_rubro_id = $request->depRubroID;
-        $bpinSave->vigencia_id = $request->vigencia_id;
-        $bpinSave->propios = $request->valueAsignarRubro;
-        $bpinSave->saldo = $request->valueAsignarRubro;
-        $bpinSave->save();
-
-        Session::flash('success','Se ha asignado exitosamente la actividad al rubro.');
-        return redirect('presupuesto/');
-
-    }
 }
