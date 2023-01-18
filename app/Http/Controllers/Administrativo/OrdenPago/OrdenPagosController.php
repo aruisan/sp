@@ -146,7 +146,7 @@ class OrdenPagosController extends Controller
 
             $R1 = RegistersPuc::where('register_puc_id', NULL)->get();
 
-            $hijosPUC = PucAlcaldia::where('hijo', '1')->get();
+            $hijosPUC = PucAlcaldia::where('hijo', '1')->orderBy('code','DESC')->get();
 
             foreach ($R1 as $r1) {
                 $codigoEnd = $r1->code;
