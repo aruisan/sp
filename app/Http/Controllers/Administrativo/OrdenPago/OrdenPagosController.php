@@ -215,6 +215,8 @@ class OrdenPagosController extends Controller
             }
         }
         $ordenPago->estado = "1";
+        //SE FIJA LA FECHA A 2ENERO2023
+        $ordenPago->created_at = '2023-01-02';
         $ordenPago->save();
         Session::flash('success','La orden de pago se ha finalizado exitosamente');
         return redirect('/administrativo/ordenPagos/show/'.$request->ordenPago_id);
