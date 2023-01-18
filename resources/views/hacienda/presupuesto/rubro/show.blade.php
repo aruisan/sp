@@ -100,19 +100,13 @@
         <div class="tab-content">
             <div id="datos" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tab-pane fade in active">
                 <div class="row justify-content-center">
-                    <center><h2>{{ $rubro->name }}</h2></center><br>
+                    <center><h2>{{ $rubro->cod }} - {{ $rubro->name }}</h2></center><br>
                 </div>
                 <div class="form-validation">
                     <form class="form" action="">
                         <hr>
                         {{ csrf_field() }}
                         <div class="col-md-6 align-self-center">
-                            <div class="form-group">
-                                <label class="control-label text-right col-md-4" for="nombre">Nombre:</label>
-                                <div class="col-lg-6">
-                                    <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $rubro->name }}">
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="control-label text-right col-md-4" for="valor">Codigo Rubro:</label>
                                 <div class="col-lg-6">
@@ -121,12 +115,6 @@
                             </div>
                         </div>
                         <div class="col-md-6 align-self-center">
-                            <div class="form-group">
-                                <label class="control-label text-right col-md-4" for="nombre">Subproyecto:</label>
-                                <div class="col-lg-6">
-                                    <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $rubro->SubProyecto->name }}">
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="control-label text-right col-md-4" for="valor">Vigencia:</label>
                                 <div class="col-lg-6">
