@@ -197,7 +197,7 @@
 			</table>
 		</div>
 	</div>
-	<div style="margin-top: 5px; font-size: 13px;">
+	<div style="font-size: 10px;">
 		<div class="col-md-12 align-self-center">
 			<div class="table-borderless">
 				<table class="table table-borderless" style="border: hidden">

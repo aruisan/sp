@@ -69,7 +69,6 @@
 				<img src="https://www.siex-concejoprovidenciaislas.com.co/img/masporlasislas.png"  height="60">
 			</div>
 		</div>
-
 		@yield('contenido')
 	</div>
 
