@@ -204,21 +204,19 @@
 					<tr class="text-center">
 						<td>
 							<center>
-								_____________________ <br>
+								_______________________ <br>
 								<!-- Presidente 2020 Léri Aniseto Henry Taylor  -->
-								JORGE NORBERTO GARI HOOKER<br>
-								ALCALDE MUNICIPAL
+								JUSTINO BRITON HENRY<br>
+								TESORERO
 							</center>
 						</td>
-						<!---
 						<td>
 							<center>
-								_____________________ <br>
-								{{ $name_contador }}<br>
-								Contador
+								_________________________ <br>
+								LIZBETH VALENZUELA<br>
+								SECRETARIA DE HACIENDA
 							</center>
 						</td>
-						---->
 					</tr>
 				</table>
 			</div>
