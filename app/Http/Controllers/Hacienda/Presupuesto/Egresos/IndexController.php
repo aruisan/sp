@@ -78,7 +78,9 @@ class IndexController extends Controller
                         //SE LLENAN LAS ORDENES DE PAGO CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
                         if ($rubroOP->orden_pago->estado == "1") {
                             if ($ord->registros->cdpsRegistro->first()->cdp->tipo == "Funcionamiento"){
-                                $valores[] = ['id' => $rubroOP->cdps_registro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro->plantilla_cuipos_id];
+                                //SE DEBE VALIDAR EL RUBRO QUE ESTA RECIBIENDO DEBIDO A QUE ESTA GENERANDO ERROR 
+                                $valores[] = ['id' => $rubroOP->cdps_registro->rubro, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro];
+                                //$valores[] = ['id' => $rubroOP->cdps_registro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro->plantilla_cuipos_id];
                             } else {
                                 $bpinCdpValue = $rubroOP->cdps_registro->cdps->bpinsCdpValor->first();
                                 $bpinID = BPin::where('cod_actividad', $bpinCdpValue->cod_actividad )->first();
