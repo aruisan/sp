@@ -206,15 +206,23 @@
 							<center>
 								_______________________ <br>
 								<!-- Presidente 2020 Léri Aniseto Henry Taylor  -->
-								JUSTINO BRITON HENRY<br>
-								TESORERO
+								HELLEN GARCIA ALEGRIA<br>
+								PROFESIONAL UNIVERSITARIO
+							</center>
+						</td>
+						<td>
+							<center>
+								_______________________ <br>
+								<!-- Presidente 2020 Léri Aniseto Henry Taylor  -->
+								&nbsp;<br>
+								SECRETARIO DE HACIENDA
 							</center>
 						</td>
 						<td>
 							<center>
 								_________________________ <br>
-								LIZBETH VALENZUELA<br>
-								SECRETARIA DE HACIENDA
+								JIM HENRY BENT<br>
+								RESPONSABLE PRESUPUESTO
 							</center>
 						</td>
 					</tr>
