@@ -221,15 +221,5 @@
 				</table>
 			</div>
 		</div>
-		<br>
-		<div class="row">
-			<div class="text-center">
-				Documento Generado por el Software
-			</div>
-		</div>
-		<br>
-		<div class="text-center">
-			<img src="https://www.siex-concejoprovidenciaislas.com.co/img/logoSiex.png"  height="50">
-		</div>
 	</div>
 @stop
