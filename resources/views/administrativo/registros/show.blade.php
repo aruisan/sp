@@ -468,7 +468,7 @@
                 @elseif($registro->secretaria_e == 2)
                     <br><div class="alert alert-danger"><center>El Registro ha sido anulado</center></div><br>
                 @endif
-                @if($ordenesPago->count() == 0 and $rol == 2 and $registro->jefe_e == 3)
+                @if($ordenesPago->count() == 0 and $rol == 3 and $registro->jefe_e == 3)
                     <form action="{{url('/administrativo/registros/'.$registro->id.'/anular')}}" method="POST" class="form">
                         {{method_field('POST')}}
                         {{ csrf_field() }}
