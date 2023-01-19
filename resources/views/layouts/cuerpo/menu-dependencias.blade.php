@@ -315,6 +315,7 @@
             <li><a class="item-menu" tabindex="-1" href="{{ url('/contractual') }}">Contratos</a></li>
          </ul>
       </li>
+   @endif
 
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown" title="Configuración">
@@ -322,35 +323,36 @@
          <span class="caret"></span>
          </a>
          <ul class="dropdown-menu">
+            @if(auth()->user()->roles->first()->id == 1)
+               <li><a class="item-menu" id="google_translate_element"></a></li>
 
-            <li><a class="item-menu" id="google_translate_element"></a></li>
+               <li><a class="item-menu" style="cursor: pointer" tabindex="-1" data-toggle="modal" data-target="#updateSoftware">Actualizaciones a la Plataforma</a></li>
 
-            <li><a class="item-menu" style="cursor: pointer" tabindex="-1" data-toggle="modal" data-target="#updateSoftware">Actualizaciones a la Plataforma</a></li>
+               <li><a class="item-menu" tabindex="-1" href="{{ route('configGeneral.index') }}">Configuración General</a></li>
 
-            <li><a class="item-menu" tabindex="-1" href="{{ route('configGeneral.index') }}">Configuración General</a></li>
+               <li><a class="item-menu" tabindex="-1" href="{{ route('dependencias.index') }}">Gestión de Dependencias</a></li>
 
-            <li><a class="item-menu" tabindex="-1" href="{{ route('dependencias.index') }}">Gestión de Dependencias</a></li>
+               <li><a class="hidden"  tabindex="-1" href="{{ route('rutas.index') }}">Rutas</a></li>
 
-            <li><a class="hidden"  tabindex="-1" href="{{ route('rutas.index') }}">Rutas</a></li>
+               @can('funcionario-list')
+               <li><a class="item-menu" tabindex="-1" href="{{ route('funcionarios.index') }}">Gestión de Funcionarios</a></li>
+               @endcan
 
-            @can('funcionario-list')
-            <li><a class="item-menu" tabindex="-1" href="{{ route('funcionarios.index') }}">Gestión de Funcionarios</a></li>
-            @endcan
+               @can('role-list')
+               <li><a class="item-menu" tabindex="-1" href="{{ route('roles.index') }}">Gestión de Roles</a></li>
+               @endcan
 
-            @can('role-list')
-            <li><a class="item-menu" tabindex="-1" href="{{ route('roles.index') }}">Gestión de Roles</a></li>
-            @endcan
-
-             @can('role-list')
-            <li><a class="item-menu" tabindex="-1" href="{{ route('modulos.index') }}">Gestión de Modulos</a></li>
-            @endcan
+                @can('role-list')
+               <li><a class="item-menu" tabindex="-1" href="{{ route('modulos.index') }}">Gestión de Modulos</a></li>
+               @endcan
+            @endif
 
             <li><a class="item-menu" tabindex="-1" href="{{route('personas.index')}}">Terceros</a></li>
-
-            <li><a class="item-menu" tabindex="-1" href="{{route('audits.index')}}">Logs</a></li>
+               @if(auth()->user()->roles->first()->id == 1)
+                  <li><a class="item-menu" tabindex="-1" href="{{route('audits.index')}}">Logs</a></li>
+               @endif
          </ul>
       </li>
-   @endif
 <li class="dropdown messages-menu">
     @include('layouts.cuerpo.perfil')
 </li>
