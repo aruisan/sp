@@ -184,7 +184,7 @@ class PagosController extends Controller
         $pago = Pagos::findOrFail($id);
         if (count($pago->rubros) > 0){
             $PUCS = RubrosPuc::where('naturaleza','1')->get();
-            $hijosPUC = PucAlcaldia::where('hijo', '1')->get();
+            $hijosPUC = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
 
             return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC'));
         } else {
