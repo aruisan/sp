@@ -223,9 +223,6 @@ class PagosController extends Controller
 
             $OP = OrdenPagos::findOrFail($request->ordenPago_id);
             $OP->saldo = $OP->saldo -  $valTotal;
-
-            //SE FIJA LA FECHA A 2ENERO2023
-            $OP->created_at = '2023-01-02';
             $OP->save();
 
             Session::flash('success','El pago se ha finalizado exitosamente');
