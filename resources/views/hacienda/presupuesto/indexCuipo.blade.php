@@ -447,6 +447,8 @@
                                                 Aprobado
                                             @endif
                                         </span>
+                                            </td>
+                                            <td>
                                                 <span class="badge badge-pill badge-danger">
                                             @if($data['estadoJefe'] == "0")
                                                         Pendiente
