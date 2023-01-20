@@ -697,7 +697,7 @@
                                                                     <a href="{{ url('administrativo/registros/show',$data->registro_id) }}" title="Ver Registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    @if($data->registro->secretaria_e == "3")
+                                                                    @if($data->registro->jefe_e == "3")
                                                                         <a href="{{ url('administrativo/registro/pdf/'.$data->registro_id.'/'.$cdp->vigencia_id) }}" title="Ver Archivo" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
                                                                     @endif
                                                                 </td>
