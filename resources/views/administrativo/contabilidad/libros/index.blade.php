@@ -14,7 +14,7 @@
         <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
             <option value="0">Seleccione la cuenta para obtener el libro</option>
             @foreach($result as $cuenta)
-                <option value="{{$cuenta['id']}}">{{$cuenta['code']}} - {{$cuenta['name']}}</option>
+                <option value="{{$cuenta['id']}}">{{$cuenta['code']}} - {{$cuenta['concepto']}}</option>
             @endforeach
         </select>
         <div class="table-responsive">

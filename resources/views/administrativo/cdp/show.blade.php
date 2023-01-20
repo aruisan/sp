@@ -654,7 +654,8 @@
                                                         <tr>
                                                             <th class="text-center">Id</th>
                                                             <th class="text-center">Nombre</th>
-                                                            <th class="text-center">Estado</th>
+                                                            <th class="text-center">Estado Secretaria</th>
+                                                            <th class="text-center">Estado Jefe</th>
                                                             <th class="text-center">Valor Inicial</th>
                                                             <th class="text-center">Valor Disponible</th>
                                                             <th class="text-center">Ver</th>
@@ -677,6 +678,17 @@
                                                             @else
                                                                 Aprobado
                                                             @endif
+                                                        </span>
+                                                                    <span class="badge badge-pill badge-danger">
+                                                            @if($data->registro->jefe_e == "0")
+                                                                            Pendiente
+                                                                        @elseif($data->registro->jefe_e == "1")
+                                                                            Rechazado
+                                                                        @elseif($data->registro->jefe_e == "2")
+                                                                            Anulado
+                                                                        @else
+                                                                            Aprobado
+                                                                        @endif
                                                         </span>
                                                                 </td>
                                                                 <td>$ <?php echo number_format($data->registro->valor,0);?>.00</td>
