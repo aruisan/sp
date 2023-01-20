@@ -79,7 +79,7 @@
 				</tr>
 				<tr class="text-center">
 					<td colspan="3">
-						SON: {{\NumerosEnLetras::convertir($pay)}} M/CTE
+						SON: {{\NumerosEnLetras::convertir($pay)}} Pesos M/CTE
 					</td>
 				</tr>
 				</tbody>
