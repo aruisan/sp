@@ -71,7 +71,6 @@
 	</div>
 
 	@yield('contenido')
-	<hr class="hrFecha br-black-1" style="margin-bottom: 0px;">
 </div>
 
 </body>

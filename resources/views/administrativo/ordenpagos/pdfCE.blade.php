@@ -198,7 +198,7 @@
 			</table>
 		</div>
 	</div>
-	<div style="margin-top: 50px; font-size: 13px;">
+	<div style="font-size: 10px;">
 		<div class="col-md-12 align-self-center">
 			<div class="table table-borderless">
 				<table class="table table-borderless" style="border: hidden">
@@ -206,8 +206,8 @@
 						<td>
 							<center>
 								_____________________ <br>
-								JORGE NORBERTO GARI HOOKER 	<br>
-								ALCALDE MUNICIPAL
+								JUSTINO BRITTON HENRY 	<br>
+								TESORERO
 							</center>
 						</td>
 						<td>
@@ -220,16 +220,6 @@
 					</tr>
 				</table>
 			</div>
-		</div>
-		<br>
-		<div class="row">
-			<div class="text-center">
-				Documento Generado por Software
-			</div>
-		</div>
-		<br>
-		<div class="text-center">
-			<img src="https://www.siex-concejoprovidenciaislas.com.co/img/logoSiex.png"  height="50">
 		</div>
 	</div>
 @stop
