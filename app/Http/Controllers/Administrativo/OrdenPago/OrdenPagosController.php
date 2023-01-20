@@ -21,6 +21,7 @@ use App\Model\Hacienda\Presupuesto\Register;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Persona;
+use App\Traits\ConteoTraits;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Registro\Registro;
@@ -491,54 +492,30 @@ class OrdenPagosController extends Controller
         }
         $vigencia_id = $V;
 
-        $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
-        $registers = Register::where('level_id', $ultimoLevel->id)->get();
-        $registers2 = Register::where('level_id', '<', $ultimoLevel->id)->get();
-        $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
-        $rubroz = Rubro::where('vigencia_id', $vigencia_id)->get();
+        $conteoTraits = new ConteoTraits;
 
-        global $lastLevel;
-        $lastLevel = $ultimoLevel->id;
-        $lastLevel2 = $ultimoLevel2->level_id;
-        foreach ($registers2 as $register2) {
-            global $codigoLast;
-            if ($register2->register_id == null) {
-                $codigoEnd = $register2->code;
-            } elseif ($codigoLast > 0) {
-                if ($lastLevel2 == $register2->level_id) {
-                    $codigo = $register2->code;
-                    $codigoEnd = "$codigoLast$codigo";
-                    foreach ($registers as $register) {
-                        if ($register2->id == $register->register_id) {
-                            $register_id = $register->code_padre->registers->id;
-                            $code = $register->code_padre->registers->code . $register->code;
-                            $ultimo = $register->code_padre->registers->level->level;
-                            while ($ultimo > 1) {
-                                $registro = Register::findOrFail($register_id);
-                                $register_id = $registro->code_padre->registers->id;
-                                $code = $registro->code_padre->registers->code . $code;
-
-                                $ultimo = $registro->code_padre->registers->level->level;
-                            }
-                            if ($register->level_id == $lastLevel) {
-                                foreach ($rubroz as $rub) {
-                                    if ($register->id == $rub->register_id) {
-                                        $newCod = "$code$rub->cod";
-                                        $infoRubro[] = collect(['id_rubro' => $rub->id, 'id' => '', 'codigo' => $newCod, 'name' => $rub->name, 'code' => $rub->code]);
-                                    }
-                                }
-                            }
+        //NEW PRESUPUESTO
+        $plantilla = PlantillaCuipo::where('id', '>', 317)->get();
+        foreach ($plantilla as $data) {
+            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+            if ($data->id < '324') {
+            } elseif (count($rubro) > 0) {
+                if($rubro[0]->fontsRubro and $rubro[0]->tipo == "Funcionamiento"){
+                    //SE VALIDA QUE EL RUBRO TENGA DINERO DISPONIBLE
+                    foreach ($rubro[0]->fontsRubro as $fuentes){
+                        foreach ($fuentes->dependenciaFont as $fontDep){
+                            if (auth()->user()->dependencia_id == $fontDep->dependencia_id) $valDisp[] = $fontDep->saldo;
                         }
                     }
+                    if (isset($valDisp) and array_sum($valDisp) > 0){
+                        $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
+                        unset($valDisp);
+                    }
                 }
-            }else {
-                $codigo = $register2->code;
-                $newRegisters = Register::findOrFail($register2->register_id);
-                $codigoNew = $newRegisters->code;
-                $codigoEnd = "$codigoNew$codigo";
-                $codigoLast = $codigoEnd;
             }
         }
+
+        if (!isset($infoRubro)) $infoRubro = [];
 
         $fecha = Carbon::createFromTimeString($OrdenPago->pago->created_at);
         $fechaO = Carbon::createFromTimeString($OrdenPago->created_at);

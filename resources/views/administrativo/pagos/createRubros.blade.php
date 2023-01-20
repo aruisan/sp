@@ -52,9 +52,9 @@
                             <tbody>
                             @if(count($pago->rubros) > 1)
                                 @foreach($pago->orden_pago->rubros as $rubros)
-                                    <?php $id = $rubros->cdps_registro->rubro->id ?>
+                                        <?php $id = $rubros->cdps_registro->rubro ?>
                                     <tr class="text-center">
-                                        <td>{{ $rubros->cdps_registro->rubro->name }}</td>
+                                        <td>{{ $rubros->cdps_registro->rubro }}</td>
                                         <td>$<?php echo number_format($rubros->saldo,0) ?></td>
                                         <td>
                                             @foreach($pago->rubros->where('rubro_id',$id) as $data)
@@ -67,11 +67,11 @@
                             @else
                                 @for($i=0;$i< count($pago->orden_pago->rubros); $i++)
                                     <tr class="text-center">
-                                        <td>{{ $pago->orden_pago->rubros[$i]->cdps_registro->rubro->name }}</td>
+                                        <td>{{ $pago->orden_pago->rubros[$i]->cdps_registro->rubro }}</td>
                                         <td>$<?php echo number_format($pago->orden_pago->rubros[$i]->saldo,0) ?></td>
                                         <td>
                                             <input type="number" name="valor[]" value="{{ $distri[$i] }}" style="text-align: center" min="0" max="{{ $pago->orden_pago->rubros[$i]->saldo }}">
-                                            <input type="hidden" name="idR[]" value="{{  $pago->orden_pago->rubros[$i]->cdps_registro->rubro->id }}" style="text-align: center">
+                                            <input type="hidden" name="idR[]" value="{{  $pago->orden_pago->rubros[$i]->cdps_registro->rubro }}" style="text-align: center">
                                         </td>
                                     </tr>
                                 @endfor
@@ -83,7 +83,7 @@
                         </table>
                     </div>
                     @if(count($pago->rubros) > 1)
-                        @else
+                    @else
                         <br>
                         <div class="col-md-12 align-self-center text-center">
                             <br>
