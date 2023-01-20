@@ -406,7 +406,8 @@
                                             <tr>
                                                 <th class="text-center">Id</th>
                                                 <th class="text-center">Nombre</th>
-                                                <th class="text-center">Estado</th>
+                                                <th class="text-center">Estado Secretaria</th>
+                                                <th class="text-center">Estado Jefe</th>
                                                 <th class="text-center">Valor Inicial</th>
                                                 <th class="text-center">Valor Disponible</th>
                                                 <th class="text-center">Ver</th>
@@ -431,13 +432,26 @@
                                                             @endif
                                                         </span>
                                                     </td>
+                                                    <td class="text-center">
+                                                        <span class="badge badge-pill badge-danger">
+                                                            @if($data->registro->jefe_e == "0")
+                                                                Pendiente
+                                                            @elseif($data->registro->jefe_e == "1")
+                                                                Rechazado
+                                                            @elseif($data->registro->jefe_e == "2")
+                                                                Anulado
+                                                            @else
+                                                                Aprobado
+                                                            @endif
+                                                        </span>
+                                                    </td>
                                                     <td>$ <?php echo number_format($data->registro->valor,0);?>.00</td>
                                                     <td>$ <?php echo number_format( $data->registro->saldo,0);?>.00</td>
                                                     <td class="text-center">
                                                         <a href="{{ url('administrativo/registros/show',$data->registro_id) }}" title="Ver Registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                                     </td>
                                                     <td class="text-center">
-                                                        @if($data->registro->secretaria_e == "3")
+                                                        @if($data->registro->jefe_e == "3")
                                                             <a href="{{ url('administrativo/registro/pdf/'.$data->registro_id.'/'.$cdp->vigencia_id) }}" title="Ver Archivo" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
                                                         @endif
                                                     </td>
