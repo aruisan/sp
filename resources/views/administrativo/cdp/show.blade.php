@@ -438,7 +438,7 @@
                                                                 Pendiente
                                                             @elseif($data->registro->jefe_e == "1")
                                                                 Rechazado {{$data->registro->ff_jefe_e}}
-                                                            @elseif($data->registro->jefe_e == "2")
+                                                            @elseif($data->registro->jefe_e == "2" )
                                                                 Anulado {{$data->registro->ff_jefe_e}}
                                                             @else
                                                                 Aprobado {{$data->registro->ff_jefe_e}}

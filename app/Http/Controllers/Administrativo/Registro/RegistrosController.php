@@ -403,6 +403,8 @@ class RegistrosController extends Controller
 
             $registro = Registro::findOrFail($registro_id);
             $registro->secretaria_e = "2";
+            $registro->jefe_e = "2";
+            $registro->ff_jefe_e = today()->format("Y-m-d");
             $registro->saldo = 0;
             $registro->save();
 
