@@ -428,7 +428,7 @@
                                                             @elseif($data->registro->secretaria_e == "2")
                                                                 Anulado
                                                             @else
-                                                                Enviado - {{$data->registro->ff_secretaria_e}}
+                                                                Enviado {{$data->registro->ff_secretaria_e}}
                                                             @endif
                                                         </span>
                                                     </td>
@@ -437,11 +437,11 @@
                                                             @if($data->registro->jefe_e == "0")
                                                                 Pendiente
                                                             @elseif($data->registro->jefe_e == "1")
-                                                                Rechazado - {{$data->registro->ff_jefe_e}}
+                                                                Rechazado {{$data->registro->ff_jefe_e}}
                                                             @elseif($data->registro->jefe_e == "2")
-                                                                Anulado - {{$data->registro->ff_jefe_e}}
+                                                                Anulado {{$data->registro->ff_jefe_e}}
                                                             @else
-                                                                Aprobado - {{$data->registro->ff_jefe_e}}
+                                                                Aprobado {{$data->registro->ff_jefe_e}}
                                                             @endif
                                                         </span>
                                                     </td>
