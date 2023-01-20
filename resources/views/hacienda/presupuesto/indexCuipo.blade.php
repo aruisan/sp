@@ -422,7 +422,8 @@
                                         <th class="text-center">Nombre Registro</th>
                                         <th class="text-center">Nombre Tercero</th>
                                         <th class="text-center">Valor</th>
-                                        <th class="text-center">Estado</th>
+                                        <th class="text-center">Estado Secretaria</th>
+                                        <th class="text-center">Estado Jefe</th>
                                         <th class="text-center"><i class="fa fa-eye"></i></th>
                                         <th class="text-center">Archivo</th>
                                     </tr>
@@ -436,15 +437,26 @@
                                             <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
                                             <td class="text-center">
                                         <span class="badge badge-pill badge-danger">
-                                            @if($data['estado'] == "0")
+                                            @if($data['estadoSecretaria'] == "0")
                                                 Pendiente
-                                            @elseif($data['estado'] == "1")
+                                            @elseif($data['estadoSecretaria'] == "1")
                                                 Rechazado
-                                            @elseif($data['estado'] == "2")
+                                            @elseif($data['estadoSecretaria'] == "2")
                                                 Anulado
                                             @else
                                                 Aprobado
                                             @endif
+                                        </span>
+                                                <span class="badge badge-pill badge-danger">
+                                            @if($data['estadoJefe'] == "0")
+                                                        Pendiente
+                                                    @elseif($data['estadoJefe'] == "1")
+                                                        Rechazado
+                                                    @elseif($data['estadoJefe'] == "2")
+                                                        Anulado
+                                                    @else
+                                                        Aprobado
+                                                    @endif
                                         </span>
                                             </td>
                                             <td class="text-center">
