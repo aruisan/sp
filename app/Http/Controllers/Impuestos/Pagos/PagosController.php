@@ -33,13 +33,21 @@ class PagosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($modulo)
     {
         $user = User::find(Auth::user()->id);
-        $pagosPendientes = Pagos::where('user_id', $user->id)->where('estado','Generado')->get();
-        $pagosBorrador = Pagos::where('user_id', $user->id)->where('estado','Borrador')->get();
-        $pagosHistoricos = Pagos::where('user_id', $user->id)->where('estado','Pagado')->get();
-        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos','pagosBorrador'));
+
+        if ($modulo == "PRED"){
+            $pagosPendientes = Pagos::where('user_id', $user->id)->where('estado','Generado')->where('modulo','PREDIAL')->get();
+            $pagosBorrador = Pagos::where('user_id', $user->id)->where('estado','Borrador')->where('modulo','PREDIAL')->get();
+            $pagosHistoricos = Pagos::where('user_id', $user->id)->where('estado','Pagado')->where('modulo','PREDIAL')->get();
+        } else {
+            $pagosPendientes = Pagos::where('user_id', $user->id)->where('estado','Generado')->where('modulo','!=','PREDIAL')->get();
+            $pagosBorrador = Pagos::where('user_id', $user->id)->where('estado','Borrador')->where('modulo','!=','PREDIAL')->get();
+            $pagosHistoricos = Pagos::where('user_id', $user->id)->where('estado','Pagado')->where('modulo','!=','PREDIAL')->get();
+        }
+
+        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos','pagosBorrador','modulo'));
     }
 
     /**

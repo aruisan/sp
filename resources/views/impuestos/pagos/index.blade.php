@@ -5,7 +5,11 @@
         <div class="col-md-12 align-self-center">
             <div class="breadcrumb text-center">
                 <strong>
-                    <h4><b>PAGOS</b></h4>
+                    @if($modulo == 'PRED')
+                        <h4><b>PAGOS PREDIAL</b></h4>
+                    @else
+                        <h4><b>PAGOS ICA</b></h4>
+                    @endif
                 </strong>
             </div>
             <ul class="nav nav-pills">

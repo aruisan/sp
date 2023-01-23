@@ -91,6 +91,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
 
         //PAGOS
+        Route::get('/Pagos/{modulo}', 'Impuestos\Pagos\PagosController@index');
         Route::resource('/Pagos', 'Impuestos\Pagos\PagosController');
         Route::post('/Pagos/Send', 'Impuestos\Pagos\PagosController@Send');
         Route::post('/Pagos/constancia', 'Impuestos\Pagos\PagosController@Constancia');

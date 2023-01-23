@@ -89,6 +89,11 @@
                                                    @if($action != "Inscripción" and $rit->otrasClasesContribuyente == "Autorretenedor ICA") checked @endif>
                                             <label class="form-check-label" for="otrasClasesContribuyente3">Autorretenedor ICA</label>
                                         </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="otrasClasesContribuyente" value="Ninguna" id="otrasClasesContribuyente4"
+                                                   @if($action != "Inscripción" and $rit->otrasClasesContribuyente == "Ninguna") checked @endif>
+                                            <label class="form-check-label" for="otrasClasesContribuyente4">Ninguna</label>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr id="RevFiscalRow">
