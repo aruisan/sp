@@ -28,6 +28,10 @@
                         <div class="form-validation">
                             <hr>
                             <div class="col-lg-12 text-center">
+                                <b>
+                                    <h4><b>Cuenta Bancaria Seleccionada</b></h4>
+                                    <h4><b>{{ $comprobante->puc->code}} - {{ $comprobante->puc->concepto}}</b></h4>
+                                </b>
                                 <br>
                                 <b>
                                     <h4><b>Valor del Comprobantes de Ingresos</b></h4>

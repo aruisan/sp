@@ -61,7 +61,6 @@
                                 <td class="text-center">$<?php echo number_format($CI->val_total,0) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/CIngresos/show/'.$CI->id) }}" title="Ver Comprobante de Ingreso" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
-                                    <a href="{{ url('administrativo/CIngresos/'.$CI->id.'/edit') }}" title="Editar Comprobante de Ingreso" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                 </td>
                             </tr>
                         @endforeach

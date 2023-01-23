@@ -22,4 +22,8 @@ class ComprobanteIngresos extends Model implements Auditable
         return $this->hasMany('App\Model\Administrativo\ComprobanteIngresos\CIRubros','comprobante_ingreso_id');
 
     }
+
+    public function puc(){
+        return $this->belongsTo('App\Model\Administrativo\Contabilidad\PucAlcaldia', 'puc_alcaldia_id');
+    }
 }
