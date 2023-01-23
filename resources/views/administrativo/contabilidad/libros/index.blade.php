@@ -23,7 +23,7 @@
                 <thead>
                     <th class="text-center">Fecha</th>
                     <th class="text-center">Cuenta</th>
-                    <th class="text-center">Modulo</th>
+                    <th class="text-center">Nombre Documento</th>
                     <th class="text-center">Concepto</th>
                     <th class="text-center">Tercero</th>
                     <th class="text-center">Debito</th>
