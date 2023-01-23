@@ -57,7 +57,7 @@ class CuipoController extends Controller
             $maxValue = $vigencia->presupuesto_inicial - array_sum($value);
             return view('hacienda.presupuesto.cuipo.index', compact('vigencia', 'rubros','terceros','paso','vigencia','tipoNormas','fuentes','fontRubro','publicPolitics','maxValue'));
         } elseif ($paso == "3"){
-            $rubros = Rubro::where('vigencia_id',$vigencia_id)->with('fontsRubro')->get();
+            $rubros = Rubro::where('vigencia_id',$vigencia_id)->with('fontsRubro')->paginate(20);
             $vigencia = Vigencia::findOrFail($vigencia_id);
             $budgetSections = BudgetSection::all();
             $vigenciaGastos = VigenciaGasto::all();
