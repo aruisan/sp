@@ -44,6 +44,8 @@ class LoginController extends Controller
             return '/administrativo/impuestos/muellaje';
         } elseif (auth()->user()->id == 54){
             return '/administrativo/impuestos/admin';
+        } elseif (auth()->user()->roles[0]->id == 7){
+            return '/administrativo/contabilidad/libros';
         }
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
