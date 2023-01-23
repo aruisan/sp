@@ -26,6 +26,7 @@
                     <th class="text-center">Nombre Documento</th>
                     <th class="text-center">Concepto</th>
                     <th class="text-center">Tercero</th>
+                    <th class="text-center">NIT/CC</th>
                     <th class="text-center">Debito</th>
                     <th class="text-center">Credito</th>
                     <th class="text-center">Saldo</th>
@@ -131,6 +132,7 @@
                         { title: "Nombre Documento", data: "modulo"},
                         { title: "Concepto", data: "concepto"},
                         { title: "Tercero", data: "tercero"},
+                        { title: "NIT/CC", data: "CC"},
                         { title: "Debito", data: "debito"},
                         { title: "Credito", data: "credito"},
                         { title: "Saldo", data: "total"}
