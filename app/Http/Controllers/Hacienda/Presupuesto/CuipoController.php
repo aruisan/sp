@@ -221,7 +221,7 @@ class CuipoController extends Controller
         $rubro[0]->save();
 
         Session::flash('success','Se ha asignado el tercero al rubro correctamente');
-        return redirect('/presupuesto/rubro/CUIPO/2/'.$request->vigencia_idT);
+        return back();
     }
 
     /**
