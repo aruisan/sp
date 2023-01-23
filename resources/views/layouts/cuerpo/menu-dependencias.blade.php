@@ -190,7 +190,9 @@
          </ul>
       --}}
       </li>
+   @endif
 
+   @if(auth()->user()->roles->first()->id == 1 or auth()->user()->roles->first()->id == 7)
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
          CONTABILIDAD
@@ -224,67 +226,69 @@
          </ul>
       </li>
    @endif
-
-<li class="dropdown ">
-   <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-   TESORERIA
-   <span class="caret"></span>
-   </a>
-   <ul class="dropdown-menu">
-      @if(auth()->user()->id != 54)
-         <li class="dropdown-submenu">
-            <a class="dropdown-item item-menu" >Comprobante de Ingresos </a>
-            <ul class="dropdown-menu">
-               <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/4') }}">2020</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/8') }}">2022</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/12') }}">2023</a></li>
-            </ul>
-         </li>
-         <li class="dropdown-submenu">
-            <a class="dropdown-item item-menu" >Comprobante de Egresos </a>
-            <ul class="dropdown-menu">
-               <li><a class="item-menu" href="{{ url('/administrativo/pagos/3') }}">2020</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/pagos/5') }}">2021</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/pagos/7') }}">2022</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/pagos/11') }}">2023</a></li>
-            </ul>
-         </li>
-         <li class="dropdown-submenu">
-            <a class="dropdown-item item-menu" >Ordenes de Pagos </a>
-            <ul class="dropdown-menu">
-               <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/3') }}">2020</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/5') }}">2021</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/7') }}">2022</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/11') }}">2023</a></li>
-            </ul>
-         </li>
-         <li class="dropdown-submenu">
-            <a class="dropdown-item item-menu" >Retención en la Fuente</a>
-            <ul class="dropdown-menu">
-               <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/declaracion') }}">Declaración</a></li>
-               <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/certificado') }}">Certificado</a></li>
-            </ul>
-         </li>
-         <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago a Terceros</a></li>
-         <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago Nomina</a></li>
-         <!-- <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/retefuente')}}">Retención en la Fuente</a></li> -->
-         <li><a class="item-menu" tabindex="-1" href="#">Informes</a></li>
-         <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li>
-         <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
-      @endif
-      <li class="dropdown-submenu">
-         <a class="dropdown-item item-menu" >Impuestos</a>
+   @if(auth()->user()->roles->first()->id == 1 or auth()->user()->roles->first()->id == 8)
+      <li class="dropdown ">
+         <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
+         TESORERIA
+         <span class="caret"></span>
+         </a>
          <ul class="dropdown-menu">
-            <li><a class="item-menu" href="{{ url('/administrativo/impuestospredial/liquidador') }}">Liquidador</a></li>
-            <li><a class="item-menu" href="{{ url('/administrativo/impuestos/muellaje') }}">Muellaje</a></li>
-            <li><a class="item-menu" href="{{ url('/administrativo/impuestos/delineacion') }}">Delineación y Urbanismo</a></li>
-            <li><a class="item-menu" href="{{url('/administrativo/impuestos/admin')}}">Administración Impuestos</a></li>
-            <li><a class="item-menu" href="{{url('/administrativo/contabilidad/impumuni')}}">Impuestos Municipales</a></li>
-            <li><a class="item-menu" href="{{url('/administrativo/impuestos/pagos')}}">Pagos</a></li>
+            @if(auth()->user()->id != 54)
+               <li class="dropdown-submenu">
+                  <a class="dropdown-item item-menu" >Comprobante de Ingresos </a>
+                  <ul class="dropdown-menu">
+                     <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/4') }}">2020</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/8') }}">2022</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/12') }}">2023</a></li>
+                  </ul>
+               </li>
+               <li class="dropdown-submenu">
+                  <a class="dropdown-item item-menu" >Comprobante de Egresos </a>
+                  <ul class="dropdown-menu">
+                     <li><a class="item-menu" href="{{ url('/administrativo/pagos/3') }}">2020</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/pagos/5') }}">2021</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/pagos/7') }}">2022</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/pagos/11') }}">2023</a></li>
+                  </ul>
+               </li>
+               <li class="dropdown-submenu">
+                  <a class="dropdown-item item-menu" >Ordenes de Pagos </a>
+                  <ul class="dropdown-menu">
+                     <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/3') }}">2020</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/5') }}">2021</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/7') }}">2022</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/11') }}">2023</a></li>
+                  </ul>
+               </li>
+               <li class="dropdown-submenu">
+                  <a class="dropdown-item item-menu" >Retención en la Fuente</a>
+                  <ul class="dropdown-menu">
+                     <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/declaracion') }}">Declaración</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/certificado') }}">Certificado</a></li>
+                  </ul>
+               </li>
+               <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago a Terceros</a></li>
+               <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago Nomina</a></li>
+               <!-- <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/retefuente')}}">Retención en la Fuente</a></li> -->
+               <li><a class="item-menu" tabindex="-1" href="#">Informes</a></li>
+               <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li>
+               <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
+            @endif
+            <li class="dropdown-submenu">
+               <a class="dropdown-item item-menu" >Impuestos</a>
+               <ul class="dropdown-menu">
+                  <li><a class="item-menu" href="{{ url('/administrativo/impuestospredial/liquidador') }}">Liquidador</a></li>
+                  <li><a class="item-menu" href="{{ url('/administrativo/impuestos/muellaje') }}">Muellaje</a></li>
+                  <li><a class="item-menu" href="{{ url('/administrativo/impuestos/delineacion') }}">Delineación y Urbanismo</a></li>
+                  <li><a class="item-menu" href="{{url('/administrativo/impuestos/admin')}}">Administración Impuestos</a></li>
+                  <li><a class="item-menu" href="{{url('/administrativo/contabilidad/impumuni')}}">Impuestos Municipales</a></li>
+                  <li><a class="item-menu" href="{{url('/administrativo/impuestos/pagos')}}">Pagos</a></li>
+               </ul>
+            </li>
          </ul>
       </li>
-   </ul>
-</li>
+   @endif
+
 
    @if(auth()->user()->roles->first()->id == 1)
       <li class="dropdown ">
