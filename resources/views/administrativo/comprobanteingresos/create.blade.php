@@ -91,6 +91,20 @@
                                 </div>
                             </div>
                             <br>
+                            <div class="row">
+                                <div class="col-md-12 align-self-center">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <select class="form-control" name="cuentaDeb" id="cuentaDeb">
+                                                @foreach($hijosDebito as $hijo)
+                                                    <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <input type="hidden" class="form-control" name="user_id" value="{{ $user_id }}">
                             <input type="hidden" class="form-control" name="vigencia_id" value="{{ $vigencia->id }}">
                             <input type="hidden" class="form-control" name="estado" value="0">

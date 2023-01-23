@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\ComprobanteIngresos;
 
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\ComprobanteIngresos\CIRubros;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipoIngresos;
@@ -46,8 +47,10 @@ class ComprobanteIngresosController extends Controller
     {
         $vigencia = Vigencia::findOrFail($id);
         $user_id = auth()->user()->id;
+        $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
 
-        return view('administrativo.comprobanteingresos.create', compact('vigencia','user_id'));
+        return view('administrativo.comprobanteingresos.create', compact('vigencia','user_id',
+        'hijosDebito'));
     }
 
     /**
@@ -79,6 +82,7 @@ class ComprobanteIngresosController extends Controller
         $comprobante->cualOtroTipo = $request->cualOtroTipo;
         $comprobante->user_id = $request->user_id;
         $comprobante->vigencia_id = $request->vigencia_id;
+        $comprobante->puc_alcaldia_id = $request->cuentaDeb;
         $comprobante->ruta = $ruta;
         $comprobante->save();
 
