@@ -128,7 +128,7 @@
                     columns: [
                         { title: "Fecha", data: "fecha"},
                         { title: "Cuenta", data: "cuenta"},
-                        { title: "Modulo", data: "modulo"},
+                        { title: "Nombre Documento", data: "modulo"},
                         { title: "Concepto", data: "concepto"},
                         { title: "Tercero", data: "tercero"},
                         { title: "Debito", data: "debito"},
