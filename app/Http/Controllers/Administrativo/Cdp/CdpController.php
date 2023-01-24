@@ -360,9 +360,6 @@ class CdpController extends Controller
                                     Session::flash('success','El CDP enviado tiene asignado un valor superior al
                                     disponible en el rubro.');
                                     return back();
-                                } else {
-                                    $dep->saldo = $dep->saldo - $data->rubrosCdpValor->first()->valor;
-                                    $dep->save();
                                 }
                             }
                         }
