@@ -359,7 +359,13 @@
                                                         <button type="button" v-on:click.prevent="nuevaFilaPrograma" class="btn btn-success">Agregar Fila</button>
                                                         <button type="submit" class="btn btn-primary">Guardar Rubros</button>
                                                         @if($cdp->rubrosCdpValor->sum('valor_disp') > 0 )
-                                                            <a class="btn btn-success" onclick="validarFormulario({{$cdp->id}}, {{$rol}}, '{{$fechaActual}}', {{$cdp->rubrosCdpValor->sum('valor_disp')}}, {{$cdp->valueControl}})">Enviar CDP</a>
+                                                            @if(auth()->user()->id == 39)
+                                                                <a href="{{url('/administrativo/cdp/'.$cdp->id.'/3/'.$fechaActual.'/'.$cdp->rubrosCdpValor->sum('valor_disp').'/3')}}" class="btn btn-danger">
+                                                                    Finalizar CDP
+                                                                </a>
+                                                            @else
+                                                                <a class="btn btn-success" onclick="validarFormulario({{$cdp->id}}, {{$rol}}, '{{$fechaActual}}', {{$cdp->rubrosCdpValor->sum('valor_disp')}}, {{$cdp->valueControl}})">Enviar CDP</a>
+                                                            @endif
                                                         @endif
                                                     @elseif($rol == 5)
                                                         @if($cdp->jefe_e == "2" and $cdp->secretaria_e == "3")
