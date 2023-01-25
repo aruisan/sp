@@ -394,15 +394,21 @@
                                     <button type="submit" class="btn btn-danger">Actualizar Registro</button>
                                     @if($registro->cdpRegistroValor->sum('valor') > 0 )
                                         @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
-                                        <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
-                                            Enviar Registro al Jefe
-                                        </a>
+                                        @if(auth()->user()->id == 39)
+                                            <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot.'/3')}}" type="submit" class="btn btn-success">
+                                                Finalizar Registro
+                                            </a>
+                                        @else
+                                            <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot.'/2')}}" type="submit" class="btn btn-success">
+                                                Enviar Registro al Jefe
+                                            </a>
+                                        @endif
                                     @endif
                                 @elseif($rol == 3 and $registro->jefe_e != 3)
                                     <a data-toggle="modal" data-target="#observacion" class="btn btn-success">Rechazar Registro</a>
                                     @if($registro->cdpRegistroValor->sum('valor') > 0 )
                                         @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
-                                        <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot)}}" type="submit" class="btn btn-success">
+                                        <a href="{{url('/administrativo/registros/'.$registro->id.'/'.$fechaActual.'/'.$registro->cdpRegistroValor->sum('valor').'/3/'.$valTot.'/3')}}" type="submit" class="btn btn-success">
                                             Finalizar Registro
                                         </a>
                                     @endif

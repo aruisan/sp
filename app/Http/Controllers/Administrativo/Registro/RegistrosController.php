@@ -313,17 +313,12 @@ class RegistrosController extends Controller
         return redirect('/administrativo/registros/'.$vigencia);
     }
 
-    public function updateEstado($id,$fecha,$valor,$estado,$valTot)
+    public function updateEstado($id,$fecha,$valor,$estado,$valTot, $rol)
     {
         //FECHA FIJA
         $fecha = '2023-01-02';
 
         $update = Registro::findOrFail($id);
-
-        $roles = auth()->user()->roles;
-        foreach ($roles as $role){
-            $rol= $role->id;
-        }
 
         //Validación del valor total frente a el valor disponible de los CDP's
         foreach ($update->cdpsRegistro as $cdps){
