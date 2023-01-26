@@ -857,19 +857,7 @@
         var count1 = '<?php echo $cdp->rubrosCdp->count(); ?>';
         var ciclo1 = JSON.parse('<?php echo json_encode($cdp->rubrosCdp); ?>');
 
-        for (i = 0; i < count1; i++) {
-            var r1 = ciclo1[i];
-            var fontsR = r1.rubros.fonts_rubro;
-            for (j = 0; j < fontsR.length; j++){
-                var fuenteR = fontsR[j].rubros_cdp_valor;
-                for (k = 0; k < fuenteR.length; k++){
-                    var idClass = '#valor'+fuenteR[k].rubrosCdp_id;
-                    var idId = '.id'+fontsR[j].font_id;
-                    var i = i;
-                }
-
-            }
-        };
+        
 
         var visto = null;
         function ver(num) {
