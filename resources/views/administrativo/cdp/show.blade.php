@@ -329,7 +329,7 @@
                                                                                     @endif
                                                                                 @endif
                                                                             @else
-                                                                                @if($cdp->dependencia_id == $user->dependencia_id)
+                                                                                @if($cdp->dependencia_id == $dep->dependencia_id)
                                                                                     @if($dep->rubroCdpValor->count() != 0)
                                                                                         <!-- VALIDACION HERE -->
                                                                                         @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
