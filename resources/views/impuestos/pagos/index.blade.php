@@ -159,7 +159,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{Storage::url($pago->resource_id)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-eye"></i>&nbsp;<i class="fa fa-usd"></i></a>
+                                            <a href="{{Storage::url($pago->Resource->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-eye"></i>&nbsp;<i class="fa fa-usd"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
