@@ -139,19 +139,21 @@
 				</thead>
 				<tbody>
 				@for($i = 0; $i < $R->cdpRegistroValor->count(); $i++)
-					<tr class="text-center">
-						<td>
-							@for($x = 0; $x < count($infoRubro); $x++)
-								@if($infoRubro[$x]['id_rubro'] == $R->cdpRegistroValor[$i]->fontRubro->rubro->id)
-									{{ $infoRubro[$x]['codigo'] }}
-								@endif
-							@endfor
-						</td>
-						<td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
-						<td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
-						<td>{{ $OrdenPago->registros->objeto }}</td>
-						<td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
-					</tr>
+					@if($R->cdpRegistroValor[$i]->valor > 0)
+						<tr class="text-center">
+							<td>
+								@for($x = 0; $x < count($infoRubro); $x++)
+									@if($infoRubro[$x]['id_rubro'] == $R->cdpRegistroValor[$i]->fontRubro->rubro->id)
+										{{ $infoRubro[$x]['codigo'] }}
+									@endif
+								@endfor
+							</td>
+							<td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
+							<td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
+							<td>{{ $OrdenPago->registros->objeto }}</td>
+							<td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+						</tr>
+					@endif
 				@endfor
 				</tbody>
 			</table>
