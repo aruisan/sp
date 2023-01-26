@@ -115,42 +115,38 @@ class CdpController extends Controller
     public function anular($id, $vigen){
         $cdp = Cdp::findOrFail($id);
         $cdpsRegistro = CdpsRegistro::where('cdp_id','=',$id)->get();
-        if (count($cdpsRegistro) > 0){
-            Session::flash('warning', 'Tiene Registros Relacionados al CDP. Elimine los Registros Para Poder Anular el CDP');
-            return redirect('/administrativo/cdp/'.$vigen.'/'.$id);
-        }else{
-            if ($cdp->tipo == "Funcionamiento"){
-                $cdp->saldo = 0;
-                $cdp->jefe_e = '2';
-                $cdp->save();
 
-                $rubrosCdp = RubrosCdpValor::where('cdp_id', $id)->get();
-                foreach ($rubrosCdp as $rubroCdp){
-                    $fontR = FontsRubro::findOrFail($rubroCdp->fontsRubro->id);
-                    $fontR->valor_disp = $fontR->valor_disp + $rubroCdp->valor;
-                    $fontR->save();
-                }
+        if ($cdp->tipo == "Funcionamiento"){
+            $cdp->saldo = 0;
+            $cdp->jefe_e = '2';
+            $cdp->save();
 
-                Session::flash('error','El CDP ha sido anulado');
-                return redirect('/administrativo/cdp/'.$vigen.'/'.$id);
-            } else{
-                //ANULAR EL CDP DE INVERSION
-                $cdp->saldo = 0;
-                $cdp->jefe_e = '2';
-                $cdp->save();
-
-                $actividadesCdp = BpinCdpValor::where('cdp_id', $id)->get();
-                foreach ($actividadesCdp as $actividadCdp){
-                    $actividad = BPin::findOrFail($actividadCdp->actividad->id);
-                    $actividad->saldo = $actividad->saldo + $actividadCdp->valor;
-                    $actividad->save();
-                }
-
-                Session::flash('error','El CDP ha sido anulado');
-                return redirect('/administrativo/cdp/'.$vigen.'/'.$id);
+            $rubrosCdp = RubrosCdpValor::where('cdp_id', $id)->get();
+            foreach ($rubrosCdp as $rubroCdp){
+                $fontR = FontsRubro::findOrFail($rubroCdp->fontsRubro->id);
+                $fontR->valor_disp = $fontR->valor_disp + $rubroCdp->valor;
+                $fontR->save();
             }
 
+            Session::flash('error','El CDP ha sido anulado');
+            return redirect('/administrativo/cdp/'.$vigen.'/'.$id);
+        } else{
+            //ANULAR EL CDP DE INVERSION
+            $cdp->saldo = 0;
+            $cdp->jefe_e = '2';
+            $cdp->save();
+
+            $actividadesCdp = BpinCdpValor::where('cdp_id', $id)->get();
+            foreach ($actividadesCdp as $actividadCdp){
+                $actividad = BPin::findOrFail($actividadCdp->actividad->id);
+                $actividad->saldo = $actividad->saldo + $actividadCdp->valor;
+                $actividad->save();
+            }
+
+            Session::flash('error','El CDP ha sido anulado');
+            return redirect('/administrativo/cdp/'.$vigen.'/'.$id);
         }
+        
     }
 
     /**
