@@ -233,8 +233,14 @@
                                                                         <li style="list-style-type: none;">
                                                                             {{ $fuentesRubro->sourceFunding->description }} :
                                                                             @foreach($fuentesRubro->dependenciaFont as $dep)
-                                                                                @if($dep->dependencia_id == $user->dependencia_id)
-                                                                                    $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                @if($rol == 2)
+                                                                                    @if($dep->dependencia_id == $user->dependencia_id)
+                                                                                        $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                    @endif
+                                                                                @else
+                                                                                    @if($dep->dependencia_id == $cdp->dependencia_id)
+                                                                                        $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                    @endif
                                                                                 @endif
                                                                             @endforeach
                                                                         </li>
@@ -247,8 +253,14 @@
                                                                         <li style="list-style-type: none;">
                                                                             {{ $fuentesRubro->sourceFunding->description }} :
                                                                             @foreach($fuentesRubro->dependenciaFont as $dep)
-                                                                                @if($dep->dependencia_id == $user->dependencia_id)
-                                                                                    $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                @if($rol == 2)
+                                                                                    @if($dep->dependencia_id == $user->dependencia_id)
+                                                                                        $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                    @endif
+                                                                                @else
+                                                                                    @if($dep->dependencia_id == $cdp->dependencia_id)
+                                                                                        $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                    @endif
                                                                                 @endif
                                                                             @endforeach
                                                                         </li>
