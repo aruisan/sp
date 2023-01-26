@@ -302,29 +302,57 @@
                                                                     @elseif($fuentesRubro->valor_disp != 0)
                                                                         Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                         @foreach($fuentesRubro->dependenciaFont as $dep)
-                                                                            @if($dep->dependencia_id == $user->dependencia_id)
-                                                                                @if($dep->rubroCdpValor->count() != 0)
-                                                                                    <!-- VALIDACION HERE -->
-                                                                                    @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
-                                                                                        @php($id_rubrosCdp = $rubrosCdpData->id )
-                                                                                        @if($valoresFR->cdp_id == $cdp->id)
-                                                                                            <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresFR->id }}">
-                                                                                            @if($cdp->secretaria_e == "0")
-                                                                                                <input type="number" required  name="valorFuenteUsar[]" id="id{{$fuentesRubro->font_id}}" class="valor{{ $valoresFR->rubrosCdp_id }}" value="{{ $valoresFR->valor }}" max="{{ $dep->saldo }}" style="text-align: center">
-                                                                                            @else
-                                                                                                $<?php echo number_format( $valoresFR->valor,0) ?>
+                                                                            @if($rol == 2)
+                                                                                @if($dep->dependencia_id == $user->dependencia_id)
+                                                                                    @if($dep->rubroCdpValor->count() != 0)
+                                                                                        <!-- VALIDACION HERE -->
+                                                                                        @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
+                                                                                            @php($id_rubrosCdp = $rubrosCdpData->id )
+                                                                                            @if($valoresFR->cdp_id == $cdp->id)
+                                                                                                <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresFR->id }}">
+                                                                                                @if($cdp->secretaria_e == "0")
+                                                                                                    <input type="number" required  name="valorFuenteUsar[]" id="id{{$fuentesRubro->font_id}}" class="valor{{ $valoresFR->rubrosCdp_id }}" value="{{ $valoresFR->valor }}" max="{{ $dep->saldo }}" style="text-align: center">
+                                                                                                @else
+                                                                                                    $<?php echo number_format( $valoresFR->valor,0) ?>
+                                                                                                @endif
                                                                                             @endif
+                                                                                        @endforeach
+                                                                                        @if($cdp->rubrosCdpValor->count() == 0)
+                                                                                            <input type="hidden" name="rubros_cdp_valor_id[]" value="">
+                                                                                            <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
+                                                                                            <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
                                                                                         @endif
-                                                                                    @endforeach
-                                                                                    @if($cdp->rubrosCdpValor->count() == 0)
+                                                                                    @else
                                                                                         <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                                         <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
                                                                                         <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
                                                                                     @endif
-                                                                                @else
-                                                                                    <input type="hidden" name="rubros_cdp_valor_id[]" value="">
-                                                                                    <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
-                                                                                    <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
+                                                                                @endif
+                                                                            @else
+                                                                                @if($cdp->dependencia_id == $user->dependencia_id)
+                                                                                    @if($dep->rubroCdpValor->count() != 0)
+                                                                                        <!-- VALIDACION HERE -->
+                                                                                        @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
+                                                                                            @php($id_rubrosCdp = $rubrosCdpData->id )
+                                                                                            @if($valoresFR->cdp_id == $cdp->id)
+                                                                                                <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresFR->id }}">
+                                                                                                @if($cdp->secretaria_e == "0")
+                                                                                                    <input type="number" required  name="valorFuenteUsar[]" id="id{{$fuentesRubro->font_id}}" class="valor{{ $valoresFR->rubrosCdp_id }}" value="{{ $valoresFR->valor }}" max="{{ $dep->saldo }}" style="text-align: center">
+                                                                                                @else
+                                                                                                    $<?php echo number_format( $valoresFR->valor,0) ?>
+                                                                                                @endif
+                                                                                            @endif
+                                                                                        @endforeach
+                                                                                        @if($cdp->rubrosCdpValor->count() == 0)
+                                                                                            <input type="hidden" name="rubros_cdp_valor_id[]" value="">
+                                                                                            <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
+                                                                                            <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
+                                                                                        @endif
+                                                                                    @else
+                                                                                        <input type="hidden" name="rubros_cdp_valor_id[]" value="">
+                                                                                        <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
+                                                                                        <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
+                                                                                    @endif
                                                                                 @endif
                                                                             @endif
                                                                         @endforeach
