@@ -36,7 +36,7 @@
         <li class="nav-item active">
             <a class="nav-link " data-toggle="pill" href="#tabTareas">TAREAS</a>
         </li>
-        @if(count($registrosProcess) > 0)
+        @if(count($registrosProcess) > 0 and $rol == 2)
             <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#tabProcess">EN PROCESO</a>
             </li>
