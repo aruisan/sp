@@ -724,19 +724,21 @@
                                                                 <td>{{ $data->registro->code }}</td>
                                                                 <td>{{ $data->registro->objeto }}</td>
                                                                 <td class="text-center">
-                                                        <span class="badge badge-pill badge-danger">
-                                                            @if($data->registro->secretaria_e == "0")
-                                                                Pendiente
-                                                            @elseif($data->registro->secretaria_e == "1")
-                                                                Rechazado
-                                                            @elseif($data->registro->secretaria_e == "2")
-                                                                Anulado
-                                                            @else
-                                                                Aprobado
-                                                            @endif
-                                                        </span>
                                                                     <span class="badge badge-pill badge-danger">
-                                                            @if($data->registro->jefe_e == "0")
+                                                                        @if($data->registro->secretaria_e == "0")
+                                                                            Pendiente
+                                                                        @elseif($data->registro->secretaria_e == "1")
+                                                                            Rechazado
+                                                                        @elseif($data->registro->secretaria_e == "2")
+                                                                            Anulado
+                                                                        @else
+                                                                            Aprobado
+                                                                        @endif
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="badge badge-pill badge-danger">
+                                                                        @if($data->registro->jefe_e == "0")
                                                                             Pendiente
                                                                         @elseif($data->registro->jefe_e == "1")
                                                                             Rechazado
@@ -745,7 +747,7 @@
                                                                         @else
                                                                             Aprobado
                                                                         @endif
-                                                        </span>
+                                                                    </span>
                                                                 </td>
                                                                 <td>$ <?php echo number_format($data->registro->valor,0);?>.00</td>
                                                                 <td>$ <?php echo number_format( $data->registro->saldo,0);?>.00</td>
