@@ -9,12 +9,24 @@ use Auth;
 class DashboardController extends Controller
 {
     public function  index()
-    { 
+    {
+
     	if(Auth::user()->type_id > 4){
     		return redirect()->route('presupuesto.index');
     	}else{
-    		return redirect()->route('notificaciones.index');
-    	
+            if (auth()->user()->roles[0]->id == 4) {
+                return redirect('/impuestos');
+            } elseif (auth()->user()->roles[0]->id == 6){
+                return redirect('/administrativo/impuestos/muellaje');
+            } elseif (auth()->user()->id == 54){
+                return redirect('/administrativo/impuestos/admin');
+            } elseif (auth()->user()->roles[0]->id == 7){
+                return redirect('/administrativo/contabilidad/libros');
+            } elseif (auth()->user()->roles[0]->id == 8){
+                return redirect('/administrativo/bancos');
+            } else {
+                return redirect()->route('notificaciones.index');
+            }
     	}
     }
 }
