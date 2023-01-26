@@ -188,11 +188,7 @@
                                                         </div>
                                                         <div class="col-lg-4">
                                                             <h4>
-                                                                @foreach($infoRubro as $infoR)
-                                                                    @if($infoR['id_rubro'] == $rubrosCdpData->rubros->id)
-                                                                        <b>Rubro: {{ $infoR['codigo'] }}</b>
-                                                                    @endif
-                                                                @endforeach
+                                                                <b>Rubro: {{ $rubrosCdpData->rubros->cod }}</b>
                                                             </h4>
                                                         </div>
                                                         <div class="col-lg-4">
