@@ -910,7 +910,8 @@
             $('#tabla_rubrosCdp').DataTable( {
                 responsive: true,
                 "searching": false,
-                "ordering" : false
+                "ordering" : false,
+                "pageLength": 100,
             } );
 
             $('#tablaRegistros').DataTable( {
