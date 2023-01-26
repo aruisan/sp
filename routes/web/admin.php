@@ -357,6 +357,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //ADMINISTRACION DE IMPUESTOS
         Route::resource('impuestos/admin','Administrativo\Impuestos\ImpAdminController');
 
+            //ADMINISTRACION DE USUARIOS DE PREDIAL
+            Route::get('impuestos/admin/predial/user/edit/{id}','Administrativo\Impuestos\ImpAdminController@editUser');
+            Route::put('impuestos/admin/predial/user/{id}','Administrativo\Impuestos\ImpAdminController@updateUser');
+
         //COMUNICADOS
         Route::get('impuestos/comunicado/create','Administrativo\Impuestos\ImpAdminController@makeComunicado');
         Route::post('impuestos/comunicado/make','Administrativo\Impuestos\ImpAdminController@generateComunicado');

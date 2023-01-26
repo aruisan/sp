@@ -81,9 +81,11 @@ class ImpAdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function editUser($id)
     {
-        //
+        $user = PredialContribuyentes::find($id);
+
+        return view('administrativo.impuestos.admin.userpredial.edit', compact('user'));
     }
 
     /**
@@ -93,9 +95,21 @@ class ImpAdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateUser(Request $request, $id)
     {
-        //
+        $user = PredialContribuyentes::find($id);
+        $user->email = $request->correo;
+        $user->areaTerreno = $request->area;
+        $user->dir_predio = $request->dirPred;
+        $user->otra_red= $request->otraRed;
+        $user->dir_notificacion = $request->dirNoti;
+        $user->municipio = $request->municipio;
+        $user->whatsapp = $request->whatsapp;
+        $user->facebook = $request->facebook;
+        $user->save();
+
+        Session::flash('success','El usuario '.$user->contribuyente.' se ha actualziado exitosamente');
+        return redirect('/administrativo/impuestos/admin');
     }
 
     /**

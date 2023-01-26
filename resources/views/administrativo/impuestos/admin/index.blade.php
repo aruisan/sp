@@ -32,7 +32,7 @@
                             <th class="text-center">Email</th>
                             <th class="text-center">Valor Deuda</th>
                             <th class="text-center">Años Deuda</th>
-                            <th class="text-center">Ver Usuario</th>
+                            <th class="text-center">Editar</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -49,7 +49,7 @@
                                 <td class="text-center">$<?php echo number_format($predUser->valor_deuda,0) ?></td>
                                 <td class="text-center">{{ $predUser->años_deuda}}</td>
                                 <td class="text-center">
-                                    <a href="{{ url('administrativo/impuestos/admin/predial/user/'.$predUser->id) }}" title="Ver Usuario" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ url('administrativo/impuestos/admin/predial/user/edit/'.$predUser->id) }}" title="Editar Usuario" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                 </td>
                             </tr>
                         @endforeach
