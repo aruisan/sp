@@ -277,8 +277,19 @@ class CdpController extends Controller
             $data->actividad->rubro = $bpinVig->rubro;
         }
 
+        $activateAnul = true;
+        if ($cdp->cdpsRegistro->count() > 0){
+            foreach ($cdp->cdpsRegistro as $registro){
+                if ($registro->secretaria_e == 2){
+                    $activateAnul = false;
+                }
+            }
+        }
+
+
+
         return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol',
-            'infoRubro', 'conteo', 'bpins', 'user','unicoBpins'));
+            'infoRubro', 'conteo', 'bpins', 'user','unicoBpins','activateAnul'));
     }
 
     public function unique_multidim_array($array, $key) {
