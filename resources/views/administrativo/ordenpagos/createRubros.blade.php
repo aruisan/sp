@@ -62,12 +62,14 @@
                             </thead>
                             <tbody>
                            @foreach($ordenPago->rubros as $rubros)
-                               <tr>
-                                   <td class="text-center">{{ $rubros->cdps_registro->cdps->id }}</td>
-                                   <td class="text-center">{{ $rubros->cdps_registro->cdps->name}}</td>
-                                   <td class="text-center">{{ $rubros->cdps_registro->cdps->rubrosCdp[0]->rubros->name}}</td>
-                                   <td class="text-center">$<?php echo number_format($rubros->valor,0) ?></td>
-                               </tr>
+                               @if($rubros->valor > 0)
+                                   <tr>
+                                       <td class="text-center">{{ $rubros->cdps_registro->cdps->id }}</td>
+                                       <td class="text-center">{{ $rubros->cdps_registro->cdps->name}}</td>
+                                       <td class="text-center">{{ $rubros->cdps_registro->cdps->rubrosCdp[0]->rubros->name}}</td>
+                                       <td class="text-center">$<?php echo number_format($rubros->valor,0) ?></td>
+                                   </tr>
+                               @endif
                            @endforeach
                             </tbody>
                         </table>
@@ -108,14 +110,16 @@
                                     <td><input type="number" style="text-align: center" required name="ValorIva" value="{{ $ordenPago->iva }}"></td>
                                 </tr>
                                 @for($i=0;$i< count($cdps); $i++)
-                                    <tr class="text-center">
-                                        <td>{{$cdps[$i]->cdp_id}}</td>
-                                        <td>{{$cdps[$i]->cdps->name}}</td>
-                                        <td>{{$cdps[$i]->fontRubro->rubro->name}}</td>
-                                        <td>$<?php echo number_format($cdps[$i]->valor,0) ?></td>
-                                        <td><input type="number" style="text-align: center" required name="Valor[]" value="{{ $distri[$i] }}"></td>
-                                        <input type="hidden" style="text-align: center" name="cdp_id[]" value="{{ $cdps[$i]->id }}">
-                                    </tr>
+                                    @if($cdps[$i]->valor > 0)
+                                        <tr class="text-center">
+                                            <td>{{$cdps[$i]->cdp_id}}</td>
+                                            <td>{{$cdps[$i]->cdps->name}}</td>
+                                            <td>{{$cdps[$i]->fontRubro->rubro->name}}</td>
+                                            <td>$<?php echo number_format($cdps[$i]->valor,0) ?></td>
+                                            <td><input type="number" style="text-align: center" required name="Valor[]" value="{{ $distri[$i] }}"></td>
+                                            <input type="hidden" style="text-align: center" name="cdp_id[]" value="{{ $cdps[$i]->id }}">
+                                        </tr>
+                                    @endif
                                 @endfor
                                 </tbody>
                             </table>
