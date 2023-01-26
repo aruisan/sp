@@ -55,6 +55,7 @@
                         <tr>
                             <td class="text-center">
                                 <select name="cdp_id[]" id="cdps" class="form-control selectF" required onchange="ShowSelected()">
+                                    <option value="0">Seleccione el CDP</option>
                                     @foreach($cdps as $cdp)
                                         <option value="{{ $cdp['id'] }}">{{ $cdp['code'] }} - {{ $cdp['name'] }}</option>
                                     @endforeach
