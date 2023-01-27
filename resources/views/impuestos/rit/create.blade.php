@@ -470,8 +470,10 @@
                                             <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaCancel[]"></td>
                                             <td style="vertical-align: middle">
                                                 <select style="width: 100%" class="form-control" name="clasificacion[]" required>
+                                                        <option value="Servicios">Servicios</option>
                                                         <option value="Servicio Comercial">Servicio Comercial</option>
                                                         <option value="Servicio Industrial">Servicio Industrial</option>
+                                                        <option value="Servicio Financiero">Servicio Financiero</option>
                                                 </select>
                                             </td>
                                         </tr>
