@@ -59,7 +59,7 @@ class ImpuestosController extends Controller
 
         if (count($rit->actividades) > 0){
             foreach ($actividades as $actividad){
-                $ciuu = Ciuu::where('code_ciuu',$actividad->codCIIU)->first();
+                $ciuu = Ciuu::where($actividad->codCIIU)->first();
                 $actividad['code'] = $ciuu->code_ciuu;
                 $actividad['description'] = $ciuu->description;
             }
