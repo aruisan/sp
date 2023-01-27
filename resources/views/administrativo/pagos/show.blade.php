@@ -116,8 +116,8 @@
                                     </thead>
                                     <tbody>
                                         <tr class="text-center">
-                                            <td>{{ $pago->banks->data_puc->code }}</td>
-                                            <td>{{ $pago->banks->data_puc->concepto }}</td>
+                                            <td>{{ $pago->banks }}</td>
+                                            <td>{{ $pago->banks }}</td>
                                             @if($pago->type_pay == "ACCOUNT")
                                                 @php( $date = strftime("%d of %B %Y", strtotime($pago->banks->created_at)))
                                                 <td> Núm Cuenta: {{$pago->num}} - Fecha: {{$date}}</td>
