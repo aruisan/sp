@@ -538,7 +538,7 @@ class OrdenPagosController extends Controller
             $name_contador = "POR DEFINIR";
         }
 
-        $pdf = PDF::loadView('administrativo.ordenpagos.pdfCE', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro', 'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        $pdf = PDF::loadView('administrativo.ordenpagos.pdfCE', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro', 'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador','banks'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
     }
 }
