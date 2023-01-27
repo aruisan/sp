@@ -43,9 +43,21 @@ class ActividadController extends Controller
 
         return view('hacienda.presupuesto.actividad.show', compact('bpin','vigencia'));
     }
-    
+
     public function certProyecto($code){
-        dd($code);
+
+        $proyectos = BPin::where('cod_proyecto', $code)->get();
+        if (count($proyectos) > 0){
+            $proyecto = $proyectos->first();
+            $hoy = Carbon::now();
+            $pdf = \PDF::loadView('hacienda.presupuesto.actividad.pdf', compact('proyecto','hoy'))
+                ->setOptions(['images' => true,'isRemoteEnabled' => true]);
+            return $pdf->stream();
+
+        } else {
+            Session::flash('warning','El proyecto no se encuentra registrado en el sistema.');
+            return back();
+        }
     }
 
 }
