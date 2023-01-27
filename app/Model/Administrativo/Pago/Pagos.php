@@ -19,7 +19,7 @@ class Pagos extends Model implements Auditable
     }
 
     public function banks(){
-        return $this->hasMany('App\Model\Administrativo\Pago\PagoBanks');
+        return $this->hasOne('App\Model\Administrativo\Pago\PagoBanks');
     }
 
     public function rubros(){
