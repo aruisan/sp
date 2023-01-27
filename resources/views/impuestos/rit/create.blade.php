@@ -470,10 +470,10 @@
                                             <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaCancel[]"></td>
                                             <td style="vertical-align: middle">
                                                 <select style="width: 100%" class="form-control" name="clasificacion[]" required>
-                                                        <option value="Servicios">Servicios</option>
-                                                        <option value="Servicio Comercial">Servicio Comercial</option>
-                                                        <option value="Servicio Industrial">Servicio Industrial</option>
-                                                        <option value="Servicio Financiero">Servicio Financiero</option>
+                                                    <option value="Servicios">Servicios</option>
+                                                    <option value="Servicio Comercial">Servicio Comercial</option>
+                                                    <option value="Servicio Industrial">Servicio Industrial</option>
+                                                    <option value="Servicio Financiero">Servicio Financiero</option>
                                                 </select>
                                             </td>
                                         </tr>
@@ -832,7 +832,12 @@
                         '<td><input type="text" class="form-control" name="direccion[]" required></td>\n'+
                         '<td><input type="text" class="form-control" name="barrio[]" required></td>\n'+
                         '<td><input type="date" class="form-control" name="fechaCancel[]"></td>\n' +
-                        '<td style="vertical-align: middle"><select style="width: 100%" class="form-control" name="clasificacion[]"><option value="Servicio Comercial">Servicio Comercial</option><option value="Servicio Industrial">Servicio Industrial</option></select></td>\n' +
+                        '<td style="vertical-align: middle"><select style="width: 100%" class="form-control" name="clasificacion[]">\n' +
+                        '<option value="Servicios">Servicios</option>\n' +
+                        '<option value="Servicio Comercial">Servicio Comercial</option>\n' +
+                        '<option value="Servicio Industrial">Servicio Industrial</option>\n' +
+                        '<option value="Servicio Financiero">Servicio Financiero</option>\n' +
+                        '</select></td>\n' +
                         '</tr>\n');
                 },
 
