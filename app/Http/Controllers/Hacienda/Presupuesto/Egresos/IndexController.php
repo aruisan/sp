@@ -9,6 +9,7 @@ use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Registro\CdpsRegistroValor;
 use App\Model\Administrativo\Registro\Registro;
@@ -702,6 +703,14 @@ class IndexController extends Controller
                                                                 $valueRegistros[] = $data->valor;
                                                                 //ID REGISTROS
                                                                 $IDRegistros[] = $data->registro_id;
+
+                                                                //VALOR ORDENES DE PAGO
+                                                                $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $cdpsRegValue->id)->get();
+                                                                foreach ($ordenPagoRubros as $ordenPagoRubro){
+                                                                    if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
+                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -718,7 +727,7 @@ class IndexController extends Controller
                                             if (count($ordenPago) > 0){
                                                 foreach($ordenPago as $data){
                                                     //VALOR ORDENES DE PAGO
-                                                    $valueOrdenPago[] = $data->valor;
+                                                    //$valueOrdenPago[] = $data->valor;
 
                                                     //PAGOS
                                                     if ($data->pago){
