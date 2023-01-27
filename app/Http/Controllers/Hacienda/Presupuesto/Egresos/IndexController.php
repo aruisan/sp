@@ -705,7 +705,7 @@ class IndexController extends Controller
                                                                 $IDRegistros[] = $data->registro_id;
 
                                                                 //VALOR ORDENES DE PAGO
-                                                                $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $cdpsRegValue->id)->get();
+                                                                $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
                                                                 foreach ($ordenPagoRubros as $ordenPagoRubro){
                                                                     if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
                                                                         $valueOrdenPago[] = $ordenPagoRubro->valor;
