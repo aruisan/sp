@@ -34,11 +34,7 @@
 					<tbody>
 						<tr style="font-size: 16px;">
 							<td style="width: 30px;">Rubro: </td>
-							@foreach($infoRubro as $rubro)
-								@if($rubro['name'] == $rubrosCdp->rubros->name)
-									<td>{{$rubro['codigo']}} - {{$rubro['name']}}</td>
-								@endif
-							@endforeach
+							<td>{{$rubrosCdp->rubros->cod}} - {{$rubrosCdp->rubros->name}}</td>
 						</tr>
 						<tr style="font-size: 16px;">
 							<td style="width: 30px;">Tipo: </td>
