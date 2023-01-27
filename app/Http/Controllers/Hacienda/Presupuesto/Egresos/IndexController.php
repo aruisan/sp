@@ -78,8 +78,6 @@ class IndexController extends Controller
                         //SE LLENAN LAS ORDENES DE PAGO CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
                         if ($rubroOP->orden_pago->estado == "1") {
                             if ($ord->registros->cdpsRegistro->first()->cdp->tipo == "Funcionamiento"){
-                                //SE DEBE VALIDAR EL RUBRO QUE ESTA RECIBIENDO DEBIDO A QUE ESTA GENERANDO ERROR
-                                //$valores[] = ['id' => $rubroOP->cdps_registro->rubro, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro];
                                 $valores[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
                             } else {
                                 $bpinCdpValue = $rubroOP->cdps_registro->cdps->bpinsCdpValor->first();
@@ -109,8 +107,8 @@ class IndexController extends Controller
                         $oPago = OrdenPagos::find($data['id']);
                         foreach ($oPago->rubros as $rubroOP){
                             //SE LLENAN LOS PAGOS CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
-                            if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->rubro, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro];
-                            //if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro->plantilla_cuipos_id];
+                            //if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->rubro, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->rubro];
+                            if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
                         }
                         $pagos[] = collect(['id' => $pagoFind[0]->id, 'code' =>$pagoFind[0]->code, 'nombre' => $data['nombre'], 'persona' => $pagoFind[0]->orden_pago->registros->persona->nombre, 'valor' => $pagoFind[0]->valor, 'estado' => $pagoFind[0]->estado]);
                     } elseif($pagoFind->count() > 1){
