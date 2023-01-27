@@ -21,9 +21,11 @@
         <li class="nav-item">
             <a class="tituloTabs" href="{{ url('/administrativo/pagos/create/'.$id) }}">NUEVO PAGO</a>
         </li>
-        <li class="nav-item pillPri">
-            <a class="tituloTabs" href="{{ url('/administrativo/ordenPagos/'.$id) }}">ORDENES DE PAGO</a>
-        </li>
+        @if(auth()->user()->roles->first()->id != 8)
+            <li class="nav-item pillPri">
+                <a class="tituloTabs" href="{{ url('/administrativo/ordenPagos/'.$id) }}">ORDENES DE PAGO</a>
+            </li>
+        @endif
         <li class="nav-item pillPri">
             <a class="tituloTabs" href="{{ url('/administrativo/registros/'.$id) }}">REGISTROS</a>
         </li>

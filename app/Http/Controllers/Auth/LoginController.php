@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Model\Hacienda\Presupuesto\Vigencia;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -47,7 +49,17 @@ class LoginController extends Controller
         } elseif (auth()->user()->roles[0]->id == 7){
             return '/administrativo/contabilidad/libros';
         } elseif (auth()->user()->roles[0]->id == 8){
-            return '/administrativo/bancos';
+
+            //VALIDACION PARA REDIRIGIR EL USUARIO A LOS PAGOS DE LA VIGENCIA ACTUAL
+
+            $añoActual = Carbon::now()->year;
+            $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
+            if ($vigens->count() == 0){
+                $vigens = Vigencia::where('vigencia', $añoActual - 1)->where('tipo', 0)->where('estado', '0')->get();
+            }
+
+            $idVig = $vigens->first()->id;
+            return '/administrativo/pagos/'.$idVig;
         }
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
