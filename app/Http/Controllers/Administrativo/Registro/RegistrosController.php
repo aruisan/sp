@@ -134,7 +134,7 @@ class RegistrosController extends Controller
         $registrocount = 0;
         foreach ($registros as $registro) if ($registro->cdpsRegistro[0]->cdp->vigencia_id == $id) $registrocount = $registrocount +1;
         if(count($cdps) > 0) {
-            if (auth()->user()->id == 50 or auth()->user()->id == 45 or $rol != 2 or auth()->user()->id == 38){
+            if (auth()->user()->id == 50 or auth()->user()->id == 45 or $rol != 2 or auth()->user()->id == 38 or auth()->user()->id == 39){
                 return view('administrativo.registros.create', compact('rol','personas','cdps', 'id','registrocount'));
             } else{
                 Session::flash('error','No tiene permisos para crear registros');
