@@ -325,7 +325,7 @@
          </ul>
       </li>
    @endif
-
+   @if(auth()->user()->roles->first()->id != 8)
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown" title="Configuración">
          <i class="fa fa-cogs" aria-hidden="true"></i>
@@ -362,6 +362,7 @@
                @endif
          </ul>
       </li>
+   @endif
 <li class="dropdown messages-menu">
     @include('layouts.cuerpo.perfil')
 </li>
