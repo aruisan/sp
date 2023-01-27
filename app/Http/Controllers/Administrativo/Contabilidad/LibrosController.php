@@ -8,6 +8,7 @@ use App\Model\Administrativo\Contabilidad\RubrosPuc;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\Pagos;
 use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
@@ -72,6 +73,8 @@ class LibrosController extends Controller
                         foreach ($pagoBanks as $pagoBank){
                             if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
                                 $total = $total + $pagoBank->valor;
+                                $pago = Pagos::find($pagoBank->pagos_id);
+                                dd($pago,$pagoBank);
                                 $tercero = $pagoBank->pago->first()->orden_pago->registros->persona->nombre;
                                 $numIdent = $pagoBank->pago->first()->orden_pago->registros->persona->num_dc;
                                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
