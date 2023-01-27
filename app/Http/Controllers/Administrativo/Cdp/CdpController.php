@@ -410,6 +410,10 @@ class CdpController extends Controller
                     foreach ($update->rubrosCdpValor as $fuentes) {
                         if ($fuentes->fontsRubro->valor_disp >= $fuentes->valor) {
                             $update->secretaria_e = $estado;
+                            if(auth()->user()->id == 39) {
+                                $update->alcalde_e = $estado;
+                                $update->ff_alcalde_e = $fecha;
+                            }
                             $update->jefe_e = $estado;
                             $update->ff_jefe_e = $fecha;
                             $update->valor = $valor;
