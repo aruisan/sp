@@ -194,9 +194,9 @@
 						</tr>
 					@endif
 				@endfor
-				@for($y = 0; $y < count($OrdenPago->pago->banks); $y++)
+				@for($y = 0; $y < count($banks); $y++)
 					<tr class="text-center">
-						<td>{{ $OrdenPago->pago->banks[$y]->data_puc->code }}</td>
+						<td>{{ $banks[$y]->data_puc->code }}</td>
 						@if($OrdenPago->pago->type_pay == "ACCOUNT")
 							@php( $date = strftime("%d of %B %Y", strtotime($OrdenPago->pago->created_at)))
 							<td> Núm Cuenta: {{$OrdenPago->pago->num}} - Fecha: {{$date}}</td>
@@ -204,9 +204,9 @@
 							@php( $date = strftime("%d of %B %Y", strtotime($OrdenPago->pago->created_at)))
 							<td> Núm Cheque: {{$OrdenPago->pago->num}} - Fecha: {{$date}}</td>
 						@endif
-						<td>{{ $OrdenPago->pago->banks[$y]->data_puc->concepto }}</td>
+						<td>{{ $banks[$y]->data_puc->concepto }}</td>
 						<td>0$</td>
-						<td>$<?php echo number_format($OrdenPago->pago->banks[$y]->valor,0);?></td>
+						<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
 					</tr>
 				@endfor
 				</tbody>

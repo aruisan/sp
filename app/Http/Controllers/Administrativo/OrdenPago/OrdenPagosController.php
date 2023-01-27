@@ -7,6 +7,7 @@ use App\Model\Administrativo\Contabilidad\LevelPUC;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
@@ -470,6 +471,7 @@ class OrdenPagosController extends Controller
     public function pdf_CE($id)
     {
         $Pago = Pagos::findOrFail($id);
+        $banks = PagoBanks::where('pagos_id', $Pago->id)->get();
         $Egreso_id = $Pago->code;
         $OrdenPago = OrdenPagos::findOrFail($Pago->orden_pago_id);
         $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $OrdenPago->id)->where('valor','>',0)->get();
