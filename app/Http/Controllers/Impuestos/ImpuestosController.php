@@ -48,8 +48,8 @@ class ImpuestosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function pdfRIT(){
-        $user = User::find(Auth::user()->id);
+    public function pdfRIT($user_id){
+        $user = User::find($user_id);
         $rit = $user->rit;
         $rit->natJuridiContri = $this->nameNaturalezaJuridica($rit->natJuridiContri);
         $rit->tipSociedadContri = $this->nameTipoSociedad($rit->tipSociedadContri);

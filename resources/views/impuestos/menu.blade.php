@@ -134,7 +134,7 @@
                                 <h3>Favoritos</h3>
                                 <hr>
                                 <div class="col-md-8">
-                                    <a class="btn btn-impuesto" target="_blank" href="{{ route('impuestos.rit.pdf') }}"><i class="fa fa-file"></i></a>
+                                    <a class="btn btn-impuesto" target="_blank" href="/impuestos/RIT/{{Auth()->user()->id}}"><i class="fa fa-file"></i></a>
                                 </div>
                                 <div class="col-md-4">
                                     <h4>Obtener Copia RIT</h4>

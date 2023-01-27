@@ -54,7 +54,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('/RIT/create', 'Impuestos\RIT\RitController@create')->name('impuestos.rit.create');
         Route::get('/RIT/update', 'Impuestos\RIT\RitController@updateRIT')->name('impuestos.rit.update');
         Route::get('/RIT/restore', 'Impuestos\RIT\RitController@restoreRIT')->name('impuestos.rit.restore');
-        Route::get('/RIT', 'Impuestos\ImpuestosController@pdfRIT')->name('impuestos.rit.pdf');
+        Route::get('/RIT/{id}', 'Impuestos\ImpuestosController@pdfRIT')->name('impuestos.rit.pdf');
         Route::post('/RIT', 'Impuestos\RIT\RitController@store')->name('impuestos.rit.store');
         Route::delete('/RIT/actividad/delete/{id}', 'Impuestos\RIT\RitController@deleteActividad');
         Route::delete('/RIT/establecimiento/delete/{id}', 'Impuestos\RIT\RitController@deleteEstablecimiento');
