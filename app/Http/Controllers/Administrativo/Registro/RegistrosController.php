@@ -342,8 +342,11 @@ class RegistrosController extends Controller
             } elseif ($rol == 3){
                 //ROL DE JEFE
                 $update->jefe_e = $estado;
+                $update->secretaria_e = $estado;
                 $update->ff_jefe_e = $fecha;
                 $update->saldo = $valTot;
+                $update->valor = $valTot;
+                $update->val_total = $valTot;
                 $update->save();
 
                 $cdpsRegistroValor = CdpsRegistroValor::where('registro_id', $id)->get();
