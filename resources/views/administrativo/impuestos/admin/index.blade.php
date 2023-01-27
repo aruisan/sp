@@ -216,6 +216,7 @@
                         </tbody>
                     </table>
                 @else
+                    <br><br>
                     <div class="alert alert-danger">
                         <center>
                             No hay comunicados registrados en el sistema.
