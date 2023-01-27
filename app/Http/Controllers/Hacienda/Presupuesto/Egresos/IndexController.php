@@ -10,6 +10,7 @@ use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Pago\Pagos;
+use App\Model\Administrativo\Registro\CdpsRegistroValor;
 use App\Model\Administrativo\Registro\Registro;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
@@ -693,13 +694,16 @@ class IndexController extends Controller
                                             if ($cdp->cdps->jefe_e == "3") {
                                                 $valueCDPs[] = $cdp->valor;
                                                 if (count($cdp->cdps->cdpsRegistro) > 0){
-                                                    foreach ($cdp->cdps->cdpsRegistro as $cdpReg){
-                                                        if ($cdpReg->registro->jefe_e == 3){
-
-                                                            //VALOR REGISTROS
-                                                            $valueRegistros[] = $cdpReg->registro->valor;
-                                                            //ID REGISTROS
-                                                            $IDRegistros[] = $cdpReg->registro->id;
+                                                    //CONSULTA PARA LOS REGISTROS
+                                                    $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
+                                                    foreach ($cdpsRegValue as $data){
+                                                        if ($data->valor != 0){
+                                                            if ($data->registro->jefe_e == 3){
+                                                                //VALOR REGISTROS
+                                                                $valueRegistros[] = $data->valor;
+                                                                //ID REGISTROS
+                                                                $IDRegistros[] = $data->registro_id;
+                                                            }
                                                         }
                                                     }
                                                 } else $valueRegistros[] = 0; $IDRegistros[] = 0;
