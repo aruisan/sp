@@ -244,9 +244,10 @@ class PagosController extends Controller
     public function show($id)
     {
         $pago = Pagos::findOrFail($id);
+        $banks = PagoBanks::where('pagos_id', $pago->id)->get();
         $ordenPago = OrdenPagos::findOrFail($pago->orden_pago_id);
 
-        return view('administrativo.pagos.show', compact('pago','ordenPago'));
+        return view('administrativo.pagos.show', compact('pago','ordenPago','banks'));
     }
 
     /**
