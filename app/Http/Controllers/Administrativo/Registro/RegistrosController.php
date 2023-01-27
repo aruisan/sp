@@ -110,7 +110,7 @@ class RegistrosController extends Controller
             unset($registrosProcess[0]);
         }
 
-        if (auth()->user()->id == 50 or auth()->user()->id == 45 or $rol != 2 or auth()->user()->id == 38 ){
+        if (auth()->user()->id == 50 or auth()->user()->id == 45 or $rol != 2 or auth()->user()->id == 38 or auth()->user()->id == 39 ){
             return view('administrativo.registros.index', compact('registros','rol', 'registrosHistorico','vigencia','registrosProcess'))->with('i', ($request->input('page', 1) - 1) * 5);
         } else{
             Session::flash('error','No tiene permisos para acceder al modulo de registros');
