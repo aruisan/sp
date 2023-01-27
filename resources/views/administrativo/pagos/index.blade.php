@@ -25,10 +25,10 @@
             <li class="nav-item pillPri">
                 <a class="tituloTabs" href="{{ url('/administrativo/ordenPagos/'.$id) }}">ORDENES DE PAGO</a>
             </li>
+            <li class="nav-item pillPri">
+                <a class="tituloTabs" href="{{ url('/administrativo/registros/'.$id) }}">REGISTROS</a>
+            </li>
         @endif
-        <li class="nav-item pillPri">
-            <a class="tituloTabs" href="{{ url('/administrativo/registros/'.$id) }}">REGISTROS</a>
-        </li>
     </ul>
     <div class="tab-content" style="background-color: white">
         <div id="tabTareas" class="tab-pane active"><br>
