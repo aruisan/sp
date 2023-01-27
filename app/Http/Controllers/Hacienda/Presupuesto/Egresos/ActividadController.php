@@ -43,5 +43,9 @@ class ActividadController extends Controller
 
         return view('hacienda.presupuesto.actividad.show', compact('bpin','vigencia'));
     }
+    
+    public function certProyecto($code){
+        dd($code);
+    }
 
 }
