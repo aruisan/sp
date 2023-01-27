@@ -110,11 +110,13 @@
          --}}
 @endif
 @if(auth()->user()->id != 54 or auth()->user()->roles->first()->id != 7)
-   <li >
-      <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto') }}">
-       PRESUPUESTO
-      </a>
-   </li>
+   @if(auth()->user()->roles->first()->id != 8)
+      <li >
+         <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto') }}">
+            PRESUPUESTO
+         </a>
+      </li>
+   @endif
 @endif
 
 {{-- <li class="dropdown ">
