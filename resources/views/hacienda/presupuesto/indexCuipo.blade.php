@@ -716,6 +716,7 @@
                                     <th class="text-center">Nombre Proyecto</th>
                                     <th class="text-center">Secretaria</th>
                                     <th class="text-center">Ver</th>
+                                    <th class="text-center"><i class="fa fa-file-pdf-o"></i></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -725,6 +726,7 @@
                                         <td>{{$item->nombre_proyecto}}</td>
                                         <td>{{$item->secretaria}}</td>
                                         <td><a class="btn btn-success" onclick="show_proyecto('{{$item->cod_proyecto}}')">Ver</a></td>
+                                        <td><a class="btn btn-success" href="/presupuesto/proyecto/{{$item->cod_proyecto}}" ><i class="fa fa-file-pdf-o"></i></a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
