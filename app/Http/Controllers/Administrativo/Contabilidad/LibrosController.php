@@ -72,8 +72,8 @@ class LibrosController extends Controller
                         foreach ($pagoBanks as $pagoBank){
                             if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
                                 $total = $total + $pagoBank->valor;
-                                $tercero = $pagoBanks->pago->orden_pago->registros->persona->nombre;
-                                $numIdent = $pagoBanks->pago->orden_pago->registros->persona->num_dc;
+                                $tercero = $pagoBank->pago->orden_pago->registros->persona->nombre;
+                                $numIdent = $pagoBank->pago->orden_pago->registros->persona->num_dc;
                                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
                                     'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pagoBank->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                     'total' => '$'.number_format($total,0)]);
