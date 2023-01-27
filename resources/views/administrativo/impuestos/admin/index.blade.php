@@ -112,7 +112,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($pago->estado == "Pagado")
-                                        <a href="{{Storage::url($pago->Resource->ruta)}}" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></a>
+                                        <a href="{{Storage::url($pago->Resource->ruta)}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></a>
                                     @else
                                         N/A
                                     @endif
@@ -159,12 +159,12 @@
                                 <td class="text-center">{{ $rit->opciondeUso }}</td>
                                 <td class="text-center">
                                     @if($rit->rut_resource_id)
-                                        <a href="{{ $rit->ResourceRUT->ruta }}" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        <a href="{{ Storage::url($rit->ResourceRUT->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     @if($rit->cc_resource_id)
-                                        <a href="{{ $rit->ResourceCC->ruta }}" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        <a href="{{ Storage::url($rit->ResourceCC->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
                                 <td class="text-center"><a href="" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a></td>
