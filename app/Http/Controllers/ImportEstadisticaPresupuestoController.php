@@ -75,4 +75,21 @@ class ImportEstadisticaPresupuestoController extends Controller
 
         return response()->json('listo');
     }
+
+    public function create_empleados_cuentas(){
+        return view('import.empleados_cuentas');
+    }
+
+    public function import_empleados_cuentas(Request $request)
+    {
+        foreach($request->data as $item):
+            $new_person = NominaEmpleado::where('num_dc', $item[0])->first();
+            $new_person->banco_cuenta_bancaria = $item[1];
+            $new_person->tipo_cuenta_bancaria = $item[2];
+            $new_person->numero_cuenta_bancaria = $item[3];
+            $new_person->save();
+        endforeach;
+
+        return response()->json('listo');
+    }
 }

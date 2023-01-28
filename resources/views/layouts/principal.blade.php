@@ -238,7 +238,7 @@
                     </li>
                     @auth
                         <li class="page-scroll">
-                            <a class="btn btn-link text-white item-menu" href="{{ url('/dashboard') }}">PLATAFORMA</a>
+                            <a class="btn btn-link text-white item-menu" href="{{ route(auth()->user()->route_autenticacion) }}">PLATAFORMA</a>
                         </li>
                     @else
                         <li class="page-scroll">

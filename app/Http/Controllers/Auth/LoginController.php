@@ -60,7 +60,10 @@ class LoginController extends Controller
 
             $idVig = $vigens->first()->id;
             return '/administrativo/pagos/'.$idVig;
+        }elseif (auth()->user()->roles[0]->id == 9){
+            return '/nomina/empleados';
         }
+
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }

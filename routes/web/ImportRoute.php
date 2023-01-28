@@ -9,4 +9,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'import'] ,function(){
 
     Route::get('/empleados', "ImportEstadisticaPresupuestoController@create_empleados");
     Route::post('/empleados', "ImportEstadisticaPresupuestoController@import_empleados")->name('import.empleado');
+
+    Route::get('/empleados-cuentas', "ImportEstadisticaPresupuestoController@create_empleados_cuentas");
+    Route::post('/empleados-cuentas', "ImportEstadisticaPresupuestoController@import_empleados_cuentas")->name('import.empleado-cuentas');
 });

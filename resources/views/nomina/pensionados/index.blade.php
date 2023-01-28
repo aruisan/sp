@@ -45,7 +45,7 @@
 	<div class="container-fluid">
 		<div class="table-responsive">
 			<div class="box">
-				<div class="box-body">
+				<div class="box-body table-responsive">
 						<table class="table table-bordered cell-border table-hover" id="example"  data-form="deleteForm">
 							<thead>
 								<tr class="active">
@@ -58,6 +58,7 @@
 									<th class="text-center">Salario</th>
 									<th class="text-center">Certificado bancario</th>
 									<th class="text-center"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
+									<th class="text-center"><i class="fa fa-lock" aria-hidden="true"></i> | <i class="fa fa-unlock" aria-hidden="true"></i></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -73,6 +74,8 @@
 									<td>{{$persona->certificado_cuenta_bancaria}}</td>
 									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger">
 									<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+									<td><button class="btn btn-xs btn-danger" onclick="eliminar({{$persona->id}})" id="btn_eliminar_{{$persona->id}}" title="{{$persona->activo ? 'activo' : 'inactivo'}}">
+									<i class="fa {{$persona->activo ? 'fa-unlock' : 'fa-lock'}}" aria-hidden="true"></i></button></td>
 								</tr>
 							@endforeach
 							</tbody>
@@ -148,6 +151,22 @@
 	$(document).ready(function() {
 		var table = $('#example').DataTable();
 	} );
+
+	const eliminar = async id => {
+		console.log('id', id);
+		let response =  await fetch(`/nomina/empleados/status/`+id)
+							.then(res => res.json())
+							.catch(error => console.error('Error:', error))
+							.then(res => res);
+
+		console.log(response);
+			console.log(response);
+			if(response){
+				$(`#btn_eliminar_${id}`).attr('title', 'activo').html('<i class="fa fa-unlock" title="activo" aria-hidden="true"></i>');
+			}else{
+				$(`#btn_eliminar_${id}`).attr('title', 'inactivo').html('<i class="fa fa-lock" title="inactivo" aria-hidden="true"></i>');
+			}
+	}
 
 		
    </script>

@@ -11,8 +11,16 @@ class PensionadoController extends Controller
 {
     use StorageTraits;
 
+    public function __construct()
+    {
+        //$this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:listar-pensionados', ['only' => ['index']]);
+         $this->middleware('permission:crear-pensionados', ['only' => ['create', 'store']]);
+         $this->middleware('permission:editar-pensionados', ['only' => ['edit','update']]);
+    }
+
     public function index(){
-        $pensionados =  $pensionados = NominaEmpleado::where('activo', True)->where('tipo', 'pensionado')->get();
+        $pensionados =  $pensionados = NominaEmpleado::where('tipo', 'pensionado')->get();
         //dd($empleados);
         return view('nomina.pensionados.index', compact('pensionados'));
     }

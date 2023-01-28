@@ -43,6 +43,7 @@
 									<th class="text-center">Nomina</th>
 									<th class="text-center"># Pagos</th>
 									<th class="text-center">Valor Total</th>
+									<th>opciones</th>
 								</tr>
 							</thead>
 
@@ -50,13 +51,32 @@
 							@foreach($nominas as $key => $nomina)
 								<tr>
 									<td>{{$key+1}}</td>
-									@php
-										setlocale(LC_ALL,"es_ES"); 
-										\Carbon\Carbon::setLocale('es');
-									@endphp
-									<td>{{$nomina->created_at->format('Y-m')}}</td>
-									<td>0</td>
-									<td>$0</td>
+									<td>{{$nomina->mes}}</td>
+									<td>{{$nomina->empleados_nominas->count()}}</td>
+									<td>${{number_format($nomina->empleados_nominas->sum('neto_pagar'), 2)}}</td>
+									<td>
+										<a href="{{route('nomina.show', $nomina->id)}}" class="btn btn-sm btn-primary" title="ver nomina">
+											<i class="fa fa-eye" aria-hidden="true"></i>
+										</a>
+										@if(!$nomina->finalizado)
+											<a href="{{route('nomina.edit', $nomina->id)}}" class="btn btn-sm btn-primary" title="editar nomina">
+												<i class="fa fa-pencil" aria-hidden="true"></i>
+											</a>
+										@else
+											<a href="{{route('nomina.pdf', $nomina->id)}}" class="btn btn-sm btn-primary" title="pdf nomina" target="_blank">
+												<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+											</a>
+											<a href="{{route('nomina.pdf-desprendibles', $nomina->id)}}" class="btn btn-sm btn-primary" title="pdf desprendibles" target="_blank">
+												<i class="fa fa-address-card-o" aria-hidden="true"></i>
+											</a>
+											<a href="{{route('nomina.pdf-contabilidad')}}" class="btn btn-sm btn-primary" title="pdf contable" target="_blank">
+												<i class="fa fa-calculator" aria-hidden="true"></i>
+											</a>
+											<a href="{{route('nomina.empleados-cuentas', $nomina->id)}}" class="btn btn-sm btn-primary" title="pdf Empleados cuentas bancarias" target="_blank">
+												<i class="fa fa-cc-diners-club" aria-hidden="true"></i>
+											</a>
+										@endif
+									</td>
 								</tr>
 							@endforeach
 							</tbody>

@@ -60,6 +60,7 @@
 									<th class="text-center">Grado</th>
 									<th class="text-center">Certificado bancario</th>
 									<th class="text-center"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
+									<th class="text-center"><i class="fa fa-lock" aria-hidden="true"></i> | <i class="fa fa-unlock" aria-hidden="true"></i></th>
 									<th class="text-center">Hv</th>
 								</tr>
 							</thead>
@@ -81,6 +82,8 @@
 									<td>{{$persona->certificado_cuenta_bancaria}}</td>
 									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger">
 									<span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></td>
+									<td><button class="btn btn-xs btn-danger" onclick="eliminar({{$persona->id}})" id="btn_eliminar_{{$persona->id}}" title="{{$persona->activo ? 'activo' : 'inactivo'}}">
+									<i class="fa {{$persona->activo ? 'fa-unlock' : 'fa-lock'}}" aria-hidden="true" ></i></button></td>
 									<td><a href="{{ route("nomina.empleados.edit", $persona->id)}}" class="btn btn-xs btn-danger" title="Hoja de vida">
 										<i class="fa fa-book" aria-hidden="true"></i>
 									</td>
@@ -160,6 +163,21 @@
 		var table = $('#example').DataTable();
 	} );
 
+	const eliminar = async id => {
+		console.log('id', id);
+		let response =  await fetch(`/nomina/empleados/status/`+id)
+							.then(res => res.json())
+							.catch(error => console.error('Error:', error))
+							.then(res => res);
+
+		console.log(response);
+		
+			if(response){
+				$(`#btn_eliminar_${id}`).attr('title', 'activo').html('<i class="fa fa-unlock" title="activo" aria-hidden="true"></i>');
+			}else{
+				$(`#btn_eliminar_${id}`).attr('title', 'inactivo').html('<i class="fa fa-lock" title="inactivo" aria-hidden="true"></i>');
+			}
+	}
 		
    </script>
 @stop

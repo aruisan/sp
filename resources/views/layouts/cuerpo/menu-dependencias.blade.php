@@ -1,4 +1,50 @@
 @include('modal.updateSoftware')
+
+@can('listar-empleados')
+<li class="dropdown ">
+   <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
+   NOMINA
+   <span class="caret"></span>
+   </a>
+   <ul class="dropdown-menu">
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
+      <li><a class="item-menu" tabindex="-1" href="{{route('nomina.pensionados.index')}}">Pensionados</a></li>
+   </ul>
+
+{{--
+   <li class="dropdown-submenu">
+         <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
+         <ul class="dropdown-menu">
+            <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Pensionados</a></li>
+         </ul>
+
+      {{--
+         <li class="dropdown-submenu">
+               <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
+               <ul class="dropdown-menu">
+                  <li><a class="item-menu" href="{{url('/administrativo/muebles/create')}}">Sueldo</a></li>
+                  <li><a class="item-menu" href="{{url('/administrativo/inventario/create')}}">Prima</a></li>
+               </ul>
+            </li>
+            <li class="dropdown-submenu">
+               <a class="dropdown-item item-menu">Nomina de Empleados</a>
+               <ul class="dropdown-menu">
+                  <li><a class="item-menu" href="">Sueldo</a></li>
+                  <li><a class="item-menu" href="">Prima Navidad</a></li>
+                  <li><a class="item-menu" href="">Vacaciones</a></li>
+                  <li><a class="item-menu" href="">Prima de Vacaciones</a></li>
+                  <li><a class="item-menu" href="">Prima de Antiguedad</a></li>
+               </ul>
+            </li>
+            <li><a class="item-menu" href="">Nomina de Bonificación</a></li>
+      --}}
+</li>
+@endcan
+
+
+
+
 @if(auth()->user()->roles->first()->id == 1)
    <li >
       <a class="btn btn-default btn-sm item-menu" href="{{ route('coso.individuo.index') }}">
@@ -10,45 +56,6 @@
       ESTADISTICA
       </a>
    </li>
-   <li class="dropdown ">
-      <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
-      NOMINA
-      <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-         <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
-         <li><a class="item-menu" tabindex="-1" href="{{route('nomina.pensionados.index')}}">Pensionados</a></li>
-      </ul>
-
-   {{--
-      <li class="dropdown-submenu">
-            <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
-            <ul class="dropdown-menu">
-               <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
-               <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Pensionados</a></li>
-            </ul>
-
-         {{--
-            <li class="dropdown-submenu">
-                  <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
-                  <ul class="dropdown-menu">
-                     <li><a class="item-menu" href="{{url('/administrativo/muebles/create')}}">Sueldo</a></li>
-                     <li><a class="item-menu" href="{{url('/administrativo/inventario/create')}}">Prima</a></li>
-                  </ul>
-               </li>
-               <li class="dropdown-submenu">
-                  <a class="dropdown-item item-menu">Nomina de Empleados</a>
-                  <ul class="dropdown-menu">
-                     <li><a class="item-menu" href="">Sueldo</a></li>
-                     <li><a class="item-menu" href="">Prima Navidad</a></li>
-                     <li><a class="item-menu" href="">Vacaciones</a></li>
-                     <li><a class="item-menu" href="">Prima de Vacaciones</a></li>
-                     <li><a class="item-menu" href="">Prima de Antiguedad</a></li>
-                  </ul>
-               </li>
-               <li><a class="item-menu" href="">Nomina de Bonificación</a></li>
-         --}}
-         </li>
          <li class="page-scroll ">
             <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
              ARCHIVOS
@@ -110,7 +117,7 @@
          --}}
 @endif
 @if(auth()->user()->id != 54 or auth()->user()->roles->first()->id != 7)
-   @if(auth()->user()->roles->first()->id != 8)
+   @if(auth()->user()->roles->first()->id != 8 && auth()->user()->roles->first()->id != 9)
       <li >
          <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto') }}">
             PRESUPUESTO
@@ -325,7 +332,7 @@
          </ul>
       </li>
    @endif
-   @if(auth()->user()->roles->first()->id != 8)
+   @if(auth()->user()->roles->first()->id != 8 && auth()->user()->roles->first()->id != 9)
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown" title="Configuración">
          <i class="fa fa-cogs" aria-hidden="true"></i>

@@ -293,6 +293,24 @@
 <div class="row">
     <div class="col-sm-3 col-md-4">
     </div>
+    <div class="col-sm-6 col-md-4 input-group">
+        <label for="employee_pension_fund">
+            Tipo de Riesgo
+        </label>
+        <input
+            type="text" 
+            value="{{isset($employee)? $employee->porc_riesgos : "" }}" 
+            class="form-control short-input" 
+            id="employee_pension_fund" 
+            name="porc_riesgos"
+        />
+    </div>
+    <div class="col-sm-3 col-md-4">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 col-md-4">
+    </div>
     <div class="col-sm-6 col-md-4 form-group">
         <label for="employee_bank_account_type">Tipo de cuenta bancaria</label>
         <select 

@@ -11,7 +11,7 @@ Auth::routes();
 //Route::get('/home', 'Cobro\HomeController@index')->name('home');
 
 Route::group([ 'middleware' => 'auth'] ,function(){
-    Route::get('dashboard', 'DashboardController@index');
+    Route::get('dashboard', 'DashboardController@index')->name('dashboard');
 
 	Route::resource('predios', 'Cobro\PredioController');
     Route::get('predios-sin-asignar', 'Cobro\PredioController@predioSinAsignar')->name('unnassigned');
