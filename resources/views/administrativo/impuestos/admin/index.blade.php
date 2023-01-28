@@ -184,9 +184,7 @@
         <div id="tabComunicados" class="tab-pane fade">
             <div class="table-responsive text-center">
                 <br>
-                <a href="{{ url('administrativo/impuestos/comunicado/create') }}" class="btn btn-primary"><i class="fa fa-plus"></i>
-                    <i class="fa fa-envelope"></i> NUEVO COMUNICADO</a>
-                <br>
+                <!-- <a href="{{ url('administrativo/impuestos/comunicado/create') }}" class="btn btn-primary"><i class="fa fa-plus"></i><i class="fa fa-envelope"></i> NUEVO COMUNICADO</a><br> -->
                 @if(count($comunicados) > 0)
                     <br>
                     <table class="table table-bordered" id="tabla_Comunicados">

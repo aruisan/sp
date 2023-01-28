@@ -459,6 +459,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('presupuesto/actividades/{vigencia}','Hacienda\Presupuesto\Egresos\ActividadController@index');
         Route::get('presupuesto/actividad/{id}/{vigencia}','Hacienda\Presupuesto\Egresos\ActividadController@show');
 
+        //CERTIFICADO DEL PROYECTO
+        Route::get('presupuesto/proyecto/{code}','Hacienda\Presupuesto\Egresos\ActividadController@certProyecto');
+
     //INFORMES PRESUPUESTO EGRESOS
     Route::resource('presupuesto/informes','Hacienda\Presupuesto\Informes\ReportsController');
     Route::get('presupuesto/informes/lvl/{id}/{vigencia}','Hacienda\Presupuesto\Informes\ReportsController@lvl');
