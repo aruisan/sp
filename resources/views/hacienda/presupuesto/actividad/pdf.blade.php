@@ -75,7 +75,7 @@
 	<div>
 		<center>
 			<h3>CERTIFICA</h3>
-			<br><br><br>
+			<br><br><br><br>
 			<h4>Que el proyecto <b>"{{$proyecto->nombre_proyecto}}"</b> SE ENCUENTRA REGISTRADO EN EL SISTEMA UNIFICADO DE INVERSIONES Y Finanzas
 				Públicas - SUIFP TERRITORIO. código BPIN No.{{$proyecto->cod_proyecto}}</h4>
 			<br><br><br>
@@ -86,7 +86,7 @@
 	</div>
 	<div style="margin-top: 10px; font-size: 17px;">
 		<center>
-			<br><br>
+			<br><br><br><br>
 			Atentamente,
 			<br><br>
 			<b>Gregg Ambrosio Huffington</b><br>
