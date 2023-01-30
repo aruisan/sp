@@ -50,7 +50,11 @@ class ActividadController extends Controller
         if (count($proyectos) > 0){
             $proyecto = $proyectos->first();
             $hoy = Carbon::now();
-            $pdf = \PDF::loadView('hacienda.presupuesto.actividad.pdf', compact('proyecto','hoy'))
+
+            $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+            $pdf = \PDF::loadView('hacienda.presupuesto.actividad.pdf', compact('proyecto','hoy','dias','meses'))
                 ->setOptions(['images' => true,'isRemoteEnabled' => true]);
             return $pdf->stream();
 

@@ -69,51 +69,29 @@
 		</div>
 	</div>
 	<div class="row">
-		<center><h3>REGISTRO PRESUPUESTAL</h3></center>
+		<center><h3><b>EL SUSCRITO SECRETARIO DE PLANEACION DEL MUNICIPIO DE PROVIDENCIA Y SANTA CATALINA, ISLAS</b></h3></center>
+		<br><br><br><br>
 	</div>
-
-	<div class="br-black-1">
+	<div>
 		<center>
 			<h4>CERTIFICA</h4>
-			Que en la fecha el presupuesto de Gastos para la vigencia fiscal del año  se le ha efectuado Registro Presupuestal por:
+			<br><br><br>
+			Que el proyecto <b>"{{$proyecto}}"</b> SE ENCUENTRA REGISTRADO EN EL SISTEMA UNIFICADO DE INVERSIONS Y Finanzas
+			Públicas - SUIFP TERRITORIO. código BPIN No.{{$proyecto->cod_proyecto}}
+			<br><br><br>
+			Se certifica en Providencia Isla, a {{ $hoy }}
+			<?=$hoy[$hoy->format('w')]." ".$hoy->format('d')." de ".$meses[$hoy->format('n')-1]. " del ".$hoy->format('Y').'  Hora:'.$hoy->format('h:i:s')?>
 		</center>
-	</div>
-	<div class="br-black-1">
-		<table style="margin: 5px 10px;">
-			<tbody>
-			<tr>
-				<td># Documento: </td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>OBJETO: </td>
-				<td>  </td>
-			</tr>
-			<tr>
-				<td>VALOR TOTAL: </td>
-				<td> $</td>
-			</tr>
-			<tr>
-				<td>Beneficiario: </td>
-				<td> - </td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="br-black-1">
-		<div class="text-center">
-			<h4>CDP's Asignados al Registro Presupuestal</h4>
-		</div>
 	</div>
 	<div style="margin-top: 10px; font-size: 17px;">
 		<center>
-			<img src="http://presupuesto.providenciaislas.com.co/img/firmas/JIM_ANDERSON_HENRY_BENT.png"  height="99"><br>
-			JIM ANDERSON HENRY BENT<br>
-			JEFE DE PRESUPUESTO
+			Atentamente,
+			<br><br><br><br>
+			<b>Gregg Ambrosio Huffington</b><br>
+			Secretario de Planeación
 		</center>
 	</div>
 </div>
-
 </body>
 </html>
 		
