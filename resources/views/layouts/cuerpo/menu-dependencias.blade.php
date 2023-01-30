@@ -235,7 +235,7 @@
          </ul>
       </li>
    @endif
-   @if(auth()->user()->roles->first()->id == 1 or auth()->user()->roles->first()->id == 8)
+   @if(auth()->user()->roles->first()->id == 1 or auth()->user()->roles->first()->id == 8 or auth()->user()->roles->first()->id == 4)
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
          TESORERIA
