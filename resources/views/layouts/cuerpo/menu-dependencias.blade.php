@@ -284,7 +284,7 @@
                      <li><a class="item-menu" href="{{ url('/administrativo/pagos/11') }}">2023</a></li>
                   </ul>
                </li>
-            @elseif(auth()->user()->roles->first()->id != 8)
+            @elseif(auth()->user()->roles->first()->id == 8)
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Impuestos</a>
                   <ul class="dropdown-menu">

@@ -726,7 +726,7 @@
                                         <td>{{$item->nombre_proyecto}}</td>
                                         <td>{{$item->secretaria}}</td>
                                         <td><a class="btn btn-success" onclick="show_proyecto('{{$item->cod_proyecto}}')">Ver</a></td>
-                                        <td><a class="btn btn-success" href="/presupuesto/proyecto/{{$item->cod_proyecto}}" ><i class="fa fa-file-pdf-o"></i></a></td>
+                                        <td><a class="btn btn-success" href="/presupuesto/proyecto/{{$item->cod_proyecto}}" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>
                                     </tr>
                                 @endforeach
                                 </tbody>
