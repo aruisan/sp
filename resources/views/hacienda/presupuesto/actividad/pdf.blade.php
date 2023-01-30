@@ -69,18 +69,17 @@
 		</div>
 	</div>
 	<div class="row">
-		<center><h3><b>EL SUSCRITO SECRETARIO DE PLANEACION DEL MUNICIPIO DE PROVIDENCIA Y SANTA CATALINA, ISLAS</b></h3></center>
+		<center><h2><b>EL SUSCRITO SECRETARIO DE PLANEACION DEL MUNICIPIO DE PROVIDENCIA Y SANTA CATALINA, ISLAS</b></h2></center>
 		<br><br><br><br>
 	</div>
 	<div>
 		<center>
-			<h4>CERTIFICA</h4>
+			<h3>CERTIFICA</h3>
 			<br><br><br>
-			Que el proyecto <b>"{{$proyecto}}"</b> SE ENCUENTRA REGISTRADO EN EL SISTEMA UNIFICADO DE INVERSIONS Y Finanzas
-			Públicas - SUIFP TERRITORIO. código BPIN No.{{$proyecto->cod_proyecto}}
+			<h4>Que el proyecto <b>"{{$proyecto->nombre_proyecto}}"</b> SE ENCUENTRA REGISTRADO EN EL SISTEMA UNIFICADO DE INVERSIONS Y Finanzas
+				Públicas - SUIFP TERRITORIO. código BPIN No.{{$proyecto->cod_proyecto}}</h4>
 			<br><br><br>
-			Se certifica en Providencia Isla, a {{ $fecha }}
-			<?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
+			Se certifica en Providencia Isla, a <?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
 		</center>
 	</div>
 	<div style="margin-top: 10px; font-size: 17px;">
