@@ -83,11 +83,11 @@
 			<tbody>
 			<tr>
 				<td># Documento: </td>
-				<td>{{$registro->num_doc}}</td>
+				<td></td>
 			</tr>
 			<tr>
 				<td>OBJETO: </td>
-				<td> {{$registro->objeto}} </td>
+				<td>  </td>
 			</tr>
 			<tr>
 				<td>VALOR TOTAL: </td>
@@ -95,7 +95,7 @@
 			</tr>
 			<tr>
 				<td>Beneficiario: </td>
-				<td>{{$registro->persona->num_dc}} - {{$registro->persona->nombre}}</td>
+				<td> - </td>
 			</tr>
 			</tbody>
 		</table>

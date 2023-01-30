@@ -703,7 +703,6 @@ class IndexController extends Controller
                                                                 $valueRegistros[] = $data->valor;
                                                                 //ID REGISTROS
                                                                 $IDRegistros[] = $data->registro_id;
-
                                                                 //VALOR ORDENES DE PAGO
                                                                 $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
                                                                 foreach ($ordenPagoRubros as $ordenPagoRubro){
@@ -726,16 +725,9 @@ class IndexController extends Controller
                                             $ordenPago = OrdenPagos::where('registros_id', $ID)->get();
                                             if (count($ordenPago) > 0){
                                                 foreach($ordenPago as $data){
-                                                    //VALOR ORDENES DE PAGO
-                                                    //$valueOrdenPago[] = $data->valor;
-
                                                     //PAGOS
-                                                    if ($data->pago){
-                                                        $valuePagos[] = $data->pago->valor;
-                                                    }
-
+                                                    if ($data->pago) $valuePagos[] = $data->pago->valor;
                                                 }
-
                                             }
                                         }
                                     }
