@@ -88,7 +88,7 @@
 		<center>
 			<br><br><br><br>
 			Atentamente,
-			<br><br>
+			<br><br><br><br>
 			<b>Gregg Ambrosio Huffington</b><br>
 			Secretario de Planeación
 		</center>
