@@ -79,8 +79,8 @@
 			Que el proyecto <b>"{{$proyecto}}"</b> SE ENCUENTRA REGISTRADO EN EL SISTEMA UNIFICADO DE INVERSIONS Y Finanzas
 			Públicas - SUIFP TERRITORIO. código BPIN No.{{$proyecto->cod_proyecto}}
 			<br><br><br>
-			Se certifica en Providencia Isla, a {{ $hoy }}
-			<?=$hoy[$hoy->format('w')]." ".$hoy->format('d')." de ".$meses[$hoy->format('n')-1]. " del ".$hoy->format('Y').'  Hora:'.$hoy->format('h:i:s')?>
+			Se certifica en Providencia Isla, a {{ $fecha }}
+			<?=$fecha[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
 		</center>
 	</div>
 	<div style="margin-top: 10px; font-size: 17px;">
