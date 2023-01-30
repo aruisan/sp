@@ -80,7 +80,7 @@
 			Públicas - SUIFP TERRITORIO. código BPIN No.{{$proyecto->cod_proyecto}}
 			<br><br><br>
 			Se certifica en Providencia Isla, a {{ $fecha }}
-			<?=$fecha[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
+			<?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
 		</center>
 	</div>
 	<div style="margin-top: 10px; font-size: 17px;">
