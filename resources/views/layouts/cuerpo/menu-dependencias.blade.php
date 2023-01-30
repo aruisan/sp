@@ -255,6 +255,12 @@
                      </ul>
                   </li>
                   <li class="dropdown-submenu">
+                     <a class="dropdown-item item-menu" >Notas Credito </a>
+                     <ul class="dropdown-menu">
+                        <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/notasCredito/12') }}">2023</a></li>
+                     </ul>
+                  </li>
+                  <li class="dropdown-submenu">
                      <a class="dropdown-item item-menu" >Ordenes de Pagos </a>
                      <ul class="dropdown-menu">
                         <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/3') }}">2020</a></li>

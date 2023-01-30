@@ -307,6 +307,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('contabilidad/retefuente/create','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@create');
 
 
+        //NOTAS CREDITO
+        Route::get('tesoreria/notasCredito/{id}','Administrativo\Tesoreria\NotaCreditoController@index');
+
+
 
             //Impuestos Municipales
 
