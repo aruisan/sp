@@ -69,23 +69,26 @@
 		</div>
 	</div>
 	<div class="row">
-		<center><h2><b>EL SUSCRITO SECRETARIO DE PLANEACION DEL MUNICIPIO DE PROVIDENCIA Y SANTA CATALINA, ISLAS</b></h2></center>
+		<center><h3><b>EL SUSCRITO SECRETARIO DE PLANEACION DEL MUNICIPIO DE PROVIDENCIA Y SANTA CATALINA, ISLAS</b></h3></center>
 		<br><br><br><br>
 	</div>
 	<div>
 		<center>
 			<h3>CERTIFICA</h3>
 			<br><br><br>
-			<h4>Que el proyecto <b>"{{$proyecto->nombre_proyecto}}"</b> SE ENCUENTRA REGISTRADO EN EL SISTEMA UNIFICADO DE INVERSIONS Y Finanzas
+			<h4>Que el proyecto <b>"{{$proyecto->nombre_proyecto}}"</b> SE ENCUENTRA REGISTRADO EN EL SISTEMA UNIFICADO DE INVERSIONES Y Finanzas
 				Públicas - SUIFP TERRITORIO. código BPIN No.{{$proyecto->cod_proyecto}}</h4>
 			<br><br><br>
-			Se certifica en Providencia Isla, a <?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
+			<h4>
+				Se certifica en Providencia Isla, a <?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
+			</h4>
 		</center>
 	</div>
 	<div style="margin-top: 10px; font-size: 17px;">
 		<center>
+			<br><br>
 			Atentamente,
-			<br><br><br><br>
+			<br><br>
 			<b>Gregg Ambrosio Huffington</b><br>
 			Secretario de Planeación
 		</center>
