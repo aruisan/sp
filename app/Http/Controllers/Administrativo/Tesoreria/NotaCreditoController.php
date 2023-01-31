@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\Tesoreria;
 
 use App\Model\Administrativo\Tesoreria\NotaCredito;
 use App\Http\Controllers\Controller;
+use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
@@ -18,6 +19,15 @@ class NotaCreditoController extends Controller
     public function index($id)
     {
         dd("INDEX NOTA CREDITO", $id);
+        $vigencia = Vigencia::findOrFail($id);
+        if ($vigencia->tipo == 1){
+            $notasT = NotaCredito::where('vigencia_id', $id)->where('estado','!=','3')->get();
+            $notas = NotaCredito::where('vigencia_id', $id)->where('estado','3')->get();
+
+            return view('administrativo.tesoreria.notacredito.index', compact('vigencia', 'notasT', 'notas'));
+        } else {
+            return back();
+        }
     }
 
     /**
