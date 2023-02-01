@@ -823,8 +823,8 @@
 
         function validarFormularioCDP(evento) {
             evento.preventDefault();
-            var fuenteDepSaldo = document.getElementById('fuenteDep_saldo').value;
-            var valorFuenteUsar = document.getElementById('valorFuenteUsar').value;
+            var fuenteDepSaldo = document.getElementById('fuenteDep_saldo');
+            var valorFuenteUsar = document.getElementById('valorFuenteUsar');
 
             console.log(fuenteDepSaldo, valorFuenteUsar);
             //if(claEntidadContri == 0) {
