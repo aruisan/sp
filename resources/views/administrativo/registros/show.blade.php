@@ -114,7 +114,7 @@
                         </div>
                     @endif
                     @if($registro->ruta)
-                        <div class="row">
+                        <div class="row text-center">
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label>Archivo Cargado </label>
                                 <div class="input-group">
