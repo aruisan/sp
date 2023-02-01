@@ -74,10 +74,9 @@
                         <br>
                     </div>
                     @if($registro->ruta)
-                        <div class="col-md-4">
-                        </div>
-                        <div class="col-md-4">
-                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">&nbsp;</div>
                         <div class="col-md-4">
                             <center>
                                 <h4><b>Archivo Cargado</b></h4>
