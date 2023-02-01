@@ -432,10 +432,10 @@ class RegistrosController extends Controller
         if ($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento") {
             foreach ($registro->cdpRegistroValor as $cdpRegVal){
                 if ($cdpRegVal->valor > 0){
-                    dd($cdpRegVal->fontRubro, $cdpRegVal);
                     $infoRubro[] = ['codCDP' => $cdpRegVal->cdps->code, 'nameCDP' => $cdpRegVal->cdps->name,
-                        'id_rubro' => $rubro->id ,'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name,
-                        'value' => $rubro->rubrosCdpValor->first()->valor];
+                        'id_rubro' => $cdpRegVal->fontRubro->rubro->id ,'id' => '', 'codigo' => $cdpRegVal->fontRubro->rubro->cod,
+                        'name' =>$cdpRegVal->fontRubro->rubro->name,
+                        'value' => $cdpRegVal->valor];
                 }
 	        }
 
