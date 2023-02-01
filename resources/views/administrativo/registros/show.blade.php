@@ -113,6 +113,18 @@
                             </div>
                         </div>
                     @endif
+                    @if($registro->ruta)
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label>Archivo Cargado </label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                    <a href="uploads/Registros/{{ $registro->ruta }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                </div>
+                                <small class="form-text text-muted">Archivo cargado al crear el registro.</small>
+                            </div>
+                        </div>
+                    @endif
                     @if($rol != 2 )
                         <div class="row">
                             <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
