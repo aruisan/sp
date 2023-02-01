@@ -698,7 +698,7 @@ class IndexController extends Controller
                                                                 foreach ($ordenPagoRubros as $ordenPagoRubro){
                                                                     if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
                                                                         $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 )$valuePagos[] = $ordenPagoRubro->valor;
+                                                                        //if ($ordenPagoRubro->orden_pago->pago->estado == 1 )$valuePagos[] = $ordenPagoRubro->valor;
                                                                     }
                                                                 }
                                                             }
@@ -709,6 +709,19 @@ class IndexController extends Controller
                                         }
                                     } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
                                     $valueRegistros[] = 0; $IDRegistros[] = 0;
+
+                                    //ORDENES DE PAGO
+                                    if (count($IDRegistros) > 0){
+                                        foreach ($IDRegistros as $ID) {
+                                            $ordenPago = OrdenPagos::where('registros_id', $ID)->get();
+                                            if (count($ordenPago) > 0){
+                                                foreach($ordenPago as $data){
+                                                    //PAGOS
+                                                    if ($data->pago) $valuePagos[] = $data->pago->valor;
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     if (!isset($value)){
                                         $value[] = null;
