@@ -823,15 +823,18 @@
 
         function validarFormularioCDP(evento) {
             evento.preventDefault();
-            var fuenteDepSaldo = document.getElementById('fuenteDep_saldo');
             var valorFuenteUsar = document.getElementById('valorFuenteUsar');
+
+            const fuenteDepSaldo = document.querySelectorAll(
+                'input[name="fuenteDep_saldo[]"]'
+            );
 
             console.log(fuenteDepSaldo, valorFuenteUsar);
             //if(claEntidadContri == 0) {
                 //alert('Debe seleccionar la clase de entidad');
                 //return;
             //}
-            this.submit();
+            //this.submit();
         }
 
         function validarFormulario(id, rol, fecha, valor, control ) {
