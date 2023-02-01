@@ -828,11 +828,15 @@
             const valorFuenteUsar = document.querySelectorAll('input[name="valorFuenteUsar[]"]');
             console.log(fuenteDepSaldo, valorFuenteUsar);
 
+            for (var i = 0; i < valorFuenteUsar.length; i++) {
+                console.log(valorFuenteUsar[i].value, fuenteDepSaldo[i].value);
+            }
+
             //if(claEntidadContri == 0) {
                 //alert('Debe seleccionar la clase de entidad');
                 //return;
             //}
-            this.submit();
+            //this.submit();
         }
 
         function validarFormulario(id, rol, fecha, valor, control ) {
