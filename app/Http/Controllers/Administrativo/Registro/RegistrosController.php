@@ -434,7 +434,7 @@ class RegistrosController extends Controller
                 $cdp = $cdpReg->cdps;
                 foreach($cdp->rubrosCdp as $rubro){
                     if (isset($infoRubro)){
-                        $validate = array_search($rubro->rubros->cod, array_column($infoRubro, 'codigo'));
+                        $validate = array_search($rubro->id, array_column($infoRubro, 'id_rubro'));
                         if (!$validate) {
                             $infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,
                                 'id_rubro' => $rubro->id ,'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name,
@@ -442,7 +442,7 @@ class RegistrosController extends Controller
                         } else{
                             dd($infoRubro, $validate , $rubro->rubros);
                         }
-                    } else $infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,'id_rubro' => $rubro->id ,
+                    } else $infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,'id_rubro' => $rubro->id,
                         'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name,
                         'value' => $rubro->rubrosCdpValor->first()->valor];
         	    }
