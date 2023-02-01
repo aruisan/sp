@@ -73,6 +73,22 @@
                         </div>
                         <br>
                     </div>
+                    @if($registro->ruta)
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                            <center>
+                                <h4><b>Archivo Cargado</b></h4>
+                                <h5>Archivo cargado al crear el registro</h5>
+                            </center>
+                            <div class="text-center">
+                                <a href="/uploads/Registros/{{ $registro->ruta }}" target="_blank" class="btn btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
+                            </div>
+                            <br>
+                        </div>
+                    @endif
                 </div>
                 <div class="form-validation">
                     <div class="row">
@@ -110,17 +126,6 @@
                                     {{ $registro->ff_doc }}
                                 </div>
                                 <small class="form-text text-muted">Fecha del Documento</small>
-                            </div>
-                        </div>
-                    @endif
-                    @if($registro->ruta)
-                        <div class="row text-center">
-                            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <label>Archivo Cargado </label>
-                                <div class="input-group">
-                                    <a href="/uploads/Registros/{{ $registro->ruta }}" target="_blank" class="btn btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
-                                </div>
-                                <small class="form-text text-muted">Archivo cargado al crear el registro.</small>
                             </div>
                         </div>
                     @endif
