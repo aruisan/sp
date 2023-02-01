@@ -396,8 +396,13 @@
                                     <h3>{{ Carbon\Carbon::today()->Format('d-m-Y')}}</h3>
                                 </td>
                                 <td>
-                                   <!-- <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Firmar y Presentar</button> -->
-                                    <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Generar Borrador</button>
+                                    @if($action == "Corrección")
+                                        @if($pago->estado == "Borrador")
+                                            <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Firmar y Presentar</button>
+                                        @endif
+                                    @else
+                                        <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">Generar Borrador</button>
+                                    @endif
                                 </td>
                             </tr>
                             </tbody>

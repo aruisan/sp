@@ -434,9 +434,8 @@ class IcaController extends Controller
         $rit = $user->rit;
         $ica = IcaContri::find($id);
         $pago = Pagos::where('modulo','ICA-Contribuyente')->where('entity_id', $id)->first();
-        dd($pago);
         if ($ica){
-            return view('impuestos.ica.contribuyente.create', compact('action','rit','ica'));
+            return view('impuestos.ica.contribuyente.create', compact('action','rit','ica','pago'));
         } else {
             Session::flash('warning', 'Formulario de declaración de contribuyente no encontrado en el sistema.');
             return redirect('/impuestos/Pagos');
