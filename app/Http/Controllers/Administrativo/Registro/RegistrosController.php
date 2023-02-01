@@ -440,7 +440,7 @@ class RegistrosController extends Controller
                                 'id_rubro' => $rubro->id ,'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name,
                                 'value' => $rubro->rubrosCdpValor->first()->valor];
                         } else{
-                            dd($infoRubro, $validate , $rubro->rubros);
+                            //dd($infoRubro, $validate , $rubro->rubros);
                         }
                     } else $infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,'id_rubro' => $rubro->id,
                         'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name,
