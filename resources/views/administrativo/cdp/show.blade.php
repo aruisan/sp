@@ -818,10 +818,10 @@
     <script>
 
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("formRubrosCdp").addEventListener('submit', validarFormulario);
+            document.getElementById("formRubrosCdp").addEventListener('submit', validarFormularioCDP);
         });
 
-        function validarFormulario(evento) {
+        function validarFormularioCDP(evento) {
             evento.preventDefault();
             var fuenteDepSaldo = document.getElementById('fuenteDep_saldo').value;
             var valorFuenteUsar = document.getElementById('valorFuenteUsar').value;
