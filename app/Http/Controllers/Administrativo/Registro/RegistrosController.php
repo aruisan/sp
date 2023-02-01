@@ -358,9 +358,9 @@ class RegistrosController extends Controller
 
                         $rubCdpValor = RubrosCdpValor::where('cdp_id', $value->cdp_id)
                             ->where('fontsRubro_id', $value->fontsRubro_id)->first();
+                        $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - $value->valor;
                         dd($rubCdpValor, $value);
 
-                        $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - $value->valor;
                     }
                 }
 
