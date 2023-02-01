@@ -823,13 +823,11 @@
 
         function validarFormularioCDP(evento) {
             evento.preventDefault();
-            var valorFuenteUsar = document.getElementById('valorFuenteUsar');
 
-            const fuenteDepSaldo = document.querySelectorAll(
-                'input[name="fuenteDep_saldo[]"]'
-            );
-
+            const fuenteDepSaldo = document.querySelectorAll('input[name="fuenteDep_saldo[]"]');
+            const valorFuenteUsar = document.querySelectorAll('input[name="valorFuenteUsar[]"]');
             console.log(fuenteDepSaldo, valorFuenteUsar);
+            
             //if(claEntidadContri == 0) {
                 //alert('Debe seleccionar la clase de entidad');
                 //return;
