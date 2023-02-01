@@ -817,6 +817,7 @@
 @section('js')
     <script>
 
+        //VALIDACION DE LOS DINEROS A TOMAR NO SEAN SUPERIORES DE LOS PERMITIDOS POR LA FUENTE
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("formRubrosCdp").addEventListener('submit', validarFormularioCDP);
         });
@@ -826,16 +827,15 @@
 
             const fuenteDepSaldo = document.querySelectorAll('input[name="fuenteDep_saldo[]"]');
             const valorFuenteUsar = document.querySelectorAll('input[name="valorFuenteUsar[]"]');
-            console.log(fuenteDepSaldo, valorFuenteUsar);
 
             for (var i = 0; i < valorFuenteUsar.length; i++) {
                 console.log(valorFuenteUsar[i].value, fuenteDepSaldo[i].value);
+                if(valorFuenteUsar[i].value > fuenteDepSaldo[i].value){
+                    alert('Revise los valores a tomar debido a que esta tomando mayor dinero del disponible');
+                    return;
+                }
             }
 
-            //if(claEntidadContri == 0) {
-                //alert('Debe seleccionar la clase de entidad');
-                //return;
-            //}
             this.submit();
         }
 
