@@ -23,7 +23,7 @@
 				<table class="table table-condensed" style="margin: 5px 10px;">
 					<thead>
 					<tr>
-						<th class="text-center" colspan="5">RUBROS ASIGNADOS A CDPs</th>
+						<th class="text-center" colspan="5">DINERO TOMADO DE LOS RUBROS DE CDPs</th>
 					</tr>
 					<tr>
 						<th class="text-center"># CDP</th>
