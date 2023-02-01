@@ -829,7 +829,6 @@
             const valorFuenteUsar = document.querySelectorAll('input[name="valorFuenteUsar[]"]');
 
             for (var i = 0; i < valorFuenteUsar.length; i++) {
-                console.log(valorFuenteUsar[i].value, fuenteDepSaldo[i].value);
                 if(valorFuenteUsar[i].value > fuenteDepSaldo[i].value){
                     alert('Revise los valores a tomar debido a que esta tomando mayor dinero del disponible');
                     return;

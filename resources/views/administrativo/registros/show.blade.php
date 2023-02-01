@@ -260,7 +260,7 @@
                                                                             @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $RCV->fontsRubro->rubro_id == $valoresRV->rubro_id)
                                                                                 <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresRV->id }}">
                                                                                 @if($registro->secretaria_e == "0")
-                                                                                    <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                                    <input type="number" required  name="valorFuenteUsar[]" id="id{{$RCV->font_id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $RCV->valor_disp }}" max="{{ $RCV->valor_disp }}" style="text-align: center">
                                                                                 @else
                                                                                     $<?php echo number_format( $valoresRV->valor,0) ?>
                                                                                 @endif
@@ -269,11 +269,11 @@
                                                                     @endforeach
                                                                     @if($registro->cdpRegistroValor->count() == 0)
                                                                         <input type="hidden" name="rubros_cdp_valor_id[]" value="">
-                                                                        <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                        <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$RCV->valor_disp}}" max="{{ $RCV->valor_disp }}" style="text-align: center">
                                                                     @endif
                                                                 @else
                                                                     <input type="hidden" name="rubros_cdp_valor_id[]" value="">
-                                                                    <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$cdpsRegistroData->cdp->saldo}}" max="{{  $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                    <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$RCV->valor_disp}}" max="{{  $RCV->valor_disp }}" style="text-align: center">
                                                                 @endif
                                                             @elseif($RCV->valor_disp > 0)
                                                                 Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
