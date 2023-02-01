@@ -253,12 +253,13 @@ class IcaController extends Controller
             $pago = Pagos::where('entity_id', $ICA->id)->where('modulo','ICA-Contribuyente')->first();
             $pago->entity_id = $ICA->id;
             $pago->valor = $ICA->totPagar;
+            $pago->estado = "Generado";
             $pago->fechaCreacion = $ICA->presentacion;
             $pago->save();
 
-            Session::flash('success', 'Formulario declaración de contribuyente corregido exitosamente.');
+            Session::flash('success', 'Formulario declaración de contribuyente firmado y emitido exitosamente.');
 
-            return redirect('/impuestos/Pagos/'.$pago->id);
+            return redirect('/impuestos/Pagos/ICA/');
         }
     }
 
