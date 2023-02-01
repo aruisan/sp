@@ -347,16 +347,20 @@ class RegistrosController extends Controller
                 $update->saldo = $valTot;
                 $update->valor = $valTot;
                 $update->val_total = $valTot;
-                $update->save();
+                //$update->save();
 
                 $cdpsRegistroValor = CdpsRegistroValor::where('registro_id', $id)->get();
                 foreach ($cdpsRegistroValor as $value){
-                    $cdp = Cdp::findOrFail($value->cdp_id);
-                    $cdp->saldo = $cdp->saldo - $value->valor;
-                    $cdp->save();
-                    foreach ($cdp->rubrosCdp as $RCDP){
-                        $RCDP->rubrosCdpValor->first()->valor_disp = $RCDP->rubrosCdpValor->first()->valor_disp - $value->valor;
-                        $RCDP->rubrosCdpValor->first()->save();
+                    if ($value->valor > 0){
+                        $cdp = Cdp::findOrFail($value->cdp_id);
+                        $cdp->saldo = $cdp->saldo - $value->valor;
+                        //$cdp->save();
+
+                        $rubCdpValor = RubrosCdpValor::where('cdp_id', $value->cdp_id)
+                            ->where('fontsRubro_id', $value->fontsRubro_id)->first();
+                        dd($rubCdpValor, $value);
+
+                        $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - $value->valor;
                     }
                 }
 
