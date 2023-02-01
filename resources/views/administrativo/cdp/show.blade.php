@@ -829,7 +829,7 @@
             console.log(fuenteDepSaldo, valorFuenteUsar);
             //if(claEntidadContri == 0) {
                 //alert('Debe seleccionar la clase de entidad');
-                return;
+                //return;
             //}
             //this.submit();
         }
