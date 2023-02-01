@@ -145,7 +145,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <form action="{{url('/administrativo/rubrosCdp')}}" method="POST" class="form">
+                                    <form action="{{url('/administrativo/rubrosCdp')}}" method="POST" id="formRubrosCdp" class="form">
                                         {{ csrf_field() }}
                                         <table id="tabla_rubrosCdp" class="table table-bordered">
                                             <thead>
@@ -816,6 +816,23 @@
 
 @section('js')
     <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("formRubrosCdp").addEventListener('submit', validarFormulario);
+        });
+
+        function validarFormulario(evento) {
+            evento.preventDefault();
+            var fuenteDepSaldo = document.getElementById('fuenteDep_saldo').value;
+            var valorFuenteUsar = document.getElementById('valorFuenteUsar').value;
+
+            console.log(fuenteDepSaldo, valorFuenteUsar);
+            //if(claEntidadContri == 0) {
+                //alert('Debe seleccionar la clase de entidad');
+                //return;
+            //}
+            this.submit();
+        }
 
         function validarFormulario(id, rol, fecha, valor, control ) {
             console.log('vu', [id, rol, fecha, valor, control ]);
