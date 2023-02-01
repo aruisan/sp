@@ -110,7 +110,7 @@
                                         <td class="text-center"> {{ \Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y') }}</td>
                                         <td class="text-center">$<?php echo number_format($pago->valor,0) ?></td>
                                         <td class="text-center">
-                                            <a href="{{ url('impuestos/ICA/contri/form/'.$pago->entity_id) }}" title="Ver" class="btn btn-sm btn-primary-impuestos">Continuar Formulario</a>
+                                            <a href="{{ url('impuestos/ICA/contri/update/'.$pago->entity_id) }}" title="Ver" class="btn btn-sm btn-primary-impuestos">Continuar Formulario</a>
                                         </td>
                                     </tr>
                                 @endforeach
