@@ -436,10 +436,11 @@ class RegistrosController extends Controller
                     if (isset($infoRubro)){
                         $validate = array_search($rubro->rubros->cod, array_column($infoRubro, 'codigo'));
                         if (!$validate) {
-                            dd($infoRubro, $validate , $rubro->rubros);
                             $infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,
                                 'id_rubro' => $rubro->id ,'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name,
                                 'value' => $rubro->rubrosCdpValor->first()->valor];
+                        } else{
+                            dd($infoRubro, $validate , $rubro->rubros);
                         }
                     } else $infoRubro[] = ['codCDP' => $cdp->code, 'nameCDP' => $cdp->name,'id_rubro' => $rubro->id ,
                         'id' => '', 'codigo' => $rubro->rubros->cod, 'name' => $rubro->rubros->name,
