@@ -831,7 +831,7 @@
                 //alert('Debe seleccionar la clase de entidad');
                 //return;
             //}
-            //this.submit();
+            this.submit();
         }
 
         function validarFormulario(id, rol, fecha, valor, control ) {
