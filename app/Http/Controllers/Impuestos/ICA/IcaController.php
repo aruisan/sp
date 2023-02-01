@@ -433,6 +433,8 @@ class IcaController extends Controller
         $user = User::find(Auth::user()->id);
         $rit = $user->rit;
         $ica = IcaContri::find($id);
+        $pago = Pagos::where('modulo','ICA-Contribuyente')->where('entity_id', $id)->first();
+        dd($pago);
         if ($ica){
             return view('impuestos.ica.contribuyente.create', compact('action','rit','ica'));
         } else {
