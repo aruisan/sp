@@ -316,11 +316,13 @@
                                                                                         @if($cdp->rubrosCdpValor->count() == 0)
                                                                                             <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                                             <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
+                                                                                            <input type="hidden" name="fuenteDep_saldo[]" value="{{ $dep->saldo }}">
                                                                                             <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $dep->saldo }}" style="text-align: center">
                                                                                         @endif
                                                                                     @else
                                                                                         <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                                         <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
+                                                                                        <input type="hidden" name="fuenteDep_saldo[]" value="{{ $dep->saldo }}">
                                                                                         <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $dep->saldo }}" style="text-align: center">
                                                                                     @endif
                                                                                 @endif

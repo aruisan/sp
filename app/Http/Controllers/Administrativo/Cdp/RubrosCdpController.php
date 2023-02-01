@@ -13,25 +13,6 @@ use Session;
 
 class RubrosCdpController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -78,28 +59,6 @@ class RubrosCdpController extends Controller
 
         Session::flash('success','Rubros asignados correctamente');
         return  back();
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RubrosCdp  $rubrosCdp
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RubrosCdp $rubrosCdp)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\RubrosCdp  $rubrosCdp
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RubrosCdp $rubrosCdp)
-    {
-        //
     }
 
     /**
