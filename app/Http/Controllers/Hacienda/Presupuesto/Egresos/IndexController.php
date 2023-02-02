@@ -697,11 +697,13 @@ class IndexController extends Controller
                                                                 $IDRegistros[] = $data->registro_id;
                                                                 //VALOR ORDENES DE PAGO
                                                                 $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
-                                                                $ordenPagoRubro = $ordenPagoRubros[0];
-                                                                if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
-                                                                    $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                    if ($ordenPagoRubro->orden_pago->pago){
-                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                if (count($ordenPagoRubros) > 0){
+                                                                    $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                    if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
+                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                        if ($ordenPagoRubro->orden_pago->pago){
+                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                        }
                                                                     }
                                                                 }
                                                             }
