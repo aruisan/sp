@@ -12,7 +12,7 @@
 					<td>Nit o Cedula: {{ $OrdenPago->registros->persona->num_dc }}</td>
 				</tr>
 				<tr class="text-center">
-					<td>Registro No: {{$R->id}}</td>
+					<td>Registro No: {{$R->code}}</td>
 					<td>Fecha Registro: <?=$dias[$fechaR->format('w')]." ".$fechaR->format('d')." ".$meses[$fechaR->format('n')-1]. " ".$fechaR->format('Y')?></td>
 				</tr>
 			</table>
@@ -148,7 +148,7 @@
 							@if($R->cdpRegistroValor[$i]->fontRubro->sourceFunding)
 								<td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
 							@else
-								<td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding }}</td>
+								<td>{{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->name }}</td>
 							@endif
 							<td>{{ $OrdenPago->registros->objeto }}</td>
 							<td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
