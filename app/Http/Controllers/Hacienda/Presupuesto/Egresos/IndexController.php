@@ -697,12 +697,11 @@ class IndexController extends Controller
                                                                 $IDRegistros[] = $data->registro_id;
                                                                 //VALOR ORDENES DE PAGO
                                                                 $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
-                                                                foreach ($ordenPagoRubros as $ordenPagoRubro){
-                                                                    if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
-                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                        if ($ordenPagoRubro->orden_pago->pago){
-                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
-                                                                        }
+                                                                $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
+                                                                    $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                    if ($ordenPagoRubro->orden_pago->pago){
+                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
                                                                     }
                                                                 }
                                                             }
@@ -715,7 +714,7 @@ class IndexController extends Controller
                                     $valueRegistros[] = 0; $IDRegistros[] = 0;
 
                                     if ($rubro->first()->id == 1103){
-                                        //dd($presupuesto, $valueRegistros, $valueOrdenPago, $valuePagos, $rubCdpValue);
+                                        dd($presupuesto, $valueRegistros, $valueOrdenPago, $valuePagos, $rubCdpValue);
                                     }
 
                                     if (!isset($value)){
