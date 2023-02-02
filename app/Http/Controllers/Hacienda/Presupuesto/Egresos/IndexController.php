@@ -714,6 +714,10 @@ class IndexController extends Controller
                                     } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
                                     $valueRegistros[] = 0; $IDRegistros[] = 0;
 
+                                    if ($rubro[0]->name == "APORTES DE CESANTIAS"){
+                                        dd($valuePagos, $valueOrdenPago, $valueRegistros);
+                                    }
+
                                     if (!isset($value)){
                                         $value[] = null;
                                         unset($value[0]);

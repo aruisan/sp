@@ -39,12 +39,13 @@ class PredialController extends Controller
         $user = User::find(Auth::user()->id);
         $action = "Creación";
         $contribuyente = PredialContribuyentes::where('email',$user->email)->get();
+        $predios = $contribuyente;
         if (count($contribuyente) == 0){
             Session::flash('warning', 'No se encuentra información del usuario almacenada en el sistema - Contacte con un funcionario.');
             return back();
         } else{
             $contribuyente = $contribuyente[0];
-            return view('impuestos.predial.create', compact('action','contribuyente'));
+            return view('impuestos.predial.create', compact('action','contribuyente','predios'));
         }
     }
 
@@ -65,6 +66,20 @@ class PredialController extends Controller
         }
         return 0;
     }
+
+
+    /**
+     * Get predio info
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getPredio(Request $request){
+        $predio = PredialContribuyentes::find($request->id);
+        if ($predio) return $predio;
+        else return 0;
+    }
+
 
     /**
      * Get value liquidador
@@ -120,6 +135,7 @@ class PredialController extends Controller
         $predial->año = $request->año;
         $predial->añoInicio = $request->añoInicio;
         $predial->user_id  = Auth::user()->id;
+        $predial->imp_pred_contri_id = $request->predio;
 
         //TOTALES IMPUESTO
         $predial->tot_imp = $request->total2;

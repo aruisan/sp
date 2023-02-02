@@ -57,84 +57,168 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            {{-- TABLA B. BASE GRAVABLE --}}
-                            <table class="table text-center table-bordered">
-                                <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="2">INFORMACION PREDIO Y PAGO</th>
-                                </tr>
-                                <tbody>
-                                <tr>
-                                    <td style="vertical-align: middle">Número Catastral:</td>
-                                    <td>{{$contribuyente->numCatastral}}</td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Dirección:</td>
-                                    <td>{{$contribuyente->dir_predio}}</td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Cédula Catastral:</td>
-                                    <td><input type="number" class="form-control" name="cedula" @if($action == "Corrección" ) value="{{ $ica->totIngreOrd }}" @endif id="cedula" required></td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Propietario:</td>
-                                    <td>{{$contribuyente->contribuyente}}</td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Matricula Inmobiliaria:</td>
-                                    <td><input type="text" class="form-control" name="matricula" @if($action == "Corrección" ) value="{{ $ica->totIngreOrd }}" @endif id="matricula" required></td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Área de Terreno:</td>
-                                    <td>{{$contribuyente->areaTerreno}}</td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Tasa Interés:</td>
-                                    <td><input type="text" class="form-control" name="tasaInt" value="25.45" id="tasaInt" required onchange="operation()"></td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Tarifa por mil:</td>
-                                    <td>
-                                        <span id="tarifaMilSpan">5</span>
-                                        <input type="hidden" name="tarifaMil" id="tarifaMil" value="5">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Tasa Bomberil:</td>
-                                    <td><input type="text" class="form-control" name="tarifaBomb" value="0" id="tarifaBomb" required onchange="operation()"></td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Fecha de Pago:</td>
-                                    <td><input type="date" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this)"></td>
-                                </tr>
-                                <tr>
-                                    <td style="vertical-align: middle">Tasa de Descuento:</td>
-                                    <td>
-                                        <span id="tasaDescSpan">0</span>
-                                        <input type="hidden" name="tasaDesc" id="tasaDesc" value="-1">
-                                    </td>
-                                </tr>
-                                <tr id="ultimoAñoPagado" style="display: none">
-                                    <td style="vertical-align: middle">Ultimo Año Pagado:</td>
-                                    @php($año = date('Y'))
-                                    @php($año = $año - 1 - $contribuyente->años_deuda)
-                                    <td>
-                                        {{$año}}<input type="hidden" name="añoInicio" id="añoInicio" value="{{$año}}">
-                                    </td>
-                                </tr>
-                                <tr id="añoTR" style="display: none">
-                                    <td style="vertical-align: middle">Año Inicial para Pago:</td>
-                                    @php($año2 = date('Y'))
-                                    <td>
-                                        <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
-                                            @while($año2 >= 2005)
-                                                <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
-                                                @php($año2 = ($año2-1))
-                                            @endwhile
-                                        </select>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            @if(count($predios) > 1)
+                                <div class="text-center">
+                                    Seleccione el numero catastral del predio a generar el formulario:
+                                </div>
+                                <select name="predio" id="predio" class="form-control" required onchange="ShowSelected()">
+                                    <option>Seleccione el Predio</option>
+                                    @foreach($predios as $predio)
+                                        <option value="{{ $predio['id'] }}">{{ $predio['numCatastral'] }} - {{ $predio['dir_predio'] }}</option>
+                                    @endforeach
+                                </select>
+                                <hr>
+                                <table class="table text-center table-bordered" id="tablaMultiplePred" style="display: none">
+                                    <tr style="background-color: #0e7224; color: white">
+                                        <th scope="row" colspan="4">INFORMACION PREDIO Y PAGO</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <td>Num Catastral:<br><span id="numCatastral"></span></td>
+                                            <td>Area Terreno:<br><span id="areaTerreno"></span></td>
+                                            <td colspan="2">Dir Predio:<br><span id="dir_predio"></span></td>
+                                        </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            Matricula Inmobiliaria: <br><span id="matInmobiliaria"></span>
+                                            <input type="hidden" name="matricula" id="matricula">
+                                        </td>
+                                        <td colspan="2">
+                                            Cédula Catastral: <br><span id="cedCatastral"></span>
+                                            <input type="hidden" name="cedula" id="cedula">
+                                        </td>
+                                    </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tasa Interés:</td>
+                                            <td colspan="3"><input type="text" class="form-control" name="tasaInt" value="25.45" id="tasaInt" required onchange="operation()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tarifa por mil:</td>
+                                            <td colspan="3">
+                                                <span id="tarifaMilSpan">5</span>
+                                                <input type="hidden" name="tarifaMil" id="tarifaMil" value="5">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tasa Bomberil:</td>
+                                            <td colspan="3"><input type="text" class="form-control" name="tarifaBomb" value="0" id="tarifaBomb" required onchange="operation()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Fecha de Pago:</td>
+                                            <td colspan="3"><input type="date" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this)"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tasa de Descuento:</td>
+                                            <td colspan="3">
+                                                <span id="tasaDescSpan">0</span>
+                                                <input type="hidden" name="tasaDesc" id="tasaDesc" value="-1">
+                                            </td>
+                                        </tr>
+                                        <tr id="ultimoAñoPagado" style="display: none">
+                                            <td style="vertical-align: middle">Ultimo Año Pagado:</td>
+                                            @php($año = date('Y'))
+                                            @php($año = $año - 1 - $contribuyente->años_deuda)
+                                            <td colspan="3">
+                                                {{$año}}<input type="hidden" name="añoInicio" id="añoInicio" value="{{$año}}">
+                                            </td>
+                                        </tr>
+                                        <tr id="añoTR" style="display: none">
+                                            <td style="vertical-align: middle">Año Inicial para Pago:</td>
+                                            @php($año2 = date('Y'))
+                                            <td colspan="3">
+                                                <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
+                                                    @while($año2 >= 2005)
+                                                        <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
+                                                        @php($año2 = ($año2-1))
+                                                    @endwhile
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            @else
+                                {{-- TABLA B. BASE GRAVABLE --}}
+                                <table class="table text-center table-bordered">
+                                    <tr style="background-color: #0e7224; color: white">
+                                        <th scope="row" colspan="2">INFORMACION PREDIO Y PAGO</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <td style="vertical-align: middle">Número Catastral:</td>
+                                            <td>
+                                                {{$contribuyente->numCatastral}}
+                                                <input type="hidden" name="predio" value="{{$contribuyente->id}}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Dirección:</td>
+                                            <td>{{$contribuyente->dir_predio}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Cédula Catastral:</td>
+                                            <td><input type="number" class="form-control" name="cedula" @if($action == "Corrección" ) value="{{ $ica->totIngreOrd }}" @endif id="cedula" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Propietario:</td>
+                                            <td>{{$contribuyente->contribuyente}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Matricula Inmobiliaria:</td>
+                                            <td><input type="text" class="form-control" name="matricula" @if($action == "Corrección" ) value="{{ $ica->totIngreOrd }}" @endif id="matricula" required></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Área de Terreno:</td>
+                                            <td>{{$contribuyente->areaTerreno}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tasa Interés:</td>
+                                            <td><input type="text" class="form-control" name="tasaInt" value="25.45" id="tasaInt" required onchange="operation()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tarifa por mil:</td>
+                                            <td>
+                                                <span id="tarifaMilSpan">5</span>
+                                                <input type="hidden" name="tarifaMil" id="tarifaMil" value="5">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tasa Bomberil:</td>
+                                            <td><input type="text" class="form-control" name="tarifaBomb" value="0" id="tarifaBomb" required onchange="operation()"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Fecha de Pago:</td>
+                                            <td><input type="date" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this)"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Tasa de Descuento:</td>
+                                            <td>
+                                                <span id="tasaDescSpan">0</span>
+                                                <input type="hidden" name="tasaDesc" id="tasaDesc" value="-1">
+                                            </td>
+                                        </tr>
+                                        <tr id="ultimoAñoPagado" style="display: none">
+                                            <td style="vertical-align: middle">Ultimo Año Pagado:</td>
+                                            @php($año = date('Y'))
+                                            @php($año = $año - 1 - $contribuyente->años_deuda)
+                                            <td>
+                                                {{$año}}<input type="hidden" name="añoInicio" id="añoInicio" value="{{$año}}">
+                                            </td>
+                                        </tr>
+                                        <tr id="añoTR" style="display: none">
+                                            <td style="vertical-align: middle">Año Inicial para Pago:</td>
+                                            @php($año2 = date('Y'))
+                                            <td>
+                                                <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
+                                                    @while($año2 >= 2005)
+                                                        <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
+                                                        @php($año2 = ($año2-1))
+                                                    @endwhile
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            @endif
 
                             {{-- TABLA C. DISCRIMINACIÓN DE INGRESOS GRAVADOS Y ACTIVIDADES DESARROLLADAS EN ESTE MUNICIPIO O DISTRITO --}}
                             <div class="table-responsive">
@@ -198,6 +282,30 @@
                 return;
             }
             this.submit();
+        }
+
+        function ShowSelected(){
+            var idPred = document.getElementById('predio').value;
+            $.ajax({
+                method: "POST",
+                url: "/impuestos/PREDIAL/predio",
+                data: { "id": idPred,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function(datos) {
+                console.log(datos)
+                document.getElementById('numCatastral').innerHTML = datos.numCatastral;
+                document.getElementById('areaTerreno').innerHTML = datos.areaTerreno;
+                document.getElementById('dir_predio').innerHTML = datos.dir_predio;
+                document.getElementById('matInmobiliaria').innerHTML = datos.matInmobiliaria;
+                document.getElementById('matricula').value = 0;
+                document.getElementById('cedCatastral').innerHTML = datos.cedCatastral;
+                document.getElementById('cedula').value = 0;
+                $("#tablaMultiplePred").show();
+
+            }).fail(function() {
+                toastr.warning('OCURRIO UN ERROR AL OBTENER EL PREDIO');
+            });
         }
 
         const formatter = new Intl.NumberFormat('en-US', {

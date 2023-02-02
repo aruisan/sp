@@ -85,6 +85,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('/PREDIAL/create','Impuestos\Predial\PredialController@create')->name('impuestos.predial.create');
         Route::post('/PREDIAL','Impuestos\Predial\PredialController@store')->name('impuestos.predial.store');
         Route::post('/PREDIAL/calendario','Impuestos\Predial\PredialController@getImpCalendar');
+        Route::post('/PREDIAL/predio','Impuestos\Predial\PredialController@getPredio');
         Route::post('/PREDIAL/liquidar','Impuestos\Predial\PredialController@liquidar');
         Route::get('/PREDIAL/pdf/{id}', 'Impuestos\Predial\PredialController@factura')->name('impuestos.predial.factura');
         Route::get('/PREDIAL/form/{id}', 'Impuestos\Predial\PredialController@form')->name('impuestos.predial.formulario');
