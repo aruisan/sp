@@ -716,7 +716,7 @@ class IndexController extends Controller
                                     $valueRegistros[] = 0; $IDRegistros[] = 0;
 
                                     if ($rubro->first()->id == 1103){
-                                        dd($presupuesto, $valueRegistros, $valueOrdenPago, $valuePagos, $rubCdpValue);
+                                        //dd($presupuesto, $valueRegistros, $valueOrdenPago, $valuePagos, $rubCdpValue);
                                     }
 
                                     if (!isset($value)){
