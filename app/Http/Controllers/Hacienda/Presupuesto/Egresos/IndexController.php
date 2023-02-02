@@ -116,9 +116,11 @@ class IndexController extends Controller
                     } elseif($pagoFind->count() > 1){
                         foreach ($pagoFind as $info){
                             $oPago = OrdenPagos::find($info->id);
-                            foreach ($oPago->rubros as $rubroOP){
-                                //SE LLENAN LOS PAGOS CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
-                                if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
+                            if (count($oPago->rubros) > 0){
+                                foreach ($oPago->rubros as $rubroOP){
+                                    //SE LLENAN LOS PAGOS CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
+                                    if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
+                                }
                             }
                             $pagos[] = collect(['id' => $info->id, 'code' => $info->code, 'nombre' => $data['nombre'], 'persona' => $info->orden_pago->registros->persona->nombre, 'valor' => $info->valor, 'estado' => $info->estado]);
                         }
