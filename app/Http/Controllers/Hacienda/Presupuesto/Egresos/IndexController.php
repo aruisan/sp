@@ -334,11 +334,14 @@ class IndexController extends Controller
                                             if ($cdp->cdps->jefe_e == "3") {
                                                 $valueCDPs[] = $cdp->valor;
                                                 if (count($cdp->cdps->cdpsRegistro) > 0) {
-                                                    foreach ($cdp->cdps->cdpsRegistro as $cdpReg) {
-                                                        if ($cdpReg->registro->jefe_e == 3) {
-
-                                                            //VALOR REGISTROS
-                                                            //$valueRegistros[] = $cdpReg->registro->valor;
+                                                    //CONSULTA PARA LOS REGISTROS
+                                                    $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
+                                                    foreach ($cdpsRegValue as $data) {
+                                                        if ($data->valor != 0) {
+                                                            if ($data->registro->jefe_e == 3) {
+                                                                //VALOR REGISTROS
+                                                                $valueRegistros[] = $data->valor;
+                                                            }
                                                         }
                                                     }
                                                 } else $valueRegistros[] = 0;
