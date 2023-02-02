@@ -466,7 +466,7 @@
                                         @if($data['estado'] == "0")
                                             Pendiente
                                         @elseif($data['estado'] == "1")
-                                            Pagado
+                                            Finalizada
                                         @else
                                             Anulado
                                         @endif
@@ -476,7 +476,9 @@
                                     <a href="{{ url('administrativo/ordenPagos/show',$data['id']) }}" title="Ver Orden de Pago" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ url('administrativo/ordenPagos/pdf',$data['id']) }}" target="_blank" title="Orden de Pago" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
+                                    @if($data['estado'] == "1")
+                                        <a href="{{ url('administrativo/ordenPagos/pdf',$data['id']) }}" target="_blank" title="Orden de Pago" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
