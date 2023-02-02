@@ -208,6 +208,8 @@ class PredialController extends Controller
      */
     public function factura($id_predial){
         $predial = Predial::find($id_predial);
+        $infoContri = PredialContribuyentes::find($predial->imp_pred_contri_id);
+        $predial->numCatas = $infoContri->numCatastral;
         $user = User::find($predial->user_id);
         $pago = Pagos::where('modulo','PREDIAL')->where('entity_id',$id_predial)->get();
         $liquidacion = $predial->liquidacion;
