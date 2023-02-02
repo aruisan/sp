@@ -786,7 +786,7 @@ class IndexController extends Controller
 
                                     if (array_sum($value) > 0){
 
-                                        dd($valuePagos, $valueOrdenPago, $valueRegistros, $presupuesto);
+                                        //dd($valuePagos, $valueOrdenPago, $valueRegistros, $presupuesto);
 
                                         $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro[0]->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => array_sum($value),
                                             'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
