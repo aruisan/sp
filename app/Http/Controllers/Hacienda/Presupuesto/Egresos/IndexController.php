@@ -697,7 +697,7 @@ class IndexController extends Controller
                                                                 $IDRegistros[] = $data->registro_id;
                                                                 //VALOR ORDENES DE PAGO
                                                                 $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
-                                                                $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                $ordenPagoRubro = $ordenPagoRubros[0];
                                                                 if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
                                                                     $valueOrdenPago[] = $ordenPagoRubro->valor;
                                                                     if ($ordenPagoRubro->orden_pago->pago){
