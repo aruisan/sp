@@ -620,6 +620,10 @@ class IndexController extends Controller
                     }
 
                     if($rubro->first()->fontsRubro){
+
+                        if ($rubro->first()->id == 1103){
+                            dd($valuePagos, $valueOrdenPago, $valueRegistros, $presupuesto);
+                        }
                         //RUBROS HIJOS
                         //EN ESTA VALIDACION SE MUESTRAN LOS VALORES DE RUBROS USADOS DEPENDIENDO LA DEP DEL USUARIO
                         $exit = false;
@@ -785,8 +789,6 @@ class IndexController extends Controller
                                     $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
 
                                     if (array_sum($value) > 0){
-
-                                        //dd($valuePagos, $valueOrdenPago, $valueRegistros, $presupuesto);
 
                                         $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro[0]->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => array_sum($value),
                                             'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
