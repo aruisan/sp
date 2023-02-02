@@ -20,7 +20,7 @@
 		<div>
 			<center>
 				<h5>CONCEPTO</h5>
-				<p><h5>{{ $OrdenPago->nombre }}</h5></p>
+				<p>{{ $OrdenPago->nombre }}</p>
 			</center>
 		</div>
 		<div class="table-responsive br-black-1">
