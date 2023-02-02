@@ -277,7 +277,7 @@ class IndexController extends Controller
                         foreach ($otherRubs as $other) {
                             $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
 
-                            if($rubroOtherFind->first() and $data->code != null) {
+                            if($rubroOtherFind->first()) {
 
                                 if($rubroOtherFind->first()->fontsRubro){
                                     foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) {
