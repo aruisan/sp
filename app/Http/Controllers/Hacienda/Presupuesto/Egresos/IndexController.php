@@ -333,15 +333,12 @@ class IndexController extends Controller
                                         foreach ($rubCdpValue as $cdp) {
                                             if ($cdp->cdps->jefe_e == "3") {
                                                 $valueCDPs[] = $cdp->valor;
-                                                if (count($cdp->cdps->cdpsRegistro) > 0){
-                                                    //CONSULTA PARA LOS REGISTROS
-                                                    $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
-                                                    foreach ($cdpsRegValue as $data){
-                                                        if ($data->valor != 0){
-                                                            if ($data->registro->jefe_e == 3) {
-                                                                //VALOR REGISTROS
-                                                                $valueRegistros[] = $data->valor;
-                                                            }
+                                                if (count($cdp->cdps->cdpsRegistro) > 0) {
+                                                    foreach ($cdp->cdps->cdpsRegistro as $cdpReg) {
+                                                        if ($cdpReg->registro->jefe_e == 3) {
+
+                                                            //VALOR REGISTROS
+                                                            //$valueRegistros[] = $cdpReg->registro->valor;
                                                         }
                                                     }
                                                 } else $valueRegistros[] = 0;
@@ -354,7 +351,7 @@ class IndexController extends Controller
                                 if (isset($valores)){
                                     foreach ($valores as $dataOP) {
                                         if ($dataOP['code'] == $other->id) {
-                                            $valueOrdenPago[] = $dataOP['val'];
+                                            //$valueOrdenPago[] = $dataOP['val'];
                                         }
                                     }
                                 }
@@ -363,7 +360,7 @@ class IndexController extends Controller
                                 if (isset($valoresPagos)){
                                     foreach ($valoresPagos as $dataP) {
                                         if ($dataP['code'] == $other->id) {
-                                            $valuePagos[] = $dataP['val'];
+                                            //$valuePagos[] = $dataP['val'];
                                         }
                                     }
                                 }
