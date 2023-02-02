@@ -169,8 +169,13 @@
                                                     @endfor
                                                 </td>
                                                 <td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
+                                                @if($R->cdpRegistroValor[$i]->fontRubro->sourceFunding)
                                                 <td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} -
                                                     {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
+                                                @else
+                                                    <td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding }} -
+                                                        {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding }}</td>
+                                                @endif
                                                 <td>{{ $OrdenPago->registros->objeto }}</td>
                                                 <td>$ <?php echo number_format($R->cdpRegistroValor[$i]->valor,0);?></td>
                                             </tr>
