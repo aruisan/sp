@@ -714,10 +714,6 @@ class IndexController extends Controller
                                     } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
                                     $valueRegistros[] = 0; $IDRegistros[] = 0;
 
-                                    if ($rubro[0]->name == "APORTES DE CESANTIAS"){
-                                        dd($valuePagos, $valueOrdenPago, $valueRegistros);
-                                    }
-
                                     if (!isset($value)){
                                         $value[] = null;
                                         unset($value[0]);
@@ -789,6 +785,11 @@ class IndexController extends Controller
                                     $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
 
                                     if (array_sum($value) > 0){
+
+                                        if ($rubro[0]->name == "APORTES DE CESANTIAS"){
+                                            dd($valuePagos, $valueOrdenPago, $valueRegistros);
+                                        }
+
                                         $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro[0]->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => array_sum($value),
                                             'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
                                             'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),

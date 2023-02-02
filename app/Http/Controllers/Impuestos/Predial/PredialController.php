@@ -194,7 +194,7 @@ class PredialController extends Controller
 
         Session::flash('success', 'Impuesto predial liquidado exitosamente.');
 
-        return redirect('/impuestos/Pagos');
+        return redirect('/impuestos/Pagos/PRED');
 
     }
 
