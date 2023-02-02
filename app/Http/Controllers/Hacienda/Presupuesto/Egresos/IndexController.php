@@ -327,22 +327,25 @@ class IndexController extends Controller
                                 if (isset($rubrosCC)) foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
 
                                 //CDPS
-                                if(count($rubroOtherFind->first()->rubrosCdp) > 0){
-                                    foreach ($rubroOtherFind->first()->rubrosCdp as $cdp) {
-                                        if ($cdp->cdps->jefe_e == "3") {
-                                            $valueCDPs[] = $cdp->valor;
-                                            if (count($cdp->cdps->cdpsRegistro) > 0){
-                                                foreach ($cdp->cdps->cdpsRegistro as $cdpReg){
-                                                    if ($cdpReg->registro->jefe_e == 3){
+                                foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro){
+                                    $rubCdpValue = RubrosCdpValor::where('fontsRubro_id', $fuenteRubro->id)->get();
+                                    if(count($rubCdpValue) > 0){
+                                        foreach ($rubCdpValue as $cdp) {
+                                            if ($cdp->cdps->jefe_e == "3") {
+                                                $valueCDPs[] = $cdp->valor;
+                                                if (count($cdp->cdps->cdpsRegistro) > 0) {
+                                                    foreach ($cdp->cdps->cdpsRegistro as $cdpReg) {
+                                                        if ($cdpReg->registro->jefe_e == 3) {
 
-                                                        //VALOR REGISTROS
-                                                        $valueRegistros[] = $cdpReg->registro->valor;
+                                                            //VALOR REGISTROS
+                                                            $valueRegistros[] = $cdpReg->registro->valor;
+                                                        }
                                                     }
-                                                }
-                                            } else $valueRegistros[] = 0;
+                                                } else $valueRegistros[] = 0;
+                                            }
                                         }
-                                    }
-                                } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+                                    }else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+                                }
 
                                 //ORDENES DE PAGO
                                 if (isset($valores)){
