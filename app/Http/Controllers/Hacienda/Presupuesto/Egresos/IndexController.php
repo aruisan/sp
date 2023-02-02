@@ -341,6 +341,17 @@ class IndexController extends Controller
                                                             if ($cdpRValue->registro->jefe_e == 3) {
                                                                 //VALOR REGISTROS
                                                                 $valueRegistros[] = $cdpRValue->valor;
+                                                                //VALOR ORDENES DE PAGO
+                                                                $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $cdpRValue->id)->get();
+                                                                if (count($ordenPagoRubros) > 0){
+                                                                    $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                    if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $cdpRValue->registro_id){
+                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                        if ($ordenPagoRubro->orden_pago->pago){
+                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                        }
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -349,25 +360,6 @@ class IndexController extends Controller
                                         }
                                     }else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
                                 }
-
-                                //ORDENES DE PAGO
-                                if (isset($valores)){
-                                    foreach ($valores as $dataOP) {
-                                        if ($dataOP['code'] == $other->id) {
-                                            //$valueOrdenPago[] = $dataOP['val'];
-                                        }
-                                    }
-                                }
-
-                                //PAGOS
-                                if (isset($valoresPagos)){
-                                    foreach ($valoresPagos as $dataP) {
-                                        if ($dataP['code'] == $other->id) {
-                                            //$valuePagos[] = $dataP['val'];
-                                        }
-                                    }
-                                }
-
                             } else {
                                 $valueRubros[] = 0;
                                 $valueRubrosAdd[] = 0;
