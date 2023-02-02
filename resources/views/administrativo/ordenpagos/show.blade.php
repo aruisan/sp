@@ -14,12 +14,14 @@
                 @if($OrdenPago->estado >= 1)
                     <li class="nav-item regresar"> <a class="nav-link" href="{{ url('/administrativo/ordenPagos/'.$vigencia_id) }}">Volver a Ordenes de Pago</a></li>
                     <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Orden de Pago {{ $OrdenPago->code }}</a></li>
-                    @if(isset($OrdenPago->pago))
-                        <li class="nav-item"> <a class="tituloTabs" href="{{ url('administrativo/pagos/show/'.$OrdenPago->pago->id) }}"><i class="fa fa-credit-card"></i>&nbsp; Ver Pago</a></li>
-                    @else
-                        <li class="nav-item"> <a class="tituloTabs" href="{{ url('/administrativo/pagos/create/'.$vigencia_id) }}"><i class="fa fa-credit-card"></i>&nbsp; Pagar</a></li>
+                    @if($OrdenPago->estado == 1)
+                        @if(isset($OrdenPago->pago))
+                            <li class="nav-item"> <a class="tituloTabs" href="{{ url('administrativo/pagos/show/'.$OrdenPago->pago->id) }}"><i class="fa fa-credit-card"></i>&nbsp; Ver Pago</a></li>
+                        @else
+                            <li class="nav-item"> <a class="tituloTabs" href="{{ url('/administrativo/pagos/create/'.$vigencia_id) }}"><i class="fa fa-credit-card"></i>&nbsp; Pagar</a></li>
+                        @endif
+                        <li class="nav-item pillPri"> <a class="tituloTabs" target="_blank" href="{{ url('/administrativo/ordenPagos/pdf/'.$OrdenPago->id) }}"><i class="fa fa-file-pdf-o"></i>&nbsp; PDF</a></li>
                     @endif
-                    <li class="nav-item pillPri"> <a class="tituloTabs" target="_blank" href="{{ url('/administrativo/ordenPagos/pdf/'.$OrdenPago->id) }}"><i class="fa fa-file-pdf-o"></i>&nbsp; PDF</a></li>
                 @else
                     <li class="nav-item regresar"> <a class="nav-link" href="{{ url('/administrativo/ordenPagos/'.$vigencia_id) }}">Volver a Ordenes de Pago</a></li>
                     <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Orden de Pago {{ $OrdenPago->code }}</a></li>
