@@ -114,8 +114,21 @@ class OrdenPagosController extends Controller
             Session::flash('warning','El valor no puede ser superior al valor disponible del registro seleccionado: '.$registro_id->saldo.' Rectifique el valor de la orden de pago y el iva.');
             return redirect('/administrativo/ordenPagos/create/'.$request->vigencia);
         } else {
+
+            $oP = OrdenPagos::orderBy('code','ASC')->get();
+            foreach ($oP as $data){
+                if ($registro_id->cdpsRegistro[0]->cdp->vigencia_id == $data->registros->cdpsRegistro[0]->cdp->vigencia_id){
+                    $ordenPago[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre]);
+                }
+            }
+            if (isset($ordenPago)){
+                $last = array_last($ordenPago);
+                $numOP = $last['info']->code + 1;
+            }else $numOP = 0;
+
+
             $ordenPago = new OrdenPagos();
-            $ordenPago->code = $request->next;
+            $ordenPago->code = $numOP;
             $ordenPago->nombre = $request->concepto;
             $ordenPago->valor = $request->ValTOP;
             $ordenPago->saldo = $request->ValTOP;
