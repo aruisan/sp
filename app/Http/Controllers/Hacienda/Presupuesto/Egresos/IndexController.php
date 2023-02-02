@@ -620,10 +620,6 @@ class IndexController extends Controller
                     }
 
                     if($rubro->first()->fontsRubro){
-
-                        if ($rubro->first()->id == 1103){
-                            dd($presupuesto);
-                        }
                         //RUBROS HIJOS
                         //EN ESTA VALIDACION SE MUESTRAN LOS VALORES DE RUBROS USADOS DEPENDIENDO LA DEP DEL USUARIO
                         $exit = false;
@@ -717,6 +713,10 @@ class IndexController extends Controller
                                         }
                                     } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
                                     $valueRegistros[] = 0; $IDRegistros[] = 0;
+
+                                    if ($rubro->first()->id == 1103){
+                                        dd($presupuesto, $valueRegistros, $valueOrdenPago, $valuePagos, $rubCdpValue);
+                                    }
 
                                     if (!isset($value)){
                                         $value[] = null;
