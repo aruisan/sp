@@ -6,6 +6,7 @@ use App\bpinVigencias;
 use App\Http\Controllers\Controller;
 use App\BPin;
 use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
@@ -664,54 +665,98 @@ class IndexController extends Controller
                                     $bpinVigen = bpinVigencias::where('dep_rubro_id', $depFont->id)->get();
 
                                     if (count($bpinVigen) > 0){
+
+                                        //AL SER UN RUBRO DE INVERSION SE REALIZA EL LLENADO DE MANERA DISTINTA LOS
+                                        //VALORES DE LOS CDPs
                                         $codBpin = $bpinVigen->first()->bpin->cod_proyecto;
                                         $codActiv = $bpinVigen->first()->bpin->cod_actividad;
                                         $nameActiv = $bpinVigen->first()->bpin->actividad;
-                                    } else{
-                                        $codBpin = "";
-                                        $codActiv = "";
-                                        $nameActiv = "";
-                                    }
 
-                                    if (isset($rubrosCC)){
-                                        foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
-                                    }
+                                        if (isset($rubrosCC)){
+                                            foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
+                                        }
 
-                                    //CDPS
-                                    $rubCdpValue = RubrosCdpValor::where('fontsDep_id', $depFont->id)->get();
-                                    if(count($rubCdpValue) > 0){
-                                        foreach ($rubCdpValue as $cdp) {
-                                            if ($cdp->cdps->jefe_e == "3") {
-                                                $valueCDPs[] = $cdp->valor;
-                                                if (count($cdp->cdps->cdpsRegistro) > 0){
-                                                    //CONSULTA PARA LOS REGISTROS
-                                                    $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
-                                                    foreach ($cdpsRegValue as $data){
-                                                        if ($data->valor != 0){
-                                                            if ($data->registro->jefe_e == 3){
-                                                                //VALOR REGISTROS
-                                                                $valueRegistros[] = $data->valor;
-                                                                //ID REGISTROS
-                                                                $IDRegistros[] = $data->registro_id;
-                                                                //VALOR ORDENES DE PAGO
-                                                                $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
-                                                                if (count($ordenPagoRubros) > 0){
-                                                                    $ordenPagoRubro = $ordenPagoRubros->first();
-                                                                    if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
-                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                        if ($ordenPagoRubro->orden_pago->pago){
-                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                        $bpinCdpValor = BpinCdpValor::where('cod_actividad', $bpinVigen->first()->bpin->cod_actividad)->get();
+                                        if (count($bpinCdpValor) > 0){
+                                            foreach ($bpinCdpValor as $bpinCDP){
+                                                if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
+                                                    $valueCDPs[] = $bpinCDP->cdp->valor;
+                                                    $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)->get();
+                                                    if (count($cdpsRegValue) > 0){
+                                                        //CONSULTA PARA LOS REGISTROS
+                                                        foreach ($cdpsRegValue as $data){
+                                                            if ($data->valor != 0){
+                                                                if ($data->registro->jefe_e == 3){
+                                                                    //VALOR REGISTROS
+                                                                    $valueRegistros[] = $data->valor;
+                                                                    //ID REGISTROS
+                                                                    $IDRegistros[] = $data->registro_id;
+                                                                    //VALOR ORDENES DE PAGO
+                                                                    $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
+                                                                    if (count($ordenPagoRubros) > 0){
+                                                                        $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                        if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
+                                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                            if ($ordenPagoRubro->orden_pago->pago){
+                                                                                if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
                                                         }
-                                                    }
-                                                } else $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                                    } else $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                                }
                                             }
+
+                                        } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+                                        $valueRegistros[] = 0; $IDRegistros[] = 0;
+
+                                    } else{
+                                        $codBpin = "";
+                                        $codActiv = "";
+                                        $nameActiv = "";
+
+                                        if (isset($rubrosCC)){
+                                            foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
                                         }
-                                    } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
-                                    $valueRegistros[] = 0; $IDRegistros[] = 0;
+
+                                        //CDPS
+                                        $rubCdpValue = RubrosCdpValor::where('fontsDep_id', $depFont->id)->get();
+                                        if(count($rubCdpValue) > 0){
+                                            foreach ($rubCdpValue as $cdp) {
+                                                if ($cdp->cdps->jefe_e == "3") {
+                                                    $valueCDPs[] = $cdp->valor;
+                                                    if (count($cdp->cdps->cdpsRegistro) > 0){
+                                                        //CONSULTA PARA LOS REGISTROS
+                                                        $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
+                                                        foreach ($cdpsRegValue as $data){
+                                                            if ($data->valor != 0){
+                                                                if ($data->registro->jefe_e == 3){
+                                                                    //VALOR REGISTROS
+                                                                    $valueRegistros[] = $data->valor;
+                                                                    //ID REGISTROS
+                                                                    $IDRegistros[] = $data->registro_id;
+                                                                    //VALOR ORDENES DE PAGO
+                                                                    $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
+                                                                    if (count($ordenPagoRubros) > 0){
+                                                                        $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                        if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
+                                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                            if ($ordenPagoRubro->orden_pago->pago){
+                                                                                if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    } else $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                                }
+                                            }
+                                        } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+                                        $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                    }
 
                                     if (!isset($value)){
                                         $value[] = null;
