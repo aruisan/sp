@@ -17,7 +17,7 @@
 				</tr>
 			</table>
 		</div>
-		<div class="br-black-1">
+		<div>
 			<center>
 				<h5>CONCEPTO</h5>
 				<p><h5>{{ $OrdenPago->nombre }}</h5></p>
