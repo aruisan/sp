@@ -127,7 +127,6 @@ class PredialController extends Controller
     public function store(Request $request)
     {
 
-        //dd($request);
         $predial = new Predial();
         $predial->cedula = $request->cedula;
         $predial->matricula = $request->matricula;
@@ -208,8 +207,8 @@ class PredialController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function factura($id_predial){
-        $user = User::find(Auth::user()->id);
         $predial = Predial::find($id_predial);
+        $user = User::find($predial->user_id);
         $pago = Pagos::where('modulo','PREDIAL')->where('entity_id',$id_predial)->get();
         $liquidacion = $predial->liquidacion;
         $predial->presentacion = Carbon::parse($pago[0]->fechaCreacion)->format('d-m-Y');
