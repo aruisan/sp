@@ -622,7 +622,7 @@ class IndexController extends Controller
                     if($rubro->first()->fontsRubro){
 
                         if ($rubro->first()->id == 1103){
-                            dd($valuePagos, $valueOrdenPago, $valueRegistros, $presupuesto);
+                            dd($presupuesto);
                         }
                         //RUBROS HIJOS
                         //EN ESTA VALIDACION SE MUESTRAN LOS VALORES DE RUBROS USADOS DEPENDIENDO LA DEP DEL USUARIO
