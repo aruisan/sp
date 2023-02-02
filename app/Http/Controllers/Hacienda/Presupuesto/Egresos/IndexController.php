@@ -325,50 +325,43 @@ class IndexController extends Controller
 
                                 //VALORES CONTRA CREDITO
                                 if (isset($rubrosCC)) foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
-
+                                
                                 //CDPS
-                                if(count($rubroOtherFind->first()->rubrosCdp) > 0) {
-                                    foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) {
-                                        $rubCdpValue = RubrosCdpValor::where('fontsRubro_id', $fuenteRubro->id)->get();
-                                        if (count($rubCdpValue) > 0) {
-                                            foreach ($rubCdpValue as $cdp) {
-                                                if ($cdp->cdps->jefe_e == "3") {
-                                                    $valueCDPs[] = $cdp->valor;
-                                                    if (count($cdp->cdps->cdpsRegistro) > 0) {
-                                                        //CONSULTA PARA LOS REGISTROS
-                                                        $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
-                                                        foreach ($cdpsRegValue as $data) {
-                                                            if ($data->valor != 0) {
-                                                                if ($data->registro->jefe_e == 3) {
-                                                                    //VALOR REGISTROS
-                                                                    $valueRegistros[] = $data->valor;
-                                                                    //ID REGISTROS
-                                                                    $IDRegistros[] = $data->registro_id;
-                                                                    //VALOR ORDENES DE PAGO
-                                                                    $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
-                                                                    if (count($ordenPagoRubros) > 0) {
-                                                                        $ordenPagoRubro = $ordenPagoRubros->first();
-                                                                        if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id) {
-                                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                            if ($ordenPagoRubro->orden_pago->pago) {
-                                                                                if ($ordenPagoRubro->orden_pago->pago->estado == 1) $valuePagos[] = $ordenPagoRubro->valor;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    } else $valueRegistros[] = 0;
-                                                    $IDRegistros[] = 0;
+                                if(count($rubroOtherFind->first()->rubrosCdp) > 0){
+                                    foreach ($rubroOtherFind->first()->rubrosCdp as $cdp) {
+                                        if ($cdp->cdps->jefe_e == "3") {
+                                            $valueCDPs[] = $cdp->cdps->valor;
+                                            if (count($cdp->cdps->cdpsRegistro) > 0){
+                                                foreach ($cdp->cdps->cdpsRegistro as $cdpReg){
+                                                    if ($cdpReg->registro->jefe_e == 3){
+
+                                                        //VALOR REGISTROS
+                                                        $valueRegistros[] = $cdpReg->registro->valor;
+                                                    }
                                                 }
-                                            }
-                                        } else $valueCDPs[] = 0;
-                                        $valueOrdenPago[] = 0;
-                                        $valuePagos[] = 0;
-                                        $valueRegistros[] = 0;
-                                        $IDRegistros[] = 0;
+                                            } else $valueRegistros[] = 0;
+                                        }
+                                    }
+                                } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+
+                                //ORDENES DE PAGO
+                                if (isset($valores)){
+                                    foreach ($valores as $dataOP) {
+                                        if ($dataOP['code'] == $other->id) {
+                                            $valueOrdenPago[] = $dataOP['val'];
+                                        }
                                     }
                                 }
+
+                                //PAGOS
+                                if (isset($valoresPagos)){
+                                    foreach ($valoresPagos as $dataP) {
+                                        if ($dataP['code'] == $other->id) {
+                                            $valuePagos[] = $dataP['val'];
+                                        }
+                                    }
+                                }
+
                             } else {
                                 $valueRubros[] = 0;
                                 $valueRubrosAdd[] = 0;
