@@ -336,6 +336,7 @@ class IndexController extends Controller
                                                 if (count($cdp->cdps->cdpsRegistro) > 0) {
                                                     //CONSULTA PARA LOS REGISTROS
                                                     $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
+                                                    dd($cdpsRegValue);
                                                     foreach ($cdp->cdps->cdpsRegistro as $cdpReg) {
                                                         if ($cdpReg->registro->jefe_e == 3) {
 
