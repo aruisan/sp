@@ -106,8 +106,10 @@ class PredialController extends Controller
             }
 
             $liquidadorLastMes = Liquidador::where('año', $añoPago)->where('mes',$mesPago)->get();
-            $porcent = $subTotal * floatval($liquidadorLastMes[0]->valor) / 100;
-            $interesMoraMeses[] = $porcent * $diaPago / 365;
+            if (count($liquidadorLastMes) > 0){
+                $porcent = $subTotal * floatval($liquidadorLastMes[0]->valor) / 100;
+                $interesMoraMeses[] = $porcent * $diaPago / 365;
+            } else $interesMoraMeses[] = 0;
 
             return array_sum($interesMoraMeses);
         } else {
@@ -124,6 +126,8 @@ class PredialController extends Controller
      */
     public function store(Request $request)
     {
+
+        //dd($request);
         $predial = new Predial();
         $predial->cedula = $request->cedula;
         $predial->matricula = $request->matricula;
@@ -138,8 +142,8 @@ class PredialController extends Controller
         $predial->imp_pred_contri_id = $request->predio;
 
         //TOTALES IMPUESTO
-        $predial->tot_imp = $request->total2;
-        $predial->desc_imp = $request->descuento;
+        $predial->tot_imp = 0;
+        $predial->desc_imp = 0;
         $predial->tot_pago = $request->totalPago;
         $predial->save();
 

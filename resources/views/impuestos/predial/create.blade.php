@@ -349,6 +349,10 @@
         }
 
         function valores(valor, año){
+
+            var today = new Date();
+            var year = today.getFullYear();
+
             var tarifaXMil = document.getElementById("tarifaMil").value;
             var tot = parseInt(valor) * parseInt(tarifaXMil) / 1000;
 
@@ -356,20 +360,30 @@
             document.getElementById('impPredial'+año).value = tot;
 
             var tasBomb = document.getElementById("tarifaBomb").value;
-            var tasaBombTot = tot * parseFloat(tasBomb) / 100
+
+            //SE APLICA EL DESCUENTO DE TASA BOMBERIL DE DEFECTO PARA TODOS LOS AÑOS ANTERIORES AL PAGO
+            if(year != año) var tasaBombTot = tot * parseFloat(1.5) / 100
+            else var tasaBombTot = tot * parseFloat(tasBomb) / 100
 
             document.getElementById('tasaBomberilSpan'+año).innerHTML = formatter.format(tasaBombTot);
             document.getElementById('tasaBomberil'+año).value = tasaBombTot;
 
-            document.getElementById('subTotalSpan'+año).innerHTML = formatter.format(tasaBombTot + tot);
-            document.getElementById('subTotal'+año).value = tasaBombTot + tot;
+            if(year != año){
+                var subTot =  tasaBombTot + tot;
+            } else {
+                var suma = tasaBombTot + tot;
+                var subTot =  suma / 2;
+            }
+
+            document.getElementById('subTotalSpan'+año).innerHTML = formatter.format(subTot);
+            document.getElementById('subTotal'+año).value = subTot;
 
             var fechaPago = document.getElementById('fechaPago').value;
 
             $.ajax({
                 method: "POST",
                 url: "/impuestos/PREDIAL/liquidar",
-                data: { "fecha_pago": fechaPago, "añoVencimiento": año, "subTotal": tasaBombTot + tot ,
+                data: { "fecha_pago": fechaPago, "añoVencimiento": año, "subTotal": subTot ,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
@@ -377,8 +391,30 @@
                 document.getElementById('interesMoraSpan'+año).innerHTML = formatter.format(datos);
                 document.getElementById('interesMora'+año).value = datos;
 
+                //NUEVOS DESCUENTOS DE INTERESES DE MORA DE LA ALCALDIA
+                if(año <= 2019){
+                    var calenDescInt = 0.3;
+                } else if(año == 2020){
+                    var calenDescInt = 1;
+                } else if(año == 2021){
+                    var calenDescInt = 1;
+                } else if(año == 2022){
+                    var calenDescInt = 0.5;
+                } else{
+                    var calenDescInt = 0;
+                }
+
+                //DESCUENTOS DE INTERESES
+                var descIntereses = datos * calenDescInt;
+
+                //TASA AMBIENTAL
+                var tasaAmb = tot * 0.01;
+
+                document.getElementById('tasaAmbientalSpan'+año).innerHTML = formatter.format(tasaAmb);
+                document.getElementById('tasaAmbiental'+año).value = parseInt(tasaAmb);
+
                 //TOTAL POR AÑO
-                var totalAño = tasaBombTot + tot + parseInt(datos);
+                var totalAño = subTot + parseInt(datos) - parseInt(descIntereses) + parseInt(tasaAmb) ;
                 document.getElementById('totalSpan'+año).innerHTML = formatter.format(totalAño);
                 document.getElementById('total'+año).value = parseInt(totalAño);
 
@@ -404,18 +440,18 @@
             let totalInicial = 0;
             totales.forEach(function(a){totalInicial += a;});
 
-            document.getElementById('total2Span').innerHTML = formatter.format(totalInicial);
-            document.getElementById('total2').value = parseInt(totalInicial);
+            document.getElementById('totalPagoSpan').innerHTML = formatter.format(totalInicial);
+            document.getElementById('totalPago').value = parseInt(totalInicial);
 
-            var subTotalLastYear = document.getElementById('subTotal'+hoy.getFullYear()).value
-            var tasaDesd = document.getElementById('tasaDesc').value;
-            var desc = subTotalLastYear * tasaDesd / 100;
+            //var subTotalLastYear = document.getElementById('subTotal'+hoy.getFullYear()).value
+            //var tasaDesd = document.getElementById('tasaDesc').value;
+            //var desc = subTotalLastYear * tasaDesd / 100;
 
-            document.getElementById('descuentoSpan').innerHTML = formatter.format(desc);
-            document.getElementById('descuento').value = parseInt(desc);
+            //document.getElementById('descuentoSpan').innerHTML = formatter.format(desc);
+            //document.getElementById('descuento').value = parseInt(desc);
 
-            document.getElementById('totalPagoSpan').innerHTML = formatter.format(totalInicial - desc);
-            document.getElementById('totalPago').value = totalInicial - desc;
+            //document.getElementById('totalPagoSpan').innerHTML = formatter.format(totalInicial - desc);
+            //document.getElementById('totalPago').value = totalInicial - desc;
 
 
         }
@@ -452,43 +488,16 @@
                     '<input type="hidden" name="interesMora'+year+'" id="interesMora'+year+'" value="0">' +
                     '<span id="interesMoraSpan'+year+'">0</span>' +
                     '</td>' +
-                    '<td><span id="tasaAmbiental'+year+'">$0</span></td>' +
+                    '<td>' +
+                    '<input type="hidden" name="tasaAmbiental'+year+'" id="tasaAmbiental'+year+'" value="0">' +
+                    '<span id="tasaAmbientalSpan'+year+'">$0</span>' +
+                    '</td>' +
                     '<td><span id="interesAmbiental'+year+'">$0</span></td>' +
                     '<td>' +
                     '<input type="hidden" name="total'+year+'" id="total'+year+'" value="0" required min="0">' +
                     '<span id="totalSpan'+year+'">0</span>' +
                     '</td>';
             }
-
-            document.getElementById("cuerpo").insertRow(-1).innerHTML = '' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td>TOTAL</td>' +
-                '<td>' +
-                '<input type="hidden" name="total2" id="total2" value="0">' +
-                '<span id="total2Span">0</span>' +
-                '</td>';
-
-            document.getElementById("cuerpo").insertRow(-1).innerHTML = '' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td>DESCUENTO</td>' +
-                '<td>' +
-                '<input type="hidden" name="descuento" id="descuento" value="0">' +
-                '<span id="descuentoSpan">0</span>' +
-                '</td>';
 
             document.getElementById("cuerpo").insertRow(-1).innerHTML = '' +
                 '<td></td>' +
