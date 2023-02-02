@@ -64,7 +64,7 @@
                     <td>$ <?php echo number_format($totImpPredial,0) ?></td>
                     <td>$ <?php echo number_format($totImpAdi,0) ?></td>
                     <td>$ <?php echo number_format($totIntPred,0) ?></td>
-                    <td>$ <?php echo number_format($predial->tot_imp,0) ?></td>
+                    <td>$ <?php echo number_format($predial->tot_pago,0) ?></td>
                 </tr>
                 </tbody>
             </table>
@@ -82,7 +82,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>$ <?php echo number_format($predial->tot_imp,0) ?></td>
+                    <td>$ <?php echo number_format($predial->tot_pago,0) ?></td>
                     <td>0</td>
                     <td>0</td>
                     <td>0</td>
