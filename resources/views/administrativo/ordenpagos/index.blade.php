@@ -110,9 +110,9 @@
                                         @if($ordenPago['info']['estado'] == "0")
                                             Pendiente
                                         @elseif($ordenPago['info']['estado'] == "1")
-                                            Finalizado
+                                            Finalizada
                                         @else
-                                            Anulado
+                                            Anulada
                                         @endif
                                     </span>
                                 </td>

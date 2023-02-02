@@ -11,7 +11,7 @@
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills">
-                @if($OrdenPago->estado == 1)
+                @if($OrdenPago->estado >= 1)
                     <li class="nav-item regresar"> <a class="nav-link" href="{{ url('/administrativo/ordenPagos/'.$vigencia_id) }}">Volver a Ordenes de Pago</a></li>
                     <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Orden de Pago {{ $OrdenPago->code }}</a></li>
                     @if(isset($OrdenPago->pago))
@@ -90,6 +90,13 @@
                                 </div>
                             </div>
                         </div>
+                        @if($OrdenPago->estado == 2)
+                            <div class="col-lg-12 text-center">
+                                <div class="col-lg-12">
+                                    <br><div class="alert alert-danger"><center>La orden de pago ha sido anulada</center></div><br>
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-md-12 align-self-center">
                             <hr>
                             <center>

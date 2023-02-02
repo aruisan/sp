@@ -468,7 +468,7 @@
                                         @elseif($data['estado'] == "1")
                                             Finalizada
                                         @else
-                                            Anulado
+                                            Anulada
                                         @endif
                                     </span>
                                 </td>
