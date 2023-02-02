@@ -163,7 +163,7 @@
                                                 <td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} -
                                                     {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
                                                 <td>{{ $OrdenPago->registros->objeto }}</td>
-                                                <td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+                                                <td>$ <?php echo number_format($R->cdpRegistroValor[$i]->valor,0);?></td>
                                             </tr>
                                         @endif
                                     @endfor
