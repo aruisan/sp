@@ -19,13 +19,10 @@
 		</div>
 		<div class="br-black-1">
 			<center>
-				<h4>CONCEPTO</h4>
-				<p>
-					<h5>{{ $OrdenPago->nombre }}</h5>
-				</p>
+				<h5>CONCEPTO</h5>
+				<p><h5>{{ $OrdenPago->nombre }}</h5></p>
 			</center>
 		</div>
-		<br>
 		<div class="table-responsive br-black-1">
 			<table class="table table-borderless">
 				<thead>
@@ -122,7 +119,6 @@
 				</tbody>
 			</table>
 		</div>
-		<br>
 		<div class="table-responsive br-black-1">
 			<table class="table-bordered" id="tablaP" style="width: 100%">
 				<thead>
