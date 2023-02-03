@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Impuestos\Pagos;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Impuestos\IcaRetenedor;
 use App\Model\Impuestos\Predial;
 use App\Traits\NaturalezaJuridicaTraits;
@@ -36,6 +37,7 @@ class PagosController extends Controller
     public function index($modulo)
     {
         $user = User::find(Auth::user()->id);
+        $bancos = PucAlcaldia::where('id', '>=', 9)->where('id', '<=', 50)->get();
 
         if ($modulo == "PRED"){
             $pagosPendientes = Pagos::where('user_id', $user->id)->where('estado','Generado')->where('modulo','PREDIAL')->get();
@@ -47,7 +49,7 @@ class PagosController extends Controller
             $pagosHistoricos = Pagos::where('user_id', $user->id)->where('estado','Pagado')->where('modulo','!=','PREDIAL')->get();
         }
 
-        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos','pagosBorrador','modulo'));
+        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos','pagosBorrador','modulo','bancos'));
     }
 
     /**
@@ -121,11 +123,55 @@ class PagosController extends Controller
             $pago->fechaPago = Carbon::today();
             $pago->resource_id = $resource;
             $pago->user_pago_id = Auth::user()->id;
+            $pago->puc_alcaldia_id = $request->cuenta;
+            $pago->save();
+
+            if ($pago->modulo == 'PREDIAL') $modulo = "PRED";
+            else $modulo = "ICA";
+
+            Session::flash('success', 'Pago aplicado exitosamente.');
+
+            return redirect('/impuestos/Pagos/'.$modulo);
+
+        }
+    }
+
+    /**
+     * Update pay with the new date and state from users admin.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function ConstanciaAdmin(Request $request){
+        if (!$request->hasFile('constanciaPago')){
+            Session::flash('warning', 'Hay algun error en el archivo, intente de nuevo por favor.');
+            return redirect('/administrativo/impuestos/admin');
+        } else {
+            $file = new ResourceTraits;
+            $resource = $file->resource($request->constanciaPago, 'public/Impuestos/ConstanciaPagos');
+
+            $pago = Pagos::find($request->regId);
+            $pago->estado = "Pagado";
+            $pago->fechaPago = Carbon::today();
+            $pago->resource_id = $resource;
+            $pago->user_pago_id = Auth::user()->id;
+            $pago->puc_alcaldia_id = $request->cuenta;
             $pago->save();
 
             Session::flash('success', 'Pago aplicado exitosamente.');
-            return redirect('/impuestos/Pagos');
-
+            return redirect('/administrativo/impuestos/admin');
         }
+    }
+
+    /**
+     * Validate if the pay can be downloaded.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function validatePagoDownload(Request $request){
+        $pago = Pagos::find($request->payId);
+        if ($pago->download > 0) return 'OK';
+        else return 'FALSE';
     }
 }

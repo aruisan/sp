@@ -92,10 +92,16 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
 
         //PAGOS
+        //VALIDAR SI EL PAGO SE PUEDE DESCARGAR
+        Route::post('/Pagos/validatePay','Impuestos\Pagos\PagosController@validatePagoDownload');
+
         Route::get('/Pagos/{modulo}', 'Impuestos\Pagos\PagosController@index');
         Route::resource('/Pagos', 'Impuestos\Pagos\PagosController');
         Route::post('/Pagos/Send', 'Impuestos\Pagos\PagosController@Send');
         Route::post('/Pagos/constancia', 'Impuestos\Pagos\PagosController@Constancia');
+
+        //CARGAR PAGO DESDE ADMIN
+        Route::post('/Pagos/constancia/admin', 'Impuestos\Pagos\PagosController@ConstanciaAdmin');
 
         //EMAIL
         Route::get('/sparkpost', function () {

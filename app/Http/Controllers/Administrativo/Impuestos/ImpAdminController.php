@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Impuestos;
 
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Impuestos\Comunicado;
 use App\Model\Impuestos\Pagos;
 use App\Model\Impuestos\PredialContribuyentes;
@@ -25,7 +26,11 @@ class ImpAdminController extends Controller
         $pagos = Pagos::all();
         $rits = RIT::all();
         $comunicados = Comunicado::all();
-        return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits', 'comunicados'));
+        $bancos = PucAlcaldia::where('id', '>=', 9)->where('id', '<=', 50)->get();
+        $año = Carbon::today()->year;
+        $pagosFinalizados = Pagos::where('estado','Pagado')->where('download', 1)->whereBetween('fechaPago',array($año.'-01-01', $año.'-12-31'))->with('user')->get();
+        return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits', 'comunicados','bancos'
+        ,'pagosFinalizados'));
     }
 
     /**

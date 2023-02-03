@@ -1,6 +1,8 @@
 @extends('layouts.dashboard')
 @section('titulo') Administracion de Impuestos @stop
 @section('content')
+    @include('modal.impuestos.constanciapagoadmin')
+    @include('modal.impuestos.pazysalvo')
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Administracion de Impuestos</b></h4>
@@ -69,6 +71,8 @@
             <br>
             <div class="table-responsive">
                 @if(count($pagos) > 0)
+                    <button onclick="getModalPazySalvo()" class="hidden">Generar Paz y Salvo</button>
+                    <br><br>
                     <table class="table table-bordered" id="tabla_pagos">
                         <thead>
                         <tr>
@@ -82,6 +86,7 @@
                             <th class="text-center">Formulario</th>
                             <th class="text-center">Fecha Pago</th>
                             <th class="text-center">Comprobante Pago</th>
+                            <th class="text-center">Cargar Pago</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -115,6 +120,11 @@
                                         <a href="{{Storage::url($pago->Resource->ruta)}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></a>
                                     @else
                                         N/A
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if($pago->estado != "Pagado")
+                                        <button onclick="getModalPago('{{$pago->modulo}}', '{{\Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y')}}','$<?php echo number_format($pago->valor,0) ?>', {{$pago->id}})" class="hidden"><i class="fa fa-arrow-up"></i><i class="fa fa-usd"></i></button>
                                     @endif
                                 </td>
                             </tr>
@@ -227,6 +237,42 @@
 @stop
 @section('js')
     <script>
+
+        //VALIDACION DE LOS DINEROS A TOMAR NO SEAN SUPERIORES DE LOS PERMITIDOS POR LA FUENTE
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("pazysalvoform").addEventListener('submit', descargarPazySalvo);
+        });
+
+        function descargarPazySalvo(evento) {
+            evento.preventDefault();
+
+            const payid = document.getElementById("paySelected").value;
+            console.log(payid);
+
+            $.ajax({
+                method: "POST",
+                url: "/impuestos/Pagos/validatePay",
+                data: { "payId": payid,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function(response) {
+               console.log(response)
+                if (response == "OK"){
+                    var opcion = confirm("SOLO SE PUEDE GENERAR UN PAZ Y SALVO POR USUARIO, ESTA SEGURO DE GENERARLO?");
+                    if (opcion == true) {
+                        console.log(payid);
+                        return;
+                    }
+                } else toastr.warning('YA SE HA GENERADO EL PAZ Y SALVO DE ESE USUARIO. NO SE PUEDE GENERAR UNO NUEVO');
+
+            }).fail(function() {
+                toastr.warning('OCURRIO UN ERROR AL VALIDAR SI SE PUEDE GENERAR EL PAZ Y SALVO.');
+            });
+
+
+            //this.submit();
+        }
+
         $('#tabla_CDP').DataTable( {
             language: {
                 "lengthMenu": "Mostrar _MENU_ registros",
@@ -442,5 +488,17 @@
             ]
 
         } );
+
+        function getModalPago(form, fecha, value, id){
+            $('#formConstanciaPago').modal('show');
+            $('#regId').val(id);
+            document.getElementById("form").innerHTML = form;
+            document.getElementById("fecha").innerHTML = fecha;
+            document.getElementById("value").innerHTML = value;
+        }
+
+        function getModalPazySalvo(){
+            $('#formPazySalvo').modal('show');
+        }
     </script>
 @stop

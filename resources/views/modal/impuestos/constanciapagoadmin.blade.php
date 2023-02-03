@@ -1,7 +1,7 @@
 
 <div id="formConstanciaPago" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-        <form class="form" action="{{ url('/impuestos/Pagos/constancia') }}" method="POST" id="add" enctype="multipart/form-data">
+        <form class="form" action="{{ url('/impuestos/Pagos/constancia/admin') }}" method="POST" id="add" enctype="multipart/form-data">
             {!! method_field('POST') !!}
             {{ csrf_field() }}
             <div class="modal-content">
