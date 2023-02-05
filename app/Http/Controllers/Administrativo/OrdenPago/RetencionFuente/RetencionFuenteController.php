@@ -167,7 +167,6 @@ class RetencionFuenteController extends Controller
                         if ($ordenPago){
                             if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $vigencia_id){
                                 //SE RECORRE EL PUC PARA OBTENER LOS VALORES DE LA OP
-                                dd($ordenPago->pucs);
                                 foreach ($ordenPago->pucs as $puc){
                                     //SE RECORRE EL PADRE CORRESPONDIENTE AL DEBITO PARA SABER SI UN HIJO CORRESPONDE
                                     if (count($hijosDeb) > 0){
