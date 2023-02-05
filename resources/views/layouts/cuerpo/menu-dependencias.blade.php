@@ -294,6 +294,22 @@
                   <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li>
                   <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
                @endif
+                  <li class="dropdown-submenu">
+                     <a class="dropdown-item item-menu" >Retención en la Fuente</a>
+                     <ul class="dropdown-menu">
+                        <li class="dropdown-submenu">
+                           <a class="dropdown-item item-menu" >Pago </a>
+                           <ul class="dropdown-menu">
+                              <li class="dropdown-submenu">
+                                 <a class="dropdown-item item-menu" >2023 </a>
+                                 <ul class="dropdown-menu">
+                                    <li><a class="item-menu" href="#">Enero</a></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Comprobante de Egresos </a>
                   <ul class="dropdown-menu">
