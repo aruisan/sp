@@ -38,12 +38,12 @@
 						<tr>
 							<td class="text-center">{{ $dato['code'] }}</td>
 							<td class="text-center">{{ $dato['concepto'] }}</td>
-							<td class="text-center">{{ $dato['valorDesc'] }}</td>
+							<td class="text-center">$ <?php echo number_format($dato['valorDesc'],0);?></td>
 							<td class="text-center">{{ $dato['cc'] }}</td>
 							<td class="text-center">{{ $dato['nameTer'] }}</td>
 							<td class="text-center">{{ $dato['codeDeb'] }}</td>
 							<td class="text-center">{{ $dato['conceptoDeb'] }}</td>
-							<td class="text-center">{{ $dato['valorDeb'] }}</td>
+							<td class="text-center">$ <?php echo number_format($dato['valorDeb'],0);?></td>
 						</tr>
 					@endforeach
 					</tbody>

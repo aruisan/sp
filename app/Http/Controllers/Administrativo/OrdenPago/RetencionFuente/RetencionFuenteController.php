@@ -150,13 +150,6 @@ class RetencionFuenteController extends Controller
             $padreDeb = PucAlcaldia::find($idPadreDeb);
             $hijosDeb = PucAlcaldia::where('padre_id', $idPadreDeb)->get();
 
-            //SE INGRESA EL PADRE
-            $tableRT[] = collect(['code' => $cuenta->code, 'concepto' => $cuenta->concepto,
-                'valorDesc' => 0, 'cc' => '',
-                'nameTer' => '', 'codeDeb' => $padreDeb->code,
-                'conceptoDeb' => $padreDeb->concepto, 'valorDeb' => 0]);
-
-
             $hijos = PucAlcaldia::where('padre_id', $cuenta->id)->get();
             foreach ($hijos as $hijo){
                 $retefuenteCode = RetencionFuente::where('codigo', $hijo->code)->first();
@@ -173,16 +166,34 @@ class RetencionFuenteController extends Controller
                                         foreach ($hijosDeb as $hDeb){
                                             if ($hDeb->id == $puc->rubros_puc_id ){
                                                 //dd($hDeb, $puc);
-                                                $tableRT[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
+                                                $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
                                                     'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
                                                     'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $hDeb->code,
                                                     'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $puc->valor_debito]);
+                                                $valueCred[] = $descuento->valor;
+                                                $valueDeb[] = $puc->valor_debito;
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+
+                    //SE VALIDA SI HAY VALORES PARA AGREGARLE AL PADRE, SI NO HAY EL PADRE POR ENDE ESTA VACIO
+                    if (isset($tableValues)){
+                        //SE INGRESA EL PADRE
+                        $tableRT[] = collect(['code' => $cuenta->code, 'concepto' => $cuenta->concepto,
+                            'valorDesc' => array_sum($valueCred), 'cc' => '', 'nameTer' => '',
+                            'codeDeb' => $padreDeb->code, 'conceptoDeb' => $padreDeb->concepto, 'valorDeb' => array_sum($valueDeb)]);
+
+                        //SE INGRESAN LOS HIJOS
+                        foreach ($tableValues as $data) $tableRT[] = collect($data);
+
+                        //SE LIMPIAN LOS ARRAY
+                        if (isset($valueDeb))unset($valueDeb);
+                        if (isset($valueCred))unset($valueCred);
+                        if (isset($tableValues))unset($tableValues);
                     }
                 }
             }
