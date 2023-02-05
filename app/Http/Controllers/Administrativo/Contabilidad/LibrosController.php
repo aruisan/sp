@@ -51,7 +51,7 @@ class LibrosController extends Controller
             if ($rubrosPUC->count() >= 1){
                 foreach ($rubrosPUC as $rubroPUC){
 
-                    //SE AÑADEN LOS PALORES DE LAS ORDENES DE PAGO AL LIBRO
+                    //SE AÑADEN LOS VALORES DE LAS ORDENES DE PAGO AL LIBRO
                     $ordenPagosPUC = OrdenPagosPuc::where('rubros_puc_id', $rubroPUC->id)->get();
                     if (count($ordenPagosPUC) > 0){
                         foreach ($ordenPagosPUC as $op_puc){

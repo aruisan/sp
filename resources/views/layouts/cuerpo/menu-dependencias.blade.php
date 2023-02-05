@@ -274,6 +274,17 @@
                      <ul class="dropdown-menu">
                         <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/declaracion') }}">Declaración</a></li>
                         <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/certificado') }}">Certificado</a></li>
+                        <li class="dropdown-submenu">
+                           <a class="dropdown-item item-menu" >Pago </a>
+                           <ul class="dropdown-menu">
+                              <li class="dropdown-submenu">
+                                 <a class="dropdown-item item-menu" >2023 </a>
+                                 <ul class="dropdown-menu">
+                                    <li><a class="item-menu" href="#">Enero</a></li>
+                                 </ul>
+                              </li>
+                           </ul>
+                        </li>
                      </ul>
                   </li>
                   <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago a Terceros</a></li>

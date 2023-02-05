@@ -100,10 +100,11 @@
 					<tr class="text-center">
 						@if($PagosDesc->retencion_fuente_id == null)
 							<td>{{ $PagosDesc->descuento_mun['codigo'] }}</td>
+							<td>{{ $PagosDesc->descuento_mun['concepto'] }}</td>
 						@else
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
+							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
 						@endif
-						<td>{{ $PagosDesc->nombre }}</td>
 						@if($PagosDesc->retencion_fuente_id == null)
 							<td>$ <?php echo number_format($PagosDesc->descuento_mun['base'],0);?></td>
 						@else
@@ -177,10 +178,11 @@
 					<tr class="text-center">
 						@if($PagosDesc->retencion_fuente_id == null)
 							<td>{{ $PagosDesc->descuento_mun['codigo'] }}</td>
+							<td>{{ $PagosDesc->descuento_mun['concepto'] }}</td>
 						@else
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
+							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
 						@endif
-						<td>{{ $PagosDesc->nombre }}</td>
 						<td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
 						<td>$0</td>
 						<td>$ <?php echo number_format($PagosDesc['valor'],0);?></td>
