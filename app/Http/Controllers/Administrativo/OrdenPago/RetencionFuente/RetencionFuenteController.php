@@ -204,6 +204,7 @@ class RetencionFuenteController extends Controller
                                 $mesOP = Carbon::parse($ordenPago->created_at)->month;
                                 //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
                                 if ($mesOP == $mes){
+                                    dd($ordenPago);
                                     //SE RECORRE EL PUC PARA OBTENER LOS VALORES DE LA OP
                                     foreach ($ordenPago->pucs as $puc){
                                         //SE RECORRE EL PADRE CORRESPONDIENTE AL DEBITO PARA SABER SI UN HIJO CORRESPONDE
