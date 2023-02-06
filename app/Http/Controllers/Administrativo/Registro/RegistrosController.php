@@ -358,7 +358,7 @@ class RegistrosController extends Controller
 
                         $rubCdpValor = RubrosCdpValor::where('cdp_id', $value->cdp_id)
                             ->where('fontsRubro_id', $value->fontsRubro_id)->first();
-                        if (count($rubCdpValor) > 0){
+                        if ($rubCdpValor){
                             //SE DESCUENTA EL DINERO DE LA FUENTE DEL RUBRO DEL CDP
                             $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - $value->valor;
                             $rubCdpValor->save();
