@@ -11,7 +11,7 @@
             <a class="nav-link"><i class="fa fa-home"></i></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/1') }}">Nuevo Pago</a>
+            <a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/1') }}">Pago Enero</a>
         </li>
     </ul>
 
