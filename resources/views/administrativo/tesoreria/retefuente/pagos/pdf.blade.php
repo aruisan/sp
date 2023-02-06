@@ -70,7 +70,7 @@
 					<td></td>
 					<td>$ <?php echo number_format($pago->pago,0);?></td>
 				</tr>
-				<tr>
+				<tr class="text-center">
 					<td colspan="2">SUMAS IGUALES</td>
 					<td>$ <?php echo number_format($pago->contas->sum('debito'),0);?></td>
 					<td>$ <?php echo number_format($pago->pago,0);?></td>
