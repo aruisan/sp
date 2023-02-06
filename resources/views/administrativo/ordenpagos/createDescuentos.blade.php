@@ -134,10 +134,18 @@
                                     <td class="text-center">{{ $desMun[$i]->id }}</td>
                                     <td class="text-center">{{ $desMun[$i]->concepto }}</td>
                                     <td class="text-center">{{ $desMun[$i]->tarifa }}%</td>
-                                    <?php
-                                    $valorMulti = $ordenPago->valor * $desMun[$i]->tarifa;
-                                    $value = $valorMulti / 1000;
-                                    ?>
+                                    @if($desMun[$i]->id == 5)
+                                            <?php
+                                            $valorMulti = $ordenPago->valor * $desMun[$i]->tarifa;
+                                            $value = $valorMulti / 1000;
+                                            ?>
+                                    @else
+                                            <?php
+                                            $valorMulti = $ordenPago->valor * $desMun[$i]->tarifa;
+                                            $value = $valorMulti / 100;
+                                            ?>
+                                    @endif
+
                                     <td class="text-center">
                                         $<?php echo number_format($value,0) ?>
                                         <input type="hidden" name="valorMuni[]" value="{{ $value }}">
