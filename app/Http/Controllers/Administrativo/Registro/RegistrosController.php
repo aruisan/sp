@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrativo\Registro;
 
 use App\BPin;
+use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Hacienda\Presupuesto\Level;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\Register;
@@ -356,14 +357,20 @@ class RegistrosController extends Controller
                         $cdp->saldo = $cdp->saldo - $value->valor;
                         $cdp->save();
 
-                        $rubCdpValor = RubrosCdpValor::where('cdp_id', $value->cdp_id)
-                            ->where('fontsRubro_id', $value->fontsRubro_id)->first();
-                        if ($rubCdpValor){
-                            //SE DESCUENTA EL DINERO DE LA FUENTE DEL RUBRO DEL CDP
-                            $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - $value->valor;
-                            $rubCdpValor->save();
+                        if ($cdp->tipo == "Funcionamiento"){
+                            $rubCdpValor = RubrosCdpValor::where('cdp_id', $value->cdp_id)
+                                ->where('fontsRubro_id', $value->fontsRubro_id)->first();
+                            if ($rubCdpValor){
+                                //SE DESCUENTA EL DINERO DE LA FUENTE DEL RUBRO DEL CDP
+                                $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - $value->valor;
+                                $rubCdpValor->save();
+                            }
+                        } else {
+                            //SE DESCUENTA EL DINERO DE LA FUENTE DEL BPIN DEL CDP
+                            $bpinCdp = BpinCdpValor::where('cdp_id',$value->cdp_id )->first();
+                            $bpinCdp->valor_disp = $bpinCdp->valor_disp - $value->valor;
+                            $bpinCdp->save();
                         }
-
                     }
                 }
 
