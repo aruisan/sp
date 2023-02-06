@@ -68,6 +68,12 @@
                                     @endforeach
                                 </select>
                                 <hr>
+                                <input type="hidden" name="a2018" id="a2018" value="0">
+                                <input type="hidden" name="a2019" id="a2019" value="0">
+                                <input type="hidden" name="a2020" id="a2020" value="0">
+                                <input type="hidden" name="a2021" id="a2021" value="0">
+                                <input type="hidden" name="a2022" id="a2022" value="0">
+                                <input type="hidden" name="a2023" id="a2023" value="0">
                                 <table class="table text-center table-bordered" id="tablaMultiplePred" style="display: none">
                                     <tr style="background-color: #0e7224; color: white">
                                         <th scope="row" colspan="4">INFORMACION PREDIO Y PAGO</th>
@@ -81,11 +87,9 @@
                                     <tr>
                                         <td colspan="2">
                                             Matricula Inmobiliaria: <br><span id="matInmobiliaria"></span>
-                                            <input type="hidden" name="matricula" id="matricula">
                                         </td>
                                         <td colspan="2">
                                             Cédula Catastral: <br><span id="cedCatastral"></span>
-                                            <input type="hidden" name="cedula" id="cedula">
                                         </td>
                                     </tr>
                                         <tr>
@@ -127,7 +131,7 @@
                                             @php($año2 = date('Y'))
                                             <td colspan="3">
                                                 <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
-                                                    @while($año2 >= 2005)
+                                                    @while($año2 >= 2018)
                                                         <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
                                                         @php($año2 = ($año2-1))
                                                     @endwhile
@@ -138,6 +142,12 @@
                                 </table>
                             @else
                                 {{-- TABLA B. BASE GRAVABLE --}}
+                                <input type="hidden" name="a2018" id="a2018" value="{{$contribuyente->a2018}}">
+                                <input type="hidden" name="a2019" id="a2019" value="{{$contribuyente->a2019}}">
+                                <input type="hidden" name="a2020" id="a2020" value="{{$contribuyente->a2020}}">
+                                <input type="hidden" name="a2021" id="a2021" value="{{$contribuyente->a2021}}">
+                                <input type="hidden" name="a2022" id="a2022" value="{{$contribuyente->a2022}}">
+                                <input type="hidden" name="a2023" id="a2023" value="{{$contribuyente->a2023}}">
                                 <table class="table text-center table-bordered">
                                     <tr style="background-color: #0e7224; color: white">
                                         <th scope="row" colspan="2">INFORMACION PREDIO Y PAGO</th>
@@ -156,7 +166,7 @@
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Cédula Catastral:</td>
-                                            <td><input type="number" class="form-control" name="cedula" @if($action == "Corrección" ) value="{{ $ica->totIngreOrd }}" @endif id="cedula" required></td>
+                                            <td>{{$contribuyente->cedCatastral}}</td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Propietario:</td>
@@ -164,11 +174,11 @@
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Matricula Inmobiliaria:</td>
-                                            <td><input type="text" class="form-control" name="matricula" @if($action == "Corrección" ) value="{{ $ica->totIngreOrd }}" @endif id="matricula" required></td>
+                                            <td>{{$contribuyente->matInmobiliaria}}</td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Área de Terreno:</td>
-                                            <td>{{$contribuyente->areaTerreno}}</td>
+                                            <td>{{$contribuyente->area}}</td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Tasa Interés:</td>
@@ -209,7 +219,7 @@
                                             @php($año2 = date('Y'))
                                             <td>
                                                 <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
-                                                    @while($año2 >= 2005)
+                                                    @while($año2 >= 2018)
                                                         <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
                                                         @php($año2 = ($año2-1))
                                                     @endwhile
@@ -293,14 +303,17 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                console.log(datos)
                 document.getElementById('numCatastral').innerHTML = datos.numCatastral;
-                document.getElementById('areaTerreno').innerHTML = datos.areaTerreno;
+                document.getElementById('areaTerreno').innerHTML = datos.area;
                 document.getElementById('dir_predio').innerHTML = datos.dir_predio;
                 document.getElementById('matInmobiliaria').innerHTML = datos.matInmobiliaria;
-                document.getElementById('matricula').value = 0;
                 document.getElementById('cedCatastral').innerHTML = datos.cedCatastral;
-                document.getElementById('cedula').value = 0;
+                document.getElementById('a2018').value = datos.a2018;
+                document.getElementById('a2019').value = datos.a2019;
+                document.getElementById('a2020').value = datos.a2020;
+                document.getElementById('a2021').value = datos.a2021;
+                document.getElementById('a2022').value = datos.a2022;
+                document.getElementById('a2023').value = datos.a2023;
                 $("#tablaMultiplePred").show();
 
             }).fail(function() {
@@ -465,13 +478,14 @@
 
             for (var i = 0; i < numRows; i++) {
                 const year = parseInt(año) + i ;
+                const avaluo = document.getElementById('a'+year).value;
                 document.getElementById("cuerpo").insertRow(-1).innerHTML = '' +
                     '<td style="width: 100px">'+year+'</td>' +
                     '<input type="hidden" name="año'+year+'" id="año'+year+'" value="'+year+'">' +
                     '<td>01-Agosto-'+year+'' +
                     '<input type="hidden" name="fechaVen'+year+'" id="fechaVen'+year+'" value="01-Agosto-'+year+'">' +
                     '</td>' +
-                    '<td><input required class="form-control" type="number" name="avaluo'+year+'" id="avaluo'+year+'" onchange="valores(this.value, '+year+')"></td>' +
+                    '<td>'+formatter.format(avaluo)+'</td>' +
                     '<td>' +
                     '<span id="impPredialSpan'+year+'">0</span>' +
                     '<input type="hidden" name="impPredial'+year+'" id="impPredial'+year+'" value="0">' +
@@ -497,6 +511,8 @@
                     '<input type="hidden" name="total'+year+'" id="total'+year+'" value="0" required min="0">' +
                     '<span id="totalSpan'+year+'">0</span>' +
                     '</td>';
+
+                valores(parseInt(avaluo), year);
             }
 
             document.getElementById("cuerpo").insertRow(-1).innerHTML = '' +

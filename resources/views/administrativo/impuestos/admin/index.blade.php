@@ -27,13 +27,8 @@
                             <th class="text-center">Número Catastral</th>
                             <th class="text-center">Número Identificación</th>
                             <th class="text-center">Contribuyente</th>
-                            <th class="text-center">Area Terreno</th>
                             <th class="text-center">Dirección Predio</th>
-                            <th class="text-center">Dirección Notificación</th>
-                            <th class="text-center">Municipio</th>
                             <th class="text-center">Email</th>
-                            <th class="text-center">Valor Deuda</th>
-                            <th class="text-center">Años Deuda</th>
                             <th class="text-center">Editar</th>
                         </tr>
                         </thead>
@@ -43,13 +38,8 @@
                                 <td class="text-center">{{ $predUser->numCatastral }}</td>
                                 <td class="text-center">{{ $predUser->numIdent }}</td>
                                 <td class="text-center">{{ $predUser->contribuyente }}</td>
-                                <td class="text-center">{{ $predUser->areaTerreno }}</td>
                                 <td class="text-center">{{ $predUser->dir_predio }}</td>
-                                <td class="text-center">{{ $predUser->dir_notificacion }}</td>
-                                <td class="text-center">{{ $predUser->municipio }}</td>
                                 <td class="text-center">{{ $predUser->email }}</td>
-                                <td class="text-center">$<?php echo number_format($predUser->valor_deuda,0) ?></td>
-                                <td class="text-center">{{ $predUser->años_deuda}}</td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/impuestos/admin/predial/user/edit/'.$predUser->id) }}" title="Editar Usuario" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                 </td>

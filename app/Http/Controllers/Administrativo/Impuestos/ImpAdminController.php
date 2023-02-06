@@ -104,13 +104,14 @@ class ImpAdminController extends Controller
     {
         $user = PredialContribuyentes::find($id);
         $user->email = $request->correo;
-        $user->areaTerreno = $request->area;
         $user->dir_predio = $request->dirPred;
         $user->otra_red= $request->otraRed;
         $user->dir_notificacion = $request->dirNoti;
         $user->municipio = $request->municipio;
         $user->whatsapp = $request->whatsapp;
         $user->facebook = $request->facebook;
+        $user->cedCatastral = $request->cedCatastral;
+        $user->matInmobiliaria = $request->matInmobiliaria;
         $user->save();
 
         Session::flash('success','El usuario '.$user->contribuyente.' se ha actualziado exitosamente');

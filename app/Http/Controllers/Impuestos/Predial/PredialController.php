@@ -126,6 +126,7 @@ class PredialController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
 
         $predial = new Predial();
         $predial->cedula = $request->cedula;
