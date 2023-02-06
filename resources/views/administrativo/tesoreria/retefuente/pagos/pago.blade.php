@@ -133,7 +133,7 @@
 			//const totDeb = valores['value'].reduce((partialSum, a) => partialSum + a, 0);
 			//console.log(sum);
 
-			this.submit();
+			//this.submit();
 		}
 
 		function add(accumulator, a) {
