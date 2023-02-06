@@ -193,12 +193,11 @@ class RetencionFuenteController extends Controller
                             }
                         }
                     }
-                    $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
-                    if (count($contaOP) > 0){
-                        dd($contaOP, $hijo);
-                        
-                    }
-
+                }
+                //VALIDACION CUANDO EN LA CONTABILIZACION ESTA EL PAGO DE LA DIAN
+                $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
+                if (count($contaOP) > 0){
+                    dd($contaOP, $hijo);
                 }
             }
 
