@@ -41,7 +41,12 @@ class CertificadoController extends Controller
             //if ($registro->jefe_e == 3 and $registro->saldo == 0){
                 if ($registro->cdpsRegistro->first()->cdp->vigencia_id == $vigencia->id){
                     foreach ($registro->ordenPagos as $ordenPago){
-                        dd($ordenPago->descuentos);
+                        foreach ($ordenPago->descuentos as $descuento){
+                            if ($descuento->valor > 0){
+                                dd($descuento);
+                                $values[] = collect(['']);
+                            }
+                        }
                     }
                 }
             //}

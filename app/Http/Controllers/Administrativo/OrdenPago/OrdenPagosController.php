@@ -225,12 +225,8 @@ class OrdenPagosController extends Controller
                     $oPP->save();
 
                     foreach ($ordenPago->descuentos as $descuento){
-                        if ($descuento->desc_municipal_id != null){
-                            if ($descuento->desc_municipal_id != 5) $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
-                        }
-                        if ($descuento->retencion_fuente_id != null){
-                            $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
-                        }
+                        if ($descuento->desc_municipal_id != null) $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
+                        if ($descuento->retencion_fuente_id != null) $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
                     }
                     $ordenPago->estado = "1";
                     $ordenPago->save();
