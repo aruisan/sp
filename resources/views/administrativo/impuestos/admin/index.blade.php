@@ -124,7 +124,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($pago->estado != "Pagado")
-                                        <button onclick="getModalPago('{{$pago->modulo}}', '{{\Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y')}}','$<?php echo number_format($pago->valor,0) ?>', {{$pago->id}})" class="hidden"><i class="fa fa-arrow-up"></i><i class="fa fa-usd"></i></button>
+                                        <button onclick="getModalPago('{{$pago->modulo}}', '{{\Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y')}}','$<?php echo number_format($pago->valor,0) ?>', {{$pago->id}})" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-arrow-up"></i><i class="fa fa-usd"></i></button>
                                     @endif
                                 </td>
                             </tr>

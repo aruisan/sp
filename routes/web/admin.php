@@ -311,6 +311,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
                 //PAGO RETENCION EN LA FUENTE
         Route::get('tesoreria/retefuente/pago/{vigencia_id}/{mes}','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@pagoRetefuente');
+        Route::get('tesoreria/retefuente/pago/{vigencia_id}','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@pagosRetefuente');
+        Route::get('tesoreria/retefuente/viewpago/{id}/view','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@showpago');
+        Route::get('tesoreria/retefuente/PDFpago/{id}/PDF','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@pdfPago');
+        Route::post('tesoreria/retefuente/pago/{vigencia_id}/{mes}/make','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@makePagoRetefuente');
 
         Route::resource('contabilidad/retefuente','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController');
         Route::get('contabilidad/retefuente/create','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@create');
