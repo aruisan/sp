@@ -37,7 +37,7 @@ class OrdenPagosDescuentosController extends Controller
         $ordenPago = OrdenPagos::findOrFail($id);
         $vigencia = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
         $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
-        $personas = Persona::all();
+        $personas = Persona::where('id','<',520);
         if ($ordenPago->rubros->count() == 0){
             Session::flash('warning',' Se debe realizar primero la asignación del monto antes de realizar los descuentos.');
             return redirect('administrativo/ordenPagos/monto/create/'.$ordenPago->id);
