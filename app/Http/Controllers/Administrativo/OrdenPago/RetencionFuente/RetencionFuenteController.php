@@ -204,24 +204,14 @@ class RetencionFuenteController extends Controller
                                 $mesOP = Carbon::parse($ordenPago->created_at)->month;
                                 //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
                                 if ($mesOP == $mes){
-                                    dd($ordenPago, $contabilizacion);
-                                    //SE RECORRE EL PUC PARA OBTENER LOS VALORES DE LA OP
-                                    foreach ($ordenPago->pucs as $puc){
-                                        //SE RECORRE EL PADRE CORRESPONDIENTE AL DEBITO PARA SABER SI UN HIJO CORRESPONDE
-                                        if (count($hijosDeb) > 0){
-                                            foreach ($hijosDeb as $hDeb){
-                                                if ($hDeb->id == $puc->rubros_puc_id ){
-                                                    //dd($hDeb, $puc);
-                                                    $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
-                                                        'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
-                                                        'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $hDeb->code,
-                                                        'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $puc->valor_debito]);
-                                                    $valueCred[] = $puc->valor_debito;
-                                                    $valueDeb[] = $descuento->valor;
-                                                }
-                                            }
-                                        }
-                                    }
+                                    dd($ordenPago, $contabilizacion, $hijo);
+
+                                    $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
+                                        'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                        'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $hDeb->code,
+                                        'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $puc->valor_debito]);
+                                    $valueCred[] = $puc->valor_debito;
+                                    $valueDeb[] = $descuento->valor;
                                 }
                             }
                         }
