@@ -56,9 +56,17 @@ class PagosController extends Controller
     public function create($id)
     {
         $oP = OrdenPagos::where([['estado', '1'], ['saldo', '>', 0]])->get();
+        $add = true;
         foreach ($oP as $data){
             if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $ordenPagos[] = collect(['info' => $data]);
+                foreach ($data->descuentos as $descuento){
+                    if ($descuento->desc_municipal_id == 5){
+                        //AL TENER LA ORDEN DE PAGO EL SALDO IGUAL AL DESCUENTO DEL ICA NO SE LE MUESTRA AL USUARIO
+                        //CUANDO SE VA A CREAR EL PAGO
+                        if ($data->saldo == $descuento->valor) $add = false;
+                    }
+                }
+                if ($add) $ordenPagos[] = collect(['info' => $data]);
             }
         }
         $pagos = Pagos::orderBy('code','ASC')->get();
