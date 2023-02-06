@@ -7,6 +7,7 @@ use App\Model\Administrativo\Contabilidad\CompContMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuenteConta;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuenteForm;
@@ -191,6 +192,11 @@ class RetencionFuenteController extends Controller
                                 }
                             }
                         }
+                    }
+                    $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
+                    if (count($contaOP) > 0){
+                        dd($contaOP, $hijo);
+                        
                     }
 
                 }
