@@ -339,7 +339,7 @@ class RetencionFuenteController extends Controller
         $pago->comp_conta_id = $compContable->id;
         $pago->save();
 
-        Session::flash('success','Pago Generado en el sistema exitosamente.');
+        Session::flash('success','Pago de retención en la fuente generado en el sistema exitosamente.');
         return redirect('administrativo/tesoreria/retefuente/pago/'.$vigencia_id);
     }
 

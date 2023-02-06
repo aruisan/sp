@@ -68,7 +68,7 @@
 					<tbody>
 					@for($z = 0; $z < $pago->contas->count(); $z++)
 						<tr class="text-center">
-							<td>{{$pago->contas[$z]['code']}}</td>
+							<td>{{$pago->contas[$z]->puc->code}}</td>
 							<td>{{$pago->contas[$z]['concepto']}}</td>
 							<td>$ <?php echo number_format($pago->contas[$z]['debito'],0);?></td>
 							<td></td>
