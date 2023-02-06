@@ -136,7 +136,7 @@
                                     <td class="text-center">{{ $desMun[$i]->tarifa }}%</td>
                                     <?php
                                     $valorMulti = $ordenPago->valor * $desMun[$i]->tarifa;
-                                    $value = $valorMulti / 100;
+                                    $value = $valorMulti / 1000;
                                     ?>
                                     <td class="text-center">
                                         $<?php echo number_format($valorMulti,0) ?>
