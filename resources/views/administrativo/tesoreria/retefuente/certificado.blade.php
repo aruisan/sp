@@ -17,14 +17,22 @@
 				</li>
 			</ul>
 			<div class="table-responsive"><br>
-				<div class="col-md-12 align-self-center">
-					<h4>Seleccione el tercero a generar el certificado</h4>
-					<select class="select-persona" name="persona_id">
-						@foreach($personas as $persona)
-							<option value="{{$persona->id}}">{{ $persona->num_dc }} - {{$persona->nombre}}</option>
-						@endforeach
-					</select>
-				</div>
+				<form class="form" action="{{ url('administrativo/tesoreria/retefuente/certificado') }}" method="POST"
+					  enctype="multipart/form-data" id="makePayReteFuente">
+					{!! method_field('POST') !!}
+					{{ csrf_field() }}
+					<div class="col-md-12 align-self-center">
+						<h4>Seleccione el tercero a generar el certificado</h4>
+						<select class="select-persona" name="persona_id" id="persona_id">
+							@foreach($personas as $persona)
+								<option value="{{$persona->id}}">{{ $persona->num_dc }} - {{$persona->nombre}}</option>
+							@endforeach
+						</select>
+					</div><br><br><br>
+					<div>
+						<br><br><br><button type="submit" class="btn-sm btn-primary"> Generar Certificado</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

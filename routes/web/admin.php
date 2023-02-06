@@ -308,6 +308,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
                 //GENERAR CERTIFICADO DE LA RETENCION EN LA FUENTE
         Route::get('tesoreria/retefuente/certificado','Administrativo\Tesoreria\retefuente\CertificadoController@index');
+        Route::post('tesoreria/retefuente/certificado','Administrativo\Tesoreria\retefuente\CertificadoController@getCert');
+
 
                 //PAGO RETENCION EN LA FUENTE
         Route::get('tesoreria/retefuente/pago/{vigencia_id}/{mes}','Administrativo\OrdenPago\RetencionFuente\RetencionFuenteController@pagoRetefuente');
