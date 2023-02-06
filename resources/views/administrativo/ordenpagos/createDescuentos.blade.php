@@ -139,8 +139,8 @@
                                     $value = $valorMulti / 1000;
                                     ?>
                                     <td class="text-center">
-                                        $<?php echo number_format($valorMulti,0) ?>
-                                        <input type="hidden" name="valorMuni[]" value="{{ $valorMulti }}">
+                                        $<?php echo number_format($value,0) ?>
+                                        <input type="hidden" name="valorMuni[]" value="{{ $value }}">
                                     </td>
                                     <td class="text-center"><input type="button" class="borrar btn-sm btn-danger" value=" - " /></td>
                                 </tr>
