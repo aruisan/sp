@@ -197,7 +197,35 @@ class RetencionFuenteController extends Controller
                 //VALIDACION CUANDO EN LA CONTABILIZACION ESTA EL PAGO DE LA DIAN
                 $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
                 if (count($contaOP) > 0){
-                    dd($contaOP, $hijo);
+                    foreach ($contaOP as $contabilizacion){
+                        $ordenPago = OrdenPagos::where('id', $contabilizacion->orden_pago_id)->where('estado', '1')->first();
+                        if ($ordenPago){
+                            dd($ordenPago);
+                            if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $vigencia_id){
+                                $mesOP = Carbon::parse($ordenPago->created_at)->month;
+                                //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
+                                if ($mesOP == $mes){
+                                    //SE RECORRE EL PUC PARA OBTENER LOS VALORES DE LA OP
+                                    foreach ($ordenPago->pucs as $puc){
+                                        //SE RECORRE EL PADRE CORRESPONDIENTE AL DEBITO PARA SABER SI UN HIJO CORRESPONDE
+                                        if (count($hijosDeb) > 0){
+                                            foreach ($hijosDeb as $hDeb){
+                                                if ($hDeb->id == $puc->rubros_puc_id ){
+                                                    //dd($hDeb, $puc);
+                                                    $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
+                                                        'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                                        'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $hDeb->code,
+                                                        'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $puc->valor_debito]);
+                                                    $valueCred[] = $puc->valor_debito;
+                                                    $valueDeb[] = $descuento->valor;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
