@@ -346,8 +346,9 @@ class RetencionFuenteController extends Controller
     public function pagosRetefuente($vigencia_id){
 
         $pagos = TesoreriaRetefuentePago::where('vigencia_id', $vigencia_id)->get();
+        $vigencia = Vigencia::find($vigencia_id);
 
-        return view('administrativo.tesoreria.retefuente.pagos.index', compact('pagos','vigencia_id'));
+        return view('administrativo.tesoreria.retefuente.pagos.index', compact('pagos','vigencia_id','vigencia'));
     }
 
     public function showpago($id){
