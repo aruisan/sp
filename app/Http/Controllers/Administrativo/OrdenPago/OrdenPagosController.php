@@ -234,7 +234,7 @@ class OrdenPagosController extends Controller
                     }
                     $ordenPago->estado = "1";
                     $ordenPago->save();
-                    
+
                 } else {
                     Session::flash('warning','Recuerde que los totales del credito y debito deben dar sumas iguales');
                     return back();
