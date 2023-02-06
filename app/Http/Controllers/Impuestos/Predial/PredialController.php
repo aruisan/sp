@@ -126,8 +126,6 @@ class PredialController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-
         $predial = new Predial();
         $predial->cedula = $request->cedula;
         $predial->matricula = $request->matricula;
@@ -162,7 +160,7 @@ class PredialController extends Controller
             $fechaVenReq = Carbon::parse($añoCiclo."-08-01")->format('Y-m-d');
             $liquidacion->fecha_venc = $fechaVenReq;
 
-            $avaluoReq = "avaluo".$añoCiclo;
+            $avaluoReq = "a".$añoCiclo;
             $liquidacion->avaluo = $request->$avaluoReq;
 
             $subTotalReq = "subTotal".$añoCiclo;
