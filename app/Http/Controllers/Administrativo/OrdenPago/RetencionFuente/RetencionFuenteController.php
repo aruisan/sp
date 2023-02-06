@@ -170,7 +170,6 @@ class RetencionFuenteController extends Controller
                             if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $vigencia_id){
                                 $mesOP = Carbon::parse($ordenPago->created_at)->month;
                                 //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
-                                dd($mesOP, $mes, $ordenPago);
                                 if ($mesOP == $mes){
                                     //SE RECORRE EL PUC PARA OBTENER LOS VALORES DE LA OP
                                     foreach ($ordenPago->pucs as $puc){
