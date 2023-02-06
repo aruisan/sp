@@ -28,7 +28,7 @@
 					<tr>
 						<th class="text-center">CONCEPTO</th>
 						<th class="text-center">BASE SUJETA A RETENCIÓN</th>
-						<th class="text-center">RETENCION</th>
+						<th class="text-center">RETENCIONES</th>
 					</tr>
 					</thead>
 					<tbody>
