@@ -42,7 +42,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="table-responsive br-black-1" style="width: 100%">
+		<div class="table-responsive" style="width: 100%">
 			<table class="table-bordered" id="tablaP">
 				<thead>
 				<tr>
