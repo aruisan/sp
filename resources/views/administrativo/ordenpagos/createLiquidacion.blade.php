@@ -73,18 +73,32 @@
                             @for($i=0;$i< count($ordenPagoDesc); $i++)
                                 <tr>
                                     @if($ordenPagoDesc[$i]->retencion_fuente_id == null)
-                                        <td class="text-center">
-                                            {{ $ordenPagoDesc[$i]->descuento_mun['codigo'] }}
-                                        </td>
+                                        @if($ordenPagoDesc[$i]->desc_municipal_id == null)
+                                            <td class="text-center">
+                                                {{ $ordenPagoDesc[$i]->puc->code }}
+                                            </td>
+                                        @else
+                                            <td class="text-center">
+                                                {{ $ordenPagoDesc[$i]->descuento_mun['codigo'] }}
+                                            </td>
+                                        @endif
+
                                     @else
                                         <td class="text-center">
                                             {{ $ordenPagoDesc[$i]->descuento_retencion->codigo }}
                                         </td>
                                     @endif
                                     @if($ordenPagoDesc[$i]->retencion_fuente_id == null)
-                                        <td class="text-center">
-                                            {{ $ordenPagoDesc[$i]->descuento_mun['cuenta'] }}
-                                        </td>
+                                            @if($ordenPagoDesc[$i]->desc_municipal_id == null)
+                                                <td class="text-center">
+                                                    {{ $ordenPagoDesc[$i]->puc->concepto }}
+                                                </td>
+                                            @else
+                                                <td class="text-center">
+                                                    {{ $ordenPagoDesc[$i]->descuento_mun['cuenta'] }}
+                                                </td>
+                                            @endif
+
                                     @else
                                         <td class="text-center">
                                             {{ $ordenPagoDesc[$i]->descuento_retencion->cuenta }}

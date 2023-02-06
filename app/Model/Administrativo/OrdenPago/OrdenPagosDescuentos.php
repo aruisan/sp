@@ -16,4 +16,8 @@ class OrdenPagosDescuentos extends Model implements Auditable
     public function descuento_mun(){
         return $this->belongsTo('App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales','desc_municipal_id');
     }
+
+    public function puc(){
+        return $this->belongsTo('App\Model\Administrativo\Contabilidad\PucAlcaldia','cuenta_puc_id');
+    }
 }
