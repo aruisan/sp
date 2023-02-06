@@ -204,15 +204,15 @@ class RetencionFuenteController extends Controller
                                 $mesOP = Carbon::parse($ordenPago->created_at)->month;
                                 //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
                                 if ($mesOP == $mes){
-                                    $debito = OrdenPagosPuc::where('orden_pago_id', $contabilizacion->orden_pago_id)
-                                        ->where('valor_credito',0)->get();
-                                    dd($ordenPago, $contabilizacion, $hijo, $debito);
+                                    $debito = OrdenPagosPuc::where('orden_pago_id', $contabilizacion->orden_pago_id)->where('valor_credito',0)->first();
+                                    $cuentaDeb = PucAlcaldia::find($debito->rubros_puc_id);
+                                    //dd($ordenPago, $contabilizacion, $hijo, $debito);
 
                                     $tableValues[] = collect(['code' => $hijo->code, 'concepto' => $hijo->concepto,
                                         'valorDesc' => $contabilizacion->valor_credito, 'cc' => $ordenPago->registros->persona->num_dc,
-                                        'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $hDeb->code,
-                                        'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $contabilizacion->valor_debito]);
-                                    $valueCred[] = $contabilizacion->valor_debito;
+                                        'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $cuentaDeb->code,
+                                        'conceptoDeb' => $cuentaDeb->concepto, 'valorDeb' => $debito->valor_debito]);
+                                    $valueCred[] = $debito->valor_debito;
                                     $valueDeb[] = $contabilizacion->valor_credito;
                                 }
                             }
