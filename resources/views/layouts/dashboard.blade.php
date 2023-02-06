@@ -171,7 +171,7 @@
               <div class="col-sm-12 col-md-4 text-center" style="padding: 5px 0">
                   
                 
-                <p class="text-foo">© 2021 Copyright Derechos Reservados
+                <p class="text-foo">© 2022 Copyright Derechos Reservados
             <a class="text-foo" href="http://altaespecialidad.co/"> Alta Especialidad SAS</a> </p>
       
                 </div>

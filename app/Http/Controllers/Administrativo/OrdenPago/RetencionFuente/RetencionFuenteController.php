@@ -222,6 +222,8 @@ class RetencionFuenteController extends Controller
         if (isset($tableRT)){
             $total = array_sum($pago);
             $bancos = PucAlcaldia::where('id', '>=', 9)->where('id', '<=', 50)->get();
+            $multaC = PucAlcaldia::find(1039);
+            $multaD = PucAlcaldia::find(1040);
 
             $days = cal_days_in_month(CAL_GREGORIAN, $mes, $vigencia->vigencia);
 
@@ -265,7 +267,7 @@ class RetencionFuenteController extends Controller
             }
 
             return view('administrativo.tesoreria.retefuente.pagos.pago', compact('tableRT','form',
-                'total','bancos', 'vigencia_id','mes','days','vigencia'));
+                'total','bancos', 'vigencia_id','mes','days','vigencia','multaC','multaD'));
         } else {
             Session::flash('error','Para el mes escogido no hay ordenes de pago finalizadas. Seleccione un mes distinto.');
             return back();
@@ -274,6 +276,18 @@ class RetencionFuenteController extends Controller
     }
 
     public function makePagoRetefuente($vigencia_id, $mes, Request $request){
+
+        if ($request->debMulta != 0 and $request->credMulta != 0){
+            if ($request->debMulta == $request->credMulta) $multas = true;
+            else {
+                Session::flash('error','El valor de debito y credito en las multas deben ser iguales.');
+                return back();
+            }
+        } elseif ($request->debMulta == 0 and $request->credMulta == 0) $multas = false;
+        else{
+            Session::flash('error','Se tiene que enviar el valor de la multa de debito y credito con valores diferentes a cero pero iguales o valores en cero cuando no aplica multa.');
+            return back();
+        }
 
         $vigencia = Vigencia::find($vigencia_id);
 
@@ -306,6 +320,26 @@ class RetencionFuenteController extends Controller
             $conta->credito = 0;
             $conta->save();
         }
+
+        //SAVE CONTABILIZACION MULTAS
+        if ($multas){
+            $conta = new TesoreriaRetefuenteConta();
+            $conta->retefuente_id = $pago->id;
+            $conta->cuenta_puc_id = 1040;
+            $conta->concepto = 'Multas Y Sanciones';
+            $conta->debito = $request->debMulta;
+            $conta->credito = 0;
+            $conta->save();
+
+            $conta = new TesoreriaRetefuenteConta();
+            $conta->retefuente_id = $pago->id;
+            $conta->cuenta_puc_id = 1039;
+            $conta->concepto = 'Multas Y Sanciones';
+            $conta->debito = 0;
+            $conta->credito = $request->credMulta;
+            $conta->save();
+        }
+
 
         //SE CREA EL COMPROBANTE CONTABLE
         $compContable = new CompCont();

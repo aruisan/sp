@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria\retefuente;
 
+use App\Model\Administrativo\Registro\Registro;
 use App\Model\Administrativo\Tesoreria\retefuente\Certificado;
+use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Persona;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
@@ -30,6 +33,18 @@ class CertificadoController extends Controller
      */
     public function getCert(Request $request)
     {
-        dd($request);
+        $registros = Registro::where('persona_id', $request->persona_id)->get();
+        $añoActual = 2018;
+        $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
+
+        foreach ($registros as $registro){
+            //if ($registro->jefe_e == 3 and $registro->saldo == 0){
+                if ($registro->cdpsRegistro->first()->cdp->vigencia_id == $vigencia->id){
+                    foreach ($registro->ordenPagos as $ordenPago){
+                        dd($ordenPago->descuentos);
+                    }
+                }
+            //}
+        }
     }
 }

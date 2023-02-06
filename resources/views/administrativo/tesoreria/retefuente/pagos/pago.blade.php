@@ -75,6 +75,7 @@
 					<tr>
 						<td class="text-center" colspan="2"><b>TOTAL A PAGAR</b></td>
 						<td class="text-center"><b>$ <?php echo number_format($total,0);?></b></td>
+						<input type="hidden" name="totPago" id="totPago" value="{{$total}}">
 					</tr>
 					</tbody>
 				</table>
@@ -84,6 +85,41 @@
 					  enctype="multipart/form-data" id="makePayReteFuente">
 					{!! method_field('POST') !!}
 					{{ csrf_field() }}
+					<div class="table-responsive" id="formulario">
+						<center>
+							<h3>MULTAS</h3>
+						</center>
+						<hr>
+						Si se requiere la multa se debe colocar el valor por igual tanto en credito como en  debito, de
+						lo contrario se debe dejar los valores en 0 y no afectaran el pago.
+						<hr>
+						<table class="table table-bordered" id="tabla_multas">
+							<thead>
+							<tr>
+								<th class="text-center">CUENTA</th>
+								<th class="text-center">DEBITO</th>
+								<th class="text-center">CREDITO</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td class="text-center">{{ $multaC->code }} - {{ $multaC->concepto }}</td>
+								<td class="text-center">$0</td>
+								<td class="text-center">
+									<input type="number" class="form-control" name="credMulta" id="credMulta" value="0"
+									onchange="addValue()">
+								</td>
+							</tr>
+							<tr>
+								<td class="text-center">{{ $multaD->code }} - {{ $multaD->concepto }}</td>
+								<td class="text-center">
+									<input type="number" class="form-control" name="debMulta" id="debMulta" value="0">
+								</td>
+								<td class="text-center">$0</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
 					@foreach($form as $index => $dato)
 						<input type="hidden" name="concepto[]" value="{{ $dato['concepto'] }}">
 						<input type="hidden" name="base[]" value="{{ $dato['base'] }}">
@@ -106,8 +142,8 @@
 							</select>
 						</div>
 						<div class="col-lg-4">
-							<input type="number" class="form-control" required name="valorPago" id="valorPago"
-								   value="{{ $total }}" max="{{ $total }}">
+							<input type="hidden" class="form-control" required name="valorPago" id="valorPago" value="{{ $total }}">
+							<h3><span id="valorPagoSpan">$ <?php echo number_format($total,0);?></span></h3>
 						</div>
 						<br><br>
 						<button type="submit" class="btn-sm btn-primary"> Enviar</button>
@@ -133,7 +169,17 @@
 			//const totDeb = valores['value'].reduce((partialSum, a) => partialSum + a, 0);
 			//console.log(sum);
 
-			//this.submit();
+			this.submit();
+		}
+
+		function addValue(){
+			const valueP = document.getElementById('totPago').value;
+			const valueMulta = document.getElementById('credMulta').value;
+
+			var total = parseInt(valueP) + parseInt(valueMulta);
+
+			document.getElementById('valorPago').value = parseInt(total);
+			document.getElementById('valorPagoSpan').innerHTML = '$ '+total;
 		}
 
 		function add(accumulator, a) {

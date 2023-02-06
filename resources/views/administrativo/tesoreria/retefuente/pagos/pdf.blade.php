@@ -61,19 +61,19 @@
 						<td>{{$pago->contas[$z]->puc->code}}</td>
 						<td>{{$pago->contas[$z]['concepto']}}</td>
 						<td>$ <?php echo number_format($pago->contas[$z]['debito'],0);?></td>
-						<td></td>
+						<td>$ <?php echo number_format($pago->contas[$z]['credito'],0);?></td>
 					</tr>
 				@endfor
 				<tr class="text-center">
 					<td>{{$pago->puc->code}}</td>
 					<td>{{$pago->puc->concepto}}</td>
-					<td></td>
+					<td>$ 0</td>
 					<td>$ <?php echo number_format($pago->pago,0);?></td>
 				</tr>
 				<tr class="text-center">
 					<td colspan="2">SUMAS IGUALES</td>
 					<td>$ <?php echo number_format($pago->contas->sum('debito'),0);?></td>
-					<td>$ <?php echo number_format($pago->pago,0);?></td>
+					<td>$ <?php echo number_format($pago->pago + $pago->contas->sum('credito'),0);?></td>
 				</tr>
 				</tbody>
 			</table>

@@ -201,6 +201,10 @@ class PagosController extends Controller
         $valR =number_format($valReceived,0);
         $valT = number_format($valTotal,0);
 
+        if ($request->referenciaPago != null){
+            $pago->referenciaPago = $request->referenciaPago;
+        }
+
         if ($valReceived == $valTotal){
             if ($request->type_pay == "1"){
                 $pago->type_pay = "CHEQUE";

@@ -97,6 +97,12 @@
                                 </div>
                             </div>
                         </div>
+                        @if($pago->referenciaPago != null)
+                            <div class="col-lg-12 text-center">
+                                <br>
+                                <h4><b>REFERENCIA DE PAGO:</b> {{$pago->referenciaPago}}</h4>
+                            </div>
+                        @endif
                         <div class="col-md-12 align-self-center">
                             <hr>
                             <center>
