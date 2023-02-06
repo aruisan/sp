@@ -200,7 +200,6 @@ class RetencionFuenteController extends Controller
                     foreach ($contaOP as $contabilizacion){
                         $ordenPago = OrdenPagos::where('id', $contabilizacion->orden_pago_id)->where('estado', '1')->first();
                         if ($ordenPago){
-                            dd($ordenPago);
                             if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $vigencia_id){
                                 $mesOP = Carbon::parse($ordenPago->created_at)->month;
                                 //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
