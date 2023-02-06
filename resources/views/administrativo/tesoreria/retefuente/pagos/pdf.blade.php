@@ -43,7 +43,7 @@
 			</table>
 		</div>
 		<div class="table-responsive" style="width: 100%">
-			<table class="table-bordered" id="tablaP">
+			<table class="table table-bordered" id="tablaP">
 				<thead>
 				<tr>
 					<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
