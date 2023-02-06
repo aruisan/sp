@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Administrativo\OrdenPago;
 
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Registro\Registro;
+use App\Model\Persona;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
@@ -34,6 +36,8 @@ class OrdenPagosDescuentosController extends Controller
         $retenF = RetencionFuente::all();
         $ordenPago = OrdenPagos::findOrFail($id);
         $vigencia = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+        $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
+        $personas = Persona::all();
         if ($ordenPago->rubros->count() == 0){
             Session::flash('warning',' Se debe realizar primero la asignación del monto antes de realizar los descuentos.');
             return redirect('administrativo/ordenPagos/monto/create/'.$ordenPago->id);
@@ -43,7 +47,8 @@ class OrdenPagosDescuentosController extends Controller
             } else {
                 $desMun = DescMunicipales::where('id','!=','4')->get();
             }
-            return view('administrativo.ordenpagos.createDescuentos', compact('ordenPago','retenF','desMun','vigencia'));
+            return view('administrativo.ordenpagos.createDescuentos', compact('ordenPago','retenF','desMun','vigencia','cuentas24',
+            'personas'));
         }
     }
 
@@ -88,16 +93,18 @@ class OrdenPagosDescuentosController extends Controller
             }
         }
 
-
-        if ($request->idDesOther != null){
-            for($x=0;$x< count($request->idDesOther); $x++){
+        //SE ALMACENAN LOS NUEVOS DESCUENTOS MUNICIPALES
+        if ($request->cuentaDesc != null){
+            for($x=0;$x< count($request->cuentaDesc); $x++){
+                $cuenta = PucAlcaldia::find($request->cuentaDesc[$x]);
                 $descuento = new OrdenPagosDescuentos();
-                $descuento->nombre = $request->concepto[$x];
+                $descuento->nombre = $cuenta->concepto;
                 $descuento->base = 0;
-                $descuento->porcent = $request->tarifa[$x];
-                $descuento->valor = $request->valorOther[$x];
+                $descuento->porcent = 0;
+                $descuento->valor = $request->valorDesc[$x];
                 $descuento->orden_pagos_id = $ordenPago_id;
-                $descuento->desc_municipal_id = $request->idDesOther[$x];
+                $descuento->cuenta_puc_id = $request->cuentaDesc[$x];
+                $descuento->persona_id = $request->tercero[$x];
                 $descuento->save();
             }
         }

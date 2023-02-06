@@ -206,7 +206,6 @@ class RetencionFuenteController extends Controller
                                 if ($mesOP == $mes){
                                     $debito = OrdenPagosPuc::where('orden_pago_id', $contabilizacion->orden_pago_id)->where('valor_credito',0)->first();
                                     $cuentaDeb = PucAlcaldia::find($debito->rubros_puc_id);
-                                    //dd($ordenPago, $contabilizacion, $hijo, $debito);
 
                                     $tableValues[] = collect(['code' => $hijo->code, 'concepto' => $hijo->concepto,
                                         'valorDesc' => $contabilizacion->valor_credito, 'cc' => $ordenPago->registros->persona->num_dc,

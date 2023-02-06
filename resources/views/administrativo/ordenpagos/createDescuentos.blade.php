@@ -106,7 +106,7 @@
                     <center><h2>Descuentos Municipales</h2></center>
                     <hr><br>
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="tabla">
+                        <table class="table table-bordered" id="tabla_desc_muni">
                             <thead>
                             <th class="text-center">Id</th>
                             <th class="text-center">Concepto</th>
@@ -130,38 +130,26 @@
                             @endforeach
                             @for($i=0;$i< count($desMun); $i++)
                                 <tr>
-                                    @if( $desMun[$i]->concepto == "Otras Contribuciones" or $desMun[$i]->concepto == "Otros Descuentos")
-                                        <input type="hidden" value="{{ $desMun[$i]->id }}" name="idDesOther[]">
-                                        <td class="text-center">{{ $desMun[$i]->id }}</td>
-                                        <td>
-                                            <input type="text" style="text-align:center" placeholder="{{ $desMun[$i]->concepto}}" name="concepto[]" required>
-                                        </td>
-                                        <td>
-                                            <input type="number" style="text-align:center" placeholder="Tarifa" name="tarifa[]" min="0" required>
-                                        </td>
-                                        <td class="text-center">
-                                            <input type="number" placeholder="Valor del Descuento" name="valorOther[]" style="text-align:center" min="0" required>
-                                        </td>
-                                        <td class="text-center"><input type="button" class="borrar btn-sm btn-danger" value=" - " /></td>
-                                    @else
-                                        <input type="hidden" value="{{$desMun[$i]->id}}" name="idDes[]">
-                                        <td class="text-center">{{ $desMun[$i]->id }}</td>
-                                        <td class="text-center">{{ $desMun[$i]->concepto }}</td>
-                                        <td class="text-center">{{ $desMun[$i]->tarifa }}%</td>
-                                        <?php
-                                        $valorMulti = $ordenPago->valor * $desMun[$i]->tarifa;
-                                        $value = $valorMulti / 100;
-                                        ?>
-                                        <td class="text-center">
-                                            $<?php echo number_format($value,0) ?>
-                                            <input type="hidden" name="valorMuni[]" value="{{ $value }}">
-                                        </td>
-                                        <td class="text-center"><input type="button" class="borrar btn-sm btn-danger" value=" - " /></td>
-                                    @endif
+                                    <input type="hidden" value="{{$desMun[$i]->id}}" name="idDes[]">
+                                    <td class="text-center">{{ $desMun[$i]->id }}</td>
+                                    <td class="text-center">{{ $desMun[$i]->concepto }}</td>
+                                    <td class="text-center">{{ $desMun[$i]->tarifa }}%</td>
+                                    <?php
+                                    $valorMulti = $ordenPago->valor * $desMun[$i]->tarifa;
+                                    $value = $valorMulti / 100;
+                                    ?>
+                                    <td class="text-center">
+                                        $<?php echo number_format($value,0) ?>
+                                        <input type="hidden" name="valorMuni[]" value="{{ $value }}">
+                                    </td>
+                                    <td class="text-center"><input type="button" class="borrar btn-sm btn-danger" value=" - " /></td>
                                 </tr>
                             @endfor
                             </tbody>
                         </table>
+                        <div class="text-center" id="buttonAddActividad">
+                            <button type="button" @click.prevent="nuevaFilaDescMuni" class="btn btn-sm btn-primary">AGREGAR DESCUENTO MUNICIPAL</button>
+                        </div>
                     </div>
                     <center>
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -233,6 +221,26 @@
                     axios.delete(urlVigencia).then(response => {
                         location.reload();
                     });
+                },
+
+                nuevaFilaDescMuni(){
+                    $('#tabla_desc_muni tbody tr:last').after('<tr>\n' +
+                        '<td></td>\n'+
+                        '<td>Seleccione la cuenta del PUC <br>' +
+                        '<select class="form-control" name="cuentaDesc[]">\n' +
+                        '                                        @foreach($cuentas24 as $cuenta)\n' +
+                        '                                            <option value="{{$cuenta->id}}">{{$cuenta->code}} - {{$cuenta->concepto}}</option>\n' +
+                        '                                        @endforeach\n' +
+                        '                                    </select></td>\n'+
+                        '<td>Seleccione el tercero' +
+                        '<select class="form-control" name="tercero[]">\n' +
+                        '                                        @foreach($personas as $persona)\n' +
+                        '                                            <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>\n' +
+                        '                                        @endforeach\n' +
+                        '                                    </select></td>\n'+
+                        '<td>Valor a descontar<br><input type="number" class="form-control" name="valorDesc[]" min="1" value="1" required></td>\n'+
+                        '<td style="vertical-align: middle" class="text-center" ><button type="button" class="borrar btn-sm btn-danger">&nbsp;-&nbsp; </button></td>\n'+
+                        '</tr>\n');
                 },
 
                 eliminarDescM: function(dato){
