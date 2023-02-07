@@ -34,7 +34,7 @@ class CertificadoController extends Controller
     public function getCert(Request $request)
     {
         $registros = Registro::where('persona_id', $request->persona_id)->get();
-        $añoActual = 2018;
+        $añoActual = Carbon::today()->year;
         $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
 
         foreach ($registros as $registro){
