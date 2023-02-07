@@ -47,7 +47,7 @@
                                         <td class="text-center">{{ $data['info']->code}}</td>
                                         <td id="Obj{{$data['info']->nombre}}" class="text-center">{{ $data['info']->nombre }}</td>
                                         <td id="Name{{$data['info']->registros->persona->nombre}}" class="text-center">{{ $data['info']->registros->persona->nombre }}</td>
-                                        <td class="text-center">$<?php echo number_format($desc,0) ?></td>
+                                        <td class="text-center">$<?php echo number_format($data['info']->saldo,0) ?></td>
                                         <td class="text-center">$<?php echo number_format($data['info']->saldo,0) ?></td>
                                         <td id="Val{{$data['info']->saldo}}" class="text-center hidden">{{ $data['info']->saldo }}</td>
                                         <td id="ValTo{{$data['info']->valor}}" class="text-center hidden">{{ $data['info']->valor }}</td>
