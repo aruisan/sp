@@ -131,7 +131,7 @@ class PagosController extends Controller
                 $pagoRubros = new PagoRubros();
                 $pagoRubros->pago_id = $Pago->id;
 
-                if ($Pago->orden_pago->rubros[0]->cdps_registro->cdps->tipo == "inversion"){
+                if ($Pago->orden_pago->rubros[0]->cdps_registro->cdps->tipo == "Inversion"){
                     $codActiv = $Pago->orden_pago->rubros[0]->cdps_registro->cdps->bpinsCdpValor->first()->cod_Actividad;
                     $bin = BPin::where('cod_actividad',$codActiv )->first();
                     $bPinVig = bpinVigencias::where('bpin_id',$bin->id)->where('vigencia_id', $OrdenPago->registros->cdpsRegistro[0]->cdp->vigencia_id)->first();
