@@ -124,7 +124,7 @@
 			<table class="table-bordered" id="tablaDesc" style="width: 100%">
 				<thead>
 				<tr>
-					<th colspan="4" class="text-center" style="background-color: rgba(19,165,255,0.14)"> DESCUENTOS</th>
+					<th colspan="5" class="text-center" style="background-color: rgba(19,165,255,0.14)"> DESCUENTOS</th>
 				</tr>
 				<tr>
 					<th class="text-center">Codigo</th>
@@ -151,7 +151,7 @@
 					</tr>
 				@endforeach
 				<tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
-					<td colspan="3"><b>Total Descuentos</b></td>
+					<td colspan="4"><b>Total Descuentos</b></td>
 					<td><b>$ <?php echo number_format($OrdenPagoDescuentos->sum('valor'),0);?></b></td>
 				</tr>
 				</tbody>
