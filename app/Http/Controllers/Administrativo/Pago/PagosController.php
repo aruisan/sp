@@ -105,9 +105,11 @@ class PagosController extends Controller
                     $PagoArray[] = collect(['info' => $pago]);
                 }
             }
-            if (isset($PagoArray)) $codePago = array_last($PagoArray)['info']->code + 1;
+            if (isset($PagoArray)) {
+                $last = array_last($PagoArray);
+                $codePago = $last['info']->code + 1;
+            }
             else $codePago = 0;
-
 
             $Pago = new Pagos();
             $Pago->code = $codePago;
