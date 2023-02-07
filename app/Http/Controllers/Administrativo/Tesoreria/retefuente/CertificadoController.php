@@ -40,6 +40,7 @@ class CertificadoController extends Controller
         $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
 
         foreach ($Descuentos as $descuento){
+            dd($añoActual, $vigencia);
             $ordenPago = OrdenPagos::where('id', $descuento->orden_pagos_id)->where('estado', '1')
                 ->where('saldo', 0)->first();
             if ($ordenPago and $ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $vigencia->id and
