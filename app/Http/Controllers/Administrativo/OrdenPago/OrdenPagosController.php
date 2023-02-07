@@ -127,6 +127,7 @@ class OrdenPagosController extends Controller
             }else $numOP = 0;
 
 
+
             $ordenPago = new OrdenPagos();
             $ordenPago->code = $numOP;
             $ordenPago->nombre = $request->concepto;

@@ -97,8 +97,20 @@ class PagosController extends Controller
         } else {
 
             $OrdenPago = OrdenPagos::findOrFail($request->IdOP);
+
+            //SE REALIZA LA BUSQUEDA DEL CODIGO CORRESPONDIENTE AL NUEVO PAGO
+            $pagos = Pagos::orderBy('code','ASC')->get();
+            foreach ($pagos as $pago){
+                if ($pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $OrdenPago->registros->cdpsRegistro[0]->cdp->vigencia_id){
+                    $PagoArray[] = collect(['info' => $pago]);
+                }
+            }
+            if (isset($PagoArray)) $codePago = array_last($PagoArray)['info']->code + 1;
+            else $codePago = 0;
+            
+
             $Pago = new Pagos();
-            $Pago->code = $request->numPago;
+            $Pago->code = $codePago;
             $Pago->concepto = $request->Objeto;
             $Pago->persona_id = $OrdenPago->registros->persona_id;
             $Pago->orden_pago_id = $request->IdOP;
