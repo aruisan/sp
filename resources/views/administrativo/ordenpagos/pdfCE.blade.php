@@ -143,9 +143,8 @@
 							@if($PagosDesc->descuento_mun['id'] == 5)
 								<td>7 X 1000</td>
 							@else
-								<td>{{ $PagosDesc->descuento_mun['concepto'] }}</td>
+								<td>{{ $PagosDesc->descuento_mun['tarifa'] }}</td>
 							@endif
-							<td>{{ $PagosDesc->descuento_mun['tarifa'] }}</td>
 						@else
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
 							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
