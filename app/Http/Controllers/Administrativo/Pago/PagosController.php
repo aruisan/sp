@@ -124,8 +124,8 @@ class PagosController extends Controller
             $Pago->save();
 
             //BUSQUEDA DEL ID DEL RUBRO
-            $rubroid = DependenciaRubroFont::find($Pago->orden_pago->registros->cdpRegistroValor[0]->cdps->rubrosCdpValor[0]->fontsDep_id);
-            $Pago->orden_pago->rubros[0]->cdps_registro->rubro_id = $rubroid->fontRubro->rubro_id;
+            //$rubroid = DependenciaRubroFont::find($Pago->orden_pago->registros->cdpRegistroValor[0]->cdps->rubrosCdpValor[0]->fontsDep_id);
+            //$Pago->orden_pago->rubros[0]->cdps_registro->rubro_id = $rubroid->fontRubro->rubro_id;
 
             if (count($Pago->orden_pago->rubros) == 1){
                 $pagoRubros = new PagoRubros();
