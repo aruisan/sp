@@ -58,7 +58,7 @@ class CertificadoController extends Controller
                         if ($ordenPago->estado == 1){
                             foreach ($ordenPago->descuentos as $descuento){
                                 if ($descuento->valor > 0){
-                                    dd($descuento, $ordenPago);
+                                    //dd($descuento, $ordenPago);
                                     $values[] = collect(['']);
                                 }
                             }
