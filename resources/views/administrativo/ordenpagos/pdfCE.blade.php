@@ -140,7 +140,7 @@
 						@if($PagosDesc->retencion_fuente_id == null)
 							<td>{{ $PagosDesc->descuento_mun['codigo'] }}</td>
 							<td>{{ $PagosDesc->descuento_mun['concepto'] }}</td>
-							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPagoDescuentos->sum('valor'),0);?></td>
+							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
 							@if($PagosDesc->descuento_mun['id'] == 5)
 								<td>7 X 1000</td>
 							@else
@@ -149,7 +149,7 @@
 						@else
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
 							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
-							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPagoDescuentos->sum('valor'),0);?></td>
+							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
 							<td>{{ $PagosDesc->descuento_retencion->tarifa }}</td>
 						@endif
 						<td>$ <?php echo number_format($PagosDesc['valor'],0);?></td>
