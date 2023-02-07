@@ -236,7 +236,7 @@
                 $("#ValS").val(Val.innerHTML);
                 $("#ValOD").val(Desc.innerHTML);
                 $("#ValDis").val(Val.innerHTML);
-                $("#Monto").val(Desc.innerHTML);
+                $("#Monto").val(Val.innerHTML);
                 $("#SaldoOP").val(Val.innerHTML);
             } else {
                 $("#form").hide();
