@@ -144,7 +144,11 @@
 						@else
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
 							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
-							<td>{{ $PagosDesc->descuento_retencion->tarifa }}</td>
+							@if($PagosDesc->descuento_retencion->id == 5)
+								<td>7 X 1000</td>
+							@else
+								<td>{{ $PagosDesc->descuento_retencion->tarifa }}</td>
+							@endif
 						@endif
 						<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPagoDescuentos->sum('valor'),0);?></td>
 						<td>$ <?php echo number_format($PagosDesc['valor'],0);?></td>
