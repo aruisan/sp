@@ -38,13 +38,15 @@ class CertificadoController extends Controller
         $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
 
         foreach ($registros as $registro){
-            //if ($registro->jefe_e == '3' and $registro->saldo == 0){
+            //if ($registro->jefe_e == '3' ){
                 if ($registro->cdpsRegistro->first()->cdp->vigencia_id == $vigencia->id){
                     foreach ($registro->ordenPagos as $ordenPago){
-                        foreach ($ordenPago->descuentos as $descuento){
-                            if ($descuento->valor > 0){
-                                dd($descuento, $ordenPago);
-                                $values[] = collect(['']);
+                        if ($ordenPago->estado == 1 and $ordenPago->saldo == 0){
+                            foreach ($ordenPago->descuentos as $descuento){
+                                if ($descuento->valor > 0){
+                                    dd($descuento, $ordenPago);
+                                    $values[] = collect(['']);
+                                }
                             }
                         }
                     }
