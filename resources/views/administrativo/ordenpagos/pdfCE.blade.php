@@ -120,7 +120,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="table-responsive br-black-1">
+		<div class="table-responsive br-black-1" style="display: none">
 			<table class="table-bordered" id="tablaDesc" style="width: 100%">
 				<thead>
 				<tr>
