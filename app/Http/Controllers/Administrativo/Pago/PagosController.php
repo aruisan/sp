@@ -107,7 +107,7 @@ class PagosController extends Controller
             }
             if (isset($PagoArray)) $codePago = array_last($PagoArray)['info']->code + 1;
             else $codePago = 0;
-            
+
 
             $Pago = new Pagos();
             $Pago->code = $codePago;
@@ -218,31 +218,41 @@ class PagosController extends Controller
         }
 
         if ($valReceived == $valTotal){
-            if ($request->type_pay == "1"){
-                $pago->type_pay = "CHEQUE";
-                $pago->num = $request->num_cheque;
-            }elseif ($request->type_pay == "2"){
-                $pago->type_pay = "ACCOUNT";
-                $pago->num = $request->num_cuenta;
-            }
-            $pago->estado = "1";
-            $pago->ff_fin = today()->format("Y-m-d");
-            $pago->save();
-
-            for($i=0;$i< count($request->banco); $i++){
-                $bank = new PagoBanks();
-                $bank->pagos_id = $request->pago_id;
-                $bank->rubros_puc_id = $request->banco[$i];
-                $bank->valor = $request->val[$i];
-                $bank->save();
-            }
 
             $OP = OrdenPagos::findOrFail($request->ordenPago_id);
-            $OP->saldo = $OP->saldo -  $valTotal;
-            $OP->save();
 
-            Session::flash('success','El pago se ha finalizado exitosamente');
-            return redirect('/administrativo/pagos/show/'.$pago->id);
+            if ($OP->saldo >= $valTotal){
+
+                if ($request->type_pay == "1"){
+                    $pago->type_pay = "CHEQUE";
+                    $pago->num = $request->num_cheque;
+                }elseif ($request->type_pay == "2"){
+                    $pago->type_pay = "ACCOUNT";
+                    $pago->num = $request->num_cuenta;
+                }
+
+                $pago->estado = "1";
+                $pago->ff_fin = today()->format("Y-m-d");
+                $pago->save();
+
+                for($i=0;$i< count($request->banco); $i++){
+                    $bank = new PagoBanks();
+                    $bank->pagos_id = $request->pago_id;
+                    $bank->rubros_puc_id = $request->banco[$i];
+                    $bank->valor = $request->val[$i];
+                    $bank->save();
+                }
+
+                $OP->saldo = $OP->saldo -  $valTotal;
+                $OP->save();
+
+                Session::flash('success','El pago se ha finalizado exitosamente');
+                return redirect('/administrativo/pagos/show/'.$pago->id);
+
+            } else {
+                Session::flash('warning','El valor que va a pagar: $'.$valTotal.' es mayor al valor disponible de la orden de pago: $'.$OP->saldo);
+                return back();
+            }
         } elseif ($valReceived > $valTotal){
             Session::flash('warning','El valor que va a pagar: $'.$valR.' es mayor al valor correspondiente del pago: $'.$valT);
             return back();
