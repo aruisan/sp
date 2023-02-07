@@ -118,6 +118,7 @@ class PagosController extends Controller
             $Pago->orden_pago_id = $request->IdOP;
             $Pago->valor = $request->Monto;
             $Pago->estado = "0";
+            $Pago->responsable_id = auth()->user()->id;
             $Pago->save();
 
             //BUSQUEDA DEL ID DEL RUBRO
