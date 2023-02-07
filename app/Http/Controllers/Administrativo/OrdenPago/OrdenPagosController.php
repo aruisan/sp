@@ -224,19 +224,19 @@ class OrdenPagosController extends Controller
                     $oPP->valor_credito = $request->valorPucC[$i];
                     $oPP->save();
 
-                    foreach ($ordenPago->descuentos as $descuento){
-                        if ($descuento->desc_municipal_id != null) $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
-                        if ($descuento->retencion_fuente_id != null) $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
-                    }
-                    $ordenPago->estado = "1";
-                    $ordenPago->save();
-
                 } else {
                     Session::flash('warning','Recuerde que los totales del credito y debito deben dar sumas iguales');
                     return back();
                 }
             }
         }
+
+        foreach ($ordenPago->descuentos as $descuento){
+            if ($descuento->desc_municipal_id != null) $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
+            if ($descuento->retencion_fuente_id != null) $ordenPago->saldo = $ordenPago->saldo - $descuento->valor;
+        }
+        $ordenPago->estado = "1";
+        $ordenPago->save();
 
         Session::flash('success','La orden de pago se ha finalizado exitosamente');
         return redirect('/administrativo/ordenPagos/show/'.$request->ordenPago_id);
