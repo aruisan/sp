@@ -113,6 +113,7 @@
                                         <th class="text-center">Codigo</th>
                                         <th class="text-center">Descripcion</th>
                                         <th class="text-center">Base</th>
+                                        <th class="text-center">%</th>
                                         <th class="text-center">Valor</th>
                                     </tr>
                                     </thead>
@@ -138,7 +139,7 @@
                                         </tr>
                                     @endforeach
                                     <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
-                                        <td colspan="3"><b>Total Descuentos</b></td>
+                                        <td colspan="4"><b>Total Descuentos</b></td>
                                         <td><b>$ <?php echo number_format($OrdenPagoDescuentos->sum('valor'),0);?></b></td>
                                     </tr>
                                     </tbody>
