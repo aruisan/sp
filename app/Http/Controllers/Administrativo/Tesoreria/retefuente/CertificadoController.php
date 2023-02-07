@@ -41,7 +41,7 @@ class CertificadoController extends Controller
             //if ($registro->jefe_e == '3' ){
                 if ($registro->cdpsRegistro->first()->cdp->vigencia_id == $vigencia->id){
                     foreach ($registro->ordenPagos as $ordenPago){
-                        if ($ordenPago->estado == 1 and $ordenPago->saldo == 0){
+                        if ($ordenPago->estado == 1){
                             foreach ($ordenPago->descuentos as $descuento){
                                 if ($descuento->valor > 0){
                                     dd($descuento, $ordenPago);
