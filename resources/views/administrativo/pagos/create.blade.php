@@ -81,35 +81,9 @@
                             </div>
                             <div class="col-md-4 align-self-center">
                                 <div class="form-group">
-                                    <label class="control-label text-right col-md-4">Valor de Orden de Pago: </label>
-                                    <div class="col-lg-6">
-                                        <input type="number" style="text-align: center" class="form-control" name="ValTo" id="ValTo" disabled>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 align-self-center">
-                                <div class="form-group">
                                     <label class="control-label text-right col-md-4">Tercero Orden de Pago: </label>
                                     <div class="col-lg-6">
                                         <input type="text" style="text-align: center" class="form-control" name="Name" id="Name" disabled>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="col-md-4 align-self-center">
-                                <div class="form-group">
-                                    <label class="control-label text-right col-md-4">Valor Orden de Pago - Descuentos: </label>
-                                    <div class="col-lg-6">
-                                        <input type="text" style="text-align: center" class="form-control" name="ValOD" id="ValOD" disabled>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 align-self-center">
-                                <div class="form-group">
-                                    <label class="control-label text-right col-md-4">Valor Disponible Orden de Pago: </label>
-                                    <div class="col-lg-6">
-                                        <input type="number" style="text-align: center" class="form-control" name="ValDis" id="ValDis" disabled>
                                     </div>
                                 </div>
                             </div>
