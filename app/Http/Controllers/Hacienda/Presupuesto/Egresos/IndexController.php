@@ -501,7 +501,7 @@ class IndexController extends Controller
                                                         $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                         $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                         if ($other->id == 754){
-                                                            dd($rubrosCC, $rubAfectado);
+                                                            //dd($rubrosCC, $rubAfectado);
                                                         }
                                                     }
                                                     elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
