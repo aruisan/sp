@@ -149,20 +149,26 @@ class IndexController extends Controller
                 if ($data->id < '324') {
                     //RUBROS INICIALES
                     if ($data->id == '318') {
+                        
                         //CDPS
                         $cdps = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
-                        if (count($cdps) > 0){
-                            $valueCDPs[] = $cdps->sum('valor');
-                        } else{
-                            $valueCDPs[] = 0;
-                        }
+                        if (count($cdps) > 0) $valueCDPs[] = $cdps->sum('valor');
+                        else $valueCDPs[] = 0;
 
+                        //registros
                         $registros = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
-                        if (count($registros) > 0){
-                            $valueRegistros[] = $registros->sum('valor');
-                        } else{
-                            $valueRegistros[] = 0;
-                        }
+                        if (count($registros) > 0) $valueRegistros[] = $registros->sum('valor');
+                        else $valueRegistros[] = 0;
+
+                        //orden pagos
+                        $ordenesPago = OrdenPagos::where('id','>=',708)->where('estado','1')->get();
+                        if (count($ordenesPago) > 0) $valueOrdenPago[] = $ordenesPago->sum('valor');
+                        else $valueOrdenPago[] = 0;
+
+                        //pagos
+                        $pagosDB = Pagos::where('id','>=',683)->where('estado','1')->get();
+                        if (count($pagosDB) > 0) $valuePagos[] = $pagosDB->sum('valor');
+                        else $valuePagos[] = 0;
 
                         $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$data->code.".')");
                         foreach ($otherRubs as $other) {
@@ -185,26 +191,6 @@ class IndexController extends Controller
                                     $valueRubrosRed[] = 0;
                                     $valueRubrosCred[] = 0;
                                     $valueRubrosCCred[] = 0;
-                                }
-
-
-
-                                //ORDENES DE PAGO
-                                if (isset($valores)){
-                                    foreach ($valores as $dataOP){
-                                        if ($dataOP['code'] == $other->id) {
-                                            $valueOrdenPago[] = $dataOP['val'];
-                                        }
-                                    }
-                                }
-
-                                //PAGOS
-                                if (isset($valoresPagos)){
-                                    foreach ($valoresPagos as $dataP){
-                                        if ($dataP['code'] == $other->id) {
-                                            $valuePagos[] = $dataP['val'];
-                                        }
-                                    }
                                 }
 
                             } else {
