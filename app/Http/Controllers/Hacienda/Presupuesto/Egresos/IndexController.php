@@ -686,33 +686,35 @@ class IndexController extends Controller
                                         if (count($bpinCdpValor) > 0){
                                             foreach ($bpinCdpValor as $bpinCDP){
                                                 $bpinArray = BPin::where('cod_actividad', $bpinCDP->cod_actividad)->first();
-                                                if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id and $bpinArray->id == $bpinVigen->first()->bpin_id){
-                                                    $valueCDPs[] = $bpinCDP->cdp->valor;
-                                                    $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)->get();
-                                                    if (count($cdpsRegValue) > 0){
-                                                        //CONSULTA PARA LOS REGISTROS
-                                                        foreach ($cdpsRegValue as $data){
-                                                            if ($data->valor != 0){
-                                                                if ($data->registro->jefe_e == 3){
-                                                                    //VALOR REGISTROS
-                                                                    $valueRegistros[] = $data->valor;
-                                                                    //ID REGISTROS
-                                                                    $IDRegistros[] = $data->registro_id;
-                                                                    //VALOR ORDENES DE PAGO
-                                                                    $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
-                                                                    if (count($ordenPagoRubros) > 0){
-                                                                        $ordenPagoRubro = $ordenPagoRubros->first();
-                                                                        if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
-                                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                            if ($ordenPagoRubro->orden_pago->pago){
-                                                                                if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
+                                                    if ($bpinArray->id == $bpinVigen->first()->bpin_id){
+                                                        $valueCDPs[] = $bpinCDP->cdp->valor;
+                                                        $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)->get();
+                                                        if (count($cdpsRegValue) > 0){
+                                                            //CONSULTA PARA LOS REGISTROS
+                                                            foreach ($cdpsRegValue as $data){
+                                                                if ($data->valor != 0){
+                                                                    if ($data->registro->jefe_e == 3){
+                                                                        //VALOR REGISTROS
+                                                                        $valueRegistros[] = $data->valor;
+                                                                        //ID REGISTROS
+                                                                        $IDRegistros[] = $data->registro_id;
+                                                                        //VALOR ORDENES DE PAGO
+                                                                        $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
+                                                                        if (count($ordenPagoRubros) > 0){
+                                                                            $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                            if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
+                                                                                $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                if ($ordenPagoRubro->orden_pago->pago){
+                                                                                    if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
                                                                 }
                                                             }
-                                                        }
-                                                    } else $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                                        } else $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                                    }else $valueCDPs[] = 0;
                                                 }
                                             }
 
