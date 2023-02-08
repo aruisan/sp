@@ -92,6 +92,7 @@
 					<th class="text-center">Codigo</th>
 					<th class="text-center">Descripcion</th>
 					<th class="text-center">Base</th>
+					<th class="text-center">%</th>
 					<th class="text-center">Valor</th>
 				</tr>
 				</thead>
@@ -101,20 +102,23 @@
 						@if($PagosDesc->retencion_fuente_id == null)
 							<td>{{ $PagosDesc->descuento_mun['codigo'] }}</td>
 							<td>{{ $PagosDesc->descuento_mun['concepto'] }}</td>
+							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
+							@if($PagosDesc->descuento_mun['id'] == 5)
+								<td>7 X 1000</td>
+							@else
+								<td>{{ $PagosDesc->descuento_mun['tarifa'] }}</td>
+							@endif
 						@else
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
 							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
-						@endif
-						@if($PagosDesc->retencion_fuente_id == null)
-							<td>$ <?php echo number_format($PagosDesc->descuento_mun['base'],0);?></td>
-						@else
-							<td>$ <?php echo number_format($PagosDesc->descuento_retencion->base,0);?></td>
+							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
+							<td>{{ $PagosDesc->descuento_retencion->tarifa }}</td>
 						@endif
 						<td>$ <?php echo number_format($PagosDesc['valor'],0);?></td>
 					</tr>
 				@endforeach
 				<tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
-					<td colspan="3"><b>Total Descuentos</b></td>
+					<td colspan="4"><b>Total Descuentos</b></td>
 					<td><b>$ <?php echo number_format($OrdenPagoDescuentos->sum('valor'),0);?></b></td>
 				</tr>
 				</tbody>
