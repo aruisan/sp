@@ -684,7 +684,7 @@ class IndexController extends Controller
                                     }
 
                                     //BPIN
-                                    $bpinVigen = bpinVigencias::where('dep_rubro_id', $depFont->id)->get();
+                                    $bpinVigen = bpinVigencias::where('dep_rubro_id', $depFont->id)->where('vigencia_id',$vigencia_id)->get();
 
                                     if (count($bpinVigen) > 0){
 

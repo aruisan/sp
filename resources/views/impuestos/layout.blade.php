@@ -57,6 +57,7 @@
 </head>
 <body>
 <div id="app">
+    @include('modal.password')
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
@@ -149,6 +150,11 @@
 @yield('scripts')
 
 <script>
+
+    function modal(){
+        $('#cambiarPasword').modal('show');
+    }
+
     $(document).keydown(function(event){
         if(event.keyCode==123){
             return false;
