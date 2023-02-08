@@ -175,27 +175,18 @@ class IndexController extends Controller
                                 //CDPS
                                 $cdps = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
                                 if (count($cdps) > 0){
-                                    //$valueCDPs[] = $cdps->sum('valor');
+                                    $valueCDPs[] = $cdps->sum('valor');
                                 } else{
                                     $valueCDPs[] = 0;
                                 }
 
-                                if(count($rubroOtherFind->first()->rubrosCdp) > 0){
-                                    foreach ($rubroOtherFind->first()->rubrosCdp as $cdp) {
-                                        if ($cdp->cdps->jefe_e == "3") {
-                                            $valueCDPs[] = $cdp->cdps->valor;
-                                            if (count($cdp->cdps->cdpsRegistro) > 0){
-                                                foreach ($cdp->cdps->cdpsRegistro as $cdpReg){
-                                                    if ($cdpReg->registro->jefe_e == 3){
-
-                                                        //VALOR REGISTROS
-                                                        $valueRegistros[] = $cdpReg->registro->valor;
-                                                    }
-                                                }
-                                            } else $valueRegistros[] = 0;
-                                        }
-                                    }
-                                } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+                                $registros = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
+                                if (count($registros) > 0){
+                                    $valueRegistros[] = $registros->sum('valor');
+                                } else{
+                                    $valueRegistros[] = 0;
+                                }
+                                
 
                                 //ORDENES DE PAGO
                                 if (isset($valores)){
