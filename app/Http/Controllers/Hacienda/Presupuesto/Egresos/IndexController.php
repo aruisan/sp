@@ -149,26 +149,24 @@ class IndexController extends Controller
                 if ($data->id < '324') {
                     //RUBROS INICIALES
                     if ($data->id == '318') {
+                        //CDPS
+                        $cdps = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
+                        if (count($cdps) > 0){
+                            $valueCDPs[] = $cdps->sum('valor');
+                        } else{
+                            $valueCDPs[] = 0;
+                        }
+
+                        $registros = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
+                        if (count($registros) > 0){
+                            $valueRegistros[] = $registros->sum('valor');
+                        } else{
+                            $valueRegistros[] = 0;
+                        }
+
                         $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$data->code.".')");
                         foreach ($otherRubs as $other) {
                             $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
-
-                            //CDPS
-                            $cdps = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
-                            if (count($cdps) > 0){
-                                $valueCDPs[] = $cdps->sum('valor');
-                            } else{
-                                $valueCDPs[] = 0;
-                            }
-
-                            $registros = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
-                            if (count($registros) > 0){
-                                $valueRegistros[] = $registros->sum('valor');
-                            } else{
-                                $valueRegistros[] = 0;
-                            }
-
-
                             if($rubroOtherFind->first()) {
                                 //2 ADD - 3 RED  - 1 CRED
                                 if(count($rubroOtherFind->first()->rubrosMov) > 0){
