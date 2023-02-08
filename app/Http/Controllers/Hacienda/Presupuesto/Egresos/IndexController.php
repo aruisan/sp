@@ -494,6 +494,7 @@ class IndexController extends Controller
                                                         $valueRubrosCred[] = $mov->valor;
                                                         $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                         $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
+                                                        dd($rubrosCC, $rubAfectado, $rubroOtherFind->first()->rubrosMov);
                                                     }
                                                     elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
                                                     elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;

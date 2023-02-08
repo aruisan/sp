@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria;
 
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Tesoreria\NotaCredito;
 use App\Http\Controllers\Controller;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -16,19 +17,12 @@ class NotaCreditoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $vigencia = Vigencia::find($id);
-        dd($vigencia);
+        $añoActual = Carbon::today()->year;
+        $notas = NotaCredito::where('año', $añoActual)->get();
 
-        if ($vigencia->tipo == 1){
-            $notasT = NotaCredito::where('vigencia_id', $id)->where('estado','!=','3')->get();
-            $notas = NotaCredito::where('vigencia_id', $id)->where('estado','3')->get();
-
-            return view('administrativo.tesoreria.notacredito.index', compact('vigencia', 'notasT', 'notas'));
-        } else {
-            return back();
-        }
+        return view('administrativo.tesoreria.notacredito.index', compact('añoActual', 'notas'));
     }
 
     /**
@@ -38,7 +32,10 @@ class NotaCreditoController extends Controller
      */
     public function create()
     {
-        //
+        $añoActual = Carbon::today()->year;
+        $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
+
+        return view('administrativo.tesoreria.notacredito.create', compact('añoActual','hijosDebito'));
     }
 
     /**

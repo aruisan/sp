@@ -323,7 +323,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
 
         //NOTAS CREDITO
-        Route::get('tesoreria/notasCredito/{id}','Administrativo\Tesoreria\NotaCreditoController@index');
+        Route::get('tesoreria/notasCredito','Administrativo\Tesoreria\NotaCreditoController@index');
+        Route::get('tesoreria/notasCredito/create','Administrativo\Tesoreria\NotaCreditoController@create');
 
 
 
