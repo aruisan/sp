@@ -89,10 +89,10 @@
                         },
                         "sProcessing":"Procesando...",
                     },
-                    "pageLength": 5,
+                    "pageLength": 10,
                     responsive: true,
                     "searching": true,
-                    ordering: false,
+                    ordering: true,
                     "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
                     dom: 'Bfrtip',
                     buttons:[
