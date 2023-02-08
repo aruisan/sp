@@ -569,6 +569,8 @@
                                                                 <tr>
                                                                     <th class="text-center">Cod.</th>
                                                                     <th class="text-center">Nombre</th>
+                                                                    <th class="text-center">Dependencia</th>
+                                                                    <th class="text-center">Fuente</th>
                                                                     <th class="text-center">Dinero Disp</th>
                                                                     <th class="text-center">Dinero a Usar</th>
                                                                 </tr>
@@ -905,24 +907,22 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                console.log(datos);
+                datos.forEach(e => {
+                    $('#tbody_actividades').append(`
+                        <tr>
+                            <td>${e.cod_actividad} <input type="hidden" name="codActividad[]" value="${e.cod_actividad}"></td>
+                            <td>${e.nombre} <input type="hidden" name="depRubro_id[]" value="${e.depRubro_id}"></td>
+                            <td>${e.dependencia}</td>
+                            <td>${e.font}</td>
+                            <td>${ parseInt(e.dineroDisp).toLocaleString('de-DE')} $</td>
+                            <td><input type="number" class="form-control" min="0" value="0" max="${e.dineroDisp}" name="valUsedActividad[]"></td>
+                        </tr>
+                    `);
+                });
 
             }).fail(function() {
                 toastr.warning('OCURRIO UN ERROR AL OBTENER LAS ACTIVIDADES DEL PROYECTO.');
             });
-            bpins.filter(r => r.cod_proyecto == codProy).forEach(e => {
-                if(e.rubro_find[0].saldo > 0){
-                            $('#tbody_actividades').append(`
-                        <tr>
-                            <td>${e.cod_actividad} <input type="hidden" name="codActividad[]" value="${e.cod_actividad}"></td>
-                            <td>${e.actividad}</td>
-                            <td>${ parseInt(e.rubro_find[0].saldo).toLocaleString('de-DE')} $</td>
-                            <td><input type="number" class="form-control" min="0" value="0" max="${e.rubro_find[0].saldo}" name="valUsedActividad[]"></td>
-                        </tr>
-                    `);
-                }
-            });
-
             window.scrollTo(0,document.body.scrollHeight);
         }
 
