@@ -897,14 +897,16 @@
             document.getElementById("tbody_actividades").innerHTML = "";
             document.getElementById("actividades").style.display = "";
             bpins.filter(r => r.cod_proyecto == codProy).forEach(e => {
-                $('#tbody_actividades').append(`
-                <tr>
-                    <td>${e.cod_actividad} <input type="hidden" name="codActividad[]" value="${e.cod_actividad}"></td>
-                    <td>${e.actividad}</td>
-                    <td>${ parseInt(e.rubro_find[0].saldo).toLocaleString('de-DE')} $</td>
-                    <td><input type="number" class="form-control" min="0" value="0" max="${e.rubro_find[0].saldo}" name="valUsedActividad[]"></td>
-                </tr>
-            `);
+                if(e.rubro_find[0].saldo > 0){
+                            $('#tbody_actividades').append(`
+                        <tr>
+                            <td>${e.cod_actividad} <input type="hidden" name="codActividad[]" value="${e.cod_actividad}"></td>
+                            <td>${e.actividad}</td>
+                            <td>${ parseInt(e.rubro_find[0].saldo).toLocaleString('de-DE')} $</td>
+                            <td><input type="number" class="form-control" min="0" value="0" max="${e.rubro_find[0].saldo}" name="valUsedActividad[]"></td>
+                        </tr>
+                    `);
+                }
             });
 
             window.scrollTo(0,document.body.scrollHeight);
