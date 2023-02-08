@@ -140,9 +140,9 @@ class PagosController extends Controller
                     $pagoRubros->rubro_id = $rubroIDInv;
 
                 } else{
-                    
+
                     $rubroid = DependenciaRubroFont::find($Pago->orden_pago->registros->cdpRegistroValor[0]->cdps->rubrosCdpValor[0]->fontsDep_id);
-                    $pagoRubros->rubro_id = $rubroid;
+                    $pagoRubros->rubro_id = $rubroid->fontRubro->rubro_id;
                 }
                 $pagoRubros->valor = $Pago->valor;
                 $pagoRubros->save();
