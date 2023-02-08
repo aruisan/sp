@@ -77,8 +77,10 @@
 			</p>
 		</div>
 		<div class="col-md-4 s7">
-			&nbsp;&nbsp;&nbsp;&nbsp;
 			<img src="https://www.siex-concejoprovidenciaislas.com.co/img/masporlasislas.png"  height="60">
+		</div>
+		<div class="col-md-6 s17">
+			<img src="https://www.siex-concejoprovidenciaislas.com.co/img/logoSiex.png"  height="50">
 		</div>
 	</div>
 
