@@ -149,7 +149,7 @@ class IndexController extends Controller
                 if ($data->id < '324') {
                     //RUBROS INICIALES
                     if ($data->id == '318') {
-                        
+
                         //CDPS
                         $cdps = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
                         if (count($cdps) > 0) $valueCDPs[] = $cdps->sum('valor');
@@ -685,7 +685,8 @@ class IndexController extends Controller
                                         $bpinCdpValor = BpinCdpValor::where('cod_actividad', $bpinVigen->first()->bpin->cod_actividad)->get();
                                         if (count($bpinCdpValor) > 0){
                                             foreach ($bpinCdpValor as $bpinCDP){
-                                                if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
+                                                $bpinArray = BPin::where('cod_actividad', $bpinCDP->cod_actividad)->first();
+                                                if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id and $bpinArray->id == $bpinVigen->first()->bpin_id){
                                                     $valueCDPs[] = $bpinCDP->cdp->valor;
                                                     $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)->get();
                                                     if (count($cdpsRegValue) > 0){
