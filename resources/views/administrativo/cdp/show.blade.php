@@ -50,6 +50,7 @@
                         <div class="form-validation">
                             <form class="form" action="">
                                 <hr>
+                                <meta name="csrf-token" content="{{ csrf_token() }}">
                                 {{ csrf_field() }}
                                 <div class="col-lg-6">
                                     <table class="table-responsive" width="100%">
@@ -554,7 +555,7 @@
                                                                 <tbody>
 
                                                                 @foreach($unicoBpins as $item)
-                                                                    <tr onclick="showActividades({{$item->cod_proyecto}})" style="cursor: pointer">
+                                                                    <tr onclick="showActividades({{$item->cod_proyecto}}, {{$vigencia}})" style="cursor: pointer">
                                                                         <td>{{ $item->cod_proyecto }}</td>
                                                                         <td>{{ $item->nombre_proyecto }}</td>
                                                                     </tr>
@@ -893,9 +894,22 @@
             console.log(rubro);
         }
 
-        function showActividades(codProy){
+        function showActividades(codProy, vigencia){
             document.getElementById("tbody_actividades").innerHTML = "";
             document.getElementById("actividades").style.display = "";
+
+            $.ajax({
+                method: "POST",
+                url: "/administrativo/proyectos/find-actividad",
+                data: { "proyecto": codProy, "vigencia_id": vigencia,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function(datos) {
+                console.log(datos);
+
+            }).fail(function() {
+                toastr.warning('OCURRIO UN ERROR AL OBTENER LAS ACTIVIDADES DEL PROYECTO.');
+            });
             bpins.filter(r => r.cod_proyecto == codProy).forEach(e => {
                 if(e.rubro_find[0].saldo > 0){
                             $('#tbody_actividades').append(`

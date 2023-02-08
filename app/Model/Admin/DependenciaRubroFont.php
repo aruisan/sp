@@ -7,6 +7,9 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class DependenciaRubroFont extends Model implements Auditable
 {
+
+    protected $table = 'dependencia_rubro_fonts';
+
     use \OwenIt\Auditing\Auditable;
 
     public function dependencias(){

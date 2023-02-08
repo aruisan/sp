@@ -257,6 +257,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::post('cdp/{id}/RestartInv', 'Administrativo\Cdp\CdpController@restaurarInv');
         Route::post('cdp/{id}/DeleteInv', 'Administrativo\Cdp\CdpController@deleteInv');
 
+        //buscar actividades para crear CDP
+        Route::post('proyectos/find-actividad', 'Administrativo\Cdp\CdpController@findActividades');
+
         Route::resource('marcas-herretes', 'Administrativo\MarcaHerrete\MarcaHerreteController');
         Route::get('persona-find/{identificador}', 'Cobro\PersonasController@personaFind');
         Route::post('persona/find-create', 'Cobro\PersonasController@PersonafindCreate');

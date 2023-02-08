@@ -286,7 +286,7 @@ class CdpController extends Controller
 
 
         return view('administrativo.cdp.show', compact('cdp','rubros','valores','rol',
-            'infoRubro', 'conteo', 'bpins', 'user','unicoBpins','activateAnul'));
+            'infoRubro', 'conteo', 'bpins', 'user','unicoBpins','activateAnul','vigencia'));
     }
 
     public function unique_multidim_array($array, $key) {
@@ -762,5 +762,22 @@ class CdpController extends Controller
             Session::flash('sucess','CDPs aprobados exitosamente');
             return back();
         }
+    }
+
+    public function findActividades(Request $request){
+        $actividadesFind = BPin::where('cod_proyecto', $request->proyecto)->get();
+
+        foreach ($actividadesFind as $actividad){
+            if (count($actividad->rubroFind) > 0){
+                $bpinVigencias = bpinVigencias::where('bpin_id', $actividad->id)->get();
+                foreach ($bpinVigencias as $bpinVigencia){
+                    if ($bpinVigencia->vigencia_id == $request->vigencia_id and $bpinVigencia->saldo > 0){
+                        $depRubroFont = DependenciaRubroFont::where('id',359)->get();
+                        $actividades[] = collect(['actividad' => $actividad, 'bpinVigencia' => $bpinVigencia, 'rubro' => $depRubroFont]);
+                    }
+                }
+            }
+        }
+        return $actividades;
     }
 }
