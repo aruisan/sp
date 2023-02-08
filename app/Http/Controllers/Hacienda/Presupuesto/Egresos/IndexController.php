@@ -174,12 +174,16 @@ class IndexController extends Controller
 
                                 //CDPS
                                 $cdps = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
-                                $valueCDPs[] = $cdps->sum('valor');
-                                dd($valueCDPs);
+                                if (count($cdps) > 0){
+                                    $valueCDPs[] = $cdps->sum('valor');
+                                } else{
+                                    $valueCDPs[] = 0;
+                                }
+                                
                                 if(count($rubroOtherFind->first()->rubrosCdp) > 0){
                                     foreach ($rubroOtherFind->first()->rubrosCdp as $cdp) {
                                         if ($cdp->cdps->jefe_e == "3") {
-                                            $valueCDPs[] = $cdp->cdps->valor;
+                                            //$valueCDPs[] = $cdp->cdps->valor;
                                             if (count($cdp->cdps->cdpsRegistro) > 0){
                                                 foreach ($cdp->cdps->cdpsRegistro as $cdpReg){
                                                     if ($cdpReg->registro->jefe_e == 3){
