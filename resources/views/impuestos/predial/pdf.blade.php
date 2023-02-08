@@ -31,7 +31,7 @@
                     <td>Area de Terreno:<br><b>{{$contribuyente->areaTerreno}}</b></td>
                     <td>Fecha Liquidación:<br><b>{{ \Carbon\Carbon::parse($predial->presentacion)->format('d-m-Y') }}</b></td>
                     <td>Tarifa:<br><b>{{$predial->tarifaMil}}</b></td>
-                    <td>Descuento<br><b>{{$predial->tasaDesc}}</b></td>
+                    <td>Descuento<br><b>{{$predial->tasaDesc}} %</b></td>
                 </tr>
                 </tbody>
             </table>
