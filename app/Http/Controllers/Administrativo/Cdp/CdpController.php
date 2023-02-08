@@ -642,6 +642,7 @@ class CdpController extends Controller
                     $bpinCdpValor->valor_disp = $request->valUsedActividad[$i];
                     $bpinCdpValor->cdp_id = $cdp;
                     $bpinCdpValor->cod_actividad = $request->codActividad[$i];
+                    $bpinCdpValor->dependencia_rubro_font_id = $request->depRubro_id[$i];
                     $bpinCdpValor->save();
                 }
             }
