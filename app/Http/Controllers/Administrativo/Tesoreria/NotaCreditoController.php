@@ -18,8 +18,9 @@ class NotaCreditoController extends Controller
      */
     public function index($id)
     {
-        dd("INDEX NOTA CREDITO", $id);
-        $vigencia = Vigencia::findOrFail($id);
+        $vigencia = Vigencia::find($id);
+        dd($vigencia);
+
         if ($vigencia->tipo == 1){
             $notasT = NotaCredito::where('vigencia_id', $id)->where('estado','!=','3')->get();
             $notas = NotaCredito::where('vigencia_id', $id)->where('estado','3')->get();

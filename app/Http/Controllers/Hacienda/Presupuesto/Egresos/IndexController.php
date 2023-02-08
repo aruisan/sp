@@ -156,8 +156,8 @@ class IndexController extends Controller
                         else $valueCDPs[] = 0;
 
                         //registros
-                        $registros = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
-                        if (count($registros) > 0) $valueRegistros[] = $registros->sum('valor');
+                        $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
+                        if (count($registrosFind) > 0) $valueRegistros[] = $registrosFind->sum('valor');
                         else $valueRegistros[] = 0;
 
                         //orden pagos

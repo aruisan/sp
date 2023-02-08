@@ -1,21 +1,21 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    Creación del Comprobante de Ingresos
+    Creación de la Nota Credito
 @stop
 @section('content')
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>NUEVO COMPROBANTE DE INGRESOS</b></h4>
+                <h4><b>NUEVA NOTA CREDITO</b></h4>
             </strong>
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills">
                 <li class="nav-item regresar">
-                    <a class="nav-link "  href="{{ url('/administrativo/CIngresos/'.$vigencia->id) }}">Volver a Comprobantes de Ingresos</a>
+                    <a class="nav-link "  href="{{ url('/administrativo/tesoreria/notasCredito/'.$vigencia->id) }}">Volver a Notas Credito</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#nuevo" >NUEVO COMPROBANTE DE INGRESOS</a>
+                    <a class="nav-link" href="#nuevo" >NUEVA NOTA CREDITO</a>
                 </li>
             </ul>
 
@@ -23,7 +23,7 @@
                 <div id="nuevo" class="tab-pane fade in active">
                     <div class="form-validation">
                         <br>
-                        <form class="form-valide" action="{{url('/administrativo/CIngresos')}}" method="POST" enctype="multipart/form-data">
+                        <form class="form-valide" action="{{url('/administrativo/tesoreria/notasCredito/'.$vigencia->id)}}" method="POST" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="col-md-6 align-self-center">
@@ -90,6 +90,8 @@
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                            <hr>
                             <br>
                             <div class="row">
                                 <div class="col-md-12 align-self-center">
