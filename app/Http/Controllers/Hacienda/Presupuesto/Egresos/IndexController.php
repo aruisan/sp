@@ -493,7 +493,7 @@ class IndexController extends Controller
                                                     if ($mov->movimiento == "1") {
                                                         $valueRubrosCred[] = $mov->valor;
                                                         $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
-                                                        $rubrosCC[] = collect(['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor]);
+                                                        $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                     }
                                                     elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
                                                     elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
@@ -507,13 +507,7 @@ class IndexController extends Controller
                                             $valueRubrosCCred[] = 0;
                                         }
 
-                                        //VALORES CONTRA CREDITO
-                                        if (isset($rubrosCC)){
-                                            if ($other->id == 548){
-                                                dd($rubrosCC, $other);
-                                            }
-                                            foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
-                                        }
+
 
                                         //CDPS
                                         foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro){
@@ -554,6 +548,14 @@ class IndexController extends Controller
                                         }
 
                                     } else $valueRubros[] = 0;$valueCDPs[] = 0;$valueRegistros[] = 0;$valueOrdenPago[] = 0; $valuePagos[] = 0; $valueRubrosDisp[] = 0;
+                                }
+
+                                //VALORES CONTRA CREDITO
+                                if (isset($rubrosCC)){
+                                    if ($other->id == 548){
+                                        dd($rubrosCC, $other);
+                                    }
+                                    foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
                                 }
 
                                 if (!isset($valueRubrosAdd)) {
