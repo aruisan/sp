@@ -773,7 +773,9 @@ class CdpController extends Controller
                 foreach ($bpinVigencias as $bpinVigencia){
                     if ($bpinVigencia->vigencia_id == $request->vigencia_id and $bpinVigencia->saldo > 0){
                         $depRubroFont = DependenciaRubroFont::where('id',359)->get();
-                        $actividades[] = collect(['actividad' => $actividad, 'bpinVigencia' => $bpinVigencia, 'rubro' => $depRubroFont]);
+                        $actividades[] = collect([
+                            'cod_actividad' => $actividad->cod_actividad, 'nombre' => $actividad->actividad, 'dineroDisp' =>
+                        $bpinVigencia->saldo]);
                     }
                 }
             }
