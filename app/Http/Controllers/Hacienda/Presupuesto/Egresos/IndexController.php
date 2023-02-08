@@ -509,7 +509,9 @@ class IndexController extends Controller
 
                                         //VALORES CONTRA CREDITO
                                         if (isset($rubrosCC)){
-                                            dd($rubrosCC, $other);
+                                            if ($other->id == 548){
+                                                dd($rubrosCC, $other);
+                                            }
                                             foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
                                         }
 
