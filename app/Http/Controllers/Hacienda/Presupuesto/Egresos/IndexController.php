@@ -305,8 +305,9 @@ class IndexController extends Controller
                                         if ($mov->valor > 0 ){
                                             if ($mov->movimiento == "1") {
                                                 $valueRubrosCred[] = $mov->valor;
+                                                $valueRubrosCCred[] = $mov->valor;
                                                 $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
-                                                $rubrosCC[] = $mov->valor;
+                                                $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                             }
                                             elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
                                             elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
@@ -321,9 +322,9 @@ class IndexController extends Controller
 
                                 //VALORES CONTRA CREDITO
                                 if (isset($rubrosCC)) {
-                                    dd($rubrosCC);
+                                    //dd($rubrosCC);
 
-                                    foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
+                                    //foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
                                 }
 
                                 //CDPS
