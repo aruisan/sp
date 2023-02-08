@@ -688,7 +688,7 @@ class IndexController extends Controller
                                                 $bpinArray = BPin::where('cod_actividad', $bpinCDP->cod_actividad)->first();
                                                 if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
                                                     if ($bpinArray->id == $bpinVigen->first()->bpin_id){
-                                                        dd($bpinArray, $bpinCdpValor, $bpinVigen);
+                                                        //dd($bpinArray, $bpinCdpValor, $bpinVigen);
                                                         $valueCDPs[] = $bpinCDP->cdp->valor;
                                                         $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)->get();
                                                         if (count($cdpsRegValue) > 0){
