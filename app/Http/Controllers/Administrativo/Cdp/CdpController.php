@@ -766,16 +766,15 @@ class CdpController extends Controller
 
     public function findActividades(Request $request){
         $actividadesFind = BPin::where('cod_proyecto', $request->proyecto)->get();
-
         foreach ($actividadesFind as $actividad){
             if (count($actividad->rubroFind) > 0){
                 $bpinVigencias = bpinVigencias::where('bpin_id', $actividad->id)->get();
                 foreach ($bpinVigencias as $bpinVigencia){
                     $depRF = DependenciaRubroFont::find($bpinVigencia->dep_rubro_id);
-                    return $depRF;
                     if ($bpinVigencia->vigencia_id == $request->vigencia_id and $bpinVigencia->saldo > 0){
                         $actividades[] = collect(['cod_actividad' => $actividad->cod_actividad, 'nombre' => $actividad->actividad,
-                            'dineroDisp' =>$bpinVigencia->saldo, 'depRubro_id' => $bpinVigencia->dep_rubro_id]);
+                            'dineroDisp' =>$bpinVigencia->saldo, 'depRubro_id' => $bpinVigencia->dep_rubro_id,
+                            'font' => $depRF->fontRubro->sourceFunding->code.' - '.$depRF->fontRubro->sourceFunding->description]);
                     }
                 }
             }
