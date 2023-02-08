@@ -18,6 +18,10 @@
             @endforeach
         </select>
         <div class="table-responsive">
+            <div class="text-center" id="cargando" style="display: none">
+                <br><br>
+                <h4>Buscando informacion para cargar libro...</h4>
+            </div>
             <table style="display: none" class="table table-bordered table-hover" id="tabla">
                 <hr>
                 <thead>
@@ -61,6 +65,7 @@
         });
 
         function findRubroPUC(option){
+            $("#cargando").show();
 
             var table = $('#tabla').DataTable();
 
@@ -73,6 +78,7 @@
             }).done(function(datos) {
                 $("#tabla").show();
                 table.destroy();
+                $("#cargando").hide();
                 table = $('#tabla').DataTable( {
                     language: {
                         "lengthMenu": "Mostrar _MENU_ registros",
@@ -141,6 +147,7 @@
             }).fail(function() {
                 $("#tabla").hide();
                 table.destroy();
+                $("#cargando").hide();
                 toastr.warning('NO SE OBTUVIERON DATOS DE ESA CUENTA');
             });
         }
