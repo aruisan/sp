@@ -318,6 +318,7 @@ class IndexController extends Controller
                                     $valueRubrosCred[] = 0;
                                     $valueRubrosCCred[] = 0;
                                 }
+                                dd($rubrosCC);
 
                                 //VALORES CONTRA CREDITO
                                 if (isset($rubrosCC)) foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
