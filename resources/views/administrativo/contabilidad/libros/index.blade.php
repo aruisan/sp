@@ -89,7 +89,7 @@
                         },
                         "sProcessing":"Procesando...",
                     },
-                    "pageLength": 10,
+                    "pageLength": 5,
                     responsive: true,
                     "searching": true,
                     ordering: true,
