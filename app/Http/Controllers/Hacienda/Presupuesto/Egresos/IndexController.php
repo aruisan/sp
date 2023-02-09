@@ -890,8 +890,6 @@ class IndexController extends Controller
             $allReg = Registro::all();
             foreach ($allReg as $reg) if ($reg->cdpsRegistro[0]->cdp->vigencia_id == $V) $registros[] = ['id' => $reg->id, 'code' => $reg->code, 'objeto' => $reg->objeto, 'nombre' => $reg->persona->nombre, 'valor' => $reg->valor,
                 'estadoSecretaria' => $reg->secretaria_e, 'estadoJefe' => $reg->jefe_e];
-                
-            
 
             //CODE CONTRACTUALES
             $codeCon = CodeContractuales::all();
