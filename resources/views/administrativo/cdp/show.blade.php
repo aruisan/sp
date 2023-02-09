@@ -166,7 +166,7 @@
                                                                 <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
                                                                 <select name="rubro_id[]" class="form-control" onchange="selectedRubro(this.value)" required>
                                                                     @foreach($infoRubro as $rubro)
-                                                                        <option value="{{ $rubro['id_rubro'] }}">{{ $rubro['codigo'] }} - {{ $rubro['name'] }}</option>
+                                                                        <option value="{{ $rubro['depFont'] }}">{{ $rubro['codigo'] }} - {{ $rubro['name'] }} - {{$rubro['dependencia']}}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </td>
