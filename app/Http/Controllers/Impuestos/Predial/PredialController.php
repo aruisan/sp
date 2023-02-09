@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Impuestos\Predial;
+
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\ImpuestosPredial\Liquidador;
 use App\Model\Impuestos\Pagos;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
 use PDF;
+use DB;
 
 class PredialController extends Controller
 {
@@ -40,11 +42,37 @@ class PredialController extends Controller
         $action = "Creación";
         $contribuyente = PredialContribuyentes::where('email',$user->email)->get();
         $predios = $contribuyente;
+        $añoActual = Carbon::today()->format('Y');
         if (count($contribuyente) == 0){
             Session::flash('warning', 'No se encuentra información del usuario almacenada en el sistema - Contacte con un funcionario.');
             return back();
         } else{
+            foreach ($contribuyente as $contri){
+                $impHechos = Predial::where('imp_pred_contri_id', $contri->id)->get();
+                foreach ($impHechos as $impHecho){
+                    if (Carbon::parse($impHecho->fechaPago)->format('Y') == $añoActual) $hechos[] = $contri->id;
+                }
+            }
+
+            if (isset($hechos)){
+                if (count($hechos) >= count($contribuyente)){
+                    if (count($contribuyente) == 1){
+                        Session::flash('warning', 'Ya ha realizado el impuesto predial de su predio por este año.');
+                        return back();
+                    } else{
+                        Session::flash('warning', 'Ya ha realizado el impuesto predial de sus predios por este año.');
+                        return back();
+                    }
+                } else{
+                    foreach ($predios as $validate){
+                        $clave = array_search($validate->id, $hechos);
+                        if ($clave === FALSE) $validatePred[] = collect($validate);
+                    }
+                }
+            }
+            if (isset($validatePred)) $predios = $validatePred;
             $contribuyente = $contribuyente[0];
+
             return view('impuestos.predial.create', compact('action','contribuyente','predios'));
         }
     }
