@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Cdp;
 
+use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\Cdp\RubrosCdp;
@@ -33,9 +34,10 @@ class RubrosCdpController extends Controller
         if ($rubros != null){
             $count = count($rubros);
             for($i = 0; $i < $count; $i++){
+                $depFont = DependenciaRubroFont::find($rubros[$i]);
                 $rubrosCdp = new RubrosCdp();
                 $rubrosCdp->cdp_id = $cdp_id;
-                $rubrosCdp->rubro_id = $rubros[$i];
+                $rubrosCdp->rubro_id = $depFont->fontRubro->rubro_id;
                 $rubrosCdp->save();
             }
         }
