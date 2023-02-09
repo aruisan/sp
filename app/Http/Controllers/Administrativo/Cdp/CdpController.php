@@ -229,7 +229,8 @@ class CdpController extends Controller
                     foreach ($rubro[0]->fontsRubro as $fuentes){
                         foreach ($fuentes->dependenciaFont as $fontDep){
                             if ($fontDep->saldo > 0){
-                                $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
+                                $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod,
+                                    'depFont' => $fontDep->id, 'dependencia' => $fontDep->dependencias->name];
                             }
                             //$valDisp[] = $fontDep->saldo;
                         }
