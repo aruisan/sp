@@ -178,21 +178,26 @@
                                             @for($i = 0; $i < $cdp->rubrosCdp->count(); $i++)
                                                 @php($rubrosCdpData = $cdp->rubrosCdp[$i] )
                                                 <tr>
+                                                    <td class="text-center"></td>
                                                     <td class="text-center">
-
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <div class="col-lg-4">
+                                                        @if($rubrosCdpData->depRubroFont)
+                                                            <div class="col-lg-3">
+                                                                <h4>
+                                                                    <b>{{ $rubrosCdpData->depRubroFont->dependencias->name}}</b>
+                                                                </h4>
+                                                            </div>
+                                                        @endif
+                                                        <div class="col-lg-3">
                                                             <h4>
                                                                 <b>{{ $rubrosCdpData->rubros->name }}</b>
                                                             </h4>
                                                         </div>
-                                                        <div class="col-lg-4">
+                                                        <div class="col-lg-3">
                                                             <h4>
                                                                 <b>Rubro: {{ $rubrosCdpData->rubros->cod }}</b>
                                                             </h4>
                                                         </div>
-                                                        <div class="col-lg-4">
+                                                        <div class="col-lg-3">
                                                             @php( $valorT = $rubrosCdpData->rubrosCdpValor->sum('valor') )
                                                             <h4>
                                                                 <b>
