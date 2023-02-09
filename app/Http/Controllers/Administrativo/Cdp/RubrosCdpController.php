@@ -38,6 +38,7 @@ class RubrosCdpController extends Controller
                 $rubrosCdp = new RubrosCdp();
                 $rubrosCdp->cdp_id = $cdp_id;
                 $rubrosCdp->rubro_id = $depFont->fontRubro->rubro_id;
+                $rubrosCdp->dep_rubro_font_id = $rubros[$i];
                 $rubrosCdp->save();
             }
         }
