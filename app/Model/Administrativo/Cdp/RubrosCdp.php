@@ -22,4 +22,8 @@ class RubrosCdp extends Model implements Auditable
     public function rubrosCdpValor(){
         return $this->hasMany('App\Model\Administrativo\Cdp\RubrosCdpValor','rubrosCdp_id');
     }
+
+    public function depRubroFont(){
+        return $this->hasOne('App\Model\Admin\DependenciaRubroFont','id','dep_rubro_font_id');
+    }
 }
