@@ -30,7 +30,13 @@
                             </tr>
                             <tr style="background-color: #bfc3bf; color: black">
                                 <td>AÑO GRAVABLE</td>
-                                <td><select class="form-control" id="añoGravable" name="añoGravable">
+                                <td><select class="form-control" id="añoGravable" name="añoGravable" onchange="operation()">
+                                        <option value="2016" @if($action == "Corrección" and $ica->añoGravable == "2016" ) selected @endif>2016</option>
+                                        <option value="2017" @if($action == "Corrección" and $ica->añoGravable == "2017" ) selected @endif>2017</option>
+                                        <option value="2018" @if($action == "Corrección" and $ica->añoGravable == "2018" ) selected @endif>2018</option>
+                                        <option value="2019" @if($action == "Corrección" and $ica->añoGravable == "2019" ) selected @endif>2019</option>
+                                        <option value="2020" @if($action == "Corrección" and $ica->añoGravable == "2020" ) selected @endif>2020</option>
+                                        <option value="2021" @if($action == "Corrección" and $ica->añoGravable == "2021" ) selected @endif>2021</option>
                                         <option value="2022" @if($action == "Corrección" and $ica->añoGravable == "2022" ) selected @endif>2022</option>
                                         <option value="2023" @if($action == "Corrección" and $ica->añoGravable == "2023" ) selected @endif>2023</option>
                                     </select></td>
@@ -365,8 +371,11 @@
                             </tr>
                             <tr>
                                 <td>36. DESCUENTO POR PRONTO PAGO (Si existe, liquidelo según el Acuerdo Municipial o distrital)</td>
-                                <td><input class="form-control" type="number" min="0" @if($action == "Corrección" ) value="{{ $ica->valorDesc }}" @else value="0" @endif name="valorDesc" id="valorDesc"
-                                           onchange="operation()"></td>
+                                <td>
+                                    <span id="valorDescSpan">@if($action == "Corrección") $<?php echo number_format($ica->valorDesc,0) ?> @else $0 @endif</span>
+                                    <input class="form-control" type="hidden" min="0" @if($action == "Corrección" ) value="{{ $ica->valorDesc }}" @else value="0" @endif name="valorDesc" id="valorDesc"
+                                           onchange="operation()">
+                                </td>
                             </tr>
                             <tr>
                                 <td>37. INTERESES DE MORA</td>
@@ -455,6 +464,8 @@
         })
 
         function operation(){
+            var añoGravable = document.getElementById("añoGravable").value;
+
             var num1 = document.getElementById("totIngreOrd").value;
             var num2 = document.getElementById("menosIngreFuera").value;
             var tot = parseInt(num1) - parseInt(num2);
@@ -579,7 +590,18 @@
             document.getElementById('valoraPagar').value = totSaldoCargo;
 
             //38. TOTAL A PAGAR
-            var valorDesc = document.getElementById("valorDesc").value;
+
+            //VALIDACION DEL DESCUENTO CORRESPONDIENTE
+            if(añoGravable == 2023) tasaDesc = 0.3;
+            else if(añoGravable == 2022)  tasaDesc = 0.0;
+            else if(añoGravable == 2021)  tasaDesc = 0.0;
+            else if(añoGravable == 2020)  tasaDesc = 0.8;
+            else tasaDesc = 0.2;
+
+            var valorDesc = totSaldoCargo * tasaDesc;
+
+            document.getElementById("valorDesc").value = valorDesc;
+            document.getElementById("valorDescSpan").innerHTML = formatter.format(valorDesc);
             var interesesMora = document.getElementById("interesesMora").value;
             var totPagar = totSaldoCargo - parseInt(valorDesc) + parseInt(interesesMora);
             if(totPagar < 0) totPagar = 0;
