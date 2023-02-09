@@ -151,8 +151,8 @@ class IndexController extends Controller
                     if ($data->id == '318') {
 
                         //CDPS
-                        $cdps = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
-                        if (count($cdps) > 0) $valueCDPs[] = $cdps->sum('valor');
+                        $cdpsFind = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
+                        if (count($cdpsFind) > 0) $valueCDPs[] = $cdpsFind->sum('valor');
                         else $valueCDPs[] = 0;
 
                         //registros
@@ -884,32 +884,14 @@ class IndexController extends Controller
             }
 
             //CDPS
-            if (auth()->user()->roles->first()->id != 2){
-                $cdps= Cdp::where('vigencia_id', $V)->get();
+            $cdps= Cdp::where('vigencia_id', $V)->get();
 
-                //REGISTROS
-                $allReg = Registro::all();
-                foreach ($allReg as $reg) if ($reg->cdpsRegistro[0]->cdp->vigencia_id == $V) $registros[] = ['id' => $reg->id, 'code' => $reg->code, 'objeto' => $reg->objeto, 'nombre' => $reg->persona->nombre, 'valor' => $reg->valor,
-                    'estadoSecretaria' => $reg->secretaria_e, 'estadoJefe' => $reg->jefe_e];
+            //REGISTROS
+            $allReg = Registro::all();
+            foreach ($allReg as $reg) if ($reg->cdpsRegistro[0]->cdp->vigencia_id == $V) $registros[] = ['id' => $reg->id, 'code' => $reg->code, 'objeto' => $reg->objeto, 'nombre' => $reg->persona->nombre, 'valor' => $reg->valor,
+                'estadoSecretaria' => $reg->secretaria_e, 'estadoJefe' => $reg->jefe_e];
                 
-            } else {
-                $cdps= Cdp::where('vigencia_id', $V)->where('dependencia_id', auth()->user()->dependencia->id)->get();
-
-                if (count($cdps) > 0){
-                    //REGISTROS
-                    foreach ($cdps as $cdp){
-                        if(count($cdp->cdpsRegistro) > 0){
-                            foreach($cdp->cdpsRegistro as $data){
-                                $registros[] = ['id' => $data->registro->id, 'code' => $data->registro->code,
-                                    'objeto' => $data->registro->objeto, 'nombre' => $data->registro->persona->nombre,
-                                    'valor' => $data->registro->valor, 'estadoSecretaria' => $data->registro->secretaria_e,
-                                    'estadoJefe' => $data->registro->jefe_e];
-                            }
-                        }
-                    }
-                }
-
-            }
+            
 
             //CODE CONTRACTUALES
             $codeCon = CodeContractuales::all();
