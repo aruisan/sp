@@ -228,7 +228,7 @@ class CdpController extends Controller
                     //SE VALIDA QUE EL RUBRO TENGA DINERO DISPONIBLE
                     foreach ($rubro[0]->fontsRubro as $fuentes){
                         foreach ($fuentes->dependenciaFont as $fontDep){
-                            if ($cdp->dependencia_id == $fontDep->dependencia_id) $valDisp[] = $fontDep->saldo;
+                            $valDisp[] = $fontDep->saldo;
                         }
                     }
                     if (isset($valDisp) and array_sum($valDisp) > 0){
