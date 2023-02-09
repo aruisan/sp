@@ -76,8 +76,22 @@ class PredialController extends Controller
      */
     public function getPredio(Request $request){
         $predio = PredialContribuyentes::find($request->id);
-        if ($predio) return $predio;
-        else return 0;
+        if ($predio) {
+            $hoy = Carbon::today()->format('Y-m-d');
+            if ($predio->a2018 > 0) $debe = 2018;
+            elseif ($predio->a2019 > 0) $debe = 2019;
+            elseif ($predio->a2020 > 0) $debe = 2020;
+            elseif ($predio->a2021 > 0) $debe = 2021;
+            elseif ($predio->a2022 > 0) $debe = 2022;
+            elseif ($predio->a2023 > 0) $debe = 2023;
+            else {
+                Session::flash('warning', 'Ese predio se encuentra sin deuda.');
+                return back();
+            }
+            $predio->deudaYear = $debe;
+            $predio->hoy = $hoy;
+            return $predio;
+        } else return 0;
     }
 
 

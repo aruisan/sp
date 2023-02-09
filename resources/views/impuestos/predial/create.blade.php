@@ -94,7 +94,10 @@
                                     </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Tasa Interés:</td>
-                                            <td colspan="3"><input type="text" class="form-control" name="tasaInt" value="25.45" id="tasaInt" required onchange="operation()"></td>
+                                            <td colspan="3">
+                                                <span>25.45</span>
+                                                <input type="hidden" class="form-control" name="tasaInt" value="25.45" id="tasaInt" required onchange="operation()">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Tarifa por mil:</td>
@@ -104,12 +107,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="vertical-align: middle">Tasa Bomberil:</td>
-                                            <td colspan="3"><input type="text" class="form-control" name="tarifaBomb" value="0" id="tarifaBomb" required onchange="operation()"></td>
-                                        </tr>
-                                        <tr>
                                             <td style="vertical-align: middle">Fecha de Pago:</td>
-                                            <td colspan="3"><input type="date" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this)"></td>
+                                            <td colspan="3">
+                                                <span id="fechaPagoSpan">0</span>
+                                                <input type="hidden" class="form-control" name="tarifaBomb" value="8" id="tarifaBomb" required onchange="operation()">
+                                                <input type="hidden" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this.value)">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Tasa de Descuento:</td>
@@ -120,28 +123,23 @@
                                         </tr>
                                         <tr id="ultimoAñoPagado" style="display: none">
                                             <td style="vertical-align: middle">Ultimo Año Pagado:</td>
-                                            @php($año = date('Y'))
-                                            @php($año = $año - 1 - $contribuyente->años_deuda)
                                             <td colspan="3">
-                                                {{$año}}<input type="hidden" name="añoInicio" id="añoInicio" value="{{$año}}">
+                                                <span id="añoInicioSpan">0</span>
+                                                <input type="hidden" name="añoInicio" id="añoInicio" value="-1">
                                             </td>
                                         </tr>
                                         <tr id="añoTR" style="display: none">
                                             <td style="vertical-align: middle">Año Inicial para Pago:</td>
-                                            @php($año2 = date('Y'))
                                             <td colspan="3">
-                                                <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
-                                                    @while($año2 >= 2018)
-                                                        <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
-                                                        @php($año2 = ($año2-1))
-                                                    @endwhile
-                                                </select>
+                                                <span id="añoSpan">0</span>
+                                                <input type="hidden" name="año" id="año" value="-1">
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             @else
                                 {{-- TABLA B. BASE GRAVABLE --}}
+                                <input type="hidden" name="predio" id="predio" value="{{$contribuyente->id}}">
                                 <input type="hidden" name="a2018" id="a2018" value="{{$contribuyente->a2018}}">
                                 <input type="hidden" name="a2019" id="a2019" value="{{$contribuyente->a2019}}">
                                 <input type="hidden" name="a2020" id="a2020" value="{{$contribuyente->a2020}}">
@@ -156,33 +154,31 @@
                                         <tr>
                                             <td style="vertical-align: middle">Número Catastral:</td>
                                             <td>
-                                                {{$contribuyente->numCatastral}}
-                                                <input type="hidden" name="predio" value="{{$contribuyente->id}}">
+                                                <span id="numCatastral"></span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Dirección:</td>
-                                            <td>{{$contribuyente->dir_predio}}</td>
+                                            <td><span id="dir_predio"></span></td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Cédula Catastral:</td>
-                                            <td>{{$contribuyente->cedCatastral}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle">Propietario:</td>
-                                            <td>{{$contribuyente->contribuyente}}</td>
+                                            <td><span id="cedCatastral"></span></td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Matricula Inmobiliaria:</td>
-                                            <td>{{$contribuyente->matInmobiliaria}}</td>
+                                            <td><span id="matInmobiliaria"></span></td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Área de Terreno:</td>
-                                            <td>{{$contribuyente->area}}</td>
+                                            <td><span id="areaTerreno"></span></td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Tasa Interés:</td>
-                                            <td><input type="text" class="form-control" name="tasaInt" value="25.45" id="tasaInt" required onchange="operation()"></td>
+                                            <td>
+                                                <span>25.45</span>
+                                                <input type="hidden" class="form-control" name="tasaInt" value="25.45" id="tasaInt" required onchange="operation()">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Tarifa por mil:</td>
@@ -192,12 +188,12 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="vertical-align: middle">Tasa Bomberil:</td>
-                                            <td><input type="text" class="form-control" name="tarifaBomb" value="0" id="tarifaBomb" required onchange="operation()"></td>
-                                        </tr>
-                                        <tr>
                                             <td style="vertical-align: middle">Fecha de Pago:</td>
-                                            <td><input type="date" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this)"></td>
+                                            <td>
+                                                <span id="fechaPagoSpan">0</span>
+                                                <input type="hidden" class="form-control" name="tarifaBomb" value="8" id="tarifaBomb" required onchange="operation()">
+                                                <input type="hidden" class="form-control" name="fechaPago" id="fechaPago" required onchange="findTasa(this.value)">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle">Tasa de Descuento:</td>
@@ -208,22 +204,17 @@
                                         </tr>
                                         <tr id="ultimoAñoPagado" style="display: none">
                                             <td style="vertical-align: middle">Ultimo Año Pagado:</td>
-                                            @php($año = date('Y'))
-                                            @php($año = $año - 1 - $contribuyente->años_deuda)
                                             <td>
-                                                {{$año}}<input type="hidden" name="añoInicio" id="añoInicio" value="{{$año}}">
+                                                <span id="añoInicioSpan">0</span>
+                                                <input type="hidden" name="añoInicio" id="añoInicio" value="-1">
                                             </td>
                                         </tr>
                                         <tr id="añoTR" style="display: none">
                                             <td style="vertical-align: middle">Año Inicial para Pago:</td>
                                             @php($año2 = date('Y'))
                                             <td>
-                                                <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
-                                                    @while($año2 >= 2018)
-                                                        <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
-                                                        @php($año2 = ($año2-1))
-                                                    @endwhile
-                                                </select>
+                                                <span id="añoSpan">0</span>
+                                                <input type="hidden" name="año" id="año" value="-1">
                                             </td>
                                         </tr>
                                     </tbody>
@@ -279,6 +270,16 @@
 @section('scripts')
     <script>
 
+        var predios = @json(count($predios))
+
+
+
+        window.onload = function() {
+            if(predios == 1){
+                ShowSelected();
+            }
+        };
+
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("formulario").addEventListener('submit', validarFormulario);
         });
@@ -296,6 +297,7 @@
 
         function ShowSelected(){
             var idPred = document.getElementById('predio').value;
+            console.log(idPred);
             $.ajax({
                 method: "POST",
                 url: "/impuestos/PREDIAL/predio",
@@ -314,7 +316,21 @@
                 document.getElementById('a2021').value = datos.a2021;
                 document.getElementById('a2022').value = datos.a2022;
                 document.getElementById('a2023').value = datos.a2023;
+                document.getElementById('fechaPago').value = datos.hoy;
+                document.getElementById('fechaPagoSpan').innerHTML = datos.hoy;
+                document.getElementById('añoSpan').innerHTML = datos.deudaYear;
+                document.getElementById('año').value = datos.deudaYear;
+
+                var yearStart = parseInt(datos.deudaYear) - 1;
+
+                document.getElementById('añoInicioSpan').innerHTML = yearStart;
+                document.getElementById('añoInicio').value = yearStart;
+
+                findTasa(datos.hoy);
                 $("#tablaMultiplePred").show();
+
+                operation();
+                listarAños(datos.deudaYear);
 
             }).fail(function() {
                 toastr.warning('OCURRIO UN ERROR AL OBTENER EL PREDIO');
@@ -337,7 +353,7 @@
                     if(parseInt(tasaDesc) != -1){
                         $("#añoTR").show();
                         $("#ultimoAñoPagado").show();
-                        listarAños(document.getElementById("año").value);
+                        //listarAños(document.getElementById("año").value);
                     }
                 }
             }
@@ -348,7 +364,7 @@
             $.ajax({
                 method: "POST",
                 url: "/impuestos/PREDIAL/calendario",
-                data: { "date": option.value,
+                data: { "date": option,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
