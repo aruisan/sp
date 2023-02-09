@@ -703,7 +703,10 @@ class IndexController extends Controller
                                             foreach ($bpinCdpValor as $bpinCDP){
                                                 $bpinArray = BPin::where('cod_actividad', $bpinCDP->cod_actividad)->first();
                                                 if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
-                                                    $valueCDPs[] = $bpinCDP->valor;
+                                                    //VALIDACION DE SI LA ACTIVIDAD CORRESPONDE A LA FUENTE DEL RUBRO DE LA DEP
+                                                    if ($bpinCDP->dependencia_rubro_font_id != null){
+                                                        if ($bpinCDP->dependencia_rubro_font_id == $depFont->id) $valueCDPs[] = $bpinCDP->valor;
+                                                    } else $valueCDPs[] = $bpinCDP->valor;
                                                     $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)->get();
                                                     if (count($cdpsRegValue) > 0){
                                                         //CONSULTA PARA LOS REGISTROS
