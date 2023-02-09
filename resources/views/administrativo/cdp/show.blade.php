@@ -878,7 +878,7 @@
                         '                                    <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">\n' +
                         '                                    <select name="rubro_id[]" class="form-control" onchange="selectedRubro(this.value)" required>\n' +
                         '                                       @foreach($infoRubro as $rubro)\n' +
-                        '                                           <option value="{{ $rubro['id_rubro'] }}">{{ $rubro['codigo'] }} - {{ $rubro['name'] }}</option>\n' +
+                        '                                           <option value="{{ $rubro['depFont'] }}">{{ $rubro['codigo'] }} - {{ $rubro['name'] }} - {{$rubro['dependencia']}}</option>\n' +
                         '                                       @endforeach\n' +
                         '                                   </select>\n' +
                         '                                </td>\n' +
