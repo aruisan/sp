@@ -23,7 +23,7 @@
                             <tbody>
                             <tr>
                                 @foreach($fuentesR as $fuentesRubro)
-                                    <input type="hidden" name="fuenteR_id[]" value="{{ $fuentesRubro->fontRubro->id }}">
+                                    <input type="hidden" name="fuenteR_id[]" value="{{ $fuentesRubro->fontRubro }}">
                                     <td>
                                         <div class="col-lg-12">
                                         @if($red->count() > 0)
