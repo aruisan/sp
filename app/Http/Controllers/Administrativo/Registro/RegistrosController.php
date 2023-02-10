@@ -309,7 +309,7 @@ class RegistrosController extends Controller
     public function updateEstado($id,$fecha,$valor,$estado,$valTot, $rol)
     {
         //FECHA FIJA
-        $fecha = '2023-01-02';
+        $fecha = '2023-01-06';
 
         $update = Registro::findOrFail($id);
 
@@ -382,7 +382,7 @@ class RegistrosController extends Controller
             if ($estado == 1){
 
                 //FECHA FIJA
-                $fecha = '2023-01-02';
+                $fecha = '2023-01-06';
 
                 $update = Registro::findOrFail($id);
                 $update->observacion = $request->observacion;

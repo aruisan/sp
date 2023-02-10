@@ -348,7 +348,7 @@ class CdpController extends Controller
     {
         $update = Cdp::findOrFail($id);
 
-        $fecha = '2023-01-02';
+        $fecha = '2023-01-06';
         if ($rol == 2){
 
             //SE VALIDA QUE SE TENGA DINERO EN LA FUENTE PARA EL ENVIO DEL CDP
@@ -463,7 +463,7 @@ class CdpController extends Controller
 
     public function rechazar(Request $request, $id, $vigen)
     {
-        $fecha = '2023-01-02';
+        $fecha = '2023-01-06';
         if ($request->rol == "3"){
             $update = Cdp::findOrFail($id);
             $update->jefe_e = "1";
