@@ -23,20 +23,20 @@
                             <tbody>
                             <tr>
                                 @foreach($fuentesR as $fuentesRubro)
-                                    <input type="hidden" name="fuenteR_id[]" value="{{ $fuentesRubro->fontRubro->id }}">
+                                    <input type="hidden" name="fuenteR_id[]" value="{{ $fuentesRubro->fontRubro }}">
                                     <td>
                                         <div class="col-lg-12">
                                         @if($add->count() > 0)
                                             <!--
                                                 <input type="hidden" name="fuente_id[]" value="@foreach($add as $mov) @if($mov->rubro_id == $fuentesRubro->rubro_id and $mov->movimiento == 2) {{ $fuentesRubro->id }} @else
                                                 {{ $fuentesRubro->id }} @endif @endforeach">
-                                                <input type="hidden" name="fuenteBase_id[]" value="{{ $fuentesRubro->fontRubro->id }}">
+                                                <input type="hidden" name="fuenteBase_id[]" value="{{ $fuentesRubro->fontRubro }}">
 
                                             -->
                                                 <input type="hidden" name="mov_id[]" value="@foreach($add as $mov) @if($mov->rubro_id == $fuentesRubro->fontRubro and $mov->movimiento == 2) {{ $mov->id }} @endif @endforeach">
                                                 <input type="text" required  name="valorCred[]" value="@foreach($fuentesRubro->fontRubro as $mov) @if($mov->rubro_id == $rubro->id and $mov->movimiento == 2) {{  $mov->valor }} @endif @endforeach" style="text-align: center">
                                             @else
-                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->fontRubro->id }}">
+                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->fontRubro }}">
                                                 <input type="hidden" name="mov_id[]" value="">
                                                 <input type="number" required  name="valorCred[]" class="form-group-sm" value="0" style="text-align: center">
                                             @endif
