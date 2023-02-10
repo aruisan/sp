@@ -12,16 +12,6 @@ use Session;
 class OrdenPagosRubrosController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -30,15 +20,24 @@ class OrdenPagosRubrosController extends Controller
     {
         $ordenPago = OrdenPagos::findOrFail($id);
         $cdps = CdpsRegistroValor::where('registro_id',$ordenPago->registros_id)->get();
-        if (count($cdps) == 1){
-            $save = new OrdenPagosRubros();
-            $save->cdps_registro_valor_id = $cdps[0]->id;
-            $save->orden_pagos_id = $ordenPago->id;
-            $save->valor = $ordenPago->valor;
-            $save->saldo = $ordenPago->saldo;
-            $save->save();
 
-            return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
+        if (count($cdps) == 1){
+            if ($ordenPago->rubros->count() == 0){
+                $save = new OrdenPagosRubros();
+                $save->cdps_registro_valor_id = $cdps[0]->id;
+                $save->orden_pagos_id = $ordenPago->id;
+                $save->valor = $ordenPago->valor;
+                $save->saldo = $ordenPago->saldo;
+                $save->save();
+
+                return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
+
+            } else{
+                Session::flash('warning','La orden de pago ya tiene asignado el monto, debe realizar el proceso de asignar los descuentos. ');
+                return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
+            }
+
+
         } else {
             foreach ($cdps as $cdp){
                 $valC[] = $cdp->valor;
@@ -96,50 +95,5 @@ class OrdenPagosRubrosController extends Controller
         }
         Session::flash('warning','Los valores se han reiniciado');
         return redirect('administrativo/ordenPagos/monto/create/'.$request->id);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\OrdenPagosRubros  $ordenPagosRubros
-     * @return \Illuminate\Http\Response
-     */
-    public function show(OrdenPagosRubros $ordenPagosRubros)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\OrdenPagosRubros  $ordenPagosRubros
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(OrdenPagosRubros $ordenPagosRubros)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\OrdenPagosRubros  $ordenPagosRubros
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, OrdenPagosRubros $ordenPagosRubros)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\OrdenPagosRubros  $ordenPagosRubros
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(OrdenPagosRubros $ordenPagosRubros)
-    {
-        //
     }
 }

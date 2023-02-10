@@ -127,17 +127,6 @@ class OrdenPagosDescuentosController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\orden_pagos_descuentos  $orden_pagos_descuentos
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(OrdenPagosDescuentos $orden_pagos_descuentos)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
