@@ -165,16 +165,16 @@ class CdpController extends Controller
         $cdp->valueControl = $request->valueControl;
         $cdp->valor = 0;
         //$cdp->fecha = $request->fecha;
-        $cdp->fecha = '2023-01-02';
+        $cdp->fecha = '2023-01-04';
         $cdp->dependencia_id = $request->dependencia_id;
         $cdp->observacion = $request->observacion;
         $cdp->saldo = 0;
         $cdp->secretaria_e = $request->secretaria_e;
         //$cdp->ff_secretaria_e = $request->fecha;
-        $cdp->ff_secretaria_e = '2023-01-02';
+        $cdp->ff_secretaria_e = '2023-01-04';
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
-        $cdp->created_at = '2023-01-02';
+        $cdp->created_at = '2023-01-04 12:00:00';
         $cdp->secretaria_user_id = auth()->user()->id;
         $cdp->save();
 
