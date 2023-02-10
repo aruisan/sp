@@ -222,7 +222,7 @@
                                             @php($año = $año - 1 - $contribuyente->años_deuda)
                                             @php($año2 = date('Y'))
                                             <td class="text-center" colspan="3">
-                                                <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
+                                                <select id="año" class="form-control text-center" name="año" onchange="listarAños(this.value)">
                                                     @while($año2 >= 2018)
                                                         <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
                                                         @php($año2 = ($año2-1))
