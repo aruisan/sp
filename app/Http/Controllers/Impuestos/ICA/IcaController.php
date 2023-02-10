@@ -253,8 +253,17 @@ class IcaController extends Controller
             $pago = Pagos::where('entity_id', $ICA->id)->where('modulo','ICA-Contribuyente')->first();
             $pago->entity_id = $ICA->id;
             $pago->valor = $ICA->totPagar;
-            $pago->estado = "Generado";
             $pago->fechaCreacion = $ICA->presentacion;
+
+
+            //SE VALIDA SI ES UNA DECLARACION EN 0$ - SI ES EN 0$ SE FINALIZA EL PAGO INMEDIATAMENTE AL FIRMAR
+            if ($ICA->totPagar > 0) $pago->estado = "Generado";
+            else {
+                $pago->estado = "Pagado";
+                $pago->fechaPago = Carbon::today();
+                $pago->user_pago_id = Auth::user()->id;
+            }
+
             $pago->save();
 
             Session::flash('success', 'Formulario declaración de contribuyente firmado y emitido exitosamente.');
