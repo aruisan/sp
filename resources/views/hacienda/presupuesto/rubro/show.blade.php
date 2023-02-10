@@ -69,29 +69,29 @@
                 <a class="nav-link" data-toggle="pill" href="#movimientos"> Movimientos del Rubro </a>
             </li>
         @endif
-        @if( $rol == 2 )
-            @include('modal.adicionRubro')
-            @include('modal.reduccionRubro')
-            @include('modal.creditoRubro')
-            @if(auth()->user()->dependencia->id == 15 or auth()->user()->dependencia->id == 1)
-                <li class="dropdown">
-                    <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
+
+        @if(auth()->user()->dependencia->id == 15 or auth()->user()->dependencia->id == 1)
+                @include('modal.adicionRubro')
+                @include('modal.reduccionRubro')
+                @include('modal.creditoRubro')
+            <li class="dropdown">
+                <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a>
+                    </li>
+                    @if($vigens->tipo != 1)
                         <li>
-                            <a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a>
+                            <a data-toggle="modal" data-target="#credito" class="btn btn-drop  text-left">Credito</a>
                         </li>
-                        <li>
-                            <a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a>
-                        </li>
-                        @if($vigens->tipo != 1)
-                            <li>
-                                <a data-toggle="modal" data-target="#credito" class="btn btn-drop  text-left">Credito</a>
-                            </li>
-                        @endif
-                    </ul>
-                </li>
-            @endif
-        @else
+                    @endif
+                </ul>
+            </li>
+        @endif
+        @if( $rol != 2 )
             @include('modal.asignarDineroDep')
         @endif
     </ul>
