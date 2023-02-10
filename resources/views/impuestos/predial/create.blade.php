@@ -128,6 +128,15 @@
                                                 <input type="hidden" name="añoInicio" id="añoInicio" value="-1">
                                             </td>
                                         </tr>
+                                        <tr id="message">
+                                            <td colspan="3">
+                                                <div class="alert alert-danger">
+                                                    POR DEFECTO SE SELECCIONA EL AÑO INICIAL PARA PAGO, EN EL CASO QUE SE
+                                                    DEBE ÚNICAMENTE EL 2023, SE DEBE SELECCIONAR EN LA OPCIÓN DE AÑO INICIAL
+                                                    PARA PAGO EL AÑO 2023 O DESDE EL AÑO QUE SE DEBE.
+                                                </div>
+                                            </td>
+                                        </tr>
                                         <tr id="añoTR" class="text-center" style="display: none; vertical-align: middle">
                                             <td style="vertical-align: middle">Año Inicial para Pago:</td>
                                             @php($año = date('Y'))
@@ -214,6 +223,15 @@
                                             <td>
                                                 <span id="añoInicioSpan">0</span>
                                                 <input type="hidden" name="añoInicio" id="añoInicio" value="-1">
+                                            </td>
+                                        </tr>
+                                        <tr id="message">
+                                            <td colspan="2">
+                                                <div class="alert alert-danger">
+                                                    POR DEFECTO SE SELECCIONA EL AÑO INICIAL PARA PAGO, EN EL CASO QUE SE
+                                                    DEBE ÚNICAMENTE EL 2023, SE DEBE SELECCIONAR EN LA OPCIÓN DE AÑO INICIAL
+                                                    PARA PAGO EL AÑO 2023 O DESDE EL AÑO QUE SE DEBE.
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr id="añoTR" style="display: none">
