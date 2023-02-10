@@ -440,10 +440,11 @@
         function validarFormulario(evento) {
             evento.preventDefault();
             var totIngreOrd = document.getElementById('totIngreOrd').value;
-            if(totIngreOrd.length < 2) {
-                alert('Valor menor a dos digitos para el total de ingresos');
-                return;
-            }
+            //SE REMUEVE LA VALIDACION DEBIDO A QUE SE PUEDE GENERAR EL FORMULARIO POR VALOR A PAGAR EN 0$
+            //if(totIngreOrd.length < 2) {
+                //alert('Valor menor a dos digitos para el total de ingresos');
+                //return;
+            //}
 
             this.submit();
         }
