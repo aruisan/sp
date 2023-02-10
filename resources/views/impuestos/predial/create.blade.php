@@ -128,11 +128,18 @@
                                                 <input type="hidden" name="añoInicio" id="añoInicio" value="-1">
                                             </td>
                                         </tr>
-                                        <tr id="añoTR" style="display: none">
+                                        <tr id="añoTR" class="text-center" style="display: none; vertical-align: middle">
                                             <td style="vertical-align: middle">Año Inicial para Pago:</td>
-                                            <td colspan="3">
-                                                <span id="añoSpan">0</span>
-                                                <input type="hidden" name="año" id="año" value="-1">
+                                            @php($año = date('Y'))
+                                            @php($año = $año - 1 - $contribuyente->años_deuda)
+                                            @php($año2 = date('Y'))
+                                            <td class="text-center" colspan="3">
+                                                <select id="año" class="form-control text-center" name="año" onchange="listarAños(this.value)">
+                                                    @while($año2 >= 2018)
+                                                        <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
+                                                        @php($año2 = ($año2-1))
+                                                    @endwhile
+                                                </select>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -211,10 +218,16 @@
                                         </tr>
                                         <tr id="añoTR" style="display: none">
                                             <td style="vertical-align: middle">Año Inicial para Pago:</td>
+                                            @php($año = date('Y'))
+                                            @php($año = $año - 1 - $contribuyente->años_deuda)
                                             @php($año2 = date('Y'))
-                                            <td>
-                                                <span id="añoSpan">0</span>
-                                                <input type="hidden" name="año" id="año" value="-1">
+                                            <td class="text-center" colspan="3">
+                                                <select id="año" style="width: 100px" class="form-control" name="año" onchange="listarAños(this.value)">
+                                                    @while($año2 >= 2018)
+                                                        <option value="{{$año2}}" @if($año + 1 == $año2) selected @endif>{{$año2}}</option>
+                                                        @php($año2 = ($año2-1))
+                                                    @endwhile
+                                                </select>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -297,7 +310,6 @@
 
         function ShowSelected(){
             var idPred = document.getElementById('predio').value;
-            console.log(idPred);
             $.ajax({
                 method: "POST",
                 url: "/impuestos/PREDIAL/predio",
@@ -318,7 +330,6 @@
                 document.getElementById('a2023').value = datos.a2023;
                 document.getElementById('fechaPago').value = datos.hoy;
                 document.getElementById('fechaPagoSpan').innerHTML = datos.hoy;
-                document.getElementById('añoSpan').innerHTML = datos.deudaYear;
                 document.getElementById('año').value = datos.deudaYear;
 
                 var yearStart = parseInt(datos.deudaYear) - 1;
