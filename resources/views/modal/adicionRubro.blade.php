@@ -18,6 +18,7 @@
                         </div>
                         <div class="form-group-sm">
                             <input type="file" required name="fileAdicion" accept="application/pdf" class="form-control">
+                            <input type="hidden" name="vigencia_id" id="vigencia_id" value="{{ $rubro->vigencia_id }}">
                         </div>
                         <br>
                         <table id="tabla_rubrosCdp" class="table table-bordered">
@@ -30,27 +31,31 @@
                             <tbody>
                             @foreach($rubro->fontsRubro as $data)
                                 <tr>
-                                    <td class="text-center">
-                                        {{ $data->sourceFunding->description }}
-                                        @if(count($data->rubrosMov) > 0)
-                                            @php($value = 0)
-                                        @else
-                                            @php($value = 0)
-                                        @endif
-                                    </td>
+                                    <td class="text-center">{{ $data->sourceFunding->description }}</td>
                                     <td>
                                         <input type="hidden" name="fontID[]" value="{{$data->id}}">
-                                        <input type="text" required  name="valorAdd[]" value="{{ $value }}" style="text-align: center" class="form-control" min="0">
+                                        @if(count($data->rubrosMov) > 0)
+                                            @foreach($data->rubrosMov as $mov)
+                                                @if($mov->movimiento == 2)
+                                                    @php($value = $mov->valor)
+                                                    @php($id = $mov->id)
+                                                @endif
+                                            @endforeach
+                                            <input type="text" required  name="valorAdd[]" value="{{ $value }}" style="text-align: center" class="form-control" min="0">
+                                            <input type="hidden" id="mov_id[]" name="mov_id[]" value="{{ $id }}">
+                                        @else
+                                            <input type="text" required  name="valorAdd[]" value="0" style="text-align: center" class="form-control" min="0">
+                                            <input type="hidden" id="mov_id[]" name="mov_id[]">
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
-                        <br>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <!-- <center><button type="submit" class="btn-sm btn-primary">Guardar Adición</button></center> -->
+                    <center><button type="submit" class="btn-sm btn-primary">Guardar Adición</button></center>
                 </div>
             </div>
         </form>

@@ -73,7 +73,6 @@
         @if(auth()->user()->dependencia->id == 15 or auth()->user()->dependencia->id == 1)
                 @include('modal.adicionRubro')
                 @include('modal.reduccionRubro')
-                @include('modal.creditoRubro')
             <li class="dropdown">
                 <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                 <ul class="dropdown-menu">
@@ -84,6 +83,7 @@
                         <a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a>
                     </li>
                     @if($vigens->tipo != 1)
+                        @include('modal.creditoRubro')
                         <li>
                             <a data-toggle="modal" data-target="#credito" class="btn btn-drop  text-left">Credito</a>
                         </li>
@@ -141,7 +141,7 @@
                                 @else
                                     <div class="col-lg-4 form-group">
                                         <center><h4><b>Valor Asignado al Rubro</b></h4></center>
-                                        <div class="text-center">$ <?php echo number_format($valor,0);?>.00</div>
+                                        <div class="text-center">$ <?php echo number_format($rubro->fontsRubro->sum('valor'),0);?>.00</div>
                                         <br>
                                     </div>
                                     <div class="col-lg-4 form-group">
@@ -153,7 +153,7 @@
                                     <div class="col-lg-4 form-group">
                                         <center><h4><b>Saldo Por Recaudar</b></h4></center>
                                         <div class="text-center">
-                                            $ <?php echo number_format($valor - $rubro->compIng->sum('valor'),0);?>.00
+                                            $ <?php echo number_format($rubro->fontsRubro->sum('valor') - $rubro->compIng->sum('valor'),0);?>.00
                                         </div>
                                     </div>
                                 @endif
@@ -185,7 +185,7 @@
                         </thead>
                         <tbody>
                         @if($rol != 2)
-                            @foreach($fuentesR as  $fuentes)
+                            @foreach($rubro->fontsRubro as  $fuentes)
                                 <tr>
                                     <td>{{ $fuentes->sourceFunding->code }}</td>
                                     <td>{{ $fuentes->sourceFunding->description }}</td>
@@ -197,10 +197,10 @@
                                 </tr>
                             @endforeach
                         @else
-                            @foreach($fuentesR as  $fuentes)
+                            @foreach($rubro->fontsRubro as  $fuentes)
                                 <tr>
-                                    <td>{{ $fuentes->fontRubro->sourceFunding->code }}</td>
-                                    <td>{{ $fuentes->fontRubro->sourceFunding->description }}</td>
+                                    <td>{{ $fuentes->sourceFunding->code }}</td>
+                                    <td>{{ $fuentes->sourceFunding->description }}</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes->value,0);?>.00</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes->saldo,0);?>.00</td>
                                 </tr>
@@ -225,7 +225,7 @@
                                 <tr>
                                     <td>{{ $dependencia->sec }}.{{ $dependencia->num }} - {{ $dependencia->name }}</td>
                                     <td class="text-center">
-                                        @foreach($fuentesR as  $fuentes)
+                                        @foreach($rubro->fontsRubro as  $fuentes)
                                             {{ $fuentes->sourceFunding->code }}
                                             {{ $fuentes->sourceFunding->description }}<br>
                                             @if(count($fuentes->dependenciaFont) > 0)
@@ -240,7 +240,7 @@
                                         @endforeach
                                     </td>
                                     <td class="text-center">
-                                        @foreach($fuentesR as  $fuentes)
+                                        @foreach($rubro->fontsRubro as  $fuentes)
                                             @if(count($fuentes->dependenciaFont) > 0)
                                                 @php($bandera = false)
                                                 @foreach($fuentes->dependenciaFont as $depFont)
@@ -392,21 +392,21 @@
                             </thead>
                             <tbody>
                             @if($rol != 2)
-                                @foreach($fuentesR as $fuentes)
+                                @foreach($rubro->fontsRubro as $fuentes)
                                     <tr>
                                         <td>{{ $fuentes->id }}</td>
                                         <td>{{ $fuentes->sourceFunding->description }}</td>
                                         <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                         <td class="text-center">
                                             @foreach($valores as $valAdd)
-                                                @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                @if($fuentes->id == $valAdd['id'])
                                                     $ <?php echo number_format($valAdd['adicion'],0);?>.00
                                                 @endif
                                             @endforeach
                                         </td>
                                         <td class="text-center">
                                             @foreach($valores as $valAdd)
-                                                @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                @if($fuentes->id == $valAdd['id'])
                                                     $ <?php echo number_format($valAdd['reduccion'],0);?>.00
                                                 @endif
                                             @endforeach
@@ -470,7 +470,7 @@
         <script src="{{ asset('/js/datatableRubro.js') }}"></script>
     <script>
 
-        const fuentesR = @json($fuentesR);
+        const fuentesR = @json($rubro->fontsRubro);
 
         function getModalDependencia(id, name, value, fuenteRid, fuente_id, valorDisp, depFontID){
             document.getElementById("nameDep").innerHTML = name;

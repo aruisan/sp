@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
+use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use App\Traits\ResourceTraits;
 use App\Resource;
@@ -15,59 +16,6 @@ use Session;
 
 class RubrosMovController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RubrosMov  $rubrosMov
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RubrosMov $rubrosMov)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\RubrosMov  $rubrosMov
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RubrosMov $rubrosMov)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -141,18 +89,7 @@ class RubrosMovController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\RubrosMov  $rubrosMov
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RubrosMov $rubrosMov)
-    {
-        //
-    }
-
-    public function updateMov($idM, $val, $request, $id, $m)
+    public function updateMov($idM, $val, $request, $id, $m, $vigencia)
     {
         if ($m == 2){
 
@@ -162,7 +99,7 @@ class RubrosMovController extends Controller
             $file = new ResourceTraits;
             $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
 
-            $fuenteR_id = $request->fuenteR_id;
+            $fuenteR_id = $request->fontID;
 
             for($i = 0; $i < count( $fuenteR_id); $i++){
                 $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
@@ -171,20 +108,23 @@ class RubrosMovController extends Controller
                 $FontRubro->save();
             }
 
-            $fontRubroCred = FontsRubro::where('rubro_id',$mov->rubro_id)->first();
-            $idFontDepCred = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
-                ->where('rubro_font_id', $fontRubroCred->id)->first();
-            $mov->dep_rubro_font_cred_id = $idFontDepCred->id;
+            if ($vigencia->tipo == 0) {
 
-            $idFontDepCred->saldo = $idFontDepCred->saldo + $val;
-            $idFontDepCred->save();
+                $fontRubroCred = FontsRubro::where('rubro_id', $mov->rubro_id)->first();
+                $idFontDepCred = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
+                    ->where('rubro_font_id', $fontRubroCred->id)->first();
+                $mov->dep_rubro_font_cred_id = $idFontDepCred->id;
 
-            $idFontDepCC = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
-                ->where('rubro_font_id', $mov->fonts_rubro_id)->first();
-            $mov->dep_rubro_font_cc_id = $idFontDepCC->id;
+                $idFontDepCred->saldo = $idFontDepCred->saldo + $val;
+                $idFontDepCred->save();
 
-            $idFontDepCC->saldo = $idFontDepCC->saldo - $val;
-            $idFontDepCC->save();
+                $idFontDepCC = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
+                    ->where('rubro_font_id', $mov->fonts_rubro_id)->first();
+                $mov->dep_rubro_font_cc_id = $idFontDepCC->id;
+
+                $idFontDepCC->saldo = $idFontDepCC->saldo - $val;
+                $idFontDepCC->save();
+            }
 
             $mov->valor = $val;
             $mov->resource_id = $resource;
@@ -310,53 +250,79 @@ class RubrosMovController extends Controller
 
         } elseif ($m == 2){
 
-            $fuenteR_id = $request->fuenteR_id;
-            $valor = $request->valorCred;
-            $mov_id = $request->mov_id;
-            $count = count($fuenteR_id);
+            if (array_sum($request->valorAdd) > 0){
+                $fuenteR_id = $request->fontID;
+                $valor = $request->valorAdd;
+                $mov_id = $request->mov_id;
+                $vigencia = Vigencia::find($request->vigencia_id);
 
-            for($i = 0; $i < $count; $i++){
+                for($i = 0; $i < count($fuenteR_id); $i++){
 
-                if ($mov_id[$i]){
-                    $this->updateMov($mov_id[$i], $valor[$i], $request, $id, $m);
-                }else{
-                    $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
-                    $FontRubro->valor_disp = $FontRubro->valor_disp + $valor[$i];
-                    $FontRubro->save();
+                    if (isset($mov_id[$i])){
+                        $this->updateMov($mov_id[$i], $valor[$i], $request, $id, $m, $vigencia);
+                    }else{
+                        if ($vigencia->tipo == 1){
+                            //SI EL RUBRO ES DE INGRESOS SE HACE LA ADICIÓN DE MANERA DISTINTA
+                            $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
+                            $FontRubro->valor_disp = $FontRubro->valor_disp + $valor[$i];
+                            $FontRubro->save();
 
-                    $file = new ResourceTraits;
-                    $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
+                            $file = new ResourceTraits;
+                            $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
 
-                    $rubrosMov2 = new RubrosMov();
+                            $rubrosMov2 = new RubrosMov();
 
-                    $fontRubroCred = FontsRubro::where('rubro_id',$id)->first();
-                    $idFontDepCred = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
-                        ->where('rubro_font_id', $fontRubroCred->id)->first();
-                    $rubrosMov2->dep_rubro_font_cred_id = $idFontDepCred->id;
+                            $rubrosMov2->valor = $valor[$i];
+                            $rubrosMov2->fonts_rubro_id = $fuenteR_id[$i];
+                            $rubrosMov2->font_vigencia_id = $vigencia->id;
+                            $rubrosMov2->rubro_id = $id;
+                            $rubrosMov2->movimiento = $m;
+                            $rubrosMov2->resource_id = $resource;
+                            $rubrosMov2->save();
 
-                    $idFontDepCred->saldo = $idFontDepCred->saldo + $valor[$i];
-                    $idFontDepCred->save();
+                        } else{
+                            //SI EL RUBRO ES DE EGRESOS SE HACE LA ADICIÓN DE MANERA DISTINTA
+                            $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
+                            $FontRubro->valor_disp = $FontRubro->valor_disp + $valor[$i];
+                            $FontRubro->save();
 
-                    $idFontDepCC = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
-                        ->where('rubro_font_id', $fuenteR_id[$i])->first();
-                    $rubrosMov2->dep_rubro_font_cc_id = $idFontDepCC->id;
+                            $file = new ResourceTraits;
+                            $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
 
-                    $idFontDepCC->saldo = $idFontDepCC->saldo - $valor[$i];
-                    $idFontDepCC->save();
+                            $rubrosMov2 = new RubrosMov();
 
-                    $rubrosMov2->valor = $valor[$i];
-                    $rubrosMov2->fonts_rubro_id = $fuenteR_id[$i];
-                    $rubrosMov2->font_vigencia_id = 1;
-                    $rubrosMov2->rubro_id = $id;
-                    $rubrosMov2->movimiento = $m;
-                    $rubrosMov2->resource_id = $resource;
-                    $rubrosMov2->save();
+                            $fontRubroCred = FontsRubro::where('rubro_id',$id)->first();
+                            $idFontDepCred = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
+                                ->where('rubro_font_id', $fontRubroCred->id)->first();
+                            $rubrosMov2->dep_rubro_font_cred_id = $idFontDepCred->id;
 
+                            $idFontDepCred->saldo = $idFontDepCred->saldo + $valor[$i];
+                            $idFontDepCred->save();
+
+                            $idFontDepCC = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
+                                ->where('rubro_font_id', $fuenteR_id[$i])->first();
+                            $rubrosMov2->dep_rubro_font_cc_id = $idFontDepCC->id;
+
+                            $idFontDepCC->saldo = $idFontDepCC->saldo - $valor[$i];
+                            $idFontDepCC->save();
+
+                            $rubrosMov2->valor = $valor[$i];
+                            $rubrosMov2->fonts_rubro_id = $fuenteR_id[$i];
+                            $rubrosMov2->font_vigencia_id = $vigencia->id;
+                            $rubrosMov2->rubro_id = $id;
+                            $rubrosMov2->movimiento = $m;
+                            $rubrosMov2->resource_id = $resource;
+                            $rubrosMov2->save();
+                        }
+                    }
                 }
-            }
 
-            Session::flash('success','La adición se realizo correctamente');
-            return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
+                Session::flash('success','La adición se realizo correctamente');
+                return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
+            } else{
+                Session::flash('warning','La adición no se puede realizar por que los valores estan en 0');
+                return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
+            }
 
         } elseif ($m == 3){
 

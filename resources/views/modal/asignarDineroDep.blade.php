@@ -18,7 +18,7 @@
                         <table id="tabla_rubrosCdp" class="table table-bordered">
                             <thead>
                             <tr>
-                                @foreach($fuentesR as $data)
+                                @foreach($rubro->fontsRubro as $data)
                                     <th class="text-center">Dinero a tomar de la fuente: {{ $data->sourceFunding->description }}</th>
                                 @endforeach
                             </tr>

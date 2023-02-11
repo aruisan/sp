@@ -120,81 +120,54 @@ class RubrosController extends Controller
         foreach ($roles as $role) $rol= $role->id;
         $rubro = Rubro::findOrFail($id);
         $rubros = Rubro::where('id', '!=', $id)->where('vigencia_id', $rubro->vigencia_id)->get();
-        if ($rol != 2){
-            $fuentesR = $rubro->Fontsrubro;
-            $valor = $fuentesR->sum('valor');
-            $valorDisp = $fuentesR->sum('valor_disp');
-        } else {
-            $fuentesRubro = $rubro->Fontsrubro;
-            foreach ($fuentesRubro as $fuente){
-                foreach ($fuente->dependenciaFont as $fontDep){
-                    if (auth()->user()->dependencia_id == $fontDep->dependencia_id){
-                        $valoresFontDep[] = $fontDep->value;
-                        $saldoFontDep[] = $fontDep->saldo;
-                        $fShow = $fontDep->fontRubro->first();
-                        $fShow->valor = $fontDep->value;
-                        $fShow->valor_disp = $fontDep->saldo;
-                        $fuentesR[] = $fontDep;
-                    }
-                }
-            }
-            if (!isset($valoresFontDep)) $valor = 0;
-            else $valor = array_sum($valoresFontDep);
+        $fuentesR = $rubro->fontsRubro;
+        $valor = $fuentesR->sum('valor');
+        $valorDisp = $fuentesR->sum('valor_disp');
 
-            if (!isset($saldoFontDep)) $valorDisp = 0;
-            else $valorDisp = array_sum($saldoFontDep);
-        }
         $add = rubrosMov::where([['rubro_id','=',$id],['movimiento','=','2']])->get();
         $red = rubrosMov::where([['rubro_id','=',$id],['movimiento','=','3']])->get();
         $vigens = Vigencia::findOrFail($rubro->vigencia_id);
         $fuentesAll = SourceFunding::all();
-
         $dependencias = Dependencia::all();
 
-        foreach ($fuentesR as $fuente){
-            $suma[] = null;
-            $sumaC[] = null;
-            $resta[] = null;
-            $restaC[] = null;
+        if (isset($fuentesR)){
+            foreach ($fuentesR as $fuente){
+                $suma[] = null;$sumaC[] = null;$resta[] = null;$restaC[] = null;
 
-            if (count($rubro->rubrosMov) > 0){
-                foreach($rubro->rubrosMov as $RM){
-                    if ($RM->fonts_rubro_id == $fuente->id){
-                        if ($RM->movimiento == 1){
-                            $suma[] = $RM->valor;
-                        } elseif($RM->movimiento == 2){
-                            $sumaC[] = $RM->valor;
-                        }
-                    } else{
-                        if ($RM->movimiento == 1){
-                            $suma[] = 0;
-                        } elseif($RM->movimiento == 2){
-                            $sumaC[] = 0;
+                if (count($fuente->rubrosMov) > 0){
+                    foreach($fuente->rubrosMov as $RM){
+                        if ($RM->fonts_rubro_id == $fuente->id){
+                            if ($RM->movimiento == 1) $suma[] = $RM->valor;
+                            elseif($RM->movimiento == 2) $sumaC[] = $RM->valor;
+                        } else{
+                            if ($RM->movimiento == 1) $suma[] = 0;
+                            elseif($RM->movimiento == 2) $sumaC[] = 0;
                         }
                     }
+                } else{
+                    $suma[] = 0;
+                    $sumaC[] = 0;
                 }
-            } else{
-                $suma[] = 0;
-                $sumaC[] = 0;
-            }
-            $val = array_sum($suma);
-            $Cred = array_sum($sumaC);
-            if ($fuente->rubrosMov){
-                foreach ($fuente->rubrosMov as $item) {
-                    if ($item->movimiento == 1){
-                        $resta[] = $item->valor;
-                    } elseif($item->movimiento == 3){
-                        $restaC[] = $item->valor;
+
+                $val = array_sum($suma);
+                $Cred = array_sum($sumaC);
+                if ($fuente->rubrosMov){
+                    foreach ($fuente->rubrosMov as $item) {
+                        if ($item->movimiento == 1) $resta[] = $item->valor;
+                        elseif($item->movimiento == 3) $restaC[] = $item->valor;
                     }
+                }else{
+                    $resta[] = 0;
+                    $restaC[] = 0;
                 }
-            }else{
-                $resta[] = 0;
-                $restaC[] = 0;
+                $val2 = array_sum($resta);
+                $CCred = array_sum($restaC);
+
+                $valores[] = collect(['id' => $fuente->id, 'credito' => $val, 'ccredito' => $val2, 'adicion' => $Cred, 'reduccion' => $CCred]);
+                unset($suma, $resta, $Cred, $CCred, $sumaC);
             }
-            $val2 = array_sum($resta);
-            $CCred = array_sum($restaC);
-            $valores[] = collect(['id' => $fuente->font_vigencia_id , 'credito' => $val, 'ccredito' => $val2, 'adicion' => $Cred, 'reduccion' => $CCred]);
-            unset($suma, $resta, $Cred, $CCred);
+        } else{
+            $fuentesR[] = 0; $valores[] = 0;
         }
         $RubrosM = RubrosMov::where([['rubro_id','=',$rubro->id],['valor','>','0']])->get();
         foreach ($RubrosM as $data){
@@ -207,16 +180,12 @@ class RubrosController extends Controller
                     $files[] = collect(['idResource' => $data2->resource_id , 'ruta' => $data2->Resource->ruta, 'mov' => $data2->movimiento]);
                 }
             }
-            if (!isset($files)){
-                $files = 0;
-            }
+            if (!isset($files)) $files = 0;
         }
 
         $contadorRubDisp = 0;
         foreach ($rubros as $rub){
-            if ($rub->fontsRubro->sum('valor_disp') > 0){
-                $contadorRubDisp = $contadorRubDisp + 1;
-            }
+            if ($rub->fontsRubro->sum('valor_disp') > 0) $contadorRubDisp = $contadorRubDisp + 1;
         }
 
         return view('hacienda.presupuesto.rubro.show', compact('rubro','fuentesR','valor','valorDisp','rol','rubros','fuentesAll','valores','files','add','red','contadorRubDisp','vigens','dependencias'));

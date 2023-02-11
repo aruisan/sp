@@ -14,7 +14,7 @@
                         <table id="tabla_rubrosCdp" class="table table-bordered">
                             <thead>
                             <tr>
-                                @foreach($fuentesR as $data)
+                                @foreach($rubro->fontsRubro as $data)
                                     <th class="text-center">Dinero a retirar de  la fuente: {{ $data->fontRubro }}</th>
                                 @endforeach
                                 <th scope="col" class="text-center">Archivo</th>
@@ -22,7 +22,7 @@
                             </thead>
                             <tbody>
                             <tr>
-                                @foreach($fuentesR as $fuentesRubro)
+                                @foreach($rubro->fontsRubro as $fuentesRubro)
                                     <input type="hidden" name="fuenteR_id[]" value="{{ $fuentesRubro->fontRubro }}">
                                     <td>
                                         <div class="col-lg-12">

@@ -53,14 +53,14 @@
                                                             @if($rubro->rubrosMov->count() > 0)
                                                                 @foreach($rubros[$i]->fontsRubro as $F)
                                                                     @foreach($F->rubrosMov as $validate)
-                                                                        @if($validate->rubro_id == $rubro->id)
+                                                                        @if($validate->rubro_id == $rubro->id and $validate->mov == 2)
                                                                             @php($val[] = $validate->valor)
                                                                         @else
                                                                             @php($val[] = 0)
                                                                         @endif
                                                                     @endforeach
                                                                 @endforeach
-                                                                @if($val == null)
+                                                                @if(!isset($val))
                                                                     $ 0.00
                                                                 @else
                                                                     $<?php echo number_format( array_sum($val) ,0) ?>
