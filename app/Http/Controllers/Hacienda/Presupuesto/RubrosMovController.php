@@ -128,7 +128,10 @@ class RubrosMovController extends Controller
 
             $mov->valor = $val;
             $mov->resource_id = $resource;
-            $mov->save();
+
+            //SI SE ESTA ENVIANDO EN 0 EL VALOR DE LA ADICION SE ELIMINA EL MOVIMIENTO.
+            if ($val == 0) $mov->delete();
+            else $mov->save();
 
             $archivo = Resource::findOrFail($idResourceD);
             Storage::delete($archivo->ruta);
@@ -250,79 +253,75 @@ class RubrosMovController extends Controller
 
         } elseif ($m == 2){
 
-            if (array_sum($request->valorAdd) > 0){
-                $fuenteR_id = $request->fontID;
-                $valor = $request->valorAdd;
-                $mov_id = $request->mov_id;
-                $vigencia = Vigencia::find($request->vigencia_id);
+            $fuenteR_id = $request->fontID;
+            $valor = $request->valorAdd;
+            $mov_id = $request->mov_id;
+            $vigencia = Vigencia::find($request->vigencia_id);
 
-                for($i = 0; $i < count($fuenteR_id); $i++){
+            for($i = 0; $i < count($fuenteR_id); $i++){
 
-                    if (isset($mov_id[$i])){
-                        $this->updateMov($mov_id[$i], $valor[$i], $request, $id, $m, $vigencia);
-                    }else{
-                        if ($vigencia->tipo == 1){
-                            //SI EL RUBRO ES DE INGRESOS SE HACE LA ADICIÓN DE MANERA DISTINTA
-                            $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
-                            $FontRubro->valor_disp = $FontRubro->valor_disp + $valor[$i];
-                            $FontRubro->save();
+                if (isset($mov_id[$i])){
+                    $this->updateMov($mov_id[$i], $valor[$i], $request, $id, $m, $vigencia);
+                }else{
+                    if ($vigencia->tipo == 1 and $valor[$i] > 0){
+                        //SI EL RUBRO ES DE INGRESOS SE HACE LA ADICIÓN DE MANERA DISTINTA
+                        $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
+                        $FontRubro->valor_disp = $FontRubro->valor_disp + $valor[$i];
+                        $FontRubro->save();
 
-                            $file = new ResourceTraits;
-                            $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
+                        $file = new ResourceTraits;
+                        $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
 
-                            $rubrosMov2 = new RubrosMov();
+                        $rubrosMov2 = new RubrosMov();
 
-                            $rubrosMov2->valor = $valor[$i];
-                            $rubrosMov2->fonts_rubro_id = $fuenteR_id[$i];
-                            $rubrosMov2->font_vigencia_id = $vigencia->id;
-                            $rubrosMov2->rubro_id = $id;
-                            $rubrosMov2->movimiento = $m;
-                            $rubrosMov2->resource_id = $resource;
-                            $rubrosMov2->save();
+                        $rubrosMov2->valor = $valor[$i];
+                        $rubrosMov2->fonts_rubro_id = $fuenteR_id[$i];
+                        $rubrosMov2->font_vigencia_id = $vigencia->id;
+                        $rubrosMov2->rubro_id = $id;
+                        $rubrosMov2->movimiento = $m;
+                        $rubrosMov2->resource_id = $resource;
+                        $rubrosMov2->save();
 
-                        } else{
-                            //SI EL RUBRO ES DE EGRESOS SE HACE LA ADICIÓN DE MANERA DISTINTA
-                            $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
-                            $FontRubro->valor_disp = $FontRubro->valor_disp + $valor[$i];
-                            $FontRubro->save();
+                    } else if ($vigencia->tipo == 0 and $valor[$i] > 0){
+                        //SI EL RUBRO ES DE EGRESOS SE HACE LA ADICIÓN DE MANERA DISTINTA
+                        $FontRubro = FontsRubro::findOrFail($fuenteR_id[$i]);
+                        $FontRubro->valor_disp = $FontRubro->valor_disp + $valor[$i];
+                        $FontRubro->save();
 
-                            $file = new ResourceTraits;
-                            $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
+                        $file = new ResourceTraits;
+                        $resource = $file->resource($request->fileAdicion, 'public/AdicionyRed');
 
-                            $rubrosMov2 = new RubrosMov();
+                        $rubrosMov2 = new RubrosMov();
 
-                            $fontRubroCred = FontsRubro::where('rubro_id',$id)->first();
-                            $idFontDepCred = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
-                                ->where('rubro_font_id', $fontRubroCred->id)->first();
-                            $rubrosMov2->dep_rubro_font_cred_id = $idFontDepCred->id;
+                        $fontRubroCred = FontsRubro::where('rubro_id',$id)->first();
+                        $idFontDepCred = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
+                            ->where('rubro_font_id', $fontRubroCred->id)->first();
+                        $rubrosMov2->dep_rubro_font_cred_id = $idFontDepCred->id;
 
-                            $idFontDepCred->saldo = $idFontDepCred->saldo + $valor[$i];
-                            $idFontDepCred->save();
+                        $idFontDepCred->saldo = $idFontDepCred->saldo + $valor[$i];
+                        $idFontDepCred->save();
 
-                            $idFontDepCC = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
-                                ->where('rubro_font_id', $fuenteR_id[$i])->first();
-                            $rubrosMov2->dep_rubro_font_cc_id = $idFontDepCC->id;
+                        $idFontDepCC = DependenciaRubroFont::where('dependencia_id', auth()->user()->dependencia->id)
+                            ->where('rubro_font_id', $fuenteR_id[$i])->first();
+                        $rubrosMov2->dep_rubro_font_cc_id = $idFontDepCC->id;
 
-                            $idFontDepCC->saldo = $idFontDepCC->saldo - $valor[$i];
-                            $idFontDepCC->save();
+                        $idFontDepCC->saldo = $idFontDepCC->saldo - $valor[$i];
+                        $idFontDepCC->save();
 
-                            $rubrosMov2->valor = $valor[$i];
-                            $rubrosMov2->fonts_rubro_id = $fuenteR_id[$i];
-                            $rubrosMov2->font_vigencia_id = $vigencia->id;
-                            $rubrosMov2->rubro_id = $id;
-                            $rubrosMov2->movimiento = $m;
-                            $rubrosMov2->resource_id = $resource;
-                            $rubrosMov2->save();
-                        }
+                        $rubrosMov2->valor = $valor[$i];
+                        $rubrosMov2->fonts_rubro_id = $fuenteR_id[$i];
+                        $rubrosMov2->font_vigencia_id = $vigencia->id;
+                        $rubrosMov2->rubro_id = $id;
+                        $rubrosMov2->movimiento = $m;
+                        $rubrosMov2->resource_id = $resource;
+                        $rubrosMov2->save();
                     }
                 }
-
-                Session::flash('success','La adición se realizo correctamente');
-                return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
-            } else{
-                Session::flash('warning','La adición no se puede realizar por que los valores estan en 0');
-                return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
             }
+
+            Session::flash('success','La adición se realizo correctamente');
+            return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
+
 
         } elseif ($m == 3){
 
