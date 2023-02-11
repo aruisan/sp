@@ -468,7 +468,24 @@ class IndexController extends Controller
                                         //VALIDACION DE ROL
                                         if (auth()->user()->roles->first()->id != 2){
                                             if($rubroOtherFind->first()->fontsRubro){
-                                                foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) $valueRubros[] = $fuenteRubro->valor; $valueRubrosDisp[] = $fuenteRubro->valor_disp;
+                                                foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) {
+                                                    $valueRubros[] = $fuenteRubro->valor;
+                                                    $valueRubrosDisp[] = $fuenteRubro->valor_disp;
+
+                                                    //VALIDACION PARA LAS ADICIONES Y REDUCCIONES
+                                                    foreach ($rubroOtherFind->first()->rubrosMov as $mov){
+                                                        if ($mov->valor > 0 ){
+                                                            if ($mov->movimiento == "2") {
+                                                                if ($mov->fonts_rubro_id == $fuenteRubro->id) $valueRubrosAdd[] = $mov->valor;
+                                                            }
+                                                            elseif ($mov->movimiento == "3") {
+                                                                if ($mov->fonts_rubro_id == $fuenteRubro->id) $valueRubrosRed[] = $mov->valor;
+                                                            }
+                                                        }
+                                                    }
+
+
+                                                }
                                             } else $valueRubros[] = 0; $valueRubrosDisp[] = 0;
                                         } else {
                                             /**
@@ -501,23 +518,15 @@ class IndexController extends Controller
                                                         $valueRubrosCCred[] = $mov->valor;
                                                         $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                         $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
-                                                        if ($other->id == 754){
-                                                            //dd($rubrosCC, $rubAfectado);
-                                                        }
                                                     }
-                                                    elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
-                                                    elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
                                                 }
                                             }
-
                                         } else {
                                             $valueRubrosAdd[] = 0;
                                             $valueRubrosRed[] = 0;
                                             $valueRubrosCred[] = 0;
                                             $valueRubrosCCred[] = 0;
                                         }
-
-
 
                                         //CDPS
                                         foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro){
@@ -625,7 +634,7 @@ class IndexController extends Controller
                                 if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($valueRubros) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                                 else $PDef = array_sum($valueRubros) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
 
-                                if (array_sum($valueRubros) > 0){
+                                if ($PDef > 0){
                                     $presupuesto[] = ['id_rubro' => 0 ,'id' => $oldId, 'cod' => $oldCode, 'name' => $oldName, 'presupuesto_inicial' => array_sum($valueRubros),
                                         'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
                                         'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
@@ -645,6 +654,23 @@ class IndexController extends Controller
                         //EN ESTA VALIDACION SE MUESTRAN LOS VALORES DE RUBROS USADOS DEPENDIENDO LA DEP DEL USUARIO
                         $exit = false;
                         foreach ($rubro->first()->fontsRubro as $itemFont){
+                            //VALIDACION PARA LAS ADICIONES Y REDUCCIONES
+                            if(count($itemFont->rubrosMov) > 0){
+                                foreach ($itemFont->rubrosMov as $mov){
+                                    if ($mov->valor > 0 ){
+                                        if ($mov->movimiento == "2") {
+                                            if ($mov->fonts_rubro_id == $itemFont->id) $valueRubrosAdd[] = $mov->valor;
+                                        }
+                                        elseif ($mov->movimiento == "3") {
+                                            if ($mov->fonts_rubro_id == $itemFont->id) $valueRubrosRed[] = $mov->valor;
+                                        }
+                                    }
+                                }
+                            } else {
+                                $valueRubrosAdd[] = 0;
+                                $valueRubrosRed[] = 0;
+                            }
+
                             if (count($itemFont->dependenciaFont) > 0){
                                 foreach ($itemFont->dependenciaFont as $depFont){
                                     //SE VALIDA SI ES USUARIO SUPERIOR A SECRETARIA
@@ -668,20 +694,6 @@ class IndexController extends Controller
                                     $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)->get();
                                     if(count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
                                     else $valueRubrosCCred[] = 0;
-
-                                    $rubroMov = RubrosMov::where('fonts_rubro_id', $depFont->id)->get();
-
-                                    if(count($rubroMov) > 0){
-                                        foreach ($rubroMov as $mov){
-                                            if ($mov->valor > 0 ){
-                                                if ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
-                                                elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
-                                            }
-                                        }
-                                    } else {
-                                        $valueRubrosAdd[] = 0;
-                                        $valueRubrosRed[] = 0;
-                                    }
 
                                     //BPIN
                                     $bpinVigen = bpinVigencias::where('dep_rubro_id', $depFont->id)->where('vigencia_id',$vigencia_id)->get();
