@@ -260,45 +260,71 @@
                                                                         </li>
                                                                     </div>
                                                                 @elseif($fuentesRubro->valor_disp != 0)
-                                                                    <div class="col-lg-6">
-                                                                        <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->id }}">
-                                                                        <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
-                                                                        <input type="hidden" name="rubros_cdp_id[]" value="{{ $rubrosCdpData->id }}">
-                                                                        <li style="list-style-type: none;">
-                                                                            {{ $fuentesRubro->sourceFunding->description }} :
-                                                                            @foreach($fuentesRubro->dependenciaFont as $dep)
-                                                                                @if($rol == 2)
-                                                                                    @if($rubrosCdpData->depRubroFont)
-                                                                                        @if($dep->id == $rubrosCdpData->dep_rubro_font_id)
-                                                                                            $<?php echo number_format( $dep->saldo,0) ?>
-                                                                                        @endif
-                                                                                    @else
-                                                                                        @if($dep->dependencia_id == $user->dependencia_id)
-                                                                                            $<?php echo number_format( $dep->saldo,0) ?>
-                                                                                        @endif
-                                                                                    @endif
-                                                                                @else
-                                                                                    @if($rubrosCdpData->depRubroFont)
-                                                                                        @if($dep->id == $rubrosCdpData->dep_rubro_font_id)
-                                                                                            $<?php echo number_format( $dep->saldo,0) ?>
-                                                                                        @endif
-                                                                                    @else
-                                                                                        @if($dep->dependencia_id == $cdp->dependencia_id)
-                                                                                            $<?php echo number_format( $dep->saldo,0) ?>
-                                                                                        @endif
-                                                                                    @endif
+                                                                    <!-- RECORRIDO DE LAS FUENTES DEL RUBRO -->
+                                                                    @foreach($fuentesRubro->dependenciaFont as $dep)
+                                                                        @if($rol == 2)
+                                                                            @if($rubrosCdpData->depRubroFont)
+                                                                                @if($dep->id == $rubrosCdpData->dep_rubro_font_id)
+                                                                            <div class="col-lg-6">
+                                                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->id }}">
+                                                                                <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
+                                                                                <input type="hidden" name="rubros_cdp_id[]" value="{{ $rubrosCdpData->id }}">
+                                                                                <li style="list-style-type: none;">
+                                                                                    {{ $fuentesRubro->sourceFunding->description }} :
+                                                                                    $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                </li>
+                                                                            </div>
+
                                                                                 @endif
-                                                                            @endforeach
-                                                                        </li>
-                                                                    </div>
+                                                                            @else
+                                                                                @if($dep->dependencia_id == $user->dependencia_id)
+                                                                            <div class="col-lg-6">
+                                                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->id }}">
+                                                                                <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
+                                                                                <input type="hidden" name="rubros_cdp_id[]" value="{{ $rubrosCdpData->id }}">
+                                                                                <li style="list-style-type: none;">
+                                                                                    {{ $fuentesRubro->sourceFunding->description }} :
+                                                                                    $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                </li>
+                                                                            </div>
+                                                                                @endif
+                                                                            @endif
+                                                                        @else
+                                                                            @if($rubrosCdpData->depRubroFont)
+                                                                                @if($dep->id == $rubrosCdpData->dep_rubro_font_id)
+                                                                            <div class="col-lg-6">
+                                                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->id }}">
+                                                                                <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
+                                                                                <input type="hidden" name="rubros_cdp_id[]" value="{{ $rubrosCdpData->id }}">
+                                                                                <li style="list-style-type: none;">
+                                                                                    {{ $fuentesRubro->sourceFunding->description }} :
+                                                                                    $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                </li>
+                                                                            </div>
+                                                                                @endif
+                                                                            @else
+                                                                                @if($dep->dependencia_id == $cdp->dependencia_id)
+                                                                            <div class="col-lg-6">
+                                                                                <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->id }}">
+                                                                                <input type="hidden" name="cdp_id" value="{{ $cdp->id }}">
+                                                                                <input type="hidden" name="rubros_cdp_id[]" value="{{ $rubrosCdpData->id }}">
+                                                                                <li style="list-style-type: none;">
+                                                                                    {{ $fuentesRubro->sourceFunding->description }} :
+                                                                                    $<?php echo number_format( $dep->saldo,0) ?>
+                                                                                </li>
+                                                                            </div>
+                                                                                @endif
+                                                                            @endif
+                                                                        @endif
+                                                                    @endforeach
                                                                 @endif
                                                                 <div class="col-lg-6">
                                                                     @if($cdp->jefe_e == "3")
-                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                         @if($fuentesRubro->rubrosCdpValor->count() != 0)
                                                                             @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                 @php($id_rubrosCdp = $rubrosCdpData->id )
                                                                                 @if($valoresFR->cdp_id == $cdp->id)
+                                                                                    Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                     <input type="hidden" name="rubros_cdp_valor_id[]" value="{{ $valoresFR->id }}">
                                                                                     @if($cdp->secretaria_e == "0")
                                                                                         <input type="number" required  name="valorFuenteUsar[]" id="id{{$fuentesRubro->font_id}}" class="valor{{ $valoresFR->rubrosCdp_id }}" value="{{ $valoresFR->valor }}" max="{{ $fuentesRubro->valor_disp }}" style="text-align: center">
@@ -340,12 +366,12 @@
                                                                             @endforeach
                                                                         @endif
                                                                     @elseif($fuentesRubro->valor_disp != 0)
-                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                         @foreach($fuentesRubro->dependenciaFont as $dep)
                                                                             @if($rol == 2)
                                                                                 @if($rubrosCdpData->depRubroFont)
                                                                                     @if($dep->id == $rubrosCdpData->dep_rubro_font_id)
                                                                                         @if($dep->rubroCdpValor->count() != 0)
+                                                                                            Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                             <!-- VALIDACION HERE -->
                                                                                             @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                                 @php($id_rubrosCdp = $rubrosCdpData->id )
@@ -374,6 +400,7 @@
                                                                                 @else
                                                                                     @if($dep->dependencia_id == $user->dependencia_id)
                                                                                         @if($dep->rubroCdpValor->count() != 0)
+                                                                                            Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                             <!-- VALIDACION HERE -->
                                                                                             @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                                 @php($id_rubrosCdp = $rubrosCdpData->id )
@@ -403,6 +430,7 @@
                                                                             @else
                                                                                 @if($cdp->dependencia_id == $dep->dependencia_id)
                                                                                     @if($dep->rubroCdpValor->count() != 0)
+                                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                         <!-- VALIDACION HERE -->
                                                                                         @foreach($fuentesRubro->rubrosCdpValor as  $valoresFR)
                                                                                             @php($id_rubrosCdp = $rubrosCdpData->id )
