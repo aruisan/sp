@@ -370,13 +370,15 @@ class PresupuestoController extends Controller
                                         else $hijosReduccion[] = 0;
                                     }
 
-                                    if (isset($hijosAdicion)) $adicionesH = array_sum($hijosAdicion);
-                                    if (isset($hijosReduccion)) $reduccionesH = array_sum($hijosReduccion);
+                                    if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                    if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+                                    if (isset($adicionesH)) $adicionesTot = array_sum($adicionesH);
+                                    if (isset($reduccionesH)) $reduccionesTot = array_sum($reduccionesH);
 
                                     $compIngValue = 0;
                                     if (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                     $sum[] = $rb->fontsRubro->sum('valor');
-                                    $definitivo = $adicionesH - $reduccionesH + $rb->fontsRubro->sum('valor');
+                                    $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesH, 'reduccion' => $reduccionesH,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
                                         'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->description]);
