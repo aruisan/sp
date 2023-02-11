@@ -334,6 +334,7 @@
                                                                                 @endif
                                                                             @endforeach
                                                                             @if($cdp->rubrosCdpValor->count() == 0)
+                                                                                    Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                 <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                                     @foreach($fuentesRubro->dependenciaFont as $dep)
                                                                                         @if($rubrosCdpData->depRubroFont)
@@ -350,6 +351,7 @@
                                                                                     @endforeach
                                                                             @endif
                                                                         @else
+                                                                            Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                             <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                             @foreach($fuentesRubro->dependenciaFont as $dep)
                                                                                 @if($rubrosCdpData->depRubroFont)
@@ -391,6 +393,7 @@
                                                                                                 <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $dep->saldo }}" style="text-align: center">
                                                                                             @endif
                                                                                         @else
+                                                                                            Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                             <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                                             <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
                                                                                             <input type="hidden" name="fuenteDep_saldo[]" value="{{ $dep->saldo }}">
@@ -420,6 +423,7 @@
                                                                                                 <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $dep->saldo }}" style="text-align: center">
                                                                                             @endif
                                                                                         @else
+                                                                                            Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                             <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                                             <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
                                                                                             <input type="hidden" name="fuenteDep_saldo[]" value="{{ $dep->saldo }}">
@@ -449,6 +453,7 @@
                                                                                             <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
                                                                                         @endif
                                                                                     @else
+                                                                                        Valor usado de {{ $fuentesRubro->sourceFunding->description}}
                                                                                         <input type="hidden" name="rubros_cdp_valor_id[]" value="">
                                                                                         <input type="hidden" name="fuenteDep_id[]" value="{{ $dep->id }}">
                                                                                         <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="0" max="{{ $fuentesRubro->saldo }}" style="text-align: center">
