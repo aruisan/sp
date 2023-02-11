@@ -31,7 +31,7 @@
                             <tbody>
                             @foreach($rubro->fontsRubro as $data)
                                 <tr>
-                                    <td class="text-center">{{ $data->sourceFunding->description }}</td>
+                                    <td class="text-center">{{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</td>
                                     <td>
                                         <input type="hidden" name="fontID[]" value="{{$data->id}}">
                                         @if(count($data->rubrosMov) > 0)
