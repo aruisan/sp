@@ -69,8 +69,9 @@ class PresupuestoController extends Controller
                 if ($data->id == 1){
                     $adiciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','2')->get();
                     $reducciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','3')->get();
+                    $definitivo = $adiciones->sum('valor') - $reducciones->sum('valor') + $vigens[0]->presupuesto_inicial;
                     $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $vigens[0]->presupuesto_inicial, 'adicion' => $adiciones->sum('valor'), 'reduccion' => $reducciones->sum('valor'),
-                        'anulados' => 0, 'recaudado' => $comprobanteIng->sum('val_total') , 'porRecaudar' => $vigens[0]->presupuesto_inicial - $comprobanteIng->sum('val_total'), 'definitivo' => $vigens[0]->presupuesto_inicial,
+                        'anulados' => 0, 'recaudado' => $comprobanteIng->sum('val_total') , 'porRecaudar' => $definitivo - $comprobanteIng->sum('val_total'), 'definitivo' => $definitivo,
                         'hijo' => 0, 'cod_fuente' => '', 'name_fuente' => '']);
                 } else {
                     $hijos1 = PlantillaCuipoIngresos::where('padre_id', $data->id)->get();
@@ -301,16 +302,12 @@ class PresupuestoController extends Controller
                             if (isset($adicionesH)) $adicionesTot = array_sum($adicionesH);
                             if (isset($reduccionesH)) $reduccionesTot = array_sum($reduccionesH);
 
-                            if (isset($adicionesH)){
-                                if (count($adicionesH) == 2){
-                                    //dd($adicionesH, $data);
-                                }
-                            }
-
+                            $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
                             $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
-                                'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => array_sum($sum) - $compIngValue, 'definitivo' => $adicionesTot - $reduccionesTot + array_sum($sum),
+                                'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                                 'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
+
                             unset($sum);
                             if (isset($civ)) unset($civ);
                             if (isset($adicionesH)) unset($adicionesH);
@@ -335,9 +332,11 @@ class PresupuestoController extends Controller
                                         if ($red) $reduccion = $red->valor;
                                         else $reduccion = 0;
 
+                                        $definitivo = $adicion - $reduccion + $font->valor;
+
                                         $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name,
                                             'inicial' => $font->valor, 'adicion' => $adicion, 'reduccion' => $reduccion, 'anulados' => 0,
-                                            'recaudado' => $compIngValue, 'porRecaudar' => $font->valor - $compIngValue, 'definitivo' => $adicion - $reduccion + $font->valor,'hijo' => $data->hijo,
+                                            'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,'hijo' => $data->hijo,
                                             'cod_fuente' => $font->sourceFunding->code, 'name_fuente' => $font->sourceFunding->description]);
                                     }
                                 } else {
@@ -350,8 +349,10 @@ class PresupuestoController extends Controller
                                         if ($red) $reduccion = $red->valor;
                                         else $reduccion = 0;
 
+                                        $definitivo = $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor');
+
                                         $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
-                                            'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $rubro[0]->fontsRubro->sum('valor') - $compIngValue, 'definitivo' =>  $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor'),
+                                            'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
                                             'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro, 'name_fuente' => $rubro[0]->fontsRubro]);
                                     }
 
@@ -359,11 +360,25 @@ class PresupuestoController extends Controller
                             } else {
                                 //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
                                 foreach ($rubro as $rb){
+                                    foreach ($rb->fontsRubro as $font) {
+                                        $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                        if ($add) $hijosAdicion[] = $add->valor;
+                                        else $hijosAdicion[] = 0;
+
+                                        $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                        if ($red) $hijosReduccion[] = $red->valor;
+                                        else $hijosReduccion[] = 0;
+                                    }
+
+                                    if (isset($hijosAdicion)) $adicionesH = array_sum($hijosAdicion);
+                                    if (isset($hijosReduccion)) $reduccionesH = array_sum($hijosReduccion);
+
                                     $compIngValue = 0;
                                     if (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                     $sum[] = $rb->fontsRubro->sum('valor');
-                                    $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => 0, 'reduccion' => 0,
-                                        'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $rb->fontsRubro->sum('valor') - $compIngValue, 'definitivo' => $rb->fontsRubro->sum('valor'),
+                                    $definitivo = $adicionesH - $reduccionesH + $rb->fontsRubro->sum('valor');
+                                    $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesH, 'reduccion' => $reduccionesH,
+                                        'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
                                         'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->description]);
                                 }
                             }
