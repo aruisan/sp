@@ -396,7 +396,7 @@
                                 @if($vigens->tipo == 0)
                                     @foreach($fuentes->dependenciaFont as $depFont)
                                         <tr>
-                                            <td>{{ $fuentes->id }}</td>
+                                            <td>{{ $depFont->id }}</td>
                                             <td>{{ $fuentes->sourceFunding->code }} - {{ $fuentes->sourceFunding->description }}</td>
                                             <td>{{ $depFont->dependencias->name }}</td>
                                             <td class="text-center">$ <?php echo number_format($depFont->saldo,0);?>.00</td>
