@@ -210,58 +210,60 @@
                     </table>
                 </div>
                 @if( $rol == 3 or $rol == 1)
-                    <br><center><h2>ASIGNACIÓN DE DINERO A DEPENDENCIAS</h2></center>
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="tablaAsignarDineroDep">
-                            <thead>
-                            <tr>
-                                <th class="text-center">Dependencia</th>
-                                <th class="text-center">Valor Tomado de Fuentes</th>
-                                <th class="text-center"><i class="fa fa-cogs"></i></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($dependencias as  $dependencia)
+                    @if($vigens->tipo == 0)
+                        <br><center><h2>ASIGNACIÓN DE DINERO A DEPENDENCIAS</h2></center>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaAsignarDineroDep">
+                                <thead>
                                 <tr>
-                                    <td>{{ $dependencia->sec }}.{{ $dependencia->num }} - {{ $dependencia->name }}</td>
-                                    <td class="text-center">
-                                        @foreach($rubro->fontsRubro as  $fuentes)
-                                            {{ $fuentes->sourceFunding->code }}
-                                            {{ $fuentes->sourceFunding->description }}<br>
-                                            @if(count($fuentes->dependenciaFont) > 0)
-                                                @foreach($fuentes->dependenciaFont as $depFont)
-                                                    @if($depFont->dependencia_id == $dependencia->id)
-                                                        $ <?php echo number_format($depFont->value,0);?>.00
+                                    <th class="text-center">Dependencia</th>
+                                    <th class="text-center">Valor Tomado de Fuentes</th>
+                                    <th class="text-center"><i class="fa fa-cogs"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($dependencias as  $dependencia)
+                                    <tr>
+                                        <td>{{ $dependencia->sec }}.{{ $dependencia->num }} - {{ $dependencia->name }}</td>
+                                        <td class="text-center">
+                                            @foreach($rubro->fontsRubro as  $fuentes)
+                                                {{ $fuentes->sourceFunding->code }}
+                                                {{ $fuentes->sourceFunding->description }}<br>
+                                                @if(count($fuentes->dependenciaFont) > 0)
+                                                    @foreach($fuentes->dependenciaFont as $depFont)
+                                                        @if($depFont->dependencia_id == $dependencia->id)
+                                                            $ <?php echo number_format($depFont->value,0);?>.00
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    0 $
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                        <td class="text-center">
+                                            @foreach($rubro->fontsRubro as  $fuentes)
+                                                @if(count($fuentes->dependenciaFont) > 0)
+                                                    @php($bandera = false)
+                                                    @foreach($fuentes->dependenciaFont as $depFont)
+                                                        @if($depFont->dependencia_id == $dependencia->id)
+                                                            @php($bandera = true)
+                                                            <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', {{ $depFont->value }}, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, {{$depFont->id}})" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
+                                                        @endif
+                                                    @endforeach
+                                                    @if($bandera == false and $fuentes->valor_disp_asign > 0)
+                                                        <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
                                                     @endif
-                                                @endforeach
-                                            @else
-                                                0 $
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                    <td class="text-center">
-                                        @foreach($rubro->fontsRubro as  $fuentes)
-                                            @if(count($fuentes->dependenciaFont) > 0)
-                                                @php($bandera = false)
-                                                @foreach($fuentes->dependenciaFont as $depFont)
-                                                    @if($depFont->dependencia_id == $dependencia->id)
-                                                        @php($bandera = true)
-                                                        <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', {{ $depFont->value }}, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, {{$depFont->id}})" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
-                                                    @endif
-                                                @endforeach
-                                                @if($bandera == false and $fuentes->valor_disp_asign > 0)
+                                                @else
                                                     <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
                                                 @endif
-                                            @else
-                                                <button onclick="getModalDependencia({{$dependencia->id}}, '{{$dependencia->name}}', 0, {{$fuentes->id}}, {{ $fuentes->sourceFunding->id }}, {{ $fuentes->valor_disp_asign }}, 0)" class="btn btn-success">{{ $fuentes->sourceFunding->description }}</button>
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
                 @endif
             </div>
             <div id="cdp" class="col-xs-12 col-sm-12 col-md-12 col-lg-12  tab-pane">
