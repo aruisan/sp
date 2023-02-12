@@ -46,8 +46,13 @@
                                                 @if(count($data->rubrosMov) > 0)
                                                     @foreach($data->rubrosMov as $mov)
                                                         @if($mov->movimiento == 2)
-                                                            @php($value = $mov->valor)
-                                                            @php($id = $mov->id)
+                                                            @if($mov->dep_rubro_font_id == $depFont->id)
+                                                                @php($value = $mov->valor)
+                                                                @php($id = $mov->id)
+                                                            @else
+                                                                @php($value = 0)
+                                                                @php($id = $mov->id)
+                                                            @endif
                                                         @else
                                                             @php($value = 0)
                                                             @php($id = $mov->id)
