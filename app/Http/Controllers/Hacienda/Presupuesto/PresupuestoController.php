@@ -372,10 +372,11 @@ class PresupuestoController extends Controller
                                     if (isset($adicionesH)) unset($adicionesH);
                                     if (isset($reduccionesH)) unset($reduccionesH);
 
-                                    dd($rb->fontsRubro);
                                     foreach ($rb->fontsRubro as $font) {
                                         $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
                                         if ($add) {
+                                            dd($rb->fontsRubro, $font);
+
                                             if ($add->rubro_id == $rb->id) $hijosAdicion[] = $add->valor;
                                             else $hijosAdicion[] = 0;
                                         }
