@@ -416,10 +416,10 @@
                                             </td>
                                             @if($vigens->tipo != 1)
                                                 <td class="text-center">
-                                                    {{ $depFont->credito->sum('valor') }}
+                                                    $ <?php echo number_format($depFont->credito->sum('valor'),0);?>.00
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ $depFont->contraCredito->sum('valor') }}
+                                                    $ <?php echo number_format($depFont->contraCredito->sum('valor'),0);?>.00
                                                 </td>
                                             @endif
                                         </tr>
