@@ -149,6 +149,16 @@ class RubrosController extends Controller
                     $sumaC[] = 0;
                 }
 
+                //VALORES DE CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
+                $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
+                if(count($rubrosCredMov) > 0) $valueRubrosCred[] = $rubrosCredMov->sum('valor');
+                else $valueRubrosCred[] = 0;
+
+                //VALORES DE CONTRA CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
+                $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)->get();
+                if(count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
+                else $valueRubrosCCred[] = 0;
+
                 $val = array_sum($suma);
                 $Cred = array_sum($sumaC);
                 if ($fuente->rubrosMov){

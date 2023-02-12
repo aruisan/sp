@@ -27,4 +27,8 @@ class DependenciaRubroFont extends Model implements Auditable
     public function rubroCdpValor(){
         return $this->hasMany('App\Model\Administrativo\Cdp\RubrosCdpValor','fontsDep_id');
     }
+
+    public function contraCredito(){
+        return $this->hasMany('App\Model\Hacienda\Presupuesto\RubrosMov', 'dep_rubro_font_cc_id');
+    }
 }

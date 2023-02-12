@@ -423,11 +423,7 @@
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">
-                                                    @foreach($valores as $valAdd)
-                                                        @if($fuentes->id == $valAdd['id'])
-                                                            $ <?php echo number_format($valAdd['ccredito'],0);?>.00
-                                                        @endif
-                                                    @endforeach
+                                                    {{ $depFont->contraCredito }}
                                                 </td>
                                             @endif
                                         </tr>
