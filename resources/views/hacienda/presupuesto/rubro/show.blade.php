@@ -179,7 +179,9 @@
                                 <th class="text-center">Valor Actual</th>
                             @endif
                             @if( $rol == 3 or $rol == 1)
-                                <th class="text-center">Valor Disponible Asignación</th>
+                                @if($vigens->tipo == 0)
+                                    <th class="text-center">Valor Disponible Asignación</th>
+                                @endif
                             @endif
                         </tr>
                         </thead>
@@ -192,7 +194,9 @@
                                     <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                     <td class="text-center">$ <?php echo number_format($fuentes['valor_disp'],0);?>.00</td>
                                     @if( $rol == 3 or $rol == 1)
-                                        <td class="text-center">$ <?php echo number_format($fuentes['valor_disp_asign'],0);?>.00</td>
+                                        @if($vigens->tipo == 0)
+                                            <td class="text-center">$ <?php echo number_format($fuentes['valor_disp_asign'],0);?>.00</td>
+                                        @endif
                                     @endif
                                 </tr>
                             @endforeach
