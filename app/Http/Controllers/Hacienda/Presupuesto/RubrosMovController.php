@@ -108,8 +108,10 @@ class RubrosMovController extends Controller
                 $FontRubro->save();
 
                 if ($vigencia->tipo == 0){
+                    $mov->dep_rubro_font_id = $request->depID[$i];
+
                     //SI EL RUBRO ES DE EGRESOS SE HACE LA ADICIÓN AL DINERO DE LA DEPENDENCIA
-                    $idFontDepCred = DependenciaRubroFont::where('rubro_font_id', $fuenteR_id[$i])->first();
+                    $idFontDepCred = DependenciaRubroFont::find($request->depID[$i]);
 
                     $idFontDepCred->saldo = $idFontDepCred->saldo - $mov->valor;
                     $idFontDepCred->saldo = $idFontDepCred->saldo + $val;
@@ -270,15 +272,18 @@ class RubrosMovController extends Controller
                     $rubrosMov2->rubro_id = $id;
                     $rubrosMov2->movimiento = $m;
                     $rubrosMov2->resource_id = $resource;
-                    $rubrosMov2->save();
 
                     if ($vigencia->tipo == 0 and $valor[$i] > 0){
+                        $rubrosMov2->dep_rubro_font_id = $request->depID[$i];
+
                         //SI EL RUBRO ES DE EGRESOS SE HACE LA ADICIÓN AL DINERO DE LA DEPENDENCIA
-                        $idFontDepCred = DependenciaRubroFont::where('rubro_font_id', $fuenteR_id[$i])->first();
+                        $idFontDepCred = DependenciaRubroFont::find($request->depID[$i]);
 
                         $idFontDepCred->saldo = $idFontDepCred->saldo + $valor[$i];
                         $idFontDepCred->save();
                     }
+
+                    $rubrosMov2->save();
                 }
             }
 
