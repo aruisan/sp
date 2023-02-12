@@ -416,14 +416,10 @@
                                             </td>
                                             @if($vigens->tipo != 1)
                                                 <td class="text-center">
-                                                    @foreach($valores as $valAdd)
-                                                        @if($fuentes->id == $valAdd['id'])
-                                                            $ <?php echo number_format($valAdd['credito'],0);?>.00
-                                                        @endif
-                                                    @endforeach
+                                                    {{ $depFont->credito->sum('valor') }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ $depFont->contraCredito }}
+                                                    {{ $depFont->contraCredito->sum('valor') }}
                                                 </td>
                                             @endif
                                         </tr>

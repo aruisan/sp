@@ -31,4 +31,8 @@ class DependenciaRubroFont extends Model implements Auditable
     public function contraCredito(){
         return $this->hasMany('App\Model\Hacienda\Presupuesto\RubrosMov', 'dep_rubro_font_cc_id');
     }
+
+    public function credito(){
+        return $this->hasMany('App\Model\Hacienda\Presupuesto\RubrosMov', 'dep_rubro_font_cred_id');
+    }
 }
