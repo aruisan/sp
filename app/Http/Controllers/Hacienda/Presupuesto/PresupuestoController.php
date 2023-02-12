@@ -367,7 +367,6 @@ class PresupuestoController extends Controller
                                 }
                             } else {
                                 //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
-                                dd($rubro);
                                 foreach ($rubro as $rb){
                                     foreach ($rb->fontsRubro as $font) {
                                         $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
@@ -388,9 +387,9 @@ class PresupuestoController extends Controller
                                     if (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                     $sum[] = $rb->fontsRubro->sum('valor');
                                     $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
-                                    $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
+                                    $prepIng[] = collect(['id' => $rb->id, 'code' => $rb->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
-                                        'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->description]);
+                                        'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->code, 'name_fuente' => $rb->fontsRubro[0]->description]);
                                 }
                             }
                         }
