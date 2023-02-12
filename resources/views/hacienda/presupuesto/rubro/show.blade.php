@@ -457,14 +457,14 @@
                                         @if($vigens->tipo != 1)
                                             <td class="text-center">
                                                 @foreach($valores as $valAdd)
-                                                    @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                    @if($fuentes->id == $valAdd['id'])
                                                         $ <?php echo number_format($valAdd['credito'],0);?>.00
                                                     @endif
                                                 @endforeach
                                             </td>
                                             <td class="text-center">
                                                 @foreach($valores as $valAdd)
-                                                    @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                    @if($fuentes->id == $valAdd['id'])
                                                         $ <?php echo number_format($valAdd['ccredito'],0);?>.00
                                                     @endif
                                                 @endforeach
