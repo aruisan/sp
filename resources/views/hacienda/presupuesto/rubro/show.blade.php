@@ -430,9 +430,6 @@
                                     <tr>
                                         <td>{{ $fuentes->id }}</td>
                                         <td>{{ $fuentes->sourceFunding->code }} - {{ $fuentes->sourceFunding->description }}</td>
-                                        <td>
-                                            {{ $fuentes }}
-                                        </td>
                                         <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                         <td class="text-center">
                                             @foreach($valores as $valAdd)
