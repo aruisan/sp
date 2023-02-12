@@ -400,6 +400,11 @@ class PresupuestoController extends Controller
                                     $prepIng[] = collect(['id' => $rb->id, 'code' => $data->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
                                         'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->code, 'name_fuente' => $rb->fontsRubro[0]->description]);
+
+                                    if (isset($adicionesH)) unset($adicionesH);
+                                    if (isset($reduccionesH)) unset($reduccionesH);
+                                    if (isset($hijosAdicion)) unset($hijosAdicion);
+                                    if (isset($hijosReduccion)) unset($hijosReduccion);
                                 }
                             }
                         }
