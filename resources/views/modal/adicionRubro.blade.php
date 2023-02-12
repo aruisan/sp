@@ -39,6 +39,9 @@
                                                 @if($mov->movimiento == 2)
                                                     @php($value = $mov->valor)
                                                     @php($id = $mov->id)
+                                                @else
+                                                    @php($value = 0)
+                                                    @php($id = $mov->id)
                                                 @endif
                                             @endforeach
                                             <input type="text" required  name="valorAdd[]" value="{{ $value }}" style="text-align: center" class="form-control" min="0">
