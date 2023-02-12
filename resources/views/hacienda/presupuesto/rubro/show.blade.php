@@ -394,7 +394,7 @@
                             <tbody>
                             @foreach($rubro->fontsRubro as $fuentes)
                                 @if($vigens->tipo == 0)
-                                    @foreach($data->dependenciaFont as $depFont)
+                                    @foreach($fuentes->dependenciaFont as $depFont)
                                         <tr>
                                             <td>{{ $fuentes->id }}</td>
                                             <td>{{ $fuentes->sourceFunding->description }}</td>
