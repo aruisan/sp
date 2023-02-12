@@ -1,7 +1,7 @@
 
 <div id="reduccion" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-        <form class="form" action="{{url('/presupuesto/rubro/m/3/'.$rubro->id)}}" method="POST" id="add" enctype="multipart/form-data">
+        <form class="form" action="{{url('/presupuesto/rubro/m/3/'.$rubro->id)}}" method="POST" id="red" enctype="multipart/form-data">
             {!! method_field('PUT') !!}
             {{ csrf_field() }}
             <div class="modal-content">

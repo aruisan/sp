@@ -25,11 +25,41 @@
                             <thead>
                             <tr>
                                 <th class="text-center">FUENTE</th>
+                                @if($vigens->tipo == 0)
+                                    <th class="text-center">DEPENDENCIA</th>
+                                @endif
                                 <th class="text-center">VALOR</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($rubro->fontsRubro as $data)
+                                @if($vigens->tipo == 0)
+                                    @foreach($data->dependenciaFont as $depFont)
+                                        <tr>
+                                            <td class="text-center">{{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</td>
+                                            <td class="text-center">{{$depFont}}</td>
+                                            <td>
+                                                <input type="hidden" name="fontID[]" value="{{$data->id}}">
+                                                @if(count($data->rubrosMov) > 0)
+                                                    @foreach($data->rubrosMov as $mov)
+                                                        @if($mov->movimiento == 2)
+                                                            @php($value = $mov->valor)
+                                                            @php($id = $mov->id)
+                                                        @else
+                                                            @php($value = 0)
+                                                            @php($id = $mov->id)
+                                                        @endif
+                                                    @endforeach
+                                                    <input type="text" required  name="valorAdd[]" value="{{ $value }}" style="text-align: center" class="form-control" min="0">
+                                                    <input type="hidden" id="mov_id[]" name="mov_id[]" value="{{ $id }}">
+                                                @else
+                                                    <input type="text" required  name="valorAdd[]" value="0" style="text-align: center" class="form-control" min="0">
+                                                    <input type="hidden" id="mov_id[]" name="mov_id[]">
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
                                 <tr>
                                     <td class="text-center">{{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</td>
                                     <td>
@@ -52,6 +82,7 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @endif
                             @endforeach
                             </tbody>
                         </table>

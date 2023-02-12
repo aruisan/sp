@@ -1,7 +1,7 @@
 
 <div id="credito" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-        <form class="form" action="{{url('/presupuesto/rubro/m/1/'.$rubro->id)}}" method="POST" id="add" enctype="multipart/form-data">
+        <form class="form" action="{{url('/presupuesto/rubro/m/1/'.$rubro->id)}}" method="POST" id="cred" enctype="multipart/form-data">
             {!! method_field('PUT') !!}
             {{ csrf_field() }}
             <div class="modal-content">
@@ -86,14 +86,14 @@
                                                                 <input type="hidden" name="fuenteR_id[]" value="{{ $fuentesRubro->id }}">
                                                                 @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
                                                                 <li style="list-style-type: none;">
-                                                                    {{ $fuentesRubro->sourceFunding->description }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
+                                                                    {{ $fuentesRubro->sourceFunding }} : $<?php echo number_format( $fuentesRubro->valor_disp,0) ?>
                                                                 </li>
                                                             </div>
                                                         @endif
                                                         <div class="col-lg-12">
                                                             <br>
                                                             @if($fuentesRubro->valor_disp != 0)
-                                                                Valor usado de {{ $fuentesRubro->sourceFunding->description }}:
+                                                                Valor usado de {{ $fuentesRubro->sourceFunding }}:
                                                                 @if($rubro->rubrosMov->count() > 0)
                                                                     <input type="hidden" name="rubro_Mov_id[]" value="@foreach($fuentesRubro->rubrosMov as $mov) @if($mov->rubro_id == $rubro->id) {{  $mov->id }} @endif @endforeach">
                                                                     <input type="text" required class="form-control" name="valorRed[]" value="@foreach($fuentesRubro->rubrosMov as $mov) @if($mov->rubro_id == $rubro->id) {{  $mov->valor }} @endif @endforeach" max="{{ $fuentesRubro->valor_disp }}" style="text-align: center">
@@ -120,17 +120,12 @@
                                 @endfor
                                 </tbody>
                             </table>
-                            <br>
                         </div>
                     @endif
                 </div>
                 <div class="modal-footer">
                     @if($contadorRubDisp > 0)
-                        <center>
-                            @if($rol == 2)
-                                <button type="submit" class="btn-sm btn-primary">Guardar Credito</button>
-                            @endif
-                        </center>
+                        <center><button type="submit" class="btn-sm btn-primary">Guardar Credito</button></center>
                     @endif
                 </div>
             </div>
