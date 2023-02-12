@@ -246,6 +246,8 @@ class RubrosMovController extends Controller
 
         } elseif ($m == 2){
 
+            dd($request->depID);
+
             $fuenteR_id = $request->fontID;
             $valor = $request->valorAdd;
             $mov_id = $request->mov_id;
