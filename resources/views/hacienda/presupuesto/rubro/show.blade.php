@@ -382,7 +382,7 @@
                                 <th class="text-center">Id</th>
                                 <th class="text-center">Fuente</th>
                                 @if($vigens->tipo == 0)<th class="text-center">Dependencia</th>@endif
-                                <th class="text-center">Valor Inicial</th>
+                                <th class="text-center">Saldo de Fuente</th>
                                 <th class="text-center">Adición</th>
                                 <th class="text-center">Reducción</th>
                                 @if($vigens->tipo == 0)
@@ -417,14 +417,14 @@
                                             @if($vigens->tipo != 1)
                                                 <td class="text-center">
                                                     @foreach($valores as $valAdd)
-                                                        @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                        @if($fuentes->id == $valAdd['id'])
                                                             $ <?php echo number_format($valAdd['credito'],0);?>.00
                                                         @endif
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">
                                                     @foreach($valores as $valAdd)
-                                                        @if($fuentes->font_vigencia_id == $valAdd['id'])
+                                                        @if($fuentes->id == $valAdd['id'])
                                                             $ <?php echo number_format($valAdd['ccredito'],0);?>.00
                                                         @endif
                                                     @endforeach
