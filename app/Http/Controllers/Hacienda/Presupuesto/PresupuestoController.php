@@ -371,7 +371,8 @@ class PresupuestoController extends Controller
                                     //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
                                     if (isset($adicionesH)) unset($adicionesH);
                                     if (isset($reduccionesH)) unset($reduccionesH);
-                                    
+
+                                    dd($rb->fontsRubro);
                                     foreach ($rb->fontsRubro as $font) {
                                         $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
                                         if ($add) {
