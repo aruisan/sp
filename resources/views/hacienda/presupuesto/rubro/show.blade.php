@@ -380,7 +380,7 @@
                             <thead>
                             <tr>
                                 <th class="text-center">Id</th>
-                                <th class="text-center">Nombre Fuente</th>
+                                <th class="text-center">Fuente</th>
                                 @if($vigens->tipo == 0)<th class="text-center">Dependencia</th>@endif
                                 <th class="text-center">Valor Inicial</th>
                                 <th class="text-center">Adición</th>
@@ -397,7 +397,7 @@
                                     @foreach($fuentes->dependenciaFont as $depFont)
                                         <tr>
                                             <td>{{ $fuentes->id }}</td>
-                                            <td>{{ $fuentes->sourceFunding->description }}</td>
+                                            <td>{{ $fuentes->sourceFunding->code }} - {{ $fuentes->sourceFunding->description }}</td>
                                             <td>{{ $depFont->dependencias->name }}</td>
                                             <td class="text-center">$ <?php echo number_format($fuentes['valor'],0);?>.00</td>
                                             <td class="text-center">
@@ -435,7 +435,7 @@
                                 @else
                                     <tr>
                                         <td>{{ $fuentes->id }}</td>
-                                        <td>{{ $fuentes->sourceFunding->description }}</td>
+                                        <td>{{ $fuentes->sourceFunding->code }} - {{ $fuentes->sourceFunding->description }}</td>
                                         <td>
                                             {{ $fuentes }}
                                         </td>
