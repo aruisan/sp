@@ -277,7 +277,7 @@ class PresupuestoController extends Controller
                                             //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
                                             if (isset($adicionesH)) unset($adicionesH);
                                             if (isset($reduccionesH)) unset($reduccionesH);
-                                            
+
                                             // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                             foreach ($rb->fontsRubro as $font) {
                                                 $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
@@ -367,6 +367,7 @@ class PresupuestoController extends Controller
                                 }
                             } else {
                                 //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
+                                dd($rubro);
                                 foreach ($rubro as $rb){
                                     foreach ($rb->fontsRubro as $font) {
                                         $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
