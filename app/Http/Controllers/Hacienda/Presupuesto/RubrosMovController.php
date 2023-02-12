@@ -246,14 +246,12 @@ class RubrosMovController extends Controller
 
         } elseif ($m == 2){
 
-            dd($request->depID);
-
             $fuenteR_id = $request->fontID;
             $valor = $request->valorAdd;
             $mov_id = $request->mov_id;
             $vigencia = Vigencia::find($request->vigencia_id);
 
-            for($i = 0; $i < count($fuenteR_id); $i++){
+            for($i = 0; $i < count($request->depID); $i++){
 
                 if (isset($mov_id[$i])){
                     $this->updateMov($mov_id[$i], $valor[$i], $request, $id, $m, $vigencia);
