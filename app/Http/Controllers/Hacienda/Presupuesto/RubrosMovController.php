@@ -196,7 +196,10 @@ class RubrosMovController extends Controller
             $mov_id = $request->mov_id;
             $vigencia = Vigencia::find($request->vigencia_id);
 
-            for($i = 0; $i <count($request->depID); $i++){
+            if ($vigencia->tipo == 0) $count = count($request->depID);
+            else $count = count($request->mov_id);
+
+            for($i = 0; $i < $count; $i++){
 
                 if (isset($mov_id[$i])){
 
@@ -245,7 +248,10 @@ class RubrosMovController extends Controller
             $mov_id = $request->mov_id;
             $vigencia = Vigencia::find($request->vigencia_id);
 
-            for($i = 0; $i < count($request->depID); $i++){
+            if ($vigencia->tipo == 0) $count = count($request->depID);
+            else $count = count($request->mov_id);
+
+            for($i = 0; $i < $count; $i++){
 
                 if (isset($mov_id[$i])){
                     $this->updateMov($mov_id[$i], $valor[$i], $request, $id, $m, $vigencia);
