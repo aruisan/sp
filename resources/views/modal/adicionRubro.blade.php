@@ -37,7 +37,10 @@
                                     @foreach($data->dependenciaFont as $depFont)
                                         <tr>
                                             <td class="text-center">{{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</td>
-                                            <td class="text-center">{{$depFont->dependencias->name}}</td>
+                                            <td class="text-center">
+                                                {{$depFont->dependencias->name}}
+                                                <input type="hidden" name="depID[]" value="{{ $depFont->dependencias->id }}">
+                                            </td>
                                             <td>
                                                 <input type="hidden" name="fontID[]" value="{{$data->id}}">
                                                 @if(count($data->rubrosMov) > 0)
