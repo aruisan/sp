@@ -36,7 +36,7 @@
                                             @else
                                                 <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->fontRubro }}">
                                                 <input type="hidden" name="mov_id[]" value="">
-                                                <input type="number" required  name="valorCred[]" class="form-group-sm" value="0" style="text-align: center">
+                                                <input type="number" required  name="valorRed[]" class="form-group-sm" value="0" style="text-align: center">
                                             @endif
                                         </div>
                                     </td>
