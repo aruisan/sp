@@ -21,7 +21,7 @@
                             <input type="hidden" name="vigencia_id" id="vigencia_id" value="{{ $rubro->vigencia_id }}">
                         </div>
                         <br>
-                        <table id="tabla_rubrosCdp" class="table table-bordered">
+                        <table id="tabla_rubrosAdd" class="table table-bordered">
                             <thead>
                             <tr>
                                 <th class="text-center">FUENTE</th>
@@ -37,7 +37,7 @@
                                     @foreach($data->dependenciaFont as $depFont)
                                         <tr>
                                             <td class="text-center">{{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</td>
-                                            <td class="text-center">{{$depFont}}</td>
+                                            <td class="text-center">{{$depFont->dependencias->name}}</td>
                                             <td>
                                                 <input type="hidden" name="fontID[]" value="{{$data->id}}">
                                                 @if(count($data->rubrosMov) > 0)
