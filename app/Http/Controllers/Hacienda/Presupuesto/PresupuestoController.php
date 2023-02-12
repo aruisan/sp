@@ -248,6 +248,10 @@ class PresupuestoController extends Controller
                                 $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h1->id)->get();
                                 if (count($rubro) > 0){
                                     if (count($rubro) == 1){
+                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                        if (isset($adicionesH)) unset($adicionesH);
+                                        if (isset($reduccionesH)) unset($reduccionesH);
+
                                         // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                         foreach ($rubro[0]->fontsRubro as $font) {
                                             $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
@@ -270,6 +274,10 @@ class PresupuestoController extends Controller
                                         if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                     } else {
                                         foreach ($rubro as $rb){
+                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                            if (isset($adicionesH)) unset($adicionesH);
+                                            if (isset($reduccionesH)) unset($reduccionesH);
+                                            
                                             // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                             foreach ($rb->fontsRubro as $font) {
                                                 $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
