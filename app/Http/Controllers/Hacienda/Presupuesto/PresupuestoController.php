@@ -370,11 +370,17 @@ class PresupuestoController extends Controller
                                 foreach ($rubro as $rb){
                                     foreach ($rb->fontsRubro as $font) {
                                         $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                        if ($add) $hijosAdicion[] = $add->valor;
+                                        if ($add) {
+                                            if ($add->rubro_id == $rb->id) $hijosAdicion[] = $add->valor;
+                                            else $hijosAdicion[] = 0;
+                                        }
                                         else $hijosAdicion[] = 0;
 
                                         $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                        if ($red) $hijosReduccion[] = $red->valor;
+                                        if ($red) {
+                                            if ($red->rubro_id == $rb->id) $hijosReduccion[] = $red->valor;
+                                            else $hijosReduccion[] = 0;
+                                        }
                                         else $hijosReduccion[] = 0;
                                     }
 
