@@ -95,6 +95,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //VALIDAR SI EL PAGO SE PUEDE DESCARGAR
         Route::post('/Pagos/validatePay','Impuestos\Pagos\PagosController@validatePagoDownload');
 
+        //DESCARGAR PAZ Y SALVO
+        Route::get('/Pagos/certPyS/{id}','Impuestos\Pagos\PagosController@certDownload');
+
         Route::get('/Pagos/{modulo}', 'Impuestos\Pagos\PagosController@index');
         Route::resource('/Pagos', 'Impuestos\Pagos\PagosController');
         Route::post('/Pagos/Send', 'Impuestos\Pagos\PagosController@Send');

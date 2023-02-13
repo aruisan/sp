@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Impuestos\Pagos;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Impuestos\IcaRetenedor;
+use App\Model\Impuestos\PazySalvo;
 use App\Model\Impuestos\Predial;
+use App\Model\Impuestos\PredialContribuyentes;
 use App\Traits\NaturalezaJuridicaTraits;
 use App\Http\Controllers\Controller;
 use App\Model\Impuestos\IcaContri;
@@ -173,5 +175,59 @@ class PagosController extends Controller
         $pago = Pagos::find($request->payId);
         if ($pago->download > 0) return 'OK';
         else return 'FALSE';
+    }
+
+    /**
+     * Download Cert.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function certDownload($id){
+        $impPago = Pagos::find($id);
+        if ($impPago){
+            if ($impPago->modulo == "PREDIAL"){
+                if ($impPago->download > 0){
+                    $pred = Predial::find($impPago->entity_id);
+                    $contri = PredialContribuyentes::find($pred->imp_pred_contri_id);
+
+                    $declaFecha = Carbon::parse($impPago->fechaCreacion);
+                    $fechaDeclaracion = Carbon::createFromTimeString($declaFecha);
+
+                    $hoy = Carbon::today();
+                    $fecha = Carbon::createFromTimeString($hoy);
+
+                    $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+                    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+                    $pazysalvo = new PazySalvo();
+                    $pazysalvo->modulo = $impPago->modulo;
+                    $pazysalvo->pago_id = $id;
+                    $pazysalvo->entity_id = $impPago->entity_id;
+                    $pazysalvo->contri_id = $pred->imp_pred_contri_id;
+                    $pazysalvo->valor = $impPago->valor;
+                    $pazysalvo->fecha = $hoy;
+                    $pazysalvo->user_id = Auth::user()->id;
+                    $pazysalvo->save();
+
+                    $impPago->download = 0;
+                    //$impPago->save();
+
+                    $pdf = \PDF::loadView('impuestos.pagos.pazysalvo', compact('dias','meses','fechaDeclaracion', 'fecha',
+                    'impPago','pred','contri','pazysalvo'))
+                        ->setOptions(['images' => true,'isRemoteEnabled' => true]);
+                    return $pdf->stream();
+                } else{
+                    Session::flash('warning','Ya ha sido generado el paz y salvo de ese predio.');
+                    return back();
+                }
+            } else{
+                Session::flash('warning','No se puede generar paz y salvo. Contacte con el administrador.');
+                return back();
+            }
+        }else {
+            Session::flash('warning','El pago no se encuentra en el sistema.');
+            return back();
+        }
     }
 }

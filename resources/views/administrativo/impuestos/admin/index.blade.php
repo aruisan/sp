@@ -107,7 +107,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($pago->estado == "Pagado")
-                                        <a href="{{Storage::url($pago->Resource->ruta)}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></a>
+                                        <a href="{{Storage::url($pago->Resource)}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></a>
                                     @else
                                         N/A
                                     @endif
@@ -237,7 +237,6 @@
             evento.preventDefault();
 
             const payid = document.getElementById("paySelected").value;
-            console.log(payid);
 
             $.ajax({
                 method: "POST",
@@ -246,11 +245,11 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(response) {
-               console.log(response)
                 if (response == "OK"){
                     var opcion = confirm("SOLO SE PUEDE GENERAR UN PAZ Y SALVO POR USUARIO, ESTA SEGURO DE GENERARLO?");
                     if (opcion == true) {
                         console.log(payid);
+                        window.open('/impuestos/Pagos/certPyS/'+payid, '_blank');
                         return;
                     }
                 } else toastr.warning('YA SE HA GENERADO EL PAZ Y SALVO DE ESE USUARIO. NO SE PUEDE GENERAR UNO NUEVO');

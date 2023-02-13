@@ -85,9 +85,9 @@
                         <label>Tercero: </label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                            <select class="form-control" name="persona_id">
+                            <select class="select-tercero" name="persona_id">
                                 @foreach($personas as $persona)
-                                    <option value="{{$persona->id}}">{{$persona->nombre}}</option>
+                                    <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -196,6 +196,8 @@
 @endsection
 @section('js')
     <script>
+
+        $('.select-tercero').select2();
 
         function ShowSelected()
         {
