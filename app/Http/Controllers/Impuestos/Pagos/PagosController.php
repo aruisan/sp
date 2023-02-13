@@ -210,8 +210,24 @@ class PagosController extends Controller
                     $pazysalvo->user_id = Auth::user()->id;
                     $pazysalvo->save();
 
+                    if (strlen($pazysalvo->id) < 6){
+                        $pazysalvo->numForm = $pazysalvo->id;
+                        for ($i = 0; $i < 6 - strlen($pazysalvo->id); $i++) {
+                            $pazysalvo->numForm =  '0'. $pazysalvo->numForm;
+                        }
+                    } else  $pazysalvo->numForm = $pazysalvo->id;
+
                     $impPago->download = 0;
-                    //$impPago->save();
+                    $impPago->save();
+
+                    if (strlen($impPago->id) < 12){
+                        $impPago->numForm = $impPago->id;
+                        for ($i = 0; $i < 12 - strlen($impPago->id); $i++) {
+                            $impPago->numForm =  '0'.$impPago->numForm;
+                        }
+                    } else $impPago->numForm = $impPago->id;
+
+
 
                     $pdf = \PDF::loadView('impuestos.pagos.pazysalvo', compact('dias','meses','fechaDeclaracion', 'fecha',
                     'impPago','pred','contri','pazysalvo'))

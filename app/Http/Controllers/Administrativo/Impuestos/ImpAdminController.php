@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrativo\Impuestos;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Impuestos\Comunicado;
 use App\Model\Impuestos\Pagos;
+use App\Model\Impuestos\Predial;
 use App\Model\Impuestos\PredialContribuyentes;
 use App\Model\Impuestos\RIT;
 use Illuminate\Http\Request;
@@ -28,7 +29,11 @@ class ImpAdminController extends Controller
         $comunicados = Comunicado::all();
         $bancos = PucAlcaldia::where('id', '>=', 9)->where('id', '<=', 50)->get();
         $año = Carbon::today()->year;
-        $pagosFinalizados = Pagos::where('estado','Pagado')->where('download', 1)->whereBetween('fechaPago',array($año.'-01-01', $año.'-12-31'))->with('user')->get();
+        $pagosFinalizados = Pagos::where('estado','Pagado')->where('download', 1)->where('modulo','PREDIAL')->whereBetween('fechaPago',array($año.'-01-01', $año.'-12-31'))->with('user')->get();
+        foreach ($pagosFinalizados as $pago){
+            $pago->impPred = Predial::find($pago->entity_id);
+            $pago->contribuyente = PredialContribuyentes::find($pago->impPred->imp_pred_contri_id);
+        }
         return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits', 'comunicados','bancos'
         ,'pagosFinalizados'));
     }

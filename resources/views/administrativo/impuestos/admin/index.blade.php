@@ -61,8 +61,6 @@
             <br>
             <div class="table-responsive">
                 @if(count($pagos) > 0)
-                    <button onclick="getModalPazySalvo()" class="hidden">Generar Paz y Salvo</button>
-                    <br><br>
                     <table class="table table-bordered" id="tabla_pagos">
                         <thead>
                         <tr>
@@ -365,6 +363,11 @@
                     text:      '<i class="fa fa-print"></i> ',
                     titleAttr: 'Imprimir',
                     className: 'btn btn-primary'
+                },
+                {
+                    text: '<i onclick="getModalPazySalvo()">Generar Paz y Salvo</i>',
+                    titleAttr: 'Paz y Salvo',
+                    className: 'hidden'
                 },
             ]
 

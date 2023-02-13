@@ -69,45 +69,42 @@
 		</div>
 	</div>
 	<div class="row">
+		<center><h3><b>PAZ Y SALVO {{ $impPago->modulo }} No. {{ $pazysalvo->numForm }}</b></h3></center>
 		<center><h3><b>EL SUSCRITO TESORERO MUNICIPAL DE PROVIDENCIA Y SANTA CATALINA, ISLAS</b></h3></center>
-		<br><br>
-		<center><h3><b>PAZ Y SALVO PREDIAL No. 001</b></h3></center>
 		<br><br>
 	</div>
 	<div>
 		<center>
 			<h3>CERTIFICA</h3>
-			<br><br><br><br>
+			<br>
 			<h4>Que el predio que se especifica a continuación se encuentra a PAZ Y SALVO por concepto de pago del impuesto
 				predial unificado hasta el 31 de diciembre de {{ \Carbon\Carbon::today()->format('Y') }}, y se expide a solicitud del interesado.</h4>
 			<br><br><br>
-			Ficha catastral No. {{ $pazysalvo->id }}
-			denominado:
-			Dirección: EL VALLE
-			Propietario: ROGELIO ARCHBOLD NEWBALL
-			Cédula o NIT: 991878
-			Área: 1 Hc-4375 M2
-			Área construida: 0 M2
-
-			Formulario declaración No: 00013
-			Fecha declaración: 2/2/2023
-			Valor Declaración: $1,741,488
-
-			Costo del paz y salvo: $0
-			Recibo de pago:
-			Fecha Recibo de pago:
-
-			Validez del Paz y Salvo: 31/12/2023
-			Fecha de expedición: 2/2/2023
-
-			<h4>
-				Se certifica en Providencia Isla, a <?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y').'  Hora:'.$fecha->format('h:i:s')?>
-			</h4>
 		</center>
+		<h4>
+			Ficha catastral No. {{ $contri->numCatastral }} <br>
+			denominado: <br>
+			Dirección: {{ $contri->dir_predio }} <br>
+			Propietario: {{ $contri->contribuyente }} <br>
+			Cédula o NIT: {{ $contri->numIdent }} <br>
+			Área: {{ $contri->hect }} Hc - {{ $contri->metros }} M2 <br>
+			Área construida: {{ $contri->area }} M2 <br>
+			<br>
+			Formulario declaración No: {{ $impPago->numForm }} <br>
+			Fecha declaración: {{ $impPago->fechaCreacion }} <br>
+			Valor Declaración: $<?php echo number_format($impPago->valor,0) ?> <br>
+			<br>
+			Costo del paz y salvo: $<?php echo number_format($pazysalvo->valor,0) ?> <br>
+			Recibo de pago: {{ $pazysalvo->recibo_pago }} <br>
+			Fecha Recibo de pago: {{ $pazysalvo->fecha_pago }} <br>
+			<br>
+			Validez del Paz y Salvo: 31/12/{{ \Carbon\Carbon::today()->format('Y') }} <br>
+			Fecha de expedición: {{ $fecha }} <br>
+		</h4>
 	</div>
 	<div style="margin-top: 10px; font-size: 17px;">
 		<center>
-			<br><br><br><br>
+			<br><br>
 			<b>JUSTINO BRITTON HENRY</b><br>
 			TESORERO MUNICIPAL
 		</center>
