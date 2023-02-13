@@ -152,7 +152,7 @@ class RegistrosController extends Controller
         }else $ruta = "";
 
         //FECHA FIJA
-        $request->fecha = '2023-01-13';
+        $request->fecha = '2023-01-17';
 
         $registro = new Registro();
 
@@ -172,7 +172,7 @@ class RegistrosController extends Controller
         $registro->ff_doc = $request->fecha_tipo_doc;
         $registro->secretaria_e = $request->secretaria_e;
         $registro->ff_secretaria_e = $request->fecha;
-        $registro->created_at = "2023-01-13 12:00:00";
+        $registro->created_at = "2023-01-17 12:00:00";
         $registro->save();
 
         $fuenteRubroId = $request->fuente_id;
@@ -309,7 +309,7 @@ class RegistrosController extends Controller
     public function updateEstado($id,$fecha,$valor,$estado,$valTot, $rol)
     {
         //FECHA FIJA
-        $fecha = '2023-01-13';
+        $fecha = '2023-01-17';
 
         $update = Registro::findOrFail($id);
 
@@ -382,7 +382,7 @@ class RegistrosController extends Controller
             if ($estado == 1){
 
                 //FECHA FIJA
-                $fecha = '2023-01-13';
+                $fecha = '2023-01-17';
 
                 $update = Registro::findOrFail($id);
                 $update->observacion = $request->observacion;
