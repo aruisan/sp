@@ -233,12 +233,21 @@ class PagosController extends Controller
         $valReceived =array_sum($request->val);
         $pago = Pagos::findOrFail($request->pago_id);
         $valTotal = $pago->valor;
-        $valR =number_format($valReceived,0);
-        $valT = number_format($valTotal,0);
+
 
         if ($request->referenciaPago != null){
             $pago->referenciaPago = $request->referenciaPago;
         }
+
+        if ($request->cuentaDesc) {
+            for ($x = 0; $x < count($request->cuentaDesc); $x++) {
+                $descuentos[] = $request->valorDesc[$x];
+            }
+            $valReceived = $valReceived + array_sum($descuentos);
+        }
+
+        $valR =number_format($valReceived,0);
+        $valT = number_format($valTotal,0);
 
         if ($valReceived == $valTotal){
 
