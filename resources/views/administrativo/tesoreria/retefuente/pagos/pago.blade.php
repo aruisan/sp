@@ -85,13 +85,12 @@
 					  enctype="multipart/form-data" id="makePayReteFuente">
 					{!! method_field('POST') !!}
 					{{ csrf_field() }}
-					<div class="table-responsive" id="formulario">
+					<div class="table-responsive" id="multasForm" style="display: none">
 						<center>
 							<h3>MULTAS</h3>
 						</center>
 						<hr>
-						Si se requiere la multa se debe colocar el valor por igual tanto en credito como en  debito, de
-						lo contrario se debe dejar los valores en 0 y no afectaran el pago.
+						Para la multa se debe colocar el valor por igual tanto en credito como en debito.
 						<hr>
 						<table class="table table-bordered" id="tabla_multas">
 							<thead>
@@ -147,6 +146,7 @@
 						</div>
 						<br><br>
 						<button type="submit" class="btn-sm btn-primary"> Enviar</button>
+						<button onclick="generateMulta()" class="btn-sm btn-primary"> Generar Multa</button>
 					</div>
 				</form>
 			</div>
@@ -186,12 +186,8 @@
 			return accumulator + a;
 		}
 
-		function generateForm(){
-			console.log("GENERAR FORM");
-		}
-
-		function makePay(){
-			console.log("HACER PAGO");
+		function generateMulta(){
+			$('#multasForm').show();
 		}
 
             
