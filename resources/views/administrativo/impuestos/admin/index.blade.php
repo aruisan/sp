@@ -105,7 +105,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($pago->estado == "Pagado")
-                                        <a href="{{Storage::url($pago->Resource)}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></a>
+                                        <a href="{{Storage::url($pago->Resource->ruta)}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-usd"></i></a>
                                     @else
                                         N/A
                                     @endif
