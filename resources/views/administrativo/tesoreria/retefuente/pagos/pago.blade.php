@@ -168,8 +168,7 @@
 			const valores = document.querySelectorAll('input[name="debitoForm[]"]');
 			//const totDeb = valores['value'].reduce((partialSum, a) => partialSum + a, 0);
 			//console.log(sum);
-
-			//this.submit();
+			this.submit();
 		}
 
 		function addValue(){
