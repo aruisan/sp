@@ -13,6 +13,7 @@ use App\Model\Administrativo\Pago\PagoRubros;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Registro\CdpsRegistroValor;
+use App\Model\Persona;
 use Illuminate\Http\Request;
 use Session;
 
@@ -211,12 +212,15 @@ class PagosController extends Controller
     }
 
     public function bank($id){
+        $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
+        $personas = Persona::all();
         $pago = Pagos::findOrFail($id);
         if (count($pago->rubros) > 0){
             $PUCS = RubrosPuc::where('naturaleza','1')->get();
             $hijosPUC = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
 
-            return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC'));
+            return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC',
+            'cuentas24', 'personas'));
         } else {
             Session::flash('warning','El pago no ha recibido la asignación del monto, por favor realizarla');
             return redirect('administrativo/pagos/asignacion/'.$pago->id);

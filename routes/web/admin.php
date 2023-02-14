@@ -288,6 +288,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //PDF OrdenPago y ComprobanteEgresos
         Route::get('ordenPagos/pdf/{id}','Administrativo\OrdenPago\OrdenPagosController@pdf_OP')->name('op-pdf');
         Route::get('egresos/pdf/{id}','Administrativo\OrdenPago\OrdenPagosController@pdf_CE')->name('ce-pdf');
+        //EMBARGOS DE LAS ORDENES DE PAGO
+        Route::get('tesoreria/ordenPagos/embargos/{id}','Administrativo\OrdenPago\OrdenPagosController@embargos')->name('op-embargos');
+        Route::post('tesoreria/ordenPagos/embargos/getOP/find','Administrativo\OrdenPago\OrdenPagosController@getOPEmbargo');
+        Route::post('tesoreria/ordenPagos/embargos/make','Administrativo\OrdenPago\OrdenPagosController@getEmbargo');
 
         //PAGOS
 

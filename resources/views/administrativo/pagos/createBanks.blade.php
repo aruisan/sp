@@ -131,6 +131,26 @@
 
             methods:{
 
+                nuevaFilaDescMuni(){
+                    $('#tabla_desc_muni tbody tr:last').after('<tr>\n' +
+                        '<td></td>\n'+
+                        '<td>Seleccione la cuenta del PUC <br>' +
+                        '<select class="form-control" name="cuentaDesc[]">\n' +
+                        '                                        @foreach($cuentas24 as $cuenta)\n' +
+                        '                                            <option value="{{$cuenta->id}}">{{$cuenta->code}} - {{$cuenta->concepto}}</option>\n' +
+                        '                                        @endforeach\n' +
+                        '                                    </select></td>\n'+
+                        '<td>Seleccione el tercero' +
+                        '<select class="form-control" name="tercero[]">\n' +
+                        '                                        @foreach($personas as $persona)\n' +
+                        '                                            <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>\n' +
+                        '                                        @endforeach\n' +
+                        '                                    </select></td>\n'+
+                        '<td>Valor a descontar<br><input type="number" class="form-control" name="valorDesc[]" min="1" value="1" required></td>\n'+
+                        '<td style="vertical-align: middle" class="text-center" ><button type="button" class="borrar btn-sm btn-danger">&nbsp;-&nbsp; </button></td>\n'+
+                        '</tr>\n');
+                },
+
                 nuevoBanco: function(){
                     var nivel=parseInt($("#banks tr").length);
                     $('#banks tbody tr:last').after('<tr><td>\n' +

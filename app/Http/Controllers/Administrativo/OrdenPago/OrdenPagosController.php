@@ -560,4 +560,34 @@ class OrdenPagosController extends Controller
         $pdf = PDF::loadView('administrativo.ordenpagos.pdfCE', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro', 'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador','banks'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
     }
+
+    public function embargos($id){
+
+        $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
+        $personas = Persona::all();
+        $oPH = OrdenPagos::where('estado','1')->where('saldo','>',0)->get();
+        $vigencia = Vigencia::find($id);
+        foreach ($oPH as $data){
+            if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
+                $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre]);
+            }
+        }
+
+        if (!isset($ordenPagos)){
+            $ordenPagos[] = null;
+            unset($ordenPagos[0]);
+        }
+
+        return view('administrativo.ordenpagos.embargo', compact('ordenPagos','id','vigencia',
+        'cuentas24','personas'));
+    }
+
+    public function getOPEmbargo(Request $request){
+        $OP = OrdenPagos::where('id', $request->id)->with('descuentos','pucs','rubros')->first();
+        return $OP;
+    }
+
+    public function getEmbargo(Request $request){
+        dd($request);
+    }
 }
