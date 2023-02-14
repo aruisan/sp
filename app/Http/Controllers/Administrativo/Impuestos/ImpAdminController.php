@@ -27,7 +27,7 @@ class ImpAdminController extends Controller
         $pagos = Pagos::all();
         $rits = RIT::all();
         $comunicados = Comunicado::all();
-        $bancos = PucAlcaldia::where('id', '>=', 9)->where('id', '<=', 50)->get();
+        $bancos = PucAlcaldia::where('padre_id', 8)->get();
         $año = Carbon::today()->year;
         $pagosFinalizados = Pagos::where('estado','Pagado')->where('download', 1)->where('modulo','PREDIAL')->whereBetween('fechaPago',array($año.'-01-01', $año.'-12-31'))->with('user')->get();
         foreach ($pagosFinalizados as $pago){
