@@ -85,8 +85,9 @@ class CdpsRegistroController extends Controller
                                 if ($bpin){
 
                                     $bpinCdpValor = BpinCdpValor::where('cdp_id', $cdps[$i])->first();
+                                    dd($bpinCdpValor);
                                     $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
-                                    
+
                                     $cdpsRegistroValor = new CdpsRegistroValor();
                                     $cdpsRegistroValor->valor = $valorActividad[$i];
                                     $cdpsRegistroValor->valor_disp = $valorActividad[$i];
