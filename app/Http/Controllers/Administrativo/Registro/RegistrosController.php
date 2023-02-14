@@ -156,7 +156,7 @@ class RegistrosController extends Controller
 
         //SE REALIZA LA BUSQUEDA DEL CODIGO QUE LE CORRESPONDE AL RP
         $allRegistros = Registro::orderBy('code','ASC')->get();
-        $cdpFind = Cdp::find($request->cdp_id_s);
+        $cdpFind = Cdp::find($request->cdp_id_s[0]);
         foreach ($allRegistros as $data){
             if ($cdpFind->vigencia_id == $data->cdpsRegistro[0]->cdp->vigencia_id){
                 $RPs[] = collect(['info' => $data]);
