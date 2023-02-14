@@ -237,7 +237,6 @@
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Retención en la Fuente</a>
                <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/declaracion') }}">Declaración</a></li>
                   <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/certificado') }}">Certificado</a></li>
                   <li class="dropdown-submenu">
                      <a class="dropdown-item item-menu" >Pago </a>
@@ -245,7 +244,8 @@
                         <li class="dropdown-submenu">
                            <a class="dropdown-item item-menu" >2023 </a>
                            <ul class="dropdown-menu">
-                              <li><a class="item-menu" href="#">Enero</a></li>
+                              <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/pago/11/1') }}">Enero</a></li>
+                              <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/pago/11/2') }}">Febrero</a></li>
                            </ul>
                         </li>
                      </ul>
