@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrativo\Registro;
 
 use App\BPin;
+use App\bpinVigencias;
 use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\Cdp;
@@ -83,10 +84,14 @@ class CdpsRegistroController extends Controller
                             }else{
                                 $bpin = BPin::find($request->bpin_id[$i]);
                                 if ($bpin){
-
                                     $bpinCdpValor = BpinCdpValor::where('cdp_id', $cdps[$i])->first();
-                                    dd($bpinCdpValor);
-                                    $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
+                                    if ($bpinCdpValor->dependencia_rubro_font_id){
+                                        $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
+                                    } else {
+                                        $bpinVigencia = bpinVigencias::where('bpin_id', $request->bpin_id[$i])->first();
+                                        dd($bpinVigencia);
+                                    }
+
 
                                     $cdpsRegistroValor = new CdpsRegistroValor();
                                     $cdpsRegistroValor->valor = $valorActividad[$i];
