@@ -154,9 +154,21 @@ class RegistrosController extends Controller
         //FECHA FIJA
         $request->fecha = '2023-01-17';
 
-        $registro = new Registro();
+        //SE REALIZA LA BUSQUEDA DEL CODIGO QUE LE CORRESPONDE AL RP
+        $allRegistros = Registro::orderBy('code','ASC')->get();
+        $cdpFind = Cdp::find($request->cdp_id_s);
+        foreach ($allRegistros as $data){
+            if ($cdpFind->vigencia_id == $data->cdpsRegistro[0]->cdp->vigencia_id){
+                $RPs[] = collect(['info' => $data]);
+            }
+        }
+        if (isset($RPs)){
+            $last = array_last($RPs);
+            $numRP = $last['info']->code + 1;
+        }else $numRP = 0;
 
-        $registro->code = $request->numReg + 1;
+        $registro = new Registro();
+        $registro->code = $numRP;
         $registro->objeto = $request->objeto;
         $registro->ff_expedicion = $request->fecha;
         $registro->ruta = $ruta;
