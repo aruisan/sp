@@ -9,7 +9,7 @@
     </li>
 @stop
 @section('content')
-    <div class="col-md-12 align-self-center" id="crud">
+    <div class="col-md-12 align-self-center">
         <div class="row justify-content-center">
             <br>
             <center><h2>Bancos</h2></center>
@@ -31,6 +31,52 @@
                     <hr>
                     {!! method_field('PUT') !!}
                     {{ csrf_field() }}
+
+                    <center><h2>Descuentos Municipales</h2></center>
+                    <hr><br>
+                    <div class="table-responsive" id="crud">
+                        <table class="table table-bordered" id="tabla_desc_muni">
+                            <thead>
+                            <th class="text-center">Codigo</th>
+                            <th class="text-center">Descripcion</th>
+                            <th class="text-center">Base</th>
+                            <th class="text-center">%</th>
+                            <th class="text-center">Valor</th>
+                            </thead>
+                            @foreach($pago->orden_pago->descuentos as $descuento)
+                                <tr>
+                                    @if($descuento->desc_municipal_id != null)
+                                        <td>{{ $descuento->descuento_mun['codigo'] }}</td>
+                                        <td>{{ $descuento->descuento_mun['concepto'] }}</td>
+                                        <td>$ <?php echo number_format($pago->orden_pago->valor - $pago->orden_pago->iva,0);?></td>
+                                        @if($descuento->descuento_mun['id'] == 5)
+                                            <td>7 X 1000</td>
+                                        @else
+                                            <td>{{ $descuento->descuento_mun['tarifa'] }}</td>
+                                        @endif
+                                    @elseif($descuento->retencion_fuente_id != null)
+                                        <td>{{ $descuento->descuento_retencion->codigo}}</td>
+                                        <td>{{ $descuento->descuento_retencion->concepto }}</td>
+                                        <td>$ <?php echo number_format($pago->orden_pago->valor - $pago->orden_pago->iva,0);?></td>
+                                        <td>{{ $descuento->descuento_retencion->tarifa }}</td>
+                                    @else
+                                        <td>{{ $descuento->puc->code}}</td>
+                                        <td>{{ $descuento->puc->concepto}}</td>
+                                        <td></td>
+                                        <td></td>
+                                    @endif
+                                    <td>$ <?php echo number_format($descuento['valor'],0);?></td>
+                                </tr>
+                            @endforeach
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="text-center" id="buttonAddActividad">
+                            <button type="button" @click.prevent="nuevaFilaDescMuni" class="btn btn-sm btn-primary">AGREGAR DESCUENTO MUNICIPAL</button>
+                        </div>
+                        <br>
+                    </div>
+
                     <input type="hidden" name="ordenPago_id" value="{{ $pago->orden_pago->id }}">
                     <input type="hidden" name="pago_id" value="{{ $pago->id }}">
 
@@ -99,9 +145,9 @@
                         <br><br>
                         <center>
                             <button type="button" v-on:click.prevent="nuevoBanco" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Agregar Otro Banco</button>
-                            <br>
-                            <button type="submit" class="btn btn-success"><i class="fa fa-usd"></i><i class="fa fa-arrow-right"></i>&nbsp; &nbsp; Pagar</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-usd"></i><i class="fa fa-arrow-right"></i>&nbsp; &nbsp; Pagar</button>
                         </center>
+                        <br>
                     </div>
                 </form>
             </div>
@@ -131,10 +177,32 @@
 
             methods:{
 
+                nuevoBanco: function(){
+                    var nivel=parseInt($("#banks tr").length);
+                    $('#banks tbody tr:last').after('<tr><td>\n' +
+                        '                                <select class="form-control" name="banco[]" required>\n' +
+                        '                                    @foreach($hijosPUC as $hijo)\n' +
+                        '                                            <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>\n' +
+                        '                                        @endforeach\n' +
+                        '                                </select>\n' +
+                        '                            </td>\n' +
+                        '                            <td>\n' +
+                        '                                <input type="number" required class="form-control" name="val[]" min="0" style="text-align:center">\n' +
+                        '                            </td>\n' +
+                        '                            <td class="text-center"><button type="button" class="btn-sm btn-danger borrar">&nbsp;-&nbsp; </button></td></tr>');
+
+                }
+            }
+        });
+
+        new Vue({
+            el: '#crud',
+
+            methods:{
+
                 nuevaFilaDescMuni(){
                     $('#tabla_desc_muni tbody tr:last').after('<tr>\n' +
-                        '<td></td>\n'+
-                        '<td>Seleccione la cuenta del PUC <br>' +
+                        '<td colspan ="2">Seleccione la cuenta del PUC <br>' +
                         '<select class="form-control" name="cuentaDesc[]">\n' +
                         '                                        @foreach($cuentas24 as $cuenta)\n' +
                         '                                            <option value="{{$cuenta->id}}">{{$cuenta->code}} - {{$cuenta->concepto}}</option>\n' +
@@ -151,21 +219,6 @@
                         '</tr>\n');
                 },
 
-                nuevoBanco: function(){
-                    var nivel=parseInt($("#banks tr").length);
-                    $('#banks tbody tr:last').after('<tr><td>\n' +
-                        '                                <select class="form-control" name="banco[]" required>\n' +
-                        '                                    @foreach($hijosPUC as $hijo)\n' +
-                        '                                            <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>\n' +
-                        '                                        @endforeach\n' +
-                        '                                </select>\n' +
-                        '                            </td>\n' +
-                        '                            <td>\n' +
-                        '                                <input type="number" required class="form-control" name="val[]" min="0" style="text-align:center">\n' +
-                        '                            </td>\n' +
-                        '                            <td class="text-center"><button type="button" class="btn-sm btn-danger borrar">&nbsp;-&nbsp; </button></td></tr>');
-
-                }
             }
         });
     </script>

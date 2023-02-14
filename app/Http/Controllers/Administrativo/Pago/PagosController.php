@@ -8,6 +8,7 @@ use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Pago\PagoRubros;
 use App\Model\Administrativo\Pago\PagoBanks;
@@ -263,6 +264,22 @@ class PagosController extends Controller
                     $bank->rubros_puc_id = $request->banco[$i];
                     $bank->valor = $request->val[$i];
                     $bank->save();
+                }
+
+                //SE ALMACENAN LOS NUEVOS DESCUENTOS MUNICIPALES
+                if ($request->cuentaDesc){
+                    for($x=0;$x< count($request->cuentaDesc); $x++){
+                        $cuenta = PucAlcaldia::find($request->cuentaDesc[$x]);
+                        $descuento = new OrdenPagosDescuentos();
+                        $descuento->nombre = $cuenta->concepto;
+                        $descuento->base = 0;
+                        $descuento->porcent = 0;
+                        $descuento->valor = $request->valorDesc[$x];
+                        $descuento->orden_pagos_id = $request->ordenPago_id;
+                        $descuento->cuenta_puc_id = $request->cuentaDesc[$x];
+                        $descuento->persona_id = $request->tercero[$x];
+                        $descuento->save();
+                    }
                 }
 
                 $OP->saldo = $OP->saldo -  $valTotal;
