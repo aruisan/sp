@@ -234,6 +234,24 @@
             <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/libros')}}">Libros</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">NICP</a></li>
             <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/puc')}}">PUC</a></li>
+            <li class="dropdown-submenu">
+               <a class="dropdown-item item-menu" >Retención en la Fuente</a>
+               <ul class="dropdown-menu">
+                  <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/declaracion') }}">Declaración</a></li>
+                  <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/certificado') }}">Certificado</a></li>
+                  <li class="dropdown-submenu">
+                     <a class="dropdown-item item-menu" >Pago </a>
+                     <ul class="dropdown-menu">
+                        <li class="dropdown-submenu">
+                           <a class="dropdown-item item-menu" >2023 </a>
+                           <ul class="dropdown-menu">
+                              <li><a class="item-menu" href="#">Enero</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </li>
          </ul>
       </li>
    @endif
@@ -267,24 +285,6 @@
                         <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/5') }}">2021</a></li>
                         <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/7') }}">2022</a></li>
                         <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/11') }}">2023</a></li>
-                     </ul>
-                  </li>
-                  <li class="dropdown-submenu">
-                     <a class="dropdown-item item-menu" >Retención en la Fuente</a>
-                     <ul class="dropdown-menu">
-                        <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/declaracion') }}">Declaración</a></li>
-                        <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/certificado') }}">Certificado</a></li>
-                        <li class="dropdown-submenu">
-                           <a class="dropdown-item item-menu" >Pago </a>
-                           <ul class="dropdown-menu">
-                              <li class="dropdown-submenu">
-                                 <a class="dropdown-item item-menu" >2023 </a>
-                                 <ul class="dropdown-menu">
-                                    <li><a class="item-menu" href="#">Enero</a></li>
-                                 </ul>
-                              </li>
-                           </ul>
-                        </li>
                      </ul>
                   </li>
                   <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago a Terceros</a></li>
