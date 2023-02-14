@@ -137,7 +137,8 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" required class="form-control" name="val[]" min="0" style="text-align:center">
+                                    <input type="number" required class="form-control" id="val[]" name="val[]" min="0" style="text-align:center"
+                                    value="{{$pago->valor}}">
                                 </td>
                                 <td></td>
                             </tr>
@@ -172,7 +173,7 @@
         function valueDesc(value){
             var valuePay = document.getElementById('montoPago').value;
             document.getElementById('montoPagoSpan').innerHTML = formatter.format(valuePay - value);
-            console.log(value, valuePay);
+            document.getElementById('val[]').value = valuePay - value;
         }
 
         $(document).ready(function() {
