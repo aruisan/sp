@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Administrativo\Registro;
 
+use App\BPin;
+use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Administrativo\Registro\CdpsRegistro;
 use App\Model\Administrativo\Registro\CdpsRegistroValor;
@@ -78,15 +81,27 @@ class CdpsRegistroController extends Controller
                             if ($bpinCdpValorId[$i]){
                                 $this->updateV($bpinCdpValorId[$i], $valorActividad[$i]);
                             }else{
-                                $cdpsRegistroValor = new CdpsRegistroValor();
-                                $cdpsRegistroValor->valor = $valorActividad[$i];
-                                $cdpsRegistroValor->valor_disp = $valorActividad[$i];
-                                $cdpsRegistroValor->fontsRubro_id = $request->bpin_id[$i];
-                                $cdpsRegistroValor->registro_id = $registro_id;
-                                $cdpsRegistroValor->cdp_id = $cdps[$i];
-                                //$cdpsRegistroValor->rubro_id = $rubroId[$i];
-                                $cdpsRegistroValor->cdps_registro_id = $rubrosCdpId[$i];
-                                $cdpsRegistroValor->save();
+                                $bpin = BPin::find($request->bpin_id[$i]);
+                                if ($bpin){
+
+                                    $bpinCdpValor = BpinCdpValor::where('cdp_id', $cdps[$i])->first();
+                                    $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
+                                    
+                                    $cdpsRegistroValor = new CdpsRegistroValor();
+                                    $cdpsRegistroValor->valor = $valorActividad[$i];
+                                    $cdpsRegistroValor->valor_disp = $valorActividad[$i];
+                                    $cdpsRegistroValor->fontsRubro_id = $depRubroFont->rubro_font_id;
+                                    $cdpsRegistroValor->registro_id = $registro_id;
+                                    $cdpsRegistroValor->cdp_id = $cdps[$i];
+                                    //$cdpsRegistroValor->rubro_id = $rubroId[$i];
+                                    $cdpsRegistroValor->cdps_registro_id = $rubrosCdpId[$i];
+                                    $cdpsRegistroValor->save();
+
+                                } else{
+                                    Session::flash('warning','BPIN no detectado');
+                                    return back();
+                                }
+
                             }
                         }
                     }
