@@ -89,7 +89,8 @@ class CdpsRegistroController extends Controller
                                         $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
                                     } else {
                                         $bpinVigencia = bpinVigencias::where('bpin_id', $request->bpin_id[$i])->first();
-                                        dd($bpinVigencia);
+                                        $depRubroFont = DependenciaRubroFont::find($bpinVigencia->dep_rubro_id);
+                                        dd($depRubroFont);
                                     }
 
 
