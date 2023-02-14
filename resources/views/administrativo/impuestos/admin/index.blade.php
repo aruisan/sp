@@ -369,7 +369,7 @@
                 {
                     text: '<i onclick="getModalPazySalvo()">Generar Paz y Salvo</i>',
                     titleAttr: 'Paz y Salvo',
-                    className: 'hidden'
+                    className: 'btn btn-primary'
                 },
             ]
 

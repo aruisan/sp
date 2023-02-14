@@ -12,7 +12,7 @@
                     <h4>Seleccione el usuario del que desea descargar el paz y salvo</h4>
                     <select name="paySelected" id="paySelected" class="form-control" required>
                         @foreach($pagosFinalizados as $pago)
-                            <option value="{{ $pago->id }}">{{$pago->contribuyente->numCatastral}} - {{ $pago->user->name }}
+                            <option value="{{ $pago->id }}">{{ $pago->modulo }} - {{$pago->contribuyente->numCatastral}} - {{ $pago->user->name }}
                                 - {{ $pago->user->email }}</option>
                         @endforeach
                     </select>
