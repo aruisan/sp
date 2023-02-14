@@ -301,6 +301,8 @@ class RetencionFuenteController extends Controller
 
     public function makePagoRetefuente($vigencia_id, $mes, Request $request){
 
+        dd($request);
+
         if ($request->debMulta != 0 and $request->credMulta != 0){
             if ($request->debMulta == $request->credMulta) $multas = true;
             else {
