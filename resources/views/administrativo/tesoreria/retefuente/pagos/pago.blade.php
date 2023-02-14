@@ -146,7 +146,7 @@
 						</div>
 						<br><br>
 						<button type="submit" class="btn-sm btn-primary"> Enviar</button>
-						<button onclick="generateMulta()" class="btn-sm btn-primary"> Generar Multa</button>
+						<a onclick="generateMulta()" class="btn-sm btn-primary"> Generar Multa</a>
 					</div>
 				</form>
 			</div>
