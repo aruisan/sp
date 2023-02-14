@@ -19,7 +19,9 @@
                     Orden de Pago: {{ $pago->orden_pago->nombre }}
                 </div>
                 <div class="col-md-4 text-center">
-                    <b>Monto a Pagar: $<?php echo number_format($pago->valor,0) ?></b>
+                    <b>Monto a Pagar:
+                        <input type="hidden" id="montoPago" value="{{$pago->valor}}">
+                        <span id="montoPagoSpan">$<?php echo number_format($pago->valor,0) ?></span></b>
                 </div>
                 <div class="col-md-4 text-center">
                     Tercero: {{ $pago->orden_pago->registros->persona->nombre }}
@@ -161,6 +163,18 @@
             "searching": false
         } );
 
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
+
+        function valueDesc(value){
+            var valuePay = document.getElementById('montoPago').value;
+            document.getElementById('montoPagoSpan').innerHTML = formatter.format(valuePay - value);
+            console.log(value, valuePay);
+        }
+
         $(document).ready(function() {
             $('#button').click( function () {
                 table.row('.selected').remove().draw( false );
@@ -214,7 +228,7 @@
                         '                                            <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>\n' +
                         '                                        @endforeach\n' +
                         '                                    </select></td>\n'+
-                        '<td>Valor a descontar<br><input type="number" class="form-control" name="valorDesc[]" min="1" value="1" required></td>\n'+
+                        '<td>Valor a descontar<br><input type="number" class="form-control" name="valorDesc[]" min="1" value="1" required onchange="valueDesc(this.value)"></td>\n'+
                         '<td style="vertical-align: middle" class="text-center" ><button type="button" class="borrar btn-sm btn-danger">&nbsp;-&nbsp; </button></td>\n'+
                         '</tr>\n');
                 },

@@ -137,7 +137,7 @@
 				<tbody>
 				@foreach($OrdenPagoDescuentos as  $PagosDesc)
 					<tr class="text-center">
-						@if($PagosDesc->retencion_fuente_id == null)
+						@if($PagosDesc->desc_municipal_id != null)
 							<td>{{ $PagosDesc->descuento_mun['codigo'] }}</td>
 							<td>{{ $PagosDesc->descuento_mun['concepto'] }}</td>
 							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
@@ -146,11 +146,17 @@
 							@else
 								<td>{{ $PagosDesc->descuento_mun['tarifa'] }}</td>
 							@endif
-						@else
+						@elseif($PagosDesc->retencion_fuente_id != null)
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
 							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
 							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
 							<td>{{ $PagosDesc->descuento_retencion->tarifa }}</td>
+						@else
+							<td>{{ $PagosDesc->puc->code}}</td>
+							<td>{{ $PagosDesc->puc->concepto}}</td>
+							<td></td>
+							<td></td>
+
 						@endif
 						<td>$ <?php echo number_format($PagosDesc['valor'],0);?></td>
 					</tr>
