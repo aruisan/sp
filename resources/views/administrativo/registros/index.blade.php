@@ -276,7 +276,7 @@
 
             $('#tabla_registros').DataTable( {
                 responsive: true,
-                "searching": false,
+                "searching": true,
                 dom: 'Bfrtip',
                 order: [[0, 'desc']],
                 buttons:[
