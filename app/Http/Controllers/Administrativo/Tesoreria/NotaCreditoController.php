@@ -101,8 +101,15 @@ class NotaCreditoController extends Controller
     public function show($id)
     {
         $notaCredito = NotaCredito::find($id);
+        $añoActual = Carbon::today()->year;
+        $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
+        $vigenciaEgresos = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
+        $vigenciaIng = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->first();
+        $rubrosEgresos = Rubro::where('vigencia_id', $vigenciaEgresos->id)->orderBy('cod','ASC')->get();
+        $rubrosIngresos = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
 
-        return view('administrativo.tesoreria.notacredito.show', compact('notaCredito'));
+        return view('administrativo.tesoreria.notacredito.show', compact('notaCredito','añoActual',
+        'hijos','rubrosIngresos','rubrosEgresos'));
     }
 
     /**
