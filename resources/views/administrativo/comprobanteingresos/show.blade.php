@@ -21,7 +21,7 @@
                 <div id="info" class="tab-pane fade in active">
                     <div class="row ">
                         {{ csrf_field() }}
-                        <div class="col-sm-9"><h3>Concepto: {{ $comprobante->concepto }}</h3></div>
+                        <div class="col-sm-9"><h3><b>Concepto: {{ $comprobante->concepto }}</b></h3></div>
                         <div class="col-sm-3"><h4><b>Número del Comprobante:</b>&nbsp;{{ $comprobante->code }}</h4></div>
                         <br>
                         <br>
@@ -34,7 +34,7 @@
                                 </b>
                                 <br>
                                 <b>
-                                    <h4><b>Valor del Comprobantes de Ingresos</b></h4>
+                                    <h4><b>Valor del Comprobante de Ingresos</b></h4>
                                     <h4><b>$<?php echo number_format( $comprobante->val_total,0) ?></b></h4>
                                 </b>
                             </div>
