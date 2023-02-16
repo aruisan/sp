@@ -75,6 +75,7 @@
                             <th class="text-center">Fecha Pago</th>
                             <th class="text-center">Comprobante Pago</th>
                             <th class="text-center">Cargar Pago</th>
+                            <th class="text-center">Eliminar Pago</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -115,6 +116,11 @@
                                 <td class="text-center">
                                     @if($pago->estado != "Pagado")
                                         <button onclick="getModalPago('{{$pago->modulo}}', '{{\Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y')}}','$<?php echo number_format($pago->valor,0) ?>', {{$pago->id}})" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-arrow-up"></i><i class="fa fa-usd"></i></button>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if($pago->estado != "Pagado")
+                                        <button onclick="eliminarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-arrow-up"></i><i class="fa fa-trash"></i></button>
                                     @endif
                                 </td>
                             </tr>
@@ -232,6 +238,30 @@
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("pazysalvoform").addEventListener('submit', descargarPazySalvo);
         });
+
+        function eliminarPago(id){
+            id.preventDefault();
+
+            var opcion = confirm("ESTA SEGURO DE ELIMIAR EL PAGO JUNTO CON EL CORRESPONDIENTE FORMULARIO?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/impuestos/Pagos/deletePay",
+                    data: { "payId": id,
+                        "_token": $("meta[name='csrf-token']").attr("content"),
+                    }
+                }).done(function(response) {
+                    if (response == "OK"){
+                        toastr.warning('PAGO Y SU FORMULARIO ELIMINADO');
+                        location. reload();
+                    } else toastr.warning('OCURRIO UN ERROR AL ELIMINAR EL PAGO Y SU FORMULARIO.');
+
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL ELIMINAR EL PAGO Y SU FORMULARIO.');
+                });
+            }
+
+        }
 
         function descargarPazySalvo(evento) {
             evento.preventDefault();

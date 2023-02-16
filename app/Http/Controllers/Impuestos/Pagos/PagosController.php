@@ -178,6 +178,18 @@ class PagosController extends Controller
     }
 
     /**
+     * Delete Pay
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function deletePago(Request $request){
+        $pago = Pagos::find($request->payId);
+        if ($pago->download > 0) return 'OK';
+        else return 'FALSE';
+    }
+
+    /**
      * Download Cert.
      *
      * @param  \Illuminate\Http\Request  $request

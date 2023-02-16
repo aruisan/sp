@@ -94,6 +94,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //PAGOS
         //VALIDAR SI EL PAGO SE PUEDE DESCARGAR
         Route::post('/Pagos/validatePay','Impuestos\Pagos\PagosController@validatePagoDownload');
+        Route::post('/Pagos/deletePay','Impuestos\Pagos\PagosController@deletePago');
 
         //DESCARGAR PAZ Y SALVO
         Route::get('/Pagos/certPyS/{id}','Impuestos\Pagos\PagosController@certDownload');
