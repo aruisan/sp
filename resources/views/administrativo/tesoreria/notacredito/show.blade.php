@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 col-form-label text-right" for="file">Fecha: </label>
                                     <div class="col-lg-6">
-                                        <input type="date" name="fecha" class="form-control" value="{{ $notaCredito->fecha}}">
+                                        {{ \Carbon\Carbon::parse($notaCredito->fecha)->format('d-m-Y') }}
                                     </div>
                                 </div>
                             </div>
