@@ -100,7 +100,7 @@
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
                                                 <select class="form-control" name="cuentaDeb" id="cuentaDeb">
-                                                    @foreach($hijosDebito as $hijo)
+                                                    @foreach($hijos as $hijo)
                                                         <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
                                                     @endforeach
                                                 </select>
@@ -130,7 +130,7 @@
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
                                                 <select class="form-control" name="cuentaPUC" id="cuentaPUC">
-                                                    @foreach($hijosDebito as $hijo)
+                                                    @foreach($hijos as $hijo)
                                                         <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
                                                     @endforeach
                                                 </select>
@@ -160,8 +160,8 @@
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione Rubro Gastos <span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
                                                 <select class="form-control" name="rubroGastos" id="rubroGastos">
-                                                    @foreach($hijosDebito as $hijo)
-                                                        <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
+                                                    @foreach($rubrosEgresos as $rubro)
+                                                        <option value="{{$rubro->id}}">{{$rubro->cod}} - {{$rubro->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -190,8 +190,8 @@
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
                                                 <select class="form-control" name="rubroIngresos" id="rubroIngresos">
-                                                    @foreach($hijosDebito as $hijo)
-                                                        <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
+                                                    @foreach($rubrosIngresos as $rubro)
+                                                        <option value="{{$rubro->id}}">{{$rubro->cod}} - {{$rubro->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

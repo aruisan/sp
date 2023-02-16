@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrativo\Tesoreria;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Tesoreria\NotaCredito;
 use App\Http\Controllers\Controller;
+use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -33,9 +34,14 @@ class NotaCreditoController extends Controller
     public function create()
     {
         $añoActual = Carbon::today()->year;
-        $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
+        $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
+        $vigenciaEgresos = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
+        $vigenciaIng = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->first();
+        $rubrosEgresos = Rubro::where('vigencia_id', $vigenciaEgresos->id)->get();
+        $rubrosIngresos = Rubro::where('vigencia_id', $vigenciaIng->id)->get();
 
-        return view('administrativo.tesoreria.notacredito.create', compact('añoActual','hijosDebito'));
+        return view('administrativo.tesoreria.notacredito.create', compact('añoActual','hijos',
+        'rubrosEgresos', 'rubrosIngresos'));
     }
 
     /**
@@ -46,7 +52,7 @@ class NotaCreditoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**
