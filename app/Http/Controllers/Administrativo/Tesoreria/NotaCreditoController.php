@@ -10,6 +10,7 @@ use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\FileTraits;
 use Session;
 
 class NotaCreditoController extends Controller
