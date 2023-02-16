@@ -140,9 +140,20 @@ class CdpController extends Controller
                 $actividadCdp->valor_disp = $actividadCdp->valor_disp - $actividadCdp->valor;
                 $actividadCdp->save();
 
-                $bpinVigencia = bpinVigencias::find($actividadCdp->actividad->id);
-                $bpinVigencia->saldo = $bpinVigencia->saldo + $actividadCdp->valor;
-                $bpinVigencia->save();
+                if ($actividadCdp->dependencia_rubro_font_id != null){
+                    $depRubroFont = DependenciaRubroFont::find($actividadCdp->dependencia_rubro_font_id);
+                    $depRubroFont->saldo = $depRubroFont->saldo + $actividadCdp->valor;
+                    $depRubroFont->save();
+                    
+                } else{
+                    $bpinVigencia = bpinVigencias::where('bpin_id',$actividadCdp->actividad->id)->first();
+                    $bpinVigencia->saldo = $bpinVigencia->saldo + $actividadCdp->valor;
+                    $bpinVigencia->save();
+
+                    $depRubroFont = DependenciaRubroFont::find($bpinVigencia->dep_rubro_id);
+                    $depRubroFont->saldo = $depRubroFont->saldo + $actividadCdp->valor;
+                    $depRubroFont->save();
+                }
             }
 
             Session::flash('error','El CDP ha sido anulado');
