@@ -40,7 +40,13 @@ class NotaCreditoController extends Controller
         $vigenciaEgresos = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
         $vigenciaIng = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->first();
         $rubrosEgresos = Rubro::where('vigencia_id', $vigenciaEgresos->id)->orderBy('cod','ASC')->get();
-        $rubrosIngresos = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
+        $rubI = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
+        foreach ($rubI as $rub){
+            foreach ($rub->fontsRubro as $fuente){
+                $rubrosIngresos = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
+            }
+        }
 
         return view('administrativo.tesoreria.notacredito.create', compact('añoActual','hijos',
         'rubrosEgresos', 'rubrosIngresos'));
