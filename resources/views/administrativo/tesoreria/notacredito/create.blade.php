@@ -191,7 +191,7 @@
                                             <div class="col-lg-6">
                                                 <select class="form-control" name="rubroIngresos" id="rubroIngresos">
                                                     @foreach($rubrosIngresos as $rubro)
-                                                        <option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
+                                                        <option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} </option>
                                                     @endforeach
                                                 </select>
                                             </div>
