@@ -71,7 +71,7 @@ class NotaCreditoController extends Controller
         $nota->tipo = $request->tipoCI;
         $nota->cualOtroTipo = $request->cualOtroTipo;
         $nota->valor = $request->valor;
-        $nota->ff = $request->fecha;
+        $nota->fecha = $request->fecha;
         $nota->iva = $request->valorIva;
         $nota->cuenta_banco = $request->cuentaDeb;
         $nota->cuenta_puc_id = $request->cuentaPUC;
