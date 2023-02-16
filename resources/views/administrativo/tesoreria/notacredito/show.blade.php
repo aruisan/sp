@@ -145,7 +145,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="{{ $notaCredito->credito_puc}}">
+                                            <input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="{{ $notaCredito->debito_puc}}">
                                         </div>
                                     </div>
                                 </td>
