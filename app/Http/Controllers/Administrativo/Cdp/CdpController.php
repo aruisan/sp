@@ -137,7 +137,7 @@ class CdpController extends Controller
                 $actividad->saldo = $actividad->saldo + $actividadCdp->valor;
                 $actividad->save();
 
-                $actividadCdp->valor_disp = $actividadCdp->valor_disp - $actividadCdp->valor;
+                $actividadCdp->valor_disp = $actividadCdp->valor_disp + $actividadCdp->valor;
                 $actividadCdp->save();
 
                 $bpinVigencia = bpinVigencias::find($actividadCdp->actividad->id);
