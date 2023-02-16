@@ -9,6 +9,7 @@ use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class NotaCreditoController extends Controller
@@ -52,8 +53,6 @@ class NotaCreditoController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-
         $añoActual = Carbon::today()->year;
 
         if($request->hasFile('file')) {
@@ -68,17 +67,25 @@ class NotaCreditoController extends Controller
         $nota = new NotaCredito();
         $nota->code = $count + 1;
         $nota->año = $añoActual;
-        $nota->concepto = $request->valor;
-        $nota->valor = $request->valor;
-        $nota->iva = $request->valorIva;
-        $nota->val_total = $request->valor + $request->valorIva;
-        $nota->estado = $request->estado;
-        $nota->ff = $request->fecha;
-        $nota->tipoCI = $request->tipoCI;
+        $nota->concepto = $request->concepto;
+        $nota->tipo = $request->tipoCI;
         $nota->cualOtroTipo = $request->cualOtroTipo;
-        $nota->user_id = $request->user_id;
-        $nota->vigencia_id = $request->vigencia_id;
-        $nota->puc_alcaldia_id = $request->cuentaDeb;
+        $nota->valor = $request->valor;
+        $nota->ff = $request->fecha;
+        $nota->iva = $request->valorIva;
+        $nota->cuenta_banco = $request->cuentaDeb;
+        $nota->cuenta_puc_id = $request->cuentaPUC;
+        $nota->rubro_egresos_id = $request->rubroGastos;
+        $nota->rubroIngresos = $request->rubro_ingresos_id;
+        $nota->debito_banco = $request->debitoBanco;
+        $nota->creditoBanco = $request->credito_banco;
+        $nota->debito_puc = $request->debitoPUC;
+        $nota->credito_puc = $request->creditoPUC;
+        $nota->debito_rubro_egresos = $request->debitoGastos;
+        $nota->credito_rubro_egresos = $request->creditoGastos;
+        $nota->debito_rubro_ing = $request->debitoIngresos;
+        $nota->credito_rubro_ing = $request->creditoIngresos;
+        $nota->responsable_id = Auth::user()->id;
         $nota->ruta = $ruta;
         $nota->save();
 

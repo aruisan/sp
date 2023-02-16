@@ -32,8 +32,6 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Objeto</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Valor Total</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                         </thead>
@@ -42,10 +40,6 @@
                             <tr>
                                 <td class="text-center">{{ $nota->code }}</td>
                                 <td class="text-center">{{ $nota->concepto }}</td>
-                                <td class="text-center">
-
-                                </td>
-                                <td class="text-center">$<?php echo number_format($nota->val_total,0) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/tesoreria/notasCredito/show/'.$nota->id) }}" title="Ver Nota Credito" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
                                 </td>
