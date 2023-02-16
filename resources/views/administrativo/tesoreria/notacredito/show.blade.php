@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="col-md-6 align-self-center">
                                     <div class="form-group">
-                                        <label class="col-lg-4 col-form-label text-right" for="file">Subir Archivo: </label>
+                                        <label class="col-lg-4 col-form-label text-right" for="file">Archivo: </label>
                                         <div class="col-lg-6">
                                             <span> {{ $notaCredito->ruta }} </span>
                                         </div>
@@ -50,13 +50,13 @@
                                         <label class="col-lg-4 col-form-label text-right" for="tipo">Tipo <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
                                             <select class="form-control" name="tipoCI" id="tipoCI" onchange="cambioTipo(this.value)">
-                                                <option value="SGP Salud">SGP Salud</option>
-                                                <option value="SGP Educacion">SGP Educacion</option>
-                                                <option value="SGP Otros sectores">SGP Otros sectores</option>
-                                                <option value="Otro">Otro</option>
+                                                <option value="SGP Salud" @if($notaCredito->tipo == 'SGP Salud') selected @endif>SGP Salud</option>
+                                                <option value="SGP Educacion" @if($notaCredito->tipo == 'SGP Educacion') selected @endif>SGP Educacion</option>
+                                                <option value="SGP Otros sectores" @if($notaCredito->tipo == 'SGP Otros sectores') selected @endif>SGP Otros sectores</option>
+                                                <option value="Otro" @if($notaCredito->tipo == 'Otro') selected @endif>Otro</option>
                                             </select>
                                             <span style="display: none" id="otroTipo">
-                                            <input class="form-control" type="text" name="cualOtroTipo" id="cualOtroTipo" placeholder="Cual otro?">
+                                            <input class="form-control" value="{{ $notaCredito->cualOtroTipo }}" type="text" name="cualOtroTipo" id="cualOtroTipo" placeholder="Cual otro?">
                                         </span>
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="file">Fecha: </label>
                                         <div class="col-lg-6">
-                                            <input type="date" name="fecha" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
+                                            <input type="date" name="fecha" class="form-control" value="{{ $notaCredito->fecha}}">
                                         </div>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="nombre">Valor <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" name="valor" min="0" value="0" class="form-control" required>
+                                            <input type="number" name="valor" min="1" value="{{ $notaCredito->valor}}" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="observacion">Valor Iva <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" name="valorIva" value="0" min="0" max="99999999" class="form-control" required>
+                                            <input type="number" name="valorIva" value="0" min="{{ $notaCredito->iva}}" max="99999999" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>

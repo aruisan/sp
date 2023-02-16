@@ -77,7 +77,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="nombre">Valor <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" name="valor" min="0" value="0" class="form-control" required>
+                                            <input type="number" name="valor" min="1" value="0" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
