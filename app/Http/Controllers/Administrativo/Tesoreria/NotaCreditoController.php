@@ -43,7 +43,7 @@ class NotaCreditoController extends Controller
         $rubI = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
         foreach ($rubI as $rub){
             foreach ($rub->fontsRubro as $fuente){
-                $rubrosIngresos = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
                 $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
             }
         }
