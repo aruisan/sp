@@ -189,7 +189,7 @@
                                         <div class="col-lg-6">
                                             <select class="form-control" name="rubroIngresos" id="rubroIngresos">
                                                 @foreach($rubrosIngresos as $rubro)
-                                                    <option @if($notaCredito->rubro_ingresos_id == $rubro->id) selected @endif value="{{$rubro->id}}">{{$rubro->cod}} - {{$rubro->name}}</option>
+                                                    <option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

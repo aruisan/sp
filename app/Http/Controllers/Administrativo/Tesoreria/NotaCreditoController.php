@@ -39,7 +39,16 @@ class NotaCreditoController extends Controller
         $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
         $vigenciaEgresos = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
         $vigenciaIng = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->first();
-        $rubrosEgresos = Rubro::where('vigencia_id', $vigenciaEgresos->id)->orderBy('cod','ASC')->get();
+        $rubE = Rubro::where('vigencia_id', $vigenciaEgresos->id)->orderBy('cod','ASC')->get();
+        foreach ($rubE as $rub){
+            foreach ($rub->fontsRubro as $fuente){
+                foreach ($fuente->dependenciaFont as $dep){
+                    dd($dep);
+                }
+                $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
+            }
+        }
         $rubI = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
         foreach ($rubI as $rub){
             foreach ($rub->fontsRubro as $fuente){
@@ -83,7 +92,7 @@ class NotaCreditoController extends Controller
         $nota->cuenta_banco = $request->cuentaDeb;
         $nota->cuenta_puc_id = $request->cuentaPUC;
         $nota->rubro_egresos_id = $request->rubroGastos;
-        $nota->rubro_ingresos_id = $request->rubroIngresos;
+        $nota->rubro_font_ingresos_id = $request->rubroIngresos;
         $nota->debito_banco = $request->debitoBanco;
         $nota->credito_banco = $request->creditoBanco;
         $nota->debito_puc = $request->debitoPUC;
@@ -113,7 +122,13 @@ class NotaCreditoController extends Controller
         $vigenciaEgresos = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
         $vigenciaIng = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->first();
         $rubrosEgresos = Rubro::where('vigencia_id', $vigenciaEgresos->id)->orderBy('cod','ASC')->get();
-        $rubrosIngresos = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
+        $rubI = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
+        foreach ($rubI as $rub){
+            foreach ($rub->fontsRubro as $fuente){
+                $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
+            }
+        }
 
         return view('administrativo.tesoreria.notacredito.show', compact('notaCredito','añoActual',
         'hijos','rubrosIngresos','rubrosEgresos'));
