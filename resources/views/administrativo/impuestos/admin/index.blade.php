@@ -120,7 +120,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($pago->estado != "Pagado")
-                                        <button onclick="eliminarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-arrow-up"></i><i class="fa fa-trash"></i></button>
+                                        <button onclick="eliminarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-trash"></i></button>
                                     @endif
                                 </td>
                             </tr>
@@ -240,8 +240,6 @@
         });
 
         function eliminarPago(id){
-            id.preventDefault();
-
             var opcion = confirm("ESTA SEGURO DE ELIMIAR EL PAGO JUNTO CON EL CORRESPONDIENTE FORMULARIO?");
             if (opcion == true) {
                 $.ajax({
