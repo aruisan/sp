@@ -90,7 +90,7 @@ class NotaCreditoController extends Controller
         $nota->iva = $request->valorIva;
         $nota->cuenta_banco = $request->cuentaDeb;
         $nota->cuenta_puc_id = $request->cuentaPUC;
-        $nota->rubro_egresos_id = $request->rubroGastos;
+        $nota->rubro_dep_egresos_id = $request->rubroGastos;
         $nota->rubro_font_ingresos_id = $request->rubroIngresos;
         $nota->debito_banco = $request->debitoBanco;
         $nota->credito_banco = $request->creditoBanco;
@@ -120,7 +120,15 @@ class NotaCreditoController extends Controller
         $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
         $vigenciaEgresos = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
         $vigenciaIng = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->first();
-        $rubrosEgresos = Rubro::where('vigencia_id', $vigenciaEgresos->id)->orderBy('cod','ASC')->get();
+        $rubE = Rubro::where('vigencia_id', $vigenciaEgresos->id)->orderBy('cod','ASC')->get();
+        foreach ($rubE as $rub){
+            foreach ($rub->fontsRubro as $fuente){
+                foreach ($fuente->dependenciaFont as $dep){
+                    $rubrosEgresos[] = collect(['id' => $dep->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                        $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description, 'dep' => $dep->dependencias->name]);
+                }
+            }
+        }
         $rubI = Rubro::where('vigencia_id', $vigenciaIng->id)->orderBy('cod','ASC')->get();
         foreach ($rubI as $rub){
             foreach ($rub->fontsRubro as $fuente){
