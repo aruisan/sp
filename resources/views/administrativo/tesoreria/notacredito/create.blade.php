@@ -111,7 +111,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="creditoBanco" id="creditoBanco" value="0">
+                                                <input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="0">
                                             </div>
                                         </div>
                                     </td>
@@ -119,7 +119,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="debitoBanco" id="debitoBanco" value="0">
+                                                <input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="0">
                                             </div>
                                         </div>
                                     </td>
@@ -141,7 +141,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="creditoPUC" id="creditoPUC" value="0">
+                                                <input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="0">
                                             </div>
                                         </div>
                                     </td>
@@ -149,7 +149,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="debitoPUC" id="debitoPUC" value="0">
+                                                <input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="0">
                                             </div>
                                         </div>
                                     </td>
@@ -171,7 +171,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="creditoGastos" id="creditoGastos" value="0">
+                                                <input class="form-control" min="0" type="number" name="creditoGastos" id="creditoGastos" value="0">
                                             </div>
                                         </div>
                                     </td>
@@ -179,7 +179,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="debitoGastos" id="debitoGastos" value="0">
+                                                <input class="form-control" min="0" type="number" name="debitoGastos" id="debitoGastos" value="0">
                                             </div>
                                         </div>
                                     </td>
@@ -201,7 +201,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="creditoIngresos" id="creditoIngresos" value="0">
+                                                <input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="0">
                                             </div>
                                         </div>
                                     </td>
@@ -209,7 +209,7 @@
                                         <div class="form-group">
                                             <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
                                             <div class="col-lg-6">
-                                                <input class="form-control" type="number" name="debitoIngresos" id="debitoIngresos" value="0">
+                                                <input class="form-control" min="0" type="number" name="debitoIngresos" id="debitoIngresos" value="0">
                                             </div>
                                         </div>
                                     </td>
