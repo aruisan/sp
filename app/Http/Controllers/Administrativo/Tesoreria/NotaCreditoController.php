@@ -53,6 +53,37 @@ class NotaCreditoController extends Controller
     public function store(Request $request)
     {
         dd($request);
+
+        $añoActual = Carbon::today()->year;
+
+        if($request->hasFile('file')) {
+            $file = new FileTraits;
+            $ruta = $file->File($request->file('file'), 'NotaCredito');
+        }else $ruta = "";
+
+        $countNC = NotaCredito::where('año', $añoActual)->orderBy('id')->get()->last();
+        if ($countNC == null)  $count = 0;
+        else $count = $countNC->code;
+
+        $nota = new NotaCredito();
+        $nota->code = $count + 1;
+        $nota->año = $añoActual;
+        $nota->concepto = $request->valor;
+        $nota->valor = $request->valor;
+        $nota->iva = $request->valorIva;
+        $nota->val_total = $request->valor + $request->valorIva;
+        $nota->estado = $request->estado;
+        $nota->ff = $request->fecha;
+        $nota->tipoCI = $request->tipoCI;
+        $nota->cualOtroTipo = $request->cualOtroTipo;
+        $nota->user_id = $request->user_id;
+        $nota->vigencia_id = $request->vigencia_id;
+        $nota->puc_alcaldia_id = $request->cuentaDeb;
+        $nota->ruta = $ruta;
+        $nota->save();
+
+        Session::flash('success','La nota credito se ha creado exitosamente');
+        return redirect('/administrativo/tesoreria/notasCredito');
     }
 
     /**
