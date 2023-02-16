@@ -119,7 +119,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @if($pago->estado != "Pagado" and $pago->modulo == "PREDIAL")
+                                    @if($pago->estado != "Pagado")
                                         <button onclick="eliminarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-trash"></i></button>
                                     @endif
                                 </td>

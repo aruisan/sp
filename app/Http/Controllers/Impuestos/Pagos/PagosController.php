@@ -198,6 +198,23 @@ class PagosController extends Controller
 
                 //SE ELIMINA EL PAGO
                 $pago->delete();
+            } elseif($pago->modulo == 'ICA-AgenteRetenedor'){
+
+                //SE ELIMINA EL FORMULARIO
+                $imp = IcaRetenedor::find($pago->entity_id);
+                $imp->delete();
+
+                //SE ELIMINA EL PAGO
+                $pago->delete();
+
+            }elseif($pago->modulo == 'ICA-Contribuyente'){
+
+                //SE ELIMINA EL FORMULARIO
+                $imp = IcaContri::find($pago->entity_id);
+                $imp->delete();
+
+                //SE ELIMINA EL PAGO
+                $pago->delete();
             }
             return 'OK';
         } else return 'FALSE';
