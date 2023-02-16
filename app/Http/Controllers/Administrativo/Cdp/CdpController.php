@@ -136,6 +136,13 @@ class CdpController extends Controller
                 $actividad = BPin::findOrFail($actividadCdp->actividad->id);
                 $actividad->saldo = $actividad->saldo + $actividadCdp->valor;
                 $actividad->save();
+
+                $actividadCdp->valor_disp = $actividadCdp->valor_disp - $actividadCdp->valor;
+                $actividadCdp->save();
+
+                $bpinVigencia = bpinVigencias::find($actividadCdp->actividad->id);
+                $bpinVigencia->saldo = $bpinVigencia->saldo + $actividadCdp->valor;
+                $bpinVigencia->save();
             }
 
             Session::flash('error','El CDP ha sido anulado');
