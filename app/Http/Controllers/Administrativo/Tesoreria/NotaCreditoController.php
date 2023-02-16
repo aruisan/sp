@@ -102,7 +102,8 @@ class NotaCreditoController extends Controller
     public function show(NotaCredito $id)
     {
         $notaCredito = NotaCredito::find($id);
-        dd($notaCredito);
+
+        return view('administrativo.tesoreria.notacredito.show', compact('notaCredito'));
     }
 
     /**

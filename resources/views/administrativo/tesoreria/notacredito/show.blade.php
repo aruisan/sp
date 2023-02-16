@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    Nota Credito
+    Creación de la Nota Credito {{ $notaCredito->code }}
 @stop
 @section('content')
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>NUEVA NOTA CREDITO</b></h4>
+                <h4><b>NOTA CREDITO {{ $notaCredito->code }} - {{ $notaCredito->año }} </b></h4>
             </strong>
         </div>
         <div class="col-lg-12">
@@ -15,7 +15,7 @@
                     <a class="nav-link "  href="{{ url('/administrativo/tesoreria/notasCredito/') }}">Volver a Notas Credito</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#nuevo" >NUEVA NOTA CREDITO</a>
+                    <a class="nav-link" href="#nuevo"> NOTA CREDITO {{ $notaCredito->code }} - {{ $notaCredito->año }}</a>
                 </li>
             </ul>
 
@@ -30,7 +30,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="nombre">Concepto <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <textarea name="concepto" class="form-control" required></textarea>
+                                            <textarea name="concepto" class="form-control" required>{{ $notaCredito->concepto }} </textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -38,8 +38,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="file">Subir Archivo: </label>
                                         <div class="col-lg-6">
-                                            <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
-                                            <input type="file" name="file" accept="application/pdf" class="form-control">
+                                            <span> {{ $notaCredito->ruta }} </span>
                                         </div>
                                     </div>
                                 </div>
