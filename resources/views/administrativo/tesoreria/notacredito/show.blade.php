@@ -31,15 +31,16 @@
                                     </div>
                                 </div>
                             </div>
-                            @if($notaCredito->ruta) SI @endif
-                            <div class="col-md-6 align-self-center">
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="file">Archivo: </label>
-                                    <div class="col-lg-6">
-                                        <i class="fa fa-file-pdf-o"><a href="{{ $notaCredito->ruta }}"></a></i>
+                            @if($notaCredito->ruta)
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" for="file">Archivo: </label>
+                                        <div class="col-lg-6">
+                                            <i class="fa fa-file-pdf-o"><a href="{{ $notaCredito->ruta }}"></a></i>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <br>
                         <div class="row">
