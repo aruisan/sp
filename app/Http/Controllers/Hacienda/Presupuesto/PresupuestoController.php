@@ -90,16 +90,17 @@ class PresupuestoController extends Controller
                                                     if (count($rubro) > 0){
                                                         if (count($rubro) == 1){
 
-                                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                                             if (isset($adicionesH)) unset($adicionesH);
                                                             if (isset($reduccionesH)) unset($reduccionesH);
 
-                                                            // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                                             foreach ($rubro[0]->fontsRubro as $font) {
+                                                                // VALIDACION PARA LAS ADICIONES
                                                                 $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
                                                                 if ($add) $hijosAdicion[] = $add->valor;
                                                                 else $hijosAdicion[] = 0;
 
+                                                                // VALIDACION PARA LAS REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                                                 $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                                 if ($red) $hijosReduccion[] = $red->valor;
                                                                 else $hijosReduccion[] = 0;
@@ -113,7 +114,7 @@ class PresupuestoController extends Controller
                                                         } else {
                                                             foreach ($rubro as $rb){
 
-                                                                //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                                                //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                                                 if (isset($adicionesH)) unset($adicionesH);
                                                                 if (isset($reduccionesH)) unset($reduccionesH);
 
@@ -143,7 +144,7 @@ class PresupuestoController extends Controller
                                                 if (count($rubro) > 0){
                                                     if (count($rubro) == 1){
 
-                                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                                         if (isset($adicionesH)) unset($adicionesH);
                                                         if (isset($reduccionesH)) unset($reduccionesH);
 
@@ -166,7 +167,7 @@ class PresupuestoController extends Controller
                                                     } else {
                                                         foreach ($rubro as $rb){
 
-                                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                                             if (isset($adicionesH)) unset($adicionesH);
                                                             if (isset($reduccionesH)) unset($reduccionesH);
 
@@ -196,7 +197,7 @@ class PresupuestoController extends Controller
                                         if (count($rubro) > 0){
                                             if (count($rubro) == 1){
 
-                                                //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                                //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                                 if (isset($adicionesH)) unset($adicionesH);
                                                 if (isset($reduccionesH)) unset($reduccionesH);
 
@@ -219,7 +220,7 @@ class PresupuestoController extends Controller
 
                                             } else {
                                                 foreach ($rubro as $rb){
-                                                    //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                                    //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                                     if (isset($adicionesH)) unset($adicionesH);
                                                     if (isset($reduccionesH)) unset($reduccionesH);
 
@@ -248,7 +249,7 @@ class PresupuestoController extends Controller
                                 $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h1->id)->get();
                                 if (count($rubro) > 0){
                                     if (count($rubro) == 1){
-                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                         if (isset($adicionesH)) unset($adicionesH);
                                         if (isset($reduccionesH)) unset($reduccionesH);
 
@@ -263,7 +264,6 @@ class PresupuestoController extends Controller
                                             else $hijosReduccion[] = 0;
                                         }
 
-
                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                         if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
@@ -274,7 +274,7 @@ class PresupuestoController extends Controller
                                         if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                     } else {
                                         foreach ($rubro as $rb){
-                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                             if (isset($adicionesH)) unset($adicionesH);
                                             if (isset($reduccionesH)) unset($reduccionesH);
 
@@ -368,7 +368,7 @@ class PresupuestoController extends Controller
                             } else {
                                 //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
                                 foreach ($rubro as $rb){
-                                    //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDUIENTE LLENADO EN LIMPIO
+                                    //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
                                     if (isset($adicionesH)) unset($adicionesH);
                                     if (isset($reduccionesH)) unset($reduccionesH);
 
