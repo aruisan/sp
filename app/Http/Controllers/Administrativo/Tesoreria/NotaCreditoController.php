@@ -76,9 +76,9 @@ class NotaCreditoController extends Controller
         $nota->cuenta_banco = $request->cuentaDeb;
         $nota->cuenta_puc_id = $request->cuentaPUC;
         $nota->rubro_egresos_id = $request->rubroGastos;
-        $nota->rubroIngresos = $request->rubro_ingresos_id;
+        $nota->rubro_ingresos_id = $request->rubroIngresos;
         $nota->debito_banco = $request->debitoBanco;
-        $nota->creditoBanco = $request->credito_banco;
+        $nota->credito_banco = $request->creditoBanco;
         $nota->debito_puc = $request->debitoPUC;
         $nota->credito_puc = $request->creditoPUC;
         $nota->debito_rubro_egresos = $request->debitoGastos;
