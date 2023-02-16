@@ -75,7 +75,7 @@
                             <th class="text-center">Fecha Pago</th>
                             <th class="text-center">Comprobante Pago</th>
                             <th class="text-center">Cargar Pago</th>
-                            <th class="text-center">Eliminar Pago</th>
+                            <th class="text-center">Eliminar Formulario</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -119,7 +119,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @if($pago->estado != "Pagado")
+                                    @if($pago->estado != "Pagado" and $pago->modulo == "PREDIAL")
                                         <button onclick="eliminarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-trash"></i></button>
                                     @endif
                                 </td>
@@ -252,7 +252,9 @@
                     if (response == "OK"){
                         toastr.warning('PAGO Y SU FORMULARIO ELIMINADO');
                         location. reload();
-                    } else toastr.warning('OCURRIO UN ERROR AL ELIMINAR EL PAGO Y SU FORMULARIO.');
+                    } else {
+                        toastr.warning('EL PAGO NO EXISTE. ACTUALICE LA PAGINA.');
+                    }
 
                 }).fail(function() {
                     toastr.warning('OCURRIO UN ERROR AL ELIMINAR EL PAGO Y SU FORMULARIO.');

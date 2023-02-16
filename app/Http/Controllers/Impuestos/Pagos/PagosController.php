@@ -6,6 +6,7 @@ use App\Model\Impuestos\IcaRetenedor;
 use App\Model\Impuestos\PazySalvo;
 use App\Model\Impuestos\Predial;
 use App\Model\Impuestos\PredialContribuyentes;
+use App\Model\Impuestos\PredialLiquidacion;
 use App\Traits\NaturalezaJuridicaTraits;
 use App\Http\Controllers\Controller;
 use App\Model\Impuestos\IcaContri;
@@ -185,8 +186,21 @@ class PagosController extends Controller
      */
     public function deletePago(Request $request){
         $pago = Pagos::find($request->payId);
-        if ($pago->download > 0) return 'OK';
-        else return 'FALSE';
+        if ($pago->download > 0) {
+            if ($pago->modulo == 'PREDIAL'){
+                //SE ELIMINA LA LIQUIDACIÓN HECHA
+                $impLiquid = PredialLiquidacion::where('imp_predial_id', $pago->entity_id)->get();
+                $impLiquid->delete();
+
+                //SE ELIMINA EL FORMULARIO
+                $imp = Predial::find($pago->entity_id);
+                $imp->delete();
+
+                //SE ELIMINA EL PAGO
+                $pago->delete();
+            }
+            return 'OK';
+        } else return 'FALSE';
     }
 
     /**
