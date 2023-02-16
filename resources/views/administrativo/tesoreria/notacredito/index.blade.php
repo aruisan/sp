@@ -41,7 +41,7 @@
                                 <td class="text-center">{{ $nota->code }}</td>
                                 <td class="text-center">{{ $nota->concepto }}</td>
                                 <td class="text-center">
-                                    <a href="{{ url('administrativo/tesoreria/notasCredito/show/'.$nota->id) }}" title="Ver Nota Credito" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
+                                    <a href="{{ url('administrativo/tesoreria/notasCredito/show/'.$nota->id) }}" title="Ver Nota Credito" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
                             </tr>
                         @endforeach

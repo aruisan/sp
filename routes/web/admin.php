@@ -336,6 +336,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('tesoreria/notasCredito','Administrativo\Tesoreria\NotaCreditoController@index');
         Route::post('tesoreria/notasCredito','Administrativo\Tesoreria\NotaCreditoController@store');
         Route::get('tesoreria/notasCredito/create','Administrativo\Tesoreria\NotaCreditoController@create');
+        Route::get('tesoreria/notasCredito/show/{id}','Administrativo\Tesoreria\NotaCreditoController@show');
 
             //Impuestos Municipales
 

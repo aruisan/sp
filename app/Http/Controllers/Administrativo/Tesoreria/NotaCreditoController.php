@@ -99,9 +99,10 @@ class NotaCreditoController extends Controller
      * @param  \App\NotaCredito  $notaCredito
      * @return \Illuminate\Http\Response
      */
-    public function show(NotaCredito $notaCredito)
+    public function show(NotaCredito $id)
     {
-        //
+        $notaCredito = NotaCredito::find($id);
+        dd($notaCredito);
     }
 
     /**
