@@ -22,7 +22,7 @@
                     <div class="row ">
                         {{ csrf_field() }}
                         <div class="col-sm-9"><h3><b>Concepto: {{ $comprobante->concepto }}</b></h3></div>
-                        <div class="col-sm-3"><h4><b>Número del Comprobante:</b>&nbsp;{{ $comprobante->code }}</h4></div>
+                        <div class="col-sm-3"><h3><b>Número del Comprobante: {{ $comprobante->code }}</b></h3></div>
                         <br>
                         <br>
                         <div class="form-validation">
