@@ -218,7 +218,7 @@
                             <br>
                             <div class="form-group row">
                                 <div class="col-lg-12 ml-auto text-center">
-                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <a href="#" class="btn btn-primary">Guardar</a>
                                 </div>
                             </div>
                         </form>
