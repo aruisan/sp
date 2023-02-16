@@ -159,7 +159,7 @@
                                         <div class="col-lg-6">
                                             <select class="form-control" name="rubroGastos" id="rubroGastos">
                                                 @foreach($rubrosEgresos as $rubro)
-                                                    <option @if($notaCredito->rubro_dep_egresos_id == $rubro->id) selected @endif value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}} - {{$rubro['dep']}}</option>
+                                                    <option @if($notaCredito->rubro_dep_egresos_id == $rubro['id']) selected @endif value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}} - {{$rubro['dep']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -189,7 +189,7 @@
                                         <div class="col-lg-6">
                                             <select class="form-control" name="rubroIngresos" id="rubroIngresos">
                                                 @foreach($rubrosIngresos as $rubro)
-                                                    <option @if($notaCredito->rubro_font_ingresos_id == $rubro->id) selected @endif value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
+                                                    <option @if($notaCredito->rubro_font_ingresos_id == $rubro['id']) selected @endif value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
