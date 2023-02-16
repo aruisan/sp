@@ -36,7 +36,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="file">Archivo: </label>
                                         <div class="col-lg-6">
-                                            <i class="fa fa-file-pdf-o"><a href="{{ $notaCredito->ruta }}"></a></i>
+                                            <a target="_blank" class="btn btn-sm btn-danger" href="/uploads/NotaCredito/{{ $notaCredito->ruta }}"><i class="fa fa-file-pdf-o"></i></a>
                                         </div>
                                     </div>
                                 </div>
