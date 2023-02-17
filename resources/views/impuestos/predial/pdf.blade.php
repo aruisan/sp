@@ -21,7 +21,7 @@
                 </tr>
                 <tr>
                     <td>Número Catastral:<br><b>{{ $predial->numCatas }}</b></td>
-                    <td colspan="2">Dirección:<br><b>{{ $contribuyente->dir_predio }}</b></td>
+                    <td colspan="2">Dirección:<br><b>{{ $predial->dir_predio }}</b></td>
                     <td>Matricula Inmobiliaria:<br><b>{{$predial->matricula}}</b></td>
                 </tr>
                 <tr>
