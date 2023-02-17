@@ -81,7 +81,7 @@
                         <tbody>
                         @foreach($pagos as $index => $pago)
                             <tr>
-                                <td class="text-center">{{ $index + 1 }}</td>
+                                <td class="text-center">{{ $pago->id }}</td>
                                 <td class="text-center">{{ $pago->modulo }}</td>
                                 <td class="text-center">{{ $pago->user->name }}</td>
                                 <td class="text-center">{{ $pago->user->email }}</td>

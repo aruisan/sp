@@ -81,7 +81,7 @@
 				</table>
 			</div>
 			<div class="table-responsive" id="pago">
-				<form class="form" action="{{ url('administrativo/tesoreria/retefuente/pago/7/1/make') }}" method="POST"
+				<form class="form" action="{{ url('administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/'.$mesID.'/make') }}" method="POST"
 					  enctype="multipart/form-data" id="makePayReteFuente">
 					{!! method_field('POST') !!}
 					{{ csrf_field() }}
@@ -119,6 +119,7 @@
 							</tbody>
 						</table>
 					</div>
+					<input type="hidden" name="conceptoOP" id="conceptoOP" value="DECLARACION DE RETENCION EN LA FUENTE Periodo comprendido entre 1 de {{ $mes }} al {{ $days }} de {{$mes}} de {{ $vigencia->vigencia }}">
 					@foreach($form as $index => $dato)
 						<input type="hidden" name="concepto[]" value="{{ $dato['concepto'] }}">
 						<input type="hidden" name="base[]" value="{{ $dato['base'] }}">
@@ -126,25 +127,14 @@
 					@endforeach
 					@foreach($tableRT as $index => $dato)
 						@if($dato['nameTer'] != null)
+							<input type="hidden" name="terceroForm[]" value="{{ $dato['idTercero'] }}">
 							<input type="hidden" name="codeForm[]" value="{{ $dato['code'] }}">
 							<input type="hidden" name="conceptoForm[]" value="{{ $dato['concepto'] }}">
 							<input type="hidden" name="debitoForm[]" value="{{ $dato['valorDesc'] }}">
 						@endif
 					@endforeach
 					<div class="text-center">
-						<h4>Cuenta bancaria objeto del pago</h4>
-						<div class="col-lg-8">
-							<select name="cuenta" id="cuenta" class="form-control" required>
-								@foreach($bancos as $banco)
-									<option value="{{ $banco->id }}">{{ $banco->code }} - {{ $banco->concepto }}</option>
-								@endforeach
-							</select>
-						</div>
-						<div class="col-lg-4">
-							<input type="hidden" class="form-control" required name="valorPago" id="valorPago" value="{{ $total }}">
-							<h3><span id="valorPagoSpan">$ <?php echo number_format($total,0);?></span></h3>
-						</div>
-						<br><br>
+						<input type="hidden" class="form-control" required name="valorPago" id="valorPago" value="{{ $total }}">
 						<button type="submit" class="btn-sm btn-primary"> Enviar</button>
 						<a onclick="generateMulta()" class="btn-sm btn-primary"> Generar Multa</a>
 					</div>

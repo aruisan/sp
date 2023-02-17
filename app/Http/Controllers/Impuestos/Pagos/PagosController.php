@@ -197,6 +197,9 @@ class PagosController extends Controller
 
             //SE ELIMINA EL PAGO
             $pago->delete();
+
+            return 'OK';
+
         } elseif($pago->modulo == 'ICA-AgenteRetenedor'){
 
             //SE ELIMINA EL FORMULARIO
@@ -206,6 +209,9 @@ class PagosController extends Controller
             //SE ELIMINA EL PAGO
             $pago->delete();
 
+            return 'OK';
+
+
         }elseif($pago->modulo == 'ICA-Contribuyente'){
 
             //SE ELIMINA EL FORMULARIO
@@ -214,8 +220,10 @@ class PagosController extends Controller
 
             //SE ELIMINA EL PAGO
             $pago->delete();
+
+            return 'OK';
+
         }
-        return 'OK';
     }
 
     /**
