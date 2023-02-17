@@ -186,38 +186,36 @@ class PagosController extends Controller
      */
     public function deletePago(Request $request){
         $pago = Pagos::find($request->payId);
-        if ($pago->download > 0) {
-            if ($pago->modulo == 'PREDIAL'){
-                //SE ELIMINA LA LIQUIDACIÓN HECHA
-                $impLiquid = PredialLiquidacion::where('imp_predial_id', $pago->entity_id)->get();
-                $impLiquid->delete();
+        if ($pago->modulo == 'PREDIAL'){
+            //SE ELIMINA LA LIQUIDACIÓN HECHA
+            $impLiquid = PredialLiquidacion::where('imp_predial_id', $pago->entity_id)->get();
+            foreach ($impLiquid as $imp) $imp->delete();
 
-                //SE ELIMINA EL FORMULARIO
-                $imp = Predial::find($pago->entity_id);
-                $imp->delete();
+            //SE ELIMINA EL FORMULARIO
+            $imp = Predial::find($pago->entity_id);
+            $imp->delete();
 
-                //SE ELIMINA EL PAGO
-                $pago->delete();
-            } elseif($pago->modulo == 'ICA-AgenteRetenedor'){
+            //SE ELIMINA EL PAGO
+            $pago->delete();
+        } elseif($pago->modulo == 'ICA-AgenteRetenedor'){
 
-                //SE ELIMINA EL FORMULARIO
-                $imp = IcaRetenedor::find($pago->entity_id);
-                $imp->delete();
+            //SE ELIMINA EL FORMULARIO
+            $imp = IcaRetenedor::find($pago->entity_id);
+            $imp->delete();
 
-                //SE ELIMINA EL PAGO
-                $pago->delete();
+            //SE ELIMINA EL PAGO
+            $pago->delete();
 
-            }elseif($pago->modulo == 'ICA-Contribuyente'){
+        }elseif($pago->modulo == 'ICA-Contribuyente'){
 
-                //SE ELIMINA EL FORMULARIO
-                $imp = IcaContri::find($pago->entity_id);
-                $imp->delete();
+            //SE ELIMINA EL FORMULARIO
+            $imp = IcaContri::find($pago->entity_id);
+            $imp->delete();
 
-                //SE ELIMINA EL PAGO
-                $pago->delete();
-            }
-            return 'OK';
-        } else return 'FALSE';
+            //SE ELIMINA EL PAGO
+            $pago->delete();
+        }
+        return 'OK';
     }
 
     /**
