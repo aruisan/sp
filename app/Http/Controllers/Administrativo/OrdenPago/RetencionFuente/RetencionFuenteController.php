@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers\Administrativo\OrdenPago\RetencionFuente;
 
+use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Administrativo\Cdp\Cdp;
+use App\Model\Administrativo\Cdp\RubrosCdp;
+use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\Contabilidad\CompCont;
 use App\Model\Administrativo\Contabilidad\CompContMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
+use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
+use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Registro\CdpsRegistro;
+use App\Model\Administrativo\Registro\CdpsRegistroValor;
+use App\Model\Administrativo\Registro\Registro;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuenteConta;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuenteForm;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
+use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Terceros;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -330,16 +340,23 @@ class RetencionFuenteController extends Controller
 
                     $vigencia = Vigencia::find($vigencia_id);
 
-                    $oP = OrdenPagos::orderBy('code','ASC')->get();
-                    foreach ($oP as $data){
-                        if ($vigencia_id == $data->registros->cdpsRegistro[0]->cdp->vigencia_id){
-                            $ordenPago[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre]);
-                        }
+                    if ($multas) {
+
+                        $depRubroFonts = DependenciaRubroFont::where('dependencia_id',15)->where('vigencia_id',$request->vigencia_id)
+                            ->where('rubro_font_id', $rubro->fontsRubro->first()->id)->first();
+
+                        //SE CREA EL CDP YA FINALIZADO
+                        $cdp = $this->createCDP($request, $depRubroFonts, $rubro);
+
+                        //SE CREA EL REGISTRO YA FINALIZADO
+                        $registro = $this->createRegistro($request, $cdp, $vigencia);
                     }
-                    if (isset($ordenPago)){
-                        $last = array_last($ordenPago);
-                        $numOP = $last['info']->code + 1;
-                    }else $numOP = 0;
+
+                    //SE REALIZA LA BUSQUEDA DEL CODIGO CORRESPONDIENTE A LA NUEVA ORDEN DE PAGO
+                    $ordenPagoFind = OrdenPagos::orderBy('code','DESC')->first();
+                    $añoOPago = Carbon::parse($ordenPagoFind->created_at)->format('Y');
+                    if ($añoOPago == $vigencia->vigencia) $numOP = $ordenPagoFind->code + 1;
+                    else $numOP = 1;
 
                     $ordenPago = new OrdenPagos();
                     $ordenPago->code = $numOP;
@@ -347,14 +364,22 @@ class RetencionFuenteController extends Controller
                     $ordenPago->valor = intval($request->valorPago);
                     $ordenPago->saldo = intval($request->valorPago);
                     $ordenPago->iva = 0;
-                    $ordenPago->estado = 1;
+                    $ordenPago->estado = '1';
+                    if ($multas) $ordenPago->registros_id = $registro['Registro']->id;
                     $ordenPago->user_id = auth()->user()->id;
                     $ordenPago->save();
+
+                    $ordenPagoRubros = new OrdenPagosRubros();
+                    $ordenPagoRubros->orden_pagos_id  = $ordenPago->id;
+                    $ordenPagoRubros->valor  = $ordenPago->valor;
+                    $ordenPagoRubros->saldo  = $ordenPago->saldo;
+                    $ordenPagoRubros->save();
 
                     $pago = new TesoreriaRetefuentePago();
                     $pago->vigencia_id = $vigencia_id;
                     $pago->mes = $mes;
                     $pago->valor = $request->valorPago;
+                    $pago->orden_pago_id = $ordenPago->id;
                     $pago->save();
 
                     //SAVE FORMS
@@ -461,7 +486,9 @@ class RetencionFuenteController extends Controller
     public function showpago($id){
 
         $pago = TesoreriaRetefuentePago::find($id);
+        $banks = PagoBanks::where('pagos_id', $pago->comp_egreso_id)->get();
         $vigencia = Vigencia::find($pago->vigencia_id);
+        $ordenPago = OrdenPagos::find($pago->orden_pago_id);
 
         $days = cal_days_in_month(CAL_GREGORIAN, $pago->mes, $vigencia->vigencia);
 
@@ -505,7 +532,7 @@ class RetencionFuenteController extends Controller
         }
 
         return view('administrativo.tesoreria.retefuente.pagos.show', compact('pago','vigencia'
-        ,'mes','days'));
+        ,'mes','days', 'banks','ordenPago'));
     }
 
     public function pdfPago($id){
@@ -561,5 +588,121 @@ class RetencionFuenteController extends Controller
             'vigencia','days','mes','fecha','dias','meses'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
 
         return $pdf->stream();
+    }
+
+    public function createCDP($request, $depRubroFonts, $rubro){
+        $countCdps = Cdp::where('vigencia_id', $request->vigencia_id)->orderBy('id')->get()->last();
+
+        if ($countCdps == null) $count = 0;
+        else $count = $countCdps->code;
+
+        $cdp = new Cdp();
+        $cdp->name = $request->conceptoOP;
+        $cdp->tipo = 'Funcionamiento';
+        $cdp->code = $count + 1;
+        $cdp->valueControl = intval($request->valorPago);
+        $cdp->valor = intval($request->valorPago);
+        $cdp->fecha =  Carbon::today()->format('Y-m-d');
+        $cdp->dependencia_id = 15;
+        $cdp->observacion = $request->conceptoOP;
+        $cdp->saldo = intval($request->valorPago);
+        $cdp->secretaria_e = '3';
+        $cdp->ff_secretaria_e =  Carbon::today()->format('Y-m-d');
+        $cdp->alcalde_e = '3';
+        $cdp->ff_alcalde_e = Carbon::today()->format('Y-m-d');
+        $cdp->jefe_e = '3';
+        $cdp->ff_jefe_e = Carbon::today()->format('Y-m-d');
+        $cdp->vigencia_id = $request->vigencia_id;
+        $cdp->secretaria_user_id = auth()->user()->id;
+        $cdp->save();
+
+        //SE CREA LA RELACION EN LA TABLA RUBROS CDP
+        $rubrosCdp = new RubrosCdp();
+        $rubrosCdp->cdp_id = $cdp->id;
+        $rubrosCdp->rubro_id = $rubro->id;
+        $rubrosCdp->dep_rubro_font_id = $depRubroFonts->id;
+        $rubrosCdp->save();
+
+        //SE CREA LA RELACION EN LA TABLA RUBROS CDP VALOR
+        $rubrosCdpValor = new RubrosCdpValor();
+        $rubrosCdpValor->valor = intval($request->valorPago);
+        $rubrosCdpValor->valor_disp = intval($request->valorPago);
+        $rubrosCdpValor->fontsRubro_id  = $rubro->fontsRubro->first()->id;
+        $rubrosCdpValor->cdp_id = $cdp->id;
+        $rubrosCdpValor->rubrosCdp_id = $rubrosCdp->id;
+        $rubrosCdpValor->fontsDep_id = $depRubroFonts->id;
+        $rubrosCdpValor->save();
+
+        //SE DESCUENTA EL DINERO CON EL QUE SE ESTA CREANDO EL CDP DEL RUBRO Y LA FUENTE DE LA DEP
+        foreach ($cdp->rubrosCdpValor as $fuentes){
+            $valor = $fuentes->valor;
+            $total = $fuentes->fontsRubro->valor_disp - $valor;
+
+            $fontRubro = FontsRubro::findOrFail($fuentes->fontsRubro->id);
+            $fontRubro->valor_disp = $total;
+            $fontRubro->save();
+
+            $depFont = DependenciaRubroFont::find($fuentes->fontsDep_id);
+            $depFont->saldo = $depFont->saldo - $cdp->valor;
+            $depFont->save();
+        }
+
+        $cdpArray = collect(['CDP' => $cdp, 'RCDPValue' => $rubrosCdpValor, 'RCDP' => $rubrosCdp]);
+
+        return $cdpArray;
+    }
+
+    public function createRegistro($request, $cdp, $vigencia){
+        //SE REALIZA LA BUSQUEDA DEL CODIGO QUE LE CORRESPONDE AL RP
+
+        $allRegistros = Registro::orderBy('code','DESC')->first();
+        $añoReg = Carbon::parse($allRegistros->created_at)->format('Y');
+        if ($añoReg == $vigencia->vigencia) $numRP = $allRegistros->code + 1;
+        else $numRP = 1;
+
+        $registro = new Registro();
+        $registro->code = $numRP;
+        $registro->objeto = $request->conceptoOP;
+        $registro->ff_expedicion = Carbon::today()->format('Y-m-d');
+        $registro->valor = intval($request->valorPago);
+        $registro->saldo = intval($request->valorPago);
+        $registro->val_total = intval($request->valorPago);
+        $registro->iva = "0";
+        $registro->persona_id = 75;
+        $registro->tipo_doc = "Factura";
+        $registro->secretaria_e = "3";
+        $registro->ff_secretaria_e = Carbon::today()->format('Y-m-d');
+        $registro->jefe_e = "3";
+        $registro->ff_jefe_e = Carbon::today()->format('Y-m-d');
+        $registro->observacion = "REGISTRO CREADO AUTOMATICAMENTE PARA EL PAGO DE LA DIAN";
+        $registro->created_at = Carbon::today()->format('Y-m-d');
+        $registro->save();
+
+        //CREACION DE LA RELACION DE CDPS REGISTRO
+        $cdpsRegistro = new CdpsRegistro();
+        $cdpsRegistro->registro_id = $registro->id;
+        $cdpsRegistro->cdp_id = $cdp['CDP']->id;
+        $cdpsRegistro->valor = $registro->valor;
+        $cdpsRegistro->save();
+
+        //CREACIÓN DE LA RELACION DE CDPS REGISTRO VALOR
+        $cdpsRegistroValor = new CdpsRegistroValor();
+        $cdpsRegistroValor->valor = $registro->valor;
+        $cdpsRegistroValor->valor_disp = $registro->valor;
+        $cdpsRegistroValor->fontsRubro_id = $cdp['RCDPValue']->fontsRubro_id ;
+        $cdpsRegistroValor->registro_id = $registro->id;
+        $cdpsRegistroValor->cdp_id = $cdp['CDP']->id;
+        $cdpsRegistroValor->rubro_id = $cdp['RCDP']->rubro_id;
+        $cdpsRegistroValor->cdps_registro_id = $cdpsRegistro->id;
+        $cdpsRegistroValor->save();
+
+        //SE DESCUENTA EL DINERO DE LA FUENTE DEL RUBRO DEL CDP
+        $rubCdpValor = RubrosCdpValor::find($cdp['RCDPValue']->id);
+        $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - intval($request->valorPago);
+        $rubCdpValor->save();
+
+        $registroArray = collect(['Registro' => $registro, 'CDPReg' => $cdpsRegistro, 'CDPRegValue' => $cdpsRegistroValor]);
+
+        return $registroArray;
     }
 }

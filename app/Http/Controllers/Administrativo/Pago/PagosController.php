@@ -14,7 +14,10 @@ use App\Model\Administrativo\Pago\PagoRubros;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Registro\CdpsRegistroValor;
+use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
+use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Persona;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Session;
 
@@ -29,16 +32,31 @@ class PagosController extends Controller
     {
         $pT = Pagos::where('estado', '0')->get();
         foreach ($pT as $data){
-            if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $pagosTarea[] = collect(['info' => $data, 'persona' => $data->persona->nombre]);
+            if (isset($data->orden_pago->registros)) {
+                if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id) {
+                    $pagosTarea[] = collect(['info' => $data, 'persona' => $data->persona->nombre]);
+                }
+            } else {
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
+                if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                    $pagosTarea[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                }
             }
         }
 
         $p = Pagos::where('estado','!=', '0')->get();
         foreach ($p as $data){
-            if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $pagos[] = collect(['info' => $data]);
+            if (isset($data->orden_pago->registros)){
+                if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
+                    $pagos[] = collect(['info' => $data]);
+                }
+            } else{
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
+                if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                    $pagos[] = collect(['info' => $data]);
+                }
             }
+
         }
         if (!isset($pagosTarea)){
             $pagosTarea[] = null;
@@ -61,14 +79,29 @@ class PagosController extends Controller
     {
         $oP = OrdenPagos::where([['estado', '1'], ['saldo', '>', 0]])->get();
         foreach ($oP as $data){
-            if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $ordenPagos[] = collect(['info' => $data]);
+            if (isset($data->registros->cdpsRegistro)){
+                if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
+                    $ordenPagos[] = collect(['info' => $data]);
+                }
+            } else {
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
+                if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                    $ordenPagos[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                }
             }
+
         }
         $pagos = Pagos::orderBy('code','ASC')->get();
         foreach ($pagos as $data){
-            if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $pagosAll[] = collect(['info' => $data, 'persona' => $data->orden_pago->registros->persona->nombre]);
+            if (isset($data->orden_pago->registros)) {
+                if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id) {
+                    $pagosAll[] = collect(['info' => $data, 'persona' => $data->orden_pago->registros->persona->nombre]);
+                }
+            } else{
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
+                if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                    $pagosAll[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                }
             }
         }
         if (!isset($ordenPagos)){
@@ -101,24 +134,19 @@ class PagosController extends Controller
         } else {
 
             $OrdenPago = OrdenPagos::findOrFail($request->IdOP);
+            $vigencia = Vigencia::find($request->vigencia_id);
 
             //SE REALIZA LA BUSQUEDA DEL CODIGO CORRESPONDIENTE AL NUEVO PAGO
-            $pagos = Pagos::orderBy('code','ASC')->get();
-            foreach ($pagos as $pago){
-                if ($pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $OrdenPago->registros->cdpsRegistro[0]->cdp->vigencia_id){
-                    $PagoArray[] = collect(['info' => $pago]);
-                }
-            }
-            if (isset($PagoArray)) {
-                $last = array_last($PagoArray);
-                $codePago = $last['info']->code + 1;
-            }
-            else $codePago = 0;
+            $pago = Pagos::orderBy('code','DESC')->first();
+            $añoPago = Carbon::parse($pago->created_at)->format('Y');
+            if (intval($añoPago) == $vigencia->vigencia) $codePago = $pago->code + 1;
+            else $codePago = 1;
 
             $Pago = new Pagos();
             $Pago->code = $codePago;
             $Pago->concepto = $request->Objeto;
-            $Pago->persona_id = $OrdenPago->registros->persona_id;
+            if (isset($OrdenPago->registros->cdpsRegistro)) $Pago->persona_id = $OrdenPago->registros->persona_id;
+            else $Pago->persona_id = 75;
             $Pago->orden_pago_id = $request->IdOP;
             $Pago->valor = $request->Monto;
             $Pago->estado = "0";
@@ -132,20 +160,24 @@ class PagosController extends Controller
                 $pagoRubros = new PagoRubros();
                 $pagoRubros->pago_id = $Pago->id;
 
-                if ($Pago->orden_pago->rubros[0]->cdps_registro->cdps->tipo == "Inversion"){
-                    $codActiv = $Pago->orden_pago->rubros[0]->cdps_registro->cdps->bpinsCdpValor->first()->cod_actividad;
-                    $bin = BPin::where('cod_actividad', $codActiv )->first();
-                    $bPinVig = bpinVigencias::where('bpin_id',$bin->id)->where('vigencia_id', $OrdenPago->registros->cdpsRegistro[0]->cdp->vigencia_id)->first();
-                    $depRub = DependenciaRubroFont::find($bPinVig->dep_rubro_id);
-                    $rubroIDInv = $depRub->fontRubro->rubro_id;
+                // SI EL PAGO NO ES DE RETEFUENTE
+                if (isset($Pago->orden_pago->rubros[0]->cdps_registro)){
+                    if ($Pago->orden_pago->rubros[0]->cdps_registro->cdps->tipo == "Inversion"){
+                        $codActiv = $Pago->orden_pago->rubros[0]->cdps_registro->cdps->bpinsCdpValor->first()->cod_actividad;
+                        $bin = BPin::where('cod_actividad', $codActiv )->first();
+                        $bPinVig = bpinVigencias::where('bpin_id',$bin->id)->where('vigencia_id', $OrdenPago->registros->cdpsRegistro[0]->cdp->vigencia_id)->first();
+                        $depRub = DependenciaRubroFont::find($bPinVig->dep_rubro_id);
+                        $rubroIDInv = $depRub->fontRubro->rubro_id;
 
-                    $pagoRubros->rubro_id = $rubroIDInv;
+                        $pagoRubros->rubro_id = $rubroIDInv;
 
-                } else{
+                    } else{
 
-                    $rubroid = DependenciaRubroFont::find($Pago->orden_pago->registros->cdpRegistroValor[0]->cdps->rubrosCdpValor[0]->fontsDep_id);
-                    $pagoRubros->rubro_id = $rubroid->fontRubro->rubro_id;
+                        $rubroid = DependenciaRubroFont::find($Pago->orden_pago->registros->cdpRegistroValor[0]->cdps->rubrosCdpValor[0]->fontsDep_id);
+                        $pagoRubros->rubro_id = $rubroid->fontRubro->rubro_id;
+                    }
                 }
+
                 $pagoRubros->valor = $Pago->valor;
                 $pagoRubros->save();
 
@@ -220,8 +252,14 @@ class PagosController extends Controller
             $PUCS = RubrosPuc::where('naturaleza','1')->get();
             $hijosPUC = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
 
+            if (isset($pago->orden_pago->rubros[0]->cdps_registro)) $vigencia_id = $pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+            else {
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();
+                $vigencia_id = $tesoreriaRetefuentePago->vigencia_id;
+            }
+
             return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC',
-            'cuentas24', 'personas'));
+            'cuentas24', 'personas', 'vigencia_id'));
         } else {
             Session::flash('warning','El pago no ha recibido la asignación del monto, por favor realizarla');
             return redirect('administrativo/pagos/asignacion/'.$pago->id);
@@ -266,6 +304,13 @@ class PagosController extends Controller
                 $pago->estado = "1";
                 $pago->ff_fin = today()->format("Y-m-d");
                 $pago->save();
+
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();
+
+                if ($tesoreriaRetefuentePago != null){
+                    $tesoreriaRetefuentePago->comp_egreso_id = $pago->id;
+                    $tesoreriaRetefuentePago->save();
+                }
 
                 for($i=0;$i< count($request->banco); $i++){
                     $bank = new PagoBanks();
@@ -321,7 +366,13 @@ class PagosController extends Controller
         $banks = PagoBanks::where('pagos_id', $pago->id)->get();
         $ordenPago = OrdenPagos::findOrFail($pago->orden_pago_id);
 
-        return view('administrativo.pagos.show', compact('pago','ordenPago','banks'));
+        if (isset($pago->orden_pago->rubros[0]->cdps_registro)) $vigencia_id = $pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+        else {
+            $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();
+            $vigencia_id = $tesoreriaRetefuentePago->vigencia_id;
+        }
+
+        return view('administrativo.pagos.show', compact('pago','ordenPago','banks','vigencia_id'));
     }
 
     /**

@@ -24,4 +24,8 @@ class TesoreriaRetefuentePago extends Model implements Auditable
     public function compcontable(){
         return $this->belongsTo('App\Model\Administrativo\Contabilidad\CompCont','comp_conta_id');
     }
+
+    public function egreso(){
+        return $this->belongsTo('App\Model\Administrativo\Pago\Pagos','comp_egreso_id');
+    }
 }

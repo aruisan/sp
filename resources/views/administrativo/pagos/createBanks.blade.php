@@ -4,7 +4,7 @@
 @stop
 @section('sidebar')
     <li>
-        <a href="{{ url('/administrativo/pagos/'.$pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id) }}" class="btn btn-success">
+        <a href="{{ url('/administrativo/pagos/'.$vigencia_id) }}" class="btn btn-success">
             <span class="hide-menu">Pagos</span></a>
     </li>
 @stop
@@ -24,7 +24,11 @@
                         <span id="montoPagoSpan">$<?php echo number_format($pago->valor,0) ?></span></b>
                 </div>
                 <div class="col-md-4 text-center">
-                    Tercero: {{ $pago->orden_pago->registros->persona->nombre }}
+                    @if(isset($pago->orden_pago->registros))
+                        Tercero: {{ $pago->orden_pago->registros->persona->nombre }}
+                    @else
+                        Tercero: DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN
+                    @endif
                 </div>
             </div>
             <br>
@@ -34,50 +38,52 @@
                     {!! method_field('PUT') !!}
                     {{ csrf_field() }}
 
-                    <center><h2>Descuentos Municipales</h2></center>
-                    <hr><br>
-                    <div class="table-responsive" id="crud">
-                        <table class="table table-bordered" id="tabla_desc_muni">
-                            <thead>
-                            <th class="text-center">Codigo</th>
-                            <th class="text-center">Descripcion</th>
-                            <th class="text-center">Base</th>
-                            <th class="text-center">%</th>
-                            <th class="text-center">Valor</th>
-                            </thead>
-                            @foreach($pago->orden_pago->descuentos as $descuento)
-                                <tr>
-                                    @if($descuento->desc_municipal_id != null)
-                                        <td>{{ $descuento->descuento_mun['codigo'] }}</td>
-                                        <td>{{ $descuento->descuento_mun['concepto'] }}</td>
-                                        <td>$ <?php echo number_format($pago->orden_pago->valor - $pago->orden_pago->iva,0);?></td>
-                                        @if($descuento->descuento_mun['id'] == 5)
-                                            <td>7 X 1000</td>
+                    @if(isset($pago->orden_pago->registros))
+                        <center><h2>Descuentos Municipales</h2></center>
+                        <hr><br>
+                        <div class="table-responsive" id="crud">
+                            <table class="table table-bordered" id="tabla_desc_muni">
+                                <thead>
+                                <th class="text-center">Codigo</th>
+                                <th class="text-center">Descripcion</th>
+                                <th class="text-center">Base</th>
+                                <th class="text-center">%</th>
+                                <th class="text-center">Valor</th>
+                                </thead>
+                                @foreach($pago->orden_pago->descuentos as $descuento)
+                                    <tr>
+                                        @if($descuento->desc_municipal_id != null)
+                                            <td>{{ $descuento->descuento_mun['codigo'] }}</td>
+                                            <td>{{ $descuento->descuento_mun['concepto'] }}</td>
+                                            <td>$ <?php echo number_format($pago->orden_pago->valor - $pago->orden_pago->iva,0);?></td>
+                                            @if($descuento->descuento_mun['id'] == 5)
+                                                <td>7 X 1000</td>
+                                            @else
+                                                <td>{{ $descuento->descuento_mun['tarifa'] }}</td>
+                                            @endif
+                                        @elseif($descuento->retencion_fuente_id != null)
+                                            <td>{{ $descuento->descuento_retencion->codigo}}</td>
+                                            <td>{{ $descuento->descuento_retencion->concepto }}</td>
+                                            <td>$ <?php echo number_format($pago->orden_pago->valor - $pago->orden_pago->iva,0);?></td>
+                                            <td>{{ $descuento->descuento_retencion->tarifa }}</td>
                                         @else
-                                            <td>{{ $descuento->descuento_mun['tarifa'] }}</td>
+                                            <td>{{ $descuento->puc->code}}</td>
+                                            <td>{{ $descuento->puc->concepto}}</td>
+                                            <td></td>
+                                            <td></td>
                                         @endif
-                                    @elseif($descuento->retencion_fuente_id != null)
-                                        <td>{{ $descuento->descuento_retencion->codigo}}</td>
-                                        <td>{{ $descuento->descuento_retencion->concepto }}</td>
-                                        <td>$ <?php echo number_format($pago->orden_pago->valor - $pago->orden_pago->iva,0);?></td>
-                                        <td>{{ $descuento->descuento_retencion->tarifa }}</td>
-                                    @else
-                                        <td>{{ $descuento->puc->code}}</td>
-                                        <td>{{ $descuento->puc->concepto}}</td>
-                                        <td></td>
-                                        <td></td>
-                                    @endif
-                                    <td>$ <?php echo number_format($descuento['valor'],0);?></td>
-                                </tr>
-                            @endforeach
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <div class="text-center" id="buttonAddActividad">
-                            <button type="button" @click.prevent="nuevaFilaDescMuni" class="btn btn-sm btn-primary">AGREGAR DESCUENTO MUNICIPAL</button>
+                                        <td>$ <?php echo number_format($descuento['valor'],0);?></td>
+                                    </tr>
+                                @endforeach
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div class="text-center" id="buttonAddActividad">
+                                <button type="button" @click.prevent="nuevaFilaDescMuni" class="btn btn-sm btn-primary">AGREGAR DESCUENTO MUNICIPAL</button>
+                            </div>
+                            <br>
                         </div>
-                        <br>
-                    </div>
+                    @endif
 
                     <input type="hidden" name="ordenPago_id" value="{{ $pago->orden_pago->id }}">
                     <input type="hidden" name="pago_id" value="{{ $pago->id }}">

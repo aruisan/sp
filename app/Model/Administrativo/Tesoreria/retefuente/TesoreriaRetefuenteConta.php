@@ -12,4 +12,9 @@ class TesoreriaRetefuenteConta extends Model implements Auditable
     public function puc(){
         return $this->belongsTo('App\Model\Administrativo\Contabilidad\PucAlcaldia','cuenta_puc_id');
     }
+
+    public function persona()
+    {
+        return $this->hasOne('App\Model\Persona','id','persona_id');
+    }
 }

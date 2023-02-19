@@ -45,7 +45,7 @@
 					@endforeach
 					<tr>
 						<td class="text-center" colspan="2"><b>TOTAL A PAGAR</b></td>
-						<td class="text-center"><b>$ <?php echo number_format($pago->pago,0);?></b></td>
+						<td class="text-center"><b>$ <?php echo number_format($pago->valor,0);?></b></td>
 					</tr>
 					</tbody>
 				</table>
@@ -74,16 +74,20 @@
 							<td>$ <?php echo number_format($pago->contas[$z]['credito'],0);?></td>
 						</tr>
 					@endfor
-					<tr class="text-center">
-						<td>{{$pago->puc->code}}</td>
-						<td>{{$pago->puc->concepto}}</td>
-						<td>$ 0</td>
-						<td>$ <?php echo number_format($pago->pago,0);?></td>
-					</tr>
+					@if($pago->egreso)
+						@for($y = 0; $y < count($banks); $y++)
+							<tr class="text-center">
+								<td>{{ $banks[$y]->data_puc->code }}</td>
+								<td>{{ $banks[$y]->data_puc->concepto }}</td>
+								<td>0$</td>
+								<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
+							</tr>
+						@endfor
+					@endif
 					<tr class="text-center">
 						<td colspan="2"><b>SUMAS IGUALES</b></td>
 						<td><b>$ <?php echo number_format($pago->contas->sum('debito'),0);?></b></td>
-						<td><b>$ <?php echo number_format($pago->pago + $pago->contas->sum('credito'),0);?></b></td>
+						<td><b>$ <?php echo number_format($banks->sum('valor'),0);?></b></td>
 					</tr>
 					</tbody>
 				</table>

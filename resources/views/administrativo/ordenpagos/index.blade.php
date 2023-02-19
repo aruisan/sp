@@ -94,6 +94,7 @@
                             <th class="text-center">Concepto</th>
                             <th class="text-center">Tercero</th>
                             <th class="text-center">Valor</th>
+                            <th class="text-center">Saldo</th>
                             <th class="text-center">Estado</th>
                             <th class="text-center">Acciones</th>
                         </tr>
@@ -105,6 +106,7 @@
                                 <td>{{ $ordenPago['info']['nombre'] }}</td>
                                 <td>{{ $ordenPago['tercero'] }}</td>
                                 <td>$<?php echo number_format($ordenPago['info']['valor'],0) ?></td>
+                                <td>$<?php echo number_format($ordenPago['info']['saldo'],0) ?></td>
                                 <td>
                                     <span class="badge badge-pill badge-danger">
                                         @if($ordenPago['info']['estado'] == "0")
@@ -117,7 +119,9 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPago['info']['id']) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                    @if(isset($ordenPago['info']->registros->cdpsRegistro))
+                                        <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPago['info']['id']) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                    @endif
                                     @if($ordenPago['info']['estado'] == "1")
                                         <a href="{{ url('administrativo/ordenPagos/pdf/'.$ordenPago['info']['id']) }}" title="Orden de Pago" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif

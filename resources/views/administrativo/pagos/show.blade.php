@@ -12,12 +12,12 @@
         <div class="col-lg-12">
             <ul class="nav nav-pills">
                 @if($pago->estado == 1)
-                    <li class="nav-item regresar"> <a class="nav-link" href="{{ url('/administrativo/pagos/'.$pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id) }}">Volver a Pagos</a></li>
+                    <li class="nav-item regresar"> <a class="nav-link" href="{{ url('/administrativo/pagos/'.$vigencia_id) }}">Volver a Pagos</a></li>
                     <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Pago {{ $pago->code }}</a></li>
                     <li class="nav-item pillPri"> <a class="tituloTabs" target="_blank" href="{{ url('/administrativo/ordenPagos/pdf/'.$ordenPago->id) }}"><i class="fa fa-file-pdf-o"></i>&nbsp; Orden de Pago</a></li>
                     <li class="nav-item pillPri"> <a class="tituloTabs" target="_blank" href="{{ url('/administrativo/egresos/pdf/'.$pago->id) }}"><i class="fa fa-file-pdf-o"></i>&nbsp; Comprobante de Egresos</a></li>
                 @else
-                    <li class="nav-item regresar"> <a class="nav-link" href="{{ url('/administrativo/pagos/'.$pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id) }}">Volver a Pagos</a></li>
+                    <li class="nav-item regresar"> <a class="nav-link" href="{{ url('/administrativo/pagos/'.$vigencia_id) }}">Volver a Pagos</a></li>
                     <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Pago {{ $pago->code }}</a></li>
                     <li class="nav-item"> <a href="{{ url('/administrativo/pagos/asignacion/'.$pago->id) }}" class="tituloTabs">Asignación de Monto</a></li>
                     <li class="nav-item"> <a href="{{ url('/administrativo/pagos/banks/'.$pago->id) }}" class="tituloTabs">Bancos</a></li>
@@ -39,18 +39,24 @@
                                             <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $pago->concepto }}">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="valor">Registro:</label>
-                                        <div class="col-lg-6">
-                                            <input type="text" disabled class="form-control" style="text-align:center" name="valor" value="{{ $ordenPago->registros->objeto }}">
+                                    @if(isset($ordenPago->registros))
+                                        <div class="form-group">
+                                            <label class="control-label text-right col-md-4" for="valor">Registro:</label>
+                                            <div class="col-lg-6">
+                                                <input type="text" disabled class="form-control" style="text-align:center" name="valor" value="{{ $ordenPago->registros->objeto }}">
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
                                 <div class="col-md-6 align-self-center">
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="nombre">Tercero:</label>
                                         <div class="col-lg-6">
-                                            <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $pago->persona->nombre }}">
+                                            @if(isset($ordenPago->registros))
+                                                <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $pago->persona->nombre }}">
+                                            @else
+                                                <input type="text" disabled class="form-control" name="name" style="text-align:center" value="DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN">
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="form-group">

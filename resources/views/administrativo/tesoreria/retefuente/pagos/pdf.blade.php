@@ -37,22 +37,30 @@
 				@endforeach
 				<tr>
 					<td class="text-center" colspan="2"><b>TOTAL A PAGAR</b></td>
-					<td class="text-center"><b>$ <?php echo number_format($pago->pago,0);?></b></td>
+					<td class="text-center"><b>$ <?php echo number_format($pago->valor,0);?></b></td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
-		<div class="table-responsive" style="width: 100%">
-			<table class="table table-bordered" id="tablaP">
+		<div style="width: 100%">
+			<table class="table table-condensed" id="tablaP">
 				<thead>
 				<tr>
-					<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
+					@if($pago->puc)
+					<th class="text-center" colspan="6" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
+					@else
+						<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
+					@endif
 				</tr>
 				<tr>
-					<th class="text-center">Codigo</th>
-					<th class="text-center">Nombre Cuenta</th>
-					<th class="text-center">Debito</th>
-					<th class="text-center">Credito</th>
+					<th class="text-center">CODIGO</th>
+					<th class="text-center">CUENTA</th>
+					<th class="text-center">DEBITO</th>
+					@if($pago->puc)
+						<th class="text-center">CREDITO</th>
+					@endif
+					<th class="text-center">NIT / CED</th>
+					<th class="text-center">TERCERO</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -61,20 +69,33 @@
 						<td>{{$pago->contas[$z]->puc->code}}</td>
 						<td>{{$pago->contas[$z]['concepto']}}</td>
 						<td>$ <?php echo number_format($pago->contas[$z]['debito'],0);?></td>
-						<td>$ <?php echo number_format($pago->contas[$z]['credito'],0);?></td>
+						@if($pago->puc)
+							<td>$ <?php echo number_format($pago->contas[$z]['credito'],0);?></td>
+						@endif
+						<td>{{$pago->contas[$z]->persona->num_dc}}</td>
+						<td>{{$pago->contas[$z]->persona->nombre}}</td>
 					</tr>
 				@endfor
-				<tr class="text-center">
-					<td>{{$pago->puc->code}}</td>
-					<td>{{$pago->puc->concepto}}</td>
-					<td>$ 0</td>
-					<td>$ <?php echo number_format($pago->pago,0);?></td>
-				</tr>
-				<tr class="text-center">
-					<td colspan="2">SUMAS IGUALES</td>
-					<td>$ <?php echo number_format($pago->contas->sum('debito'),0);?></td>
-					<td>$ <?php echo number_format($pago->pago + $pago->contas->sum('credito'),0);?></td>
-				</tr>
+				@if($pago->puc)
+					<tr class="text-center">
+						<td>{{$pago->puc->code}}</td>
+						<td>{{$pago->puc->concepto}}</td>
+						<td>$ 0</td>
+						<td>$ <?php echo number_format($pago->pago,0);?></td>
+					</tr>
+					<tr class="text-center">
+						<td colspan="2">SUMAS IGUALES</td>
+						<td>$ <?php echo number_format($pago->contas->sum('debito'),0);?></td>
+						<td>$ <?php echo number_format($pago->pago + $pago->contas->sum('credito'),0);?></td>
+					</tr>
+				@else
+					<tr class="text-center">
+						<td colspan="2">TOTAL</td>
+						<td>$ <?php echo number_format($pago->contas->sum('debito'),0);?></td>
+						<td></td>
+						<td></td>
+					</tr>
+				@endif
 				</tbody>
 			</table>
 		</div>

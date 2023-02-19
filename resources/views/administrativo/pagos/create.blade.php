@@ -18,6 +18,7 @@
                     <hr>
                     {{ csrf_field() }}
                     <div class="col-md-12 text-center">
+                        <input type="hidden" name="vigencia_id" id="vigencia_id" value="{{ $id }}">
                         <h2 class="tituloPago">Seleccione la orden de pago correspondiente:</h2>
                     </div>
                     <div class="col-md-12 text-center">
@@ -41,12 +42,18 @@
                                 </thead>
                                 <tbody>
                                 @foreach ($ordenPagos as $key => $data)
+                                    @if(isset($data['info']->registros))
+                                        @php($personaName = $data['info']->registros->persona->nombre)
+                                    @else
+                                        @php($personaName = $data['persona'])
+                                    @endif
+
                                     <?php $desc = $data['info']->valor - $data['info']->descuentos->sum('valor');?>
-                                    <tr onclick="ver('col{{$data['info']->id}}','Obj{{$data['info']->nombre}}','Name{{$data['info']->registros->persona->nombre}}','Val{{$data['info']->saldo}}','ValTo{{$data['info']->valor}}','Iva{{$data['info']->iva}}','Desc{{$desc}}');" style="cursor:pointer">
+                                    <tr onclick="ver('col{{$data['info']->id}}','Obj{{$data['info']->nombre}}','Name{{$personaName}}','Val{{$data['info']->saldo}}','ValTo{{$data['info']->valor}}','Iva{{$data['info']->iva}}','Desc{{$desc}}');" style="cursor:pointer">
                                         <td id="col{{$data['info']->id}}" class="text-center hidden">{{ $data['info']->id }}</td>
                                         <td class="text-center">{{ $data['info']->code}}</td>
                                         <td id="Obj{{$data['info']->nombre}}" class="text-center">{{ $data['info']->nombre }}</td>
-                                        <td id="Name{{$data['info']->registros->persona->nombre}}" class="text-center">{{ $data['info']->registros->persona->nombre }}</td>
+                                        <td id="Name{{$personaName}}" class="text-center">{{ $personaName }}</td>
                                         <td class="text-center">$<?php echo number_format($data['info']->saldo,0) ?></td>
                                         <td class="text-center">$<?php echo number_format($data['info']->saldo,0) ?></td>
                                         <td id="Val{{$data['info']->saldo}}" class="text-center hidden">{{ $data['info']->saldo }}</td>

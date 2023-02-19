@@ -25,7 +25,7 @@
                             <th class="text-center">#</th>
                             <th class="text-center">Mes</th>
                             <th class="text-center">Valor</th>
-                            <th class="text-center">Fecha Pago</th>
+                            <th class="text-center">Fecha</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                         </thead>
@@ -34,11 +34,17 @@
                             <tr>
                                 <td class="text-center">{{ $pago->id }}</td>
                                 <td class="text-center">{{ $pago->mes }}</td>
-                                <td class="text-center">$ <?php echo number_format($pago->pago,0);?></td>
+                                <td class="text-center">$ <?php echo number_format($pago->valor,0);?></td>
                                 <td class="text-center"> {{ \Carbon\Carbon::parse($pago->created_at)->format('d-m-Y H:i:s') }}</td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/tesoreria/retefuente/viewpago/'.$pago->id.'/view') }}" title="Ver Pago" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                    <a href="{{ url('administrativo/tesoreria/retefuente/PDFpago/'.$pago->id.'/PDF') }}" target="_blank" title="Ver PDF" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                    <a href="{{ url('administrativo/tesoreria/retefuente/PDFpago/'.$pago->id.'/PDF') }}" target="_blank" title="Comprobante Contable" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                    <a href="{{ url('administrativo/ordenPagos/pdf/'.$pago->orden_pago_id) }}" title="Orden de Pago" class="btn-sm btn-primary" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+                                    @if($pago->egreso)
+                                        @if($pago->egreso['estado'] == '1')
+                                            <a href="{{ url('/administrativo/egresos/pdf/'.$pago->egreso['id']) }}" title="Comprobante de Egresos" class="btn-sm btn-primary" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+                                        @endif
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
