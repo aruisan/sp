@@ -487,7 +487,7 @@
             document.getElementById('totIngreGravables').value = value;
 
             var num7 = document.getElementById("tarifa").value;
-            var impIyCo = (value * num7)/100;
+            var impIyCo = (value * num7)/1000;
             if(impIyCo < 0) impIyCo = 0;
             document.getElementById('impIndyComSpan').innerHTML = formatter.format(impIyCo);
             document.getElementById('impIndyCom').value = impIyCo;

@@ -116,19 +116,19 @@ class IcaController extends Controller
                 $request->menosIngreOtrasActiv - $request->menosIngreActivExcentes;
             $ICA->codClasiMuni = $request->codClasiMuni;
             $ICA->tarifa = $request->tarifa;
-            $ICA->impIndyCom = $ICA->totIngreGravables * $ICA->tarifa / 100;
+            $ICA->impIndyCom = $ICA->totIngreGravables * $ICA->tarifa / 1000;
             $ICA->codClasiMuni2 = $request->codClasiMuni2;
             $ICA->ingreGravados2 = $request->ingreGravados2;
             $ICA->tarifa2 = $request->tarifa2;
-            $ICA->impIndyCom2 = $ICA->ingreGravados2 * $ICA->tarifa2 / 100;
+            $ICA->impIndyCom2 = $ICA->ingreGravados2 * $ICA->tarifa2 / 1000;
             $ICA->codClasiMuni3 = $request->codClasiMuni3;
             $ICA->ingreGravados3 = $request->ingreGravados3;
             $ICA->tarifa3 = $request->tarifa3;
-            $ICA->impIndyCom3 = $ICA->ingreGravados3 * $ICA->tarifa3 / 100;
+            $ICA->impIndyCom3 = $ICA->ingreGravados3 * $ICA->tarifa3 / 1000;
             $ICA->codClasiMuni4 = $request->codClasiMuni4;
             $ICA->ingreGravados4 = $request->ingreGravados4;
             $ICA->tarifa4 = $request->tarifa4;
-            $ICA->impIndyCom4 = $ICA->ingreGravados4 * $ICA->tarifa4 / 100;
+            $ICA->impIndyCom4 = $ICA->ingreGravados4 * $ICA->tarifa4 / 1000;
             $ICA->codClasiMuni5 = $request->codClasiMuni5;
             $ICA->ingreGravados5 = $request->ingreGravados5;
             $ICA->totIngreGravado = $ICA->totIngreGravables + $ICA->ingreGravados2 + $ICA->ingreGravados3 +
@@ -202,19 +202,19 @@ class IcaController extends Controller
                 $request->menosIngreOtrasActiv - $request->menosIngreActivExcentes;
             $ICA->codClasiMuni = $request->codClasiMuni;
             $ICA->tarifa = $request->tarifa;
-            $ICA->impIndyCom = $ICA->totIngreGravables * $ICA->tarifa / 100;
+            $ICA->impIndyCom = $ICA->totIngreGravables * $ICA->tarifa / 1000;
             $ICA->codClasiMuni2 = $request->codClasiMuni2;
             $ICA->ingreGravados2 = $request->ingreGravados2;
             $ICA->tarifa2 = $request->tarifa2;
-            $ICA->impIndyCom2 = $ICA->ingreGravados2 * $ICA->tarifa2 / 100;
+            $ICA->impIndyCom2 = $ICA->ingreGravados2 * $ICA->tarifa2 / 1000;
             $ICA->codClasiMuni3 = $request->codClasiMuni3;
             $ICA->ingreGravados3 = $request->ingreGravados3;
             $ICA->tarifa3 = $request->tarifa3;
-            $ICA->impIndyCom3 = $ICA->ingreGravados3 * $ICA->tarifa3 / 100;
+            $ICA->impIndyCom3 = $ICA->ingreGravados3 * $ICA->tarifa3 / 1000;
             $ICA->codClasiMuni4 = $request->codClasiMuni4;
             $ICA->ingreGravados4 = $request->ingreGravados4;
             $ICA->tarifa4 = $request->tarifa4;
-            $ICA->impIndyCom4 = $ICA->ingreGravados4 * $ICA->tarifa4 / 100;
+            $ICA->impIndyCom4 = $ICA->ingreGravados4 * $ICA->tarifa4 / 1000;
             $ICA->codClasiMuni5 = $request->codClasiMuni5;
             $ICA->ingreGravados5 = $request->ingreGravados5;
             $ICA->totIngreGravado = $ICA->totIngreGravables + $ICA->ingreGravados2 + $ICA->ingreGravados3 +
