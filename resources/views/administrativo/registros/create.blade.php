@@ -211,6 +211,55 @@
             input.value = result;
         }
 
+        var visto = null;
+
+        function ver(num) {
+            obj = document.getElementById(num);
+            obj.style.display = (obj==visto) ? 'none' : '';
+            if (visto != null)
+                visto.style.display = 'none';
+            visto = (obj==visto) ? null : obj;
+        }
+
+        $(document).ready(function() {
+
+            new Vue({
+                el: '#prog',
+
+                methods:{
+
+                    nuevaFilaPrograma: function(){
+                        $('#tabla_rubrosCdp tbody tr:last').after('<tr>\n' +
+                            '                <td class="text-center">\n' +
+                            '                    <select name="cdp_id[]" class="form-control selectF" required>\n' +
+                            '                        @foreach($cdps as $cdp)\n' +
+                            '                            <option value="{{ $cdp["id"] }}">{{ $cdp["code"] }} - {{ $cdp["name"] }}</option>\n' +
+                            '                        @endforeach\n' +
+                            '                    </select>\n' +
+                            '                </td>\n' +
+                            '                <td class="text-center"><button type="button" class="btn-sm btn-danger borrar">&nbsp;-&nbsp; </button></td>\n' +
+                            '            </tr>');
+
+                    }
+                }
+            });
+
+            $('.selectF').select2();
+
+            $('#tabla_rubrosCdp').DataTable( {
+                responsive: true,
+                "searching": false,
+                "ordering" : false
+            } );
+
+
+            $(document).on('click', '.borrar', function (event) {
+                event.preventDefault();
+                $(this).closest('tr').remove();
+            });
+
+        } );
+
 
     </script>
 @stop
