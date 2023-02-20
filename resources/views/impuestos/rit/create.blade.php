@@ -460,7 +460,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td style="vertical-align: middle"></td>
+                                            <td style="vertical-align: middle"><button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button></td>
                                             <td style="vertical-align: middle"><input type="text" class="form-control" name="nombre[]" required></td>
                                             <td style="vertical-align: middle"><input type="text" class="form-control" name="matMercantil[]" required></td>
                                             <td style="vertical-align: middle"><input type="number" class="form-control" name="telefono[]" required></td>
