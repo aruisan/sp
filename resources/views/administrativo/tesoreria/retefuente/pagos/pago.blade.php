@@ -167,8 +167,8 @@
 
 			var total = parseInt(valueP) + parseInt(valueMulta);
 
-			document.getElementById('valorPago').value = parseInt(total);
-			document.getElementById('valorPagoSpan').innerHTML = '$ '+total;
+			//document.getElementById('valorPago').value = parseInt(total);
+			//document.getElementById('valorPagoSpan').innerHTML = '$ '+total;
 		}
 
 		function add(accumulator, a) {
