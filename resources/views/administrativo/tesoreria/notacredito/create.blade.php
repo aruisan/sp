@@ -51,6 +51,12 @@
                                         <label class="col-lg-4 col-form-label text-right" for="tipo">Tipo <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
                                             <select class="form-control" name="tipoCI" id="tipoCI" onchange="cambioTipo(this.value)">
+                                                <option value="Nota Debito">Nota Debito</option>
+                                                <option value="Nota Credito">Nota Credito</option>
+                                                <option value="Consignacion">Consignacion</option>
+                                                <option value="Transferencia">Transferencia</option>
+                                                <option value="Ingreso sin identificar">Ingreso sin identificar</option>
+                                                <option value="Impuestos">Impuestos</option>
                                                 <option value="SGP Salud">SGP Salud</option>
                                                 <option value="SGP Educacion">SGP Educacion</option>
                                                 <option value="SGP Otros sectores">SGP Otros sectores</option>

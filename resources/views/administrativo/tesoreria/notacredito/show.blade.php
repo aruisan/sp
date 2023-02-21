@@ -49,6 +49,12 @@
                                     <label class="col-lg-4 col-form-label text-right" for="tipo">Tipo <span class="text-danger">*</span></label>
                                     <div class="col-lg-6">
                                         <select class="form-control" name="tipoCI" id="tipoCI" onchange="cambioTipo(this.value)">
+                                            <option value="Nota Debito" @if($notaCredito->tipo == 'Nota Debito') selected @endif>Nota Debito</option>
+                                            <option value="Nota Credito" @if($notaCredito->tipo == 'Nota Credito') selected @endif>Nota Credito</option>
+                                            <option value="Consignacion" @if($notaCredito->tipo == 'Consignacion') selected @endif>Consignacion</option>
+                                            <option value="Transferencia" @if($notaCredito->tipo == 'Transferencia') selected @endif>Transferencia</option>
+                                            <option value="Ingreso sin indetificar" @if($notaCredito->tipo == 'Ingreso sin identificar') selected @endif>Ingreso sin identificar</option>
+                                            <option value="Impuestos" @if($notaCredito->tipo == 'Impuestos') selected @endif>Impuestos</option>
                                             <option value="SGP Salud" @if($notaCredito->tipo == 'SGP Salud') selected @endif>SGP Salud</option>
                                             <option value="SGP Educacion" @if($notaCredito->tipo == 'SGP Educacion') selected @endif>SGP Educacion</option>
                                             <option value="SGP Otros sectores" @if($notaCredito->tipo == 'SGP Otros sectores') selected @endif>SGP Otros sectores</option>
