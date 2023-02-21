@@ -115,7 +115,18 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
                       @if(Auth::guest())
                         <a data-toggle="modal" data-target="#modal-ingresar"><b>Entrar</b></a></li>
                       @else
-                        <a href="{{url('/dashboard')}}"><b>Plataforma</b></a></li>
+                        <a href="{{url('/dashboard')}}"><b>Plataforma</b></a>
+                          <li class="page-scroll">
+                              <a  href="{{ route('logout') }}"
+                                 onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                  <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                  Cerrar Sesión
+                              </a>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  {{ csrf_field() }}
+                              </form>
+                          </li>
                       @endif
                     <li>
                         <input type="text" class="form-control" placeholder="Buscar" style="margin-top: 7px; border-radius:20px;">
