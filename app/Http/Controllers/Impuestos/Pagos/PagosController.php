@@ -239,6 +239,12 @@ class PagosController extends Controller
                 if ($impPago->download > 0){
                     $pred = Predial::find($impPago->entity_id);
                     $contri = PredialContribuyentes::find($pred->imp_pred_contri_id);
+                    $morePropie = PredialContribuyentes::where('numCatastral', $contri->numCatastral)->get();
+                    if (count($morePropie) > 1){
+                        foreach ($morePropie as $propie) {
+                            if ($propie->id != $contri->id) $contri->contribuyente = $contri->contribuyente.' - '.$propie->contribuyente;
+                        }
+                    }
 
                     $declaFecha = Carbon::parse($impPago->fechaCreacion);
                     $fechaDeclaracion = Carbon::createFromTimeString($declaFecha);

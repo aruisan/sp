@@ -71,15 +71,14 @@
 	<div class="row">
 		<center><h3><b>PAZ Y SALVO {{ $impPago->modulo }} No. {{ $pazysalvo->numForm }}</b></h3></center>
 		<center><h3><b>EL SUSCRITO TESORERO MUNICIPAL DE PROVIDENCIA Y SANTA CATALINA, ISLAS</b></h3></center>
-		<br><br>
+		<br>
 	</div>
 	<div>
 		<center>
 			<h3>CERTIFICA</h3>
-			<br>
 			<h4>Que el predio que se especifica a continuación se encuentra a PAZ Y SALVO por concepto de pago del impuesto
 				predial unificado hasta el 31 de diciembre de {{ \Carbon\Carbon::today()->format('Y') }}, y se expide a solicitud del interesado.</h4>
-			<br><br><br>
+			<br><br>
 		</center>
 		<h4>
 			Ficha catastral No. {{ $contri->numCatastral }} <br>
