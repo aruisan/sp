@@ -104,13 +104,15 @@ class PresupuestoController extends Controller
                                                                 $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                                 if ($red) $hijosReduccion[] = $red->valor;
                                                                 else $hijosReduccion[] = 0;
+
+                                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
                                                             }
 
                                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                             if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                             $sum[] = $rubro[0]->fontsRubro->sum('valor');
-                                                            if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
+
                                                         } else {
                                                             foreach ($rubro as $rb){
 
@@ -127,13 +129,14 @@ class PresupuestoController extends Controller
                                                                     $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                                     if ($red) $hijosReduccion[] = $red->valor;
                                                                     else $hijosReduccion[] = 0;
+
+                                                                    if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
                                                                 }
 
                                                                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                                 if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                                 $sum[] = $rb->fontsRubro->sum('valor');
-                                                                if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                                             }
                                                         }
                                                     }
@@ -157,13 +160,14 @@ class PresupuestoController extends Controller
                                                             $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                             if ($red) $hijosReduccion[] = $red->valor;
                                                             else $hijosReduccion[] = 0;
+
+                                                            if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
                                                         }
 
                                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                         if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                         $sum[] = $rubro[0]->fontsRubro->sum('valor');
-                                                        if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                                     } else {
                                                         foreach ($rubro as $rb){
 
@@ -180,13 +184,14 @@ class PresupuestoController extends Controller
                                                                 $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                                 if ($red) $hijosReduccion[] = $red->valor;
                                                                 else $hijosReduccion[] = 0;
+
+                                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
                                                             }
 
                                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                             if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                             $sum[] = $rb->fontsRubro->sum('valor');
-                                                            if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                                         }
                                                     }
                                                 }
@@ -210,14 +215,14 @@ class PresupuestoController extends Controller
                                                     $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                     if ($red) $hijosReduccion[] = $red->valor;
                                                     else $hijosReduccion[] = 0;
+
+                                                    if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
                                                 }
 
                                                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                 if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                 $sum[] = $rubro[0]->fontsRubro->sum('valor');
-                                                if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
-
                                             } else {
                                                 foreach ($rubro as $rb){
                                                     //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
@@ -233,13 +238,14 @@ class PresupuestoController extends Controller
                                                         $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                         if ($red) $hijosReduccion[] = $red->valor;
                                                         else $hijosReduccion[] = 0;
+
+                                                        if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
                                                     }
 
                                                     if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                     if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                     $sum[] = $rb->fontsRubro->sum('valor');
-                                                    if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                                 }
                                             }
                                         }
@@ -262,6 +268,8 @@ class PresupuestoController extends Controller
                                             $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                             if ($red) $hijosReduccion[] = $red->valor;
                                             else $hijosReduccion[] = 0;
+
+                                            if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
                                         }
 
                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -269,9 +277,6 @@ class PresupuestoController extends Controller
 
                                         // VALIDACION PARA EL VALOR INICIAL DE LOS RUBROS PADRES
                                         $sum[] = $rubro[0]->fontsRubro->sum('valor');
-
-                                        //VALIDACION PARA LOS VALORES DE LOS COMPROBANTES DE INGRESOS DE LOS PADRES
-                                        if (count($rubro[0]->compIng) > 0) $civ[] = $rubro[0]->compIng->sum('valor');
                                     } else {
                                         foreach ($rubro as $rb){
                                             //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
@@ -287,6 +292,8 @@ class PresupuestoController extends Controller
                                                 $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                                 if ($red) $hijosReduccion[] = $red->valor;
                                                 else $hijosReduccion[] = 0;
+
+                                                if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
                                             }
 
                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -294,9 +301,6 @@ class PresupuestoController extends Controller
 
                                             // VALIDACION PARA EL VALOR INICIAL DE LOS RUBROS PADRES
                                             $sum[] = $rb->fontsRubro->sum('valor');
-
-                                            //VALIDACION PARA LOS VALORES DE LOS COMPROBANTES DE INGRESOS DE LOS PADRES
-                                            if (count($rb->compIng) > 0) $civ[] = $rb->compIng->sum('valor');
                                         }
                                     }
                                 }

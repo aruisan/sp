@@ -51,6 +51,7 @@ class ComprobanteIngresosController extends Controller
         $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
         $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
         $rubI = Rubro::where('vigencia_id', $vigencia->id)->orderBy('cod','ASC')->get();
+
         foreach ($rubI as $rub){
             foreach ($rub->fontsRubro as $fuente){
                 $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
@@ -105,7 +106,7 @@ class ComprobanteIngresosController extends Controller
         $comprobante->save();
 
         Session::flash('success','El comprobante de ingreso se ha creado exitosamente');
-        return redirect('/administrativo/CIngresos/show/'.$comprobante->id);
+        return redirect('/administrativo/CIngresos/'.$request->vigencia_id);
     }
 
     /**

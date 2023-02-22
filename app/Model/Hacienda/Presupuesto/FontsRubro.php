@@ -38,4 +38,8 @@ class FontsRubro extends Model implements Auditable
     public function dependenciaFont(){
         return $this->hasMany('App\Model\Admin\DependenciaRubroFont', 'rubro_font_id','id');
     }
+
+    public function compIng(){
+        return $this->hasMany('App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos','rubro_font_ingresos_id');
+    }
 }
