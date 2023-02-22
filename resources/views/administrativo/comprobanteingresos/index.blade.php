@@ -26,6 +26,7 @@
     <div class="tab-content" >
         <div id="tabTareas" class="tab-pane fade in active">
             <div class="table-responsive">
+                <br>
                 @if(count($CIngresos) > 0)
                     <table class="table table-bordered" id="tabla_Historico">
                         <thead>
