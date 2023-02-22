@@ -95,7 +95,7 @@
 			Valor Declaración: $<?php echo number_format($impPago->valor,0) ?> <br>
 			Avaluó Catastral: $<?php echo number_format($contri->a2023,0) ?> <br>
 			<br>
-			Costo del paz y salvo: $<?php echo number_format($pazysalvo->valor,0) ?> <br>
+			Costo del paz y salvo: $<?php echo number_format(10000,0) ?> <br>
 			Recibo de pago: {{ $pazysalvo->recibo_pago }} <br>
 			Fecha Recibo de pago: {{ $pazysalvo->fecha_pago }} <br>
 			<br>
