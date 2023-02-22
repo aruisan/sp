@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Impuestos;
 use App\Http\Controllers\Controller;
 use App\Model\Impuestos\Ciuu;
 use App\Model\Impuestos\Comunicado;
+use App\Model\Impuestos\ImpSalarioMin;
+use App\Model\Impuestos\ImpUVT;
 use App\Model\Impuestos\PredialContribuyentes;
 use App\Model\User;
 use Illuminate\Http\Request;
@@ -39,8 +41,12 @@ class ImpuestosController extends Controller
         $numComunicados = $comunicados->count();
         $rit = $user->rit;
         $contribuyente = PredialContribuyentes::where('email',$user->email)->get();
+        $añoActual = Carbon::today()->format('Y');
+        $uvt = ImpUVT::where('año', $añoActual)->first();
+        $sml = ImpSalarioMin::whereBetween('fecha',array($añoActual.'-01-01', $añoActual.'-12-31'))->first();
 
-        return view('impuestos.menu',compact('rit', 'numComunicados', 'contribuyente'));
+        return view('impuestos.menu',compact('rit', 'numComunicados', 'contribuyente','uvt',
+        'sml','añoActual'));
     }
 
     /**

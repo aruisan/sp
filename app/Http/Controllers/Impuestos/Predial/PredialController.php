@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Impuestos\Predial;
 
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\ImpuestosPredial\Liquidador;
+use App\Model\Impuestos\ImpPredUVT;
+use App\Model\Impuestos\ImpSalarioMin;
+use App\Model\Impuestos\ImpUVT;
 use App\Model\Impuestos\Pagos;
 use App\Model\Impuestos\Predial;
 use App\Model\Impuestos\PredialCalendario;
@@ -43,38 +46,46 @@ class PredialController extends Controller
         $contribuyente = PredialContribuyentes::where('email',$user->email)->get();
         $predios = $contribuyente;
         $añoActual = Carbon::today()->format('Y');
-        if (count($contribuyente) == 0){
-            Session::flash('warning', 'No se encuentra información del usuario almacenada en el sistema - Contacte con un funcionario.');
-            return back();
-        } else{
-            foreach ($contribuyente as $contri){
-                $impHechos = Predial::where('imp_pred_contri_id', $contri->id)->get();
-                foreach ($impHechos as $impHecho){
-                    if (Carbon::parse($impHecho->fechaPago)->format('Y') == $añoActual) $hechos[] = $contri->id;
+        $uvt = ImpUVT::where('año', $añoActual)->first();
+        $sml = ImpSalarioMin::whereBetween('fecha',array($añoActual.'-01-01', $añoActual.'-12-31'))->first();
+        if ($uvt){
+            if (count($contribuyente) == 0){
+                Session::flash('warning', 'No se encuentra información del usuario almacenada en el sistema - Contacte con un funcionario.');
+                return back();
+            } else{
+                foreach ($contribuyente as $contri){
+                    $impHechos = Predial::where('imp_pred_contri_id', $contri->id)->get();
+                    foreach ($impHechos as $impHecho){
+                        if (Carbon::parse($impHecho->fechaPago)->format('Y') == $añoActual) $hechos[] = $contri->id;
+                    }
                 }
-            }
 
-            if (isset($hechos)){
-                if (count($hechos) >= count($contribuyente)){
-                    if (count($contribuyente) == 1){
-                        Session::flash('warning', 'Ya ha realizado el impuesto predial de su predio por este año.');
-                        return back();
+                if (isset($hechos)){
+                    if (count($hechos) >= count($contribuyente)){
+                        if (count($contribuyente) == 1){
+                            Session::flash('warning', 'Ya ha realizado el impuesto predial de su predio por este año.');
+                            return back();
+                        } else{
+                            Session::flash('warning', 'Ya ha realizado el impuesto predial de sus predios por este año.');
+                            return back();
+                        }
                     } else{
-                        Session::flash('warning', 'Ya ha realizado el impuesto predial de sus predios por este año.');
-                        return back();
-                    }
-                } else{
-                    foreach ($predios as $validate){
-                        $clave = array_search($validate->id, $hechos);
-                        if ($clave === FALSE) $validatePred[] = collect($validate);
+                        foreach ($predios as $validate){
+                            $clave = array_search($validate->id, $hechos);
+                            if ($clave === FALSE) $validatePred[] = collect($validate);
+                        }
                     }
                 }
-            }
-            if (isset($validatePred)) $predios = $validatePred;
-            $contribuyente = $contribuyente[0];
+                if (isset($validatePred)) $predios = $validatePred;
+                $contribuyente = $contribuyente[0];
 
-            return view('impuestos.predial.create', compact('action','contribuyente','predios'));
+                return view('impuestos.predial.create', compact('action','contribuyente','predios','uvt','sml'));
+            }
+        } else {
+            Session::flash('warning', 'No se detecta el valor UVT para el año actual. Por favor contacte con el administrador.');
+            return back();
         }
+
     }
 
 
@@ -283,5 +294,15 @@ class PredialController extends Controller
         $pdf = PDF::loadView('impuestos.predial.pdf', compact('contribuyente','predial','liquidacion','pago', 'totImpPredial',
         'totImpAdi', 'totIntPred', 'newValue','numFacturaCodebar'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
+    }
+
+    /**
+     * Get value UVT
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uvt(Request $request){
+        return ImpPredUVT::where('año', Carbon::today()->format('Y'))->get();
     }
 }

@@ -79,6 +79,15 @@
                     <tr><td><a href="impuestos/download/ACUERDO 015 - ESTATUTO DE RENTAS[1] 2022 NUEVO.pdf"><i class="fa fa-file-pdf-o"></i> NUEVO ESTATUTO</a></td></tr>
                     </tbody>
                 </table>
+                <br>
+                <h3>Valores de Ayuda {{ $añoActual }}</h3>
+                <table class="table">
+                    <tbody>
+                        <tr><td><b>UVT: $<?php echo number_format($uvt->valor,0) ?></b></td></tr>
+                        <tr><td><b>Salario Minimo: $<?php echo number_format($sml->valor,0) ?></b></td></tr>
+                        <tr><td><script src="https://www.dolar-colombia.com/widget.js?t=2&c=1"></script></td></tr>
+                    </tbody>
+                </table>
             </div>
             @if($rit)
                 @if($rit->opciondeUso == "Cancelación")

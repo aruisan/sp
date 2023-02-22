@@ -3,6 +3,8 @@
 @section('content')
     @include('modal.impuestos.constanciapagoadmin')
     @include('modal.impuestos.pazysalvo')
+    @include('modal.impuestos.sml')
+    @include('modal.impuestos.uvt')
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Administracion de Impuestos</b></h4>
@@ -14,6 +16,13 @@
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabPagos">Pagos</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabRIT">RIT</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabComunicados">Comunicados</a></li>
+        <li class="dropdown-submenu">
+            <a class="dropdown-item item-menu"><i class="fa fa-cogs"></i></a>
+            <ul class="dropdown-menu">
+                <li><a class="item-menu" style="cursor: pointer" onclick="getModalSML()">SALARIO MINIMO</a></li>
+                <li><a class="item-menu" style="cursor: pointer" onclick="getModalUVT()">UVT</a></li>
+            </ul>
+        </li>
     </ul>
 
     <div class="tab-content">
@@ -261,6 +270,14 @@
                 });
             }
 
+        }
+
+        function getModalUVT(){
+            $('#formUVT').modal('show');
+        }
+
+        function getModalSML(){
+            $('#formSML').modal('show');
         }
 
         function descargarPazySalvo(evento) {

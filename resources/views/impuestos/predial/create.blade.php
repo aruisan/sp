@@ -1,6 +1,7 @@
 @extends('impuestos.layout')
 @section('container')
     <div class="container" style="background-color: white">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
             <div class="col-md-12 align-self-center">
                 <div class="breadcrumb text-center">
                     <strong>
@@ -14,6 +15,7 @@
                         <form class="form-valide" action="{{url('/impuestos/PREDIAL')}}" method="POST" enctype="multipart/form-data" id="formulario">
                             {{ csrf_field() }}
                             {{-- ENCABEZADO--}}
+                            <input type="hidden" name="uvt" id="uvt" value="{{$uvt->valor}}">
                             <table id="TABLA1" class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
@@ -104,6 +106,13 @@
                                             <td colspan="3">
                                                 <span id="tarifaMilSpan">5</span>
                                                 <input type="hidden" name="tarifaMil" id="tarifaMil" value="5">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Uso del Predio:</td>
+                                            <td colspan="3">
+                                                <span id="usoSpan">5</span>
+                                                <input type="hidden" name="uso" id="uso" value="5">
                                             </td>
                                         </tr>
                                         <tr>
@@ -201,6 +210,13 @@
                                             <td>
                                                 <span id="tarifaMilSpan">5</span>
                                                 <input type="hidden" name="tarifaMil" id="tarifaMil" value="5">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle">Uso del Predio:</td>
+                                            <td>
+                                                <span id="usoSpan">5</span>
+                                                <input type="hidden" name="uso" id="uso" value="5">
                                             </td>
                                         </tr>
                                         <tr>
@@ -303,12 +319,8 @@
 
         var predios = @json(count($predios))
 
-
-
         window.onload = function() {
-            if(predios == 1){
-                ShowSelected();
-            }
+            if(predios == 1) ShowSelected();
         };
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -349,11 +361,56 @@
                 document.getElementById('fechaPago').value = datos.hoy;
                 document.getElementById('fechaPagoSpan').innerHTML = datos.hoy;
                 document.getElementById('año').value = datos.deudaYear;
+                var uvtAño = document.getElementById('uvt').value;
 
                 var yearStart = parseInt(datos.deudaYear) - 1;
 
                 document.getElementById('añoInicioSpan').innerHTML = yearStart;
                 document.getElementById('añoInicio').value = yearStart;
+
+                //CALCULO DEL UVT DEL AVALUO
+                var uvtPred = parseInt(datos.a2023) / parseInt(uvtAño);
+
+                $.ajax({
+                    method: "POST",
+                    url: "/impuestos/PREDIAL/uvt",
+                    data: { "_token": $("meta[name='csrf-token']").attr("content") }
+                }).done(function(datos) {
+                    //const predUVT = datos;
+                    for (var i = 0; i < datos.length; i++) {
+                        if(datos[i]['condicion'] != null){
+                            if (datos[i]['uso'] == 1){
+                                if(uvtPred <= datos[i]['condicion']){
+                                    var uso = datos[i]['concepto'];
+                                    var tarifaxMil = datos[i]['tarifa'];
+                                    break;
+                                }
+                            } else if (datos[i]['uso'] == 2){
+                                if(uvtPred <= datos[i]['condicion'] & uvtPred >= datos[i-1]['condicion']){
+                                    var uso = datos[i]['concepto'];
+                                    var tarifaxMil = datos[i]['tarifa'];
+                                    break;
+                                }
+                            }else if(datos[i]['uso'] == 3){
+                                if( uvtPred >= datos[i]['condicion']){
+                                    var uso = datos[i]['concepto'];
+                                    var tarifaxMil = datos[i]['tarifa'];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    //SE COLOCA EL USO DEL PREDIO
+                    document.getElementById('usoSpan').innerHTML = uso;
+                    document.getElementById('uso').value = uso;
+
+                    //SE ACTUALIZA LA TARIFA POR MIL
+                    document.getElementById('tarifaMilSpan').innerHTML = tarifaxMil;
+                    document.getElementById('tarifaMil').value = tarifaxMil;
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL OBTENER LOS VALORES DEL UVT');
+                });
 
                 findTasa(datos.hoy);
                 $("#tablaMultiplePred").show();

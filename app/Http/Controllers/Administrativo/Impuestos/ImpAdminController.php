@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Administrativo\Impuestos;
 
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Impuestos\Comunicado;
+use App\Model\Impuestos\ImpSalarioMin;
+use App\Model\Impuestos\ImpUVT;
 use App\Model\Impuestos\Pagos;
 use App\Model\Impuestos\Predial;
 use App\Model\Impuestos\PredialContribuyentes;
@@ -29,13 +31,15 @@ class ImpAdminController extends Controller
         $comunicados = Comunicado::all();
         $bancos = PucAlcaldia::where('padre_id', 8)->get();
         $año = Carbon::today()->year;
+        $uvts = ImpUVT::all();
+        $smls = ImpSalarioMin::all();
         $pagosFinalizados = Pagos::where('estado','Pagado')->where('download', 1)->where('modulo','PREDIAL')->whereBetween('fechaPago',array($año.'-01-01', $año.'-12-31'))->with('user')->get();
         foreach ($pagosFinalizados as $pago){
             $pago->impPred = Predial::find($pago->entity_id);
             $pago->contribuyente = PredialContribuyentes::find($pago->impPred->imp_pred_contri_id);
         }
         return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits', 'comunicados','bancos'
-        ,'pagosFinalizados'));
+        ,'pagosFinalizados','uvts','smls'));
     }
 
     /**

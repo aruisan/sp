@@ -46,8 +46,9 @@ class MuellajeController extends Controller
      */
     public function create()
     {
+        $atraques = Muellaje::all()->unique('name');
         $responsable = Auth::user()->name.' - '.Auth::user()->email;
-        return view('administrativo.impuestos.muellaje.create', compact('responsable'));
+        return view('administrativo.impuestos.muellaje.create', compact('responsable','atraques'));
     }
 
     /**
@@ -140,37 +141,14 @@ class MuellajeController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Send Atraque
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function findAtraque($id, Request $request)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return Muellaje::find($id);
     }
 
     /**

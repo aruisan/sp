@@ -3,6 +3,7 @@
 @section('sidebar')@stop
 @section('content')
     <div class="col-md-12 align-self-center" translate="no">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <div class="col-lg-12">
             <ul class="nav nav-pills">
                 <li class="nav-item regresar">
@@ -36,6 +37,18 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            @if(count($atraques) >= 1)
+                                <div class="text-center">
+                                    Seleccione el nombre de la embarcación:
+                                    <select  class="form-control" required onchange="ShowSelected(this.value)">
+                                        <option>Seleccione Embarcación</option>
+                                        @foreach($atraques as $atraque)
+                                            <option value="{{ $atraque->id }}">{{ $atraque->name }} - bandera: {{ $atraque->bandera }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <hr>
+                            @endif
                             <table class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
@@ -48,6 +61,9 @@
                                     <td><select class="form-control" id="bandera" name="bandera">
                                             <option value="NACIONAL">NACIONAL</option>
                                             <option value="INTERNACIONAL">INTERNACIONAL</option>
+                                            <option value="NACIONAL ADZ-PVA-ADZ">NACIONAL ADZ-PVA-ADZ</option>
+                                            <option value="EXCLUIDOS FUERZAS MILITARES">EXCLUIDOS FUERZAS MILITARES</option>
+                                            <option value="EXCLUIDOS GOBIERNOS EXTRANJEROS">EXCLUIDOS GOBIERNOS EXTRANJEROS</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -197,4 +213,45 @@
             </div>
         </div>
     </div>
+@stop
+@section('js')
+    <script>
+        function ShowSelected(id) {
+            $.ajax({
+                method: "POST",
+                url: "/administrativo/impuestos/muellaje/"+id+"/find",
+                data: { "id": id, "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(data) {
+                document.getElementById('name').value = data.name;
+                document.getElementById('bandera').value = data.bandera;
+                document.getElementById('claseVehiculo').value = data.claseVehiculo;
+                document.getElementById('dirNotificacion').value = data.dirNotificacion;
+                document.getElementById('emailCap').value = data.emailCap;
+                document.getElementById('emailNaviera').value = data.emailNaviera;
+                document.getElementById('idRep').value = data.idRep;
+                document.getElementById('movilCap').value = data.movilCap;
+                document.getElementById('movilCompany').value = data.movilCompany;
+                document.getElementById('municipio').value = data.municipio;
+                document.getElementById('nameCap').value = data.nameCap;
+                document.getElementById('nameCompany').value = data.nameCompany;
+                document.getElementById('nameNaviera').value = data.nameNaviera;
+                document.getElementById('nameRep').value = data.nameRep;
+                document.getElementById('nameRepPago').value = data.nameRepPago;
+                document.getElementById('numIdent').value = data.numIdent;
+                document.getElementById('piesEslora').value = data.piesEslora;
+                document.getElementById('sustanciasPeligrosas').value = data.sustanciasPeligrosas;
+                document.getElementById('NITNaviera').value = data.NITNaviera;
+                document.getElementById('titularPermiso').value = data.titularPermiso;
+                document.getElementById('tipoCarga').value = data.tipoCarga;
+                document.getElementById('tripulantes').value = data.tripulantes;
+                document.getElementById('pasajeros').value = data.pasajeros;
+                document.getElementById('vehiculos').value = data.vehiculos;
+                document.getElementById('tonelajeCarga').value = data.tonelajeCarga;
+                document.getElementById('tipo').value = data.tipo;
+            }).fail(function() {
+                toastr.warning('OCURRIO UN ERROR AL BUSCAR LA EMBARCACIÓN PARA EL CORRESPONDIENTE LLENADO AUTOMATICO. LLENE LOS DATOS MANUALMENTE POR FAVOR');
+            });
+
+        }
+    </script>
 @stop

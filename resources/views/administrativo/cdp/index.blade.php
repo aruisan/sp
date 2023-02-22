@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 @section('titulo') CDP's @stop
 @section('content')
+    @include('modal.objetoCDP')
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>CDP's</b></h4>
@@ -32,6 +33,7 @@
     <div class="tab-content" >
         <div id="tabTareas" class="tab-pane fade in active"><br>
             <br>
+            <meta name="csrf-token" content="{{ csrf_token() }}">
             <div class="table-responsive">
                 @if(count($cdpTarea) > 0)
                     <form class="form-valide" action="{{url('/administrativo/cdp/check')}}" method="POST" enctype="multipart/form-data">
@@ -53,10 +55,12 @@
                                 @elseif ($rol == 3)
                                     <th class="text-center">Dependencia</th>
                                     <th class="text-center">Ver</th>
+                                    <th class="text-center"><i class="fa fa-edit"></i></th>
                                     <th class="text-center"><label>Aprobar &nbsp;<input type="checkbox" onclick="approve(this.checked, {{count($cdpTarea)}}, {{$cdpTarea}})"></label> </th>
                                 @elseif ($rol == 5)
                                     <th class="text-center">Dependencia</th>
                                     <th class="text-center">Ver</th>
+                                    <th class="text-center"><i class="fa fa-edit"></i></th>
                                     <th class="text-center"><label>Aprobar &nbsp;<input type="checkbox" onclick="approve(this.checked, {{count($cdpTarea)}}, {{$cdpTarea}})"></label></th>
                                 @endif
                             </tr>
@@ -125,11 +129,17 @@
                                         <td class="text-center">
                                             <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                         </td>
+                                        <td class="text-center">
+                                            <a onclick="showFormObjetoCdp({{ $cdp->id }}, {{ $cdp->code }},'{{ $cdp->name }}')" title="Editar Objeto CDP" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                        </td>
                                         <td class="text-center"><input type="checkbox" id="check{{$index}}" onclick="approveUnidad(this.checked, {{$index}}, {{$cdp->id}})"><input type="hidden" id="checkInput{{$index}}" name="checkInput{{$index}}"></td>
                                     @elseif($rol == 5)
                                         <td class="text-center">{{ $cdp->dependencia->name }}</td>
                                         <td class="text-center">
                                             <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a onclick="showFormObjetoCdp({{ $cdp->id }}, {{ $cdp->code }},'{{ $cdp->name }}')" title="Editar Objeto CDP" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                         </td>
                                         <td class="text-center"><input type="checkbox" id="check{{$index}}" onclick="approveUnidad(this.checked, {{$index}}, {{$cdp->id}})"><input type="hidden" id="checkInput{{$index}}" name="checkInput{{$index}}"></td>
                                     @endif
@@ -253,6 +263,9 @@
                             <th class="text-center">Saldo</th>
                             <th class="text-center">Dependencia</th>
                             <th class="text-center">Ver</th>
+                            @if($rol != 2)
+                                <th class="text-center">Editar</th>
+                            @endif
                             <th class="text-center">PDF</th>
                         </tr>
                         </thead>
@@ -283,6 +296,11 @@
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/cdp/'.$vigencia_id.'/'.$cdp->id) }}" title="Ver CDP" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
+                                @if($rol != 2)
+                                    <td class="text-center">
+                                        <a onclick="showFormObjetoCdp({{ $cdp->id }}, {{ $cdp->code }},'{{ $cdp->name }}')" title="Editar Objeto CDP" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                    </td>
+                                @endif
                                 <td class="text-center">
                                     @if($cdp->jefe_e == "2")
                                         <span class="badge badge-pill badge-danger">Anulado</span>
@@ -315,10 +333,35 @@
 
             $('.nav-tabs a[href="#tabTareas"]').tab('show')
         });
-
     </script>
 
     <script>
+
+        function showFormObjetoCdp(id, code, objeto){
+            document.getElementById('idCdpChange').value = parseInt(id);
+            document.getElementById('codeCDP').innerHTML = code;
+            document.getElementById('objeto').value = objeto;
+            $("#objetoCDPedit").modal('show');
+        }
+
+        function editObject(){
+            var id = document.getElementById('idCdpChange').value;
+            var object = document.getElementById('objeto').value;
+
+            console.log(id, object);
+            $.ajax({
+                method: "POST",
+                url: "/administrativo/changeObject/cdp/"+id,
+                data: { "id": id, "objeto": object,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function() {
+                location.reload();
+                toastr.success('SE CAMBIO EL OBJETO CORRECTAMENTE.');
+            }).fail(function() {
+                toastr.warning('OCURRIO UN ERROR AL CAMBIAR EL OBJETO DEL CDP.');
+            });
+        }
 
         function approve(value, num, cdps){
             if (value == true){

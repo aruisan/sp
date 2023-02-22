@@ -801,4 +801,11 @@ class CdpController extends Controller
         }
         return $actividades;
     }
+
+    public function changeObject($id,Request $request){
+        $cdp = Cdp::find($id);
+        $cdp->name = $request->objeto;
+        $cdp->save();
+        return $cdp;
+    }
 }

@@ -87,6 +87,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::post('/PREDIAL/calendario','Impuestos\Predial\PredialController@getImpCalendar');
         Route::post('/PREDIAL/predio','Impuestos\Predial\PredialController@getPredio');
         Route::post('/PREDIAL/liquidar','Impuestos\Predial\PredialController@liquidar');
+        Route::post('/PREDIAL/uvt','Impuestos\Predial\PredialController@uvt');
         Route::get('/PREDIAL/pdf/{id}', 'Impuestos\Predial\PredialController@factura')->name('impuestos.predial.factura');
         Route::get('/PREDIAL/form/{id}', 'Impuestos\Predial\PredialController@form')->name('impuestos.predial.formulario');
 
@@ -240,6 +241,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //CDP's
 
+        Route::post('changeObject/cdp/{id}/', 'Administrativo\Cdp\CdpController@changeObject');
         Route::get('cdp/{id}', 'Administrativo\Cdp\CdpController@index');
         Route::put('cdp/{id}/{vigen}', 'Administrativo\Cdp\CdpController@update');
         Route::get('cdp/create/{id}', 'Administrativo\Cdp\CdpController@create');
@@ -377,6 +379,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //Impuestos
 
             //MUELLAJE
+        Route::post('impuestos/muellaje/{id}/find','Administrativo\Impuestos\MuellajeController@findAtraque');
         Route::resource('impuestos/muellaje','Administrativo\Impuestos\MuellajeController');
         Route::post('impuestos/muellaje/pay','Administrativo\Impuestos\MuellajeController@pay');
 
