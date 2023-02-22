@@ -16,10 +16,7 @@
             <a class="nav-link" href="{{ url('/presupuestoIng') }}" >Volver a Presupuesto de Ingresos</a>
         </li>
         <li class="nav-item active">
-            <a class="nav-link" data-toggle="pill" href="#tabTareas">TAREAS</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="pill" href="#tabHistorico">HISTORICO</a>
+            <a class="nav-link" data-toggle="pill" href="#tabTareas">Comprobantes</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url('/administrativo/CIngresos/create/'.$vigencia->id) }}" >NUEVO COMPROBANTE DE INGRESOS</a>
@@ -29,62 +26,12 @@
     <div class="tab-content" >
         <div id="tabTareas" class="tab-pane fade in active">
             <div class="table-responsive">
-                @if(count($CIngresosT) > 0)
-                    <table class="table table-bordered" id="tabla_CDP">
-                        <thead>
-                        <tr>
-                            <th class="text-center">#</th>
-                            <th class="text-center">Objeto</th>
-                            <th class="text-center">Estado</th>
-                            <th class="text-center">Valor Total</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($CIngresosT as $index => $CI)
-                            <tr>
-                                <td class="text-center">{{ $CI->code }}</td>
-                                <td class="text-center">{{ $CI->concepto }}</td>
-                                <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
-                                        @if($CI->estado == "0")
-                                            Pendiente
-                                        @elseif($CI->estado == "1")
-                                            Rechazado
-                                        @elseif($CI->estado == "2")
-                                            Anulado
-                                        @else
-                                            Enviado
-                                        @endif
-                                    </span>
-                                </td>
-                                <td class="text-center">$<?php echo number_format($CI->val_total,0) ?></td>
-                                <td class="text-center">
-                                    <a href="{{ url('administrativo/CIngresos/show/'.$CI->id) }}" title="Ver Comprobante de Ingreso" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <br><br>
-                    <div class="alert alert-danger">
-                        <center>
-                            No hay Comprobantes de Ingresos Pendientes.
-                        </center>
-                    </div>
-                @endif
-            </div>
-        </div>
-        <div id="tabHistorico" class="tab-pane fade">
-            <div class="table-responsive">
                 @if(count($CIngresos) > 0)
                     <table class="table table-bordered" id="tabla_Historico">
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Concepto</th>
-                            <th class="text-center">Estado</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Ver</th>
                         </tr>
@@ -94,24 +41,9 @@
                             <tr>
                                 <td class="text-center">{{ $historico->code }}</td>
                                 <td class="text-center">{{ $historico->concepto }}</td>
-                                <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
-                                        @if($historico->estado == "0")
-                                            Pendiente
-                                        @elseif($historico->estado == "1")
-                                            Rechazado
-                                        @elseif($historico->estado == "2")
-                                            Anulado
-                                        @elseif($historico->estado == "3")
-                                            Aprobado
-                                        @else
-                                            En Espera
-                                        @endif
-                                    </span>
-                                </td>
                                 <td class="text-center">$<?php echo number_format($historico->valor,0) ?></td>
                                 <td class="text-center">
-                                    <a href="{{ url('administrativo/CIngresos/show/'.$historico->id) }}" title="Ver Comprobante de Ingreso" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ url('administrativo/CIngresos/'.$historico->id.'/edit') }}" title="Ver Comprobante de Ingreso" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -121,13 +53,12 @@
                     <br><br>
                     <div class="alert alert-danger">
                         <center>
-                            No hay Comprobantes de Ingresos finalizados
+                            No hay Comprobantes de Ingresos
                         </center>
                     </div>
                 @endif
             </div>
         </div>
-
     </div>
 @stop
 @section('js')
@@ -142,23 +73,42 @@
     </script>
 
     <script>
-        $('#tabla_CDP').DataTable( {
-            responsive: true,
-            "searching": true,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'print'
-            ]
-        } );
 
         $('#tabla_Historico').DataTable( {
-            responsive: true,
-            "searching": true,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'print'
+        responsive: true,
+        "searching": true,
+        dom: 'Bfrtip',
+        order: [[0, 'desc']],
+        buttons:[
+        {
+            extend:    'copyHtml5',
+            text:      '<i class="fa fa-clone"></i> ',
+            titleAttr: 'Copiar',
+            className: 'btn btn-primary'
+        },
+        {
+            extend:    'excelHtml5',
+            text:      '<i class="fa fa-file-excel-o"></i> ',
+            titleAttr: 'Exportar a Excel',
+            className: 'btn btn-primary'
+        },
+        {
+            extend:    'pdfHtml5',
+            text:      '<i class="fa fa-file-pdf-o"></i> ',
+            titleAttr: 'Exportar a PDF',
+            message : 'SIEX-Providencia',
+            header :true,
+            orientation : 'landscape',
+            pageSize: 'LEGAL',
+            className: 'btn btn-primary',
+        },
+        {
+            extend:    'print',
+            text:      '<i class="fa fa-print"></i> ',
+            titleAttr: 'Imprimir',
+            className: 'btn btn-primary'
+        },
             ]
         } );
-
     </script>
 @stop

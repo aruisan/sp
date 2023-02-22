@@ -86,7 +86,7 @@ class ComprobanteIngresosController extends Controller
         $comprobante->valor = $request->valor;
         $comprobante->iva = $request->valorIva;
         $comprobante->val_total = $request->valor + $request->valorIva;
-        $comprobante->estado = $request->estado;
+        $comprobante->estado = '3';
         $comprobante->ff = $request->fecha;
         $comprobante->tipoCI = $request->tipoCI;
         $comprobante->cualOtroTipo = $request->cualOtroTipo;
@@ -107,6 +107,25 @@ class ComprobanteIngresosController extends Controller
 
         Session::flash('success','El comprobante de ingreso se ha creado exitosamente');
         return redirect('/administrativo/CIngresos/'.$request->vigencia_id);
+    }
+
+    public function edit($id){
+        $comprobante = ComprobanteIngresos::find($id);
+        $vigencia = Vigencia::findOrFail($comprobante->vigencia_id);
+        $user_id = auth()->user()->id;
+        $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
+        $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
+        $rubI = Rubro::where('vigencia_id', $vigencia->id)->orderBy('cod','ASC')->get();
+
+        foreach ($rubI as $rub){
+            foreach ($rub->fontsRubro as $fuente){
+                $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
+            }
+        }
+
+        return view('administrativo.comprobanteingresos.edit', compact('vigencia','user_id',
+            'hijosDebito','rubrosIngresos','hijos','comprobante'));
     }
 
     /**
