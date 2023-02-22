@@ -1012,9 +1012,6 @@
             }).done(function(datos) {
                 document.getElementById("tbody_actividades").innerHTML = "";
                 document.getElementById("actividades").style.display = "";
-
-                console.log(datos);
-
                 datos.forEach(e => {
                     $('#tbody_actividades').append(`
                         <tr>
@@ -1029,7 +1026,7 @@
                 });
 
             }).fail(function() {
-                toastr.warning('OCURRIO UN ERROR AL OBTENER LAS ACTIVIDADES DEL PROYECTO.');
+                toastr.warning('NO TIENES ACTIVIDADES DISPONIBLES PARA HACER CDP, PUEDE SER A QUE NO HAY ACTIVIDADES DE ESE PROYECTO PARA TU DEPENDENCIA O QUE LAS ACTIVIDADES ESTAN EN 0$.');
             });
             window.scrollTo(0,document.body.scrollHeight);
         }
