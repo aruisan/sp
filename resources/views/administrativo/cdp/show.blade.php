@@ -1013,6 +1013,7 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
+                console.log(datos);
                 datos.forEach(e => {
                     $('#tbody_actividades').append(`
                         <tr>
