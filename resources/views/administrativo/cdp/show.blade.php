@@ -1026,7 +1026,7 @@
                 });
 
             }).fail(function() {
-                toastr.warning('NO TIENES ACTIVIDADES DISPONIBLES PARA HACER CDP, PUEDE SER A QUE NO HAY ACTIVIDADES DE ESE PROYECTO PARA TU DEPENDENCIA O QUE LAS ACTIVIDADES NO TIENEN DINERO DISPONIBLE');
+                toastr.warning('ESE PROYECTO NO TIENE ACTIVIDADES PARA TU DEPENDENCIA O LAS ACTIVIDADES NO TIENEN DINERO DISPONIBLE PARA ELABORAR UN CDP');
             });
             window.scrollTo(0,document.body.scrollHeight);
         }
