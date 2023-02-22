@@ -15,6 +15,7 @@ use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\FileTraits;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 
@@ -48,9 +49,17 @@ class ComprobanteIngresosController extends Controller
         $vigencia = Vigencia::findOrFail($id);
         $user_id = auth()->user()->id;
         $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
+        $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
+        $rubI = Rubro::where('vigencia_id', $vigencia->id)->orderBy('cod','ASC')->get();
+        foreach ($rubI as $rub){
+            foreach ($rub->fontsRubro as $fuente){
+                $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
+            }
+        }
 
         return view('administrativo.comprobanteingresos.create', compact('vigencia','user_id',
-        'hijosDebito'));
+        'hijosDebito','rubrosIngresos','hijos'));
     }
 
     /**
@@ -82,8 +91,17 @@ class ComprobanteIngresosController extends Controller
         $comprobante->cualOtroTipo = $request->cualOtroTipo;
         $comprobante->user_id = $request->user_id;
         $comprobante->vigencia_id = $request->vigencia_id;
-        $comprobante->puc_alcaldia_id = $request->cuentaDeb;
         $comprobante->ruta = $ruta;
+        $comprobante->cuenta_banco = $request->cuentaDeb;
+        $comprobante->cuenta_puc_id = $request->cuentaPUC;
+        $comprobante->rubro_font_ingresos_id = $request->rubroIngresos;
+        $comprobante->debito_banco = $request->debitoBanco;
+        $comprobante->credito_banco = $request->creditoBanco;
+        $comprobante->debito_puc = $request->debitoPUC;
+        $comprobante->credito_puc = $request->creditoPUC;
+        $comprobante->debito_rubro_ing = $request->debitoIngresos;
+        $comprobante->credito_rubro_ing = $request->creditoIngresos;
+        $comprobante->responsable_id = Auth::user()->id;
         $comprobante->save();
 
         Session::flash('success','El comprobante de ingreso se ha creado exitosamente');
