@@ -1003,9 +1003,6 @@
         }
 
         function showActividades(codProy, vigencia){
-            document.getElementById("tbody_actividades").innerHTML = "";
-            document.getElementById("actividades").style.display = "";
-
             $.ajax({
                 method: "POST",
                 url: "/administrativo/proyectos/find-actividad",
@@ -1013,7 +1010,11 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
+                document.getElementById("tbody_actividades").innerHTML = "";
+                document.getElementById("actividades").style.display = "";
+
                 console.log(datos);
+
                 datos.forEach(e => {
                     $('#tbody_actividades').append(`
                         <tr>
