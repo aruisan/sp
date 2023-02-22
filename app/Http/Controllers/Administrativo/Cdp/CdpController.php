@@ -789,10 +789,12 @@ class CdpController extends Controller
                 foreach ($bpinVigencias as $bpinVigencia){
                     $depRF = DependenciaRubroFont::find($bpinVigencia->dep_rubro_id);
                     if ($bpinVigencia->vigencia_id == $request->vigencia_id and $bpinVigencia->saldo > 0){
-                        $actividades[] = collect(['cod_actividad' => $actividad->cod_actividad, 'nombre' => $actividad->actividad,
-                            'dineroDisp' =>$bpinVigencia->saldo, 'depRubro_id' => $bpinVigencia->dep_rubro_id,
-                            'font' => $depRF->fontRubro->sourceFunding->code.' - '.$depRF->fontRubro->sourceFunding->description,
-                            'dependencia'  => $depRF->dependencias->name]);
+                        if ($depRF->dependencia_id == auth()->user()->dependencia->first()->id){
+                            $actividades[] = collect(['cod_actividad' => $actividad->cod_actividad, 'nombre' => $actividad->actividad,
+                                'dineroDisp' =>$bpinVigencia->saldo, 'depRubro_id' => $bpinVigencia->dep_rubro_id,
+                                'font' => $depRF->fontRubro->sourceFunding->code.' - '.$depRF->fontRubro->sourceFunding->description,
+                                'dependencia'  => $depRF->dependencias->name]);
+                        }
                     }
                 }
             }
