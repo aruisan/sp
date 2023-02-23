@@ -11,6 +11,9 @@
             <a class="nav-link" data-toggle="pill" href="#tabHistorico">Atraques Pagados</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="/administrativo/impuestos/admin">Administración de Impuestos</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ url('/administrativo/impuestos/muellaje/create') }}"><i class="fa fa-plus"></i>
                 <i class="fa fa-ship"></i>NUEVO REGISTRO</a>
         </li>

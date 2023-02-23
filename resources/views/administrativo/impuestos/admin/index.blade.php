@@ -16,6 +16,7 @@
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabPagos">Pagos</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabRIT">RIT</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tabComunicados">Comunicados</a></li>
+        <li class="nav-item"><a class="nav-link" href="/administrativo/impuestos/muellaje">Muellaje</a></li>
         <li class="dropdown-submenu">
             <a class="dropdown-item item-menu"><i class="fa fa-cogs"></i></a>
             <ul class="dropdown-menu">
