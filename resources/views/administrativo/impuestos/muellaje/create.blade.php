@@ -58,7 +58,7 @@
                                     <td>Nombre Embarcación</td>
                                     <td colspan="3"><input class="form-control" type="text" name="name" id="name" required></td>
                                     <td>Bandera</td>
-                                    <td><select class="form-control" id="bandera" name="bandera">
+                                    <td><select class="form-control" id="bandera" name="bandera" onchange="changeFlag(this.value)">
                                             <option value="NACIONAL">NACIONAL</option>
                                             <option value="INTERNACIONAL">INTERNACIONAL</option>
                                             <option value="NACIONAL ADZ-PVA-ADZ">NACIONAL ADZ-PVA-ADZ</option>
@@ -70,13 +70,40 @@
                                 <tr>
                                     <td>Tipo de Embarcación</td>
                                     <td colspan="3">
-                                        <select class="form-control" id="tipo" name="tipo">
-                                            <option value="0">TIPO 0</option>
-                                            <option value="1">TIPO 1</option>
+                                        <select class="form-control" id="tipo" name="tipo" onchange="changeTipo(this.value)" required>
+                                            <option>Seleccione el tipo de embarcación</option>
+                                            <option value="0">Motonave, planchones, barcos de carga, pasajeros y similares.</option>
+                                            <option value="1">Pesqueros, yates y similares</option>
                                         </select>
                                     </td>
                                     <td>Pies de Eslora</td>
-                                    <td><input class="form-control" type="number" min="1" value="1" name="piesEslora" id="piesEslora" required></td>
+                                    <td>
+                                        <select class="form-control" id="piesEsloraTipo0INT" onchange="changeTarifa(this.value)" name="piesEslora" style="display: none">
+                                            <option>Seleccione una opción</option>
+                                            <option value="Hasta 37 mts - 130 USD">Hasta 37 mts - 130 USD</option>
+                                            <option value="Hasta 38 mts - 50 mts - 223.85 USD">Hasta 38 mts - 50 mts - 223.85 USD</option>
+                                            <option value="Hasta 51 mts - 57 mts - 313.3 USD">Hasta 51 mts - 57 mts - 313.3 USD</option>
+                                            <option value="Hasta 58 mts - 75 mts - 533 USD">Hasta 58 mts - 75 mts - 533 USD</option>
+                                            <option value="Hasta 76 mts - 89 mts - 730.6 USD">Hasta 76 mts - 89 mts - 730.6 USD</option>
+                                            <option value="Hasta 90 mts - 101 mts - 930.8 USD">Hasta 90 mts - 101 mts - 930.8 USD</option>
+                                            <option value="Hasta 102 mts y más - 1667.9 USD">Hasta 102 mts y más - 1667.9 USD</option>
+                                        </select>
+                                        <select class="form-control" id="piesEsloraTipo1" onchange="changeTarifa(this.value)" name="piesEslora"  style="display: none">
+                                            <option>Seleccione una opción</option>
+                                            <option value="Hasta 37 mts - 130 USD">Hasta 37 mts - 130 USD</option>
+                                            <option value="38 mts en adelante - 223.85 USD">38 mts en adelante - 223.85 USD</option>
+                                        </select>
+                                        <select class="form-control" id="piesEsloraTipo0NAC" onchange="changeTarifa(this.value)" name="piesEslora" style="display: none">
+                                            <option>Seleccione una opción</option>
+                                            <option value="Hasta 37 mts - 30.096 USD">Hasta 37 mts - 30.096 USD</option>
+                                            <option value="Hasta 138 mts - 50 mts - 45.096 USD">Hasta 138 mts - 50 mts - 45.096 USD</option>
+                                            <option value="Hasta 51 mts - 57 mts - 54.12 USD">Hasta 51 mts - 57 mts - 54.12 USD</option>
+                                            <option value="Hasta 58 mts - 75 mts - 66.144 USD">Hasta 58 mts - 75 mts - 66.144 USD</option>
+                                            <option value="Hasta 76 mts - 89 mts - 78.168 USD">Hasta 76 mts - 89 mts - 78.168 USD</option>
+                                            <option value="Hasta 90 mts - 101 mts - 90.252 USD">Hasta 90 mts - 101 mts - 90.252 USD</option>
+                                            <option value="Hasta 102 mts y más - 180.396 USD">Hasta 102 mts y más - 180.396 USD</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Tipo de Carga</td>
@@ -164,43 +191,53 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <table class="table text-center">
+                            <table class="table text-center" id="tablePay">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="6">LIQUIDACION IMPUESTO MUELLAJE</th>
+                                    <th scope="row" colspan="4">LIQUIDACION IMPUESTO MUELLAJE</th>
                                 </tr>
                                 <tr>
                                     <td colspan="2">Nombre responsable del pago</td>
-                                    <td colspan="4"><input class="form-control" type="text" name="nameRepPago" id="nameRepPago" required></td>
+                                    <td colspan="2"><input class="form-control" type="text" name="nameRepPago" id="nameRepPago" required></td>
                                 </tr>
                                 <tr>
                                     <td>Fecha de Atraque</td>
                                     <td><input class="form-control" type="date" name="fechaAtraque" id="fechaAtraque" required></td>
                                     <td>Fecha de Salida</td>
                                     <td><input class="form-control" type="date" name="fechaSalida" id="fechaSalida" min="{{ Carbon\Carbon::today()}}" required></td>
-                                    <td>Tarifa</td>
-                                    <td><input class="form-control" type="number" name="tarifa" id="tarifa" min="0" required></td>
                                 </tr>
                                 <tr>
                                     <td>Hora de Ingreso</td>
                                     <td><input class="form-control" type="time" name="horaIngreso" id="horaIngreso" required></td>
                                     <td>Hora de salida</td>
                                     <td><input class="form-control" type="time" name="horaSalida" id="horaSalida" required></td>
-                                    <td>Valor diario</td>
-                                    <td><input class="form-control" type="number" name="valorDiario" id="valorDiario" min="0" value="0" required></td>
                                 </tr>
                                 <tr>
-                                    <td>Número total de días</td>
-                                    <td><input class="form-control" type="number" value="1" name="numTotalDias" id="numTotalDias" min="1" required></td>
-                                    <td>Valor a pagar</td>
-                                    <td colspan="3"><input class="form-control" type="number" name="valorPago" id="valorPago" min="1" value="0" required></td>
+                                    <td>Días Permanencia</td>
+                                    <td><input class="form-control" type="number" value="0" onchange="changeDays(this.value)" name="numTotalDias" id="numTotalDias" min="0" required></td>
+                                    <td>Horas Permanencia</td>
+                                    <td><input class="form-control" onchange="changeHours(this.value)" type="number" value="0" name="numHoras" id="numHoras" min="0" max="7" required></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Tarifa</td>
+                                    <td colspan="2">
+                                        <input class="form-control" type="hidden" name="tarifa" id="tarifa" min="0" value="0" step=".001">
+                                        <span id="tarifaSpan">0 USD</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><h3>Valor a pagar</h3></td>
+                                    <td colspan="2">
+                                        <input class="form-control" type="hidden" name="valorPago" id="valorPago" min="1" value="0" step=".001" required>
+                                        <h3><span id="valorPagoSpan">0 $</span></h3>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Observaciones</td>
-                                    <td colspan="5"><textarea class="form-control" type="text" name="observaciones" id="observaciones"></textarea></td>
+                                    <td colspan="3"><textarea class="form-control" type="text" name="observaciones" id="observaciones"></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="4">
                                         <button type="submit" class="btn btn-impuesto" style="font-size: 25px; color: white">ENVIAR</button>
                                     </td>
                                 </tr>
@@ -216,6 +253,172 @@
 @stop
 @section('js')
     <script>
+
+        function changeDays(dias){
+            var tarifa = document.getElementById('tarifa').value;
+            var horas = document.getElementById('numHoras').value;
+            if(horas <= 2 && horas > 0){
+                var div = tarifa / 2;
+                var div2 = div / 24;
+                var valHours = div2 * horas;
+
+                var valDays = dias * tarifa;
+
+                var totPay = parseFloat(valHours) + parseFloat(valDays);
+
+                document.getElementById('valorPago').value = parseFloat(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+
+            } else if(horas <= 6 && horas > 2){
+                var div = tarifa / 24;
+                var valHours = div * horas;
+
+                var valDays = dias * tarifa;
+
+                var totPay = parseFloat(valHours) + parseFloat(valDays);
+
+                document.getElementById('valorPago').value = parseFloat(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+
+            } else if(horas == 0){
+
+                var valDays = dias * tarifa;
+
+                document.getElementById('valorPago').value = parseFloat(valDays);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(valDays);
+
+            }
+        }
+
+        function changeHours(horas){
+            var tarifa = document.getElementById('tarifa').value;
+            var dias = document.getElementById('numTotalDias').value;
+            if(horas <= 2 && horas > 0){
+                var div = tarifa / 2;
+                var div2 = div / 24;
+                var valHours = div2 * horas;
+
+                var valDays = dias * tarifa;
+
+                var totPay = parseFloat(valHours) + parseFloat(valDays);
+
+                document.getElementById('valorPago').value = parseFloat(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+
+            } else if(horas <= 6 && horas > 2) {
+                var div = tarifa / 24;
+                var valHours = div * horas;
+
+                var valDays = dias * tarifa;
+
+                var totPay = parseFloat(valHours) + parseFloat(valDays);
+
+                document.getElementById('valorPago').value = parseFloat(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+            }else if(horas == 0 ){
+                var valDays = dias * tarifa;
+
+                document.getElementById('valorPago').value = parseFloat(valDays);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(valDays);
+            }else if(horas > 6){
+                toastr.warning('MAYOR A 6 HORAS, INGRESAR COMO DIA COMPLETO');
+                document.getElementById('numHoras').value = 0;
+                document.getElementById('valorPago').value = 0;
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(0);
+            }
+        }
+
+        function changeTarifa(tarifa){
+            if(tarifa == "Hasta 37 mts - 130 USD"){
+                document.getElementById('tarifa').value = 130;
+                document.getElementById('tarifaSpan').innerHTML = '130 USD';
+            } else if(tarifa == "Hasta 38 mts - 50 mts - 223.85 USD") {
+                document.getElementById('tarifa').value = 223.85;
+                document.getElementById('tarifaSpan').innerHTML = '223.85 USD';
+            } else if(tarifa == "Hasta 51 mts - 57 mts - 313.3 USD"){
+                document.getElementById('tarifa').value = 313.3;
+                document.getElementById('tarifaSpan').innerHTML = '313.3 USD';
+            } else if(tarifa == "Hasta 58 mts - 75 mts - 533 USD"){
+                document.getElementById('tarifa').value = 533;
+                document.getElementById('tarifaSpan').innerHTML = '533 USD';
+            } else if(tarifa == "Hasta 76 mts - 89 mts - 730.6 USD"){
+                document.getElementById('tarifa').value = 730.6;
+                document.getElementById('tarifaSpan').innerHTML = '730.6 USD';
+            } else if(tarifa == "Hasta 90 mts - 101 mts - 930.8 USD"){
+                document.getElementById('tarifa').value = 930.8;
+                document.getElementById('tarifaSpan').innerHTML = '930.8 USD';
+            } else if(tarifa == "Hasta 102 mts y más - 1667.9 USD"){
+                document.getElementById('tarifa').value = 1667.9;
+                document.getElementById('tarifaSpan').innerHTML = '1667.9 USD';
+            } else if(tarifa == "Hasta 37 mts - 130 USD"){
+                document.getElementById('tarifa').value = 130;
+                document.getElementById('tarifaSpan').innerHTML = '130 USD';
+            } else if(tarifa == "38 mts en adelante - 223.85 USD"){
+                document.getElementById('tarifa').value = 223.85;
+                document.getElementById('tarifaSpan').innerHTML = '223.85 USD';
+            } else if(tarifa == "Hasta 51 mts - 57 mts - 313.3 USD"){
+                document.getElementById('tarifa').value = 313.3;
+                document.getElementById('tarifaSpan').innerHTML = '313.3 USD';
+            } else if(tarifa == "Hasta 37 mts - 30.096 USD"){
+                document.getElementById('tarifa').value = 30.096;
+                document.getElementById('tarifaSpan').innerHTML = '30.096 USD';
+            } else if(tarifa == "Hasta 138 mts - 50 mts - 45.096 USD"){
+                document.getElementById('tarifa').value = 45.096;
+                document.getElementById('tarifaSpan').innerHTML = '45.096 USD';
+            } else if(tarifa == "Hasta 51 mts - 57 mts - 54.12 USD"){
+                document.getElementById('tarifa').value = 54.12;
+                document.getElementById('tarifaSpan').innerHTML = '54.12 USD';
+            } else if(tarifa == "Hasta 58 mts - 75 mts - 66.144 USD"){
+                document.getElementById('tarifa').value = 66.144;
+                document.getElementById('tarifaSpan').innerHTML = '66.144 USD';
+            } else if(tarifa == "Hasta 76 mts - 89 mts - 78.168 USD"){
+                document.getElementById('tarifa').value = 78.168;
+                document.getElementById('tarifaSpan').innerHTML = '78.168 USD';
+            } else if(tarifa == "Hasta 90 mts - 101 mts - 90.252 USD"){
+                document.getElementById('tarifa').value = 90.252;
+                document.getElementById('tarifaSpan').innerHTML = '90.252 USD';
+            } else if(tarifa == "Hasta 102 mts y más - 180.396 USD"){
+                document.getElementById('tarifa').value = 180.396;
+                document.getElementById('tarifaSpan').innerHTML = '180.396 USD';
+            }
+        }
+
+        function changeTipo(tipo){
+            var bandera = document.getElementById('bandera').value;
+
+            if(tipo == 0){
+                if(bandera == "NACIONAL"){
+                    $('#piesEsloraTipo0NAC').show();
+                    $('#piesEsloraTipo1').hide();
+                    $('#piesEsloraTipo0INT').hide();
+                } else if(bandera == "INTERNACIONAL"){
+                    $('#piesEsloraTipo0NAC').hide();
+                    $('#piesEsloraTipo1').hide();
+                    $('#piesEsloraTipo0INT').show();
+                }
+            } else{
+                $('#piesEsloraTipo0NAC').hide();
+                $('#piesEsloraTipo0INT').hide();
+                $('#piesEsloraTipo1').show();
+            }
+        }
+
+        function changeFlag(flag){
+            $('#piesEsloraTipo0NAC').hide();
+            $('#piesEsloraTipo0INT').hide();
+            $('#piesEsloraTipo1').hide();
+            if(flag == "NACIONAL"){
+            } else if(flag == "INTERNACIONAL"){
+            } else if(flag == "NACIONAL ADZ-PVA-ADZ"){
+            } else{
+                document.getElementById('valorPago').value = 0;
+                document.getElementById('valorPagoSpan').innerHTML = '0$';
+
+                document.getElementById('tarifa').value = 0;
+                document.getElementById('tarifaSpan').innerHTML = '0$';
+            }
+        }
+
         function ShowSelected(id) {
             $.ajax({
                 method: "POST",
@@ -253,5 +456,11 @@
             });
 
         }
+
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
     </script>
 @stop

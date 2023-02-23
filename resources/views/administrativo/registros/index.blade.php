@@ -24,6 +24,7 @@
     </li> --}}
 @stop
 @section('content')
+    @include('modal.objetoRP')
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Registros</b></h4>
@@ -51,6 +52,7 @@
         @endif
     </ul>
     <div class="tab-content" style="background-color: white">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <div id="tabTareas" class="tab-pane active"><br>
             <div class="table-responsive">
                 @if(isset($registros))
@@ -204,6 +206,9 @@
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Ver</th>
                             <th class="text-center">PDF</th>
+                            @if($rol != 2)
+                                <th class="text-center"><i class="fa fa-edit"></i></th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody>
@@ -252,6 +257,11 @@
                                         <a href="{{ url('administrativo/registro/pdf/'.$data['id'].'/'.$vigencia) }}" target="_blank" title="Ver Archivo" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
+                                @if($rol != 2)
+                                    <td class="text-center">
+                                        <a onclick="showFormObjetoRP({{ $data['id'] }}, {{ $data['code'] }},'{{ $data['objeto'] }}')" title="Editar Objeto" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                         </tbody>
@@ -271,6 +281,32 @@
 @endsection
 @section('js')
     <script>
+
+        function showFormObjetoRP(id, code, objeto){
+            document.getElementById('idRPChange').value = parseInt(id);
+            document.getElementById('codeRP').innerHTML = code;
+            document.getElementById('objeto').value = objeto;
+            $("#objetoRPedit").modal('show');
+        }
+
+        function editObject(){
+            var id = document.getElementById('idRPChange').value;
+            var object = document.getElementById('objeto').value;
+
+            console.log(id, object);
+            $.ajax({
+                method: "POST",
+                url: "/administrativo/changeObject/rp/"+id,
+                data: { "id": id, "objeto": object,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function() {
+                location.reload();
+                toastr.success('SE CAMBIO EL OBJETO CORRECTAMENTE.');
+            }).fail(function() {
+                toastr.warning('OCURRIO UN ERROR AL CAMBIAR EL OBJETO DEL REGISTRO PRESUPUESTAL.');
+            });
+        }
 
         $(document).ready(function() {
 

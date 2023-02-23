@@ -98,96 +98,63 @@
                             </div>
                             <br>
                             <table class="table">
+                                <thead>
                                 <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <select class="form-control" name="cuentaDeb" id="cuentaDeb">
-                                                    @foreach($hijosDebito as $hijo)
-                                                        <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="0">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="0">
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <th class="text-center"></th>
+                                    <th class="text-center" style="width: 200px">Credito<span class="text-danger">*</span></th>
+                                    <th class="text-center" style="width: 200px">Debito<span class="text-danger">*</span></th>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <select class="form-control" name="cuentaPUC" id="cuentaPUC">
-                                                    @foreach($hijos as $hijo)
-                                                        <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
-                                                    @endforeach
-                                                </select>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
+                                                <div class="col-lg-6">
+                                                    <select class="form-control" name="cuentaDeb" id="cuentaDeb">
+                                                        @foreach($hijosDebito as $hijo)
+                                                            <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="0">
+                                        </td>
+                                        <td><input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="0"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>
+                                                <div class="col-lg-6">
+                                                    <select class="form-control" name="cuentaPUC" id="cuentaPUC">
+                                                        @foreach($hijos as $hijo)
+                                                            <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="0">
+                                        </td>
+                                        <td><input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="0"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>
+                                                <div class="col-lg-6">
+                                                    <select class="form-control" name="rubroIngresos" id="rubroIngresos">
+                                                        @foreach($rubrosIngresos as $rubro)
+                                                            <option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <select class="form-control" name="rubroIngresos" id="rubroIngresos">
-                                                    @foreach($rubrosIngresos as $rubro)
-                                                        <option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="0">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
-                                            <div class="col-lg-6">
-                                                <input class="form-control" min="0" type="number" name="debitoIngresos" id="debitoIngresos" value="0">
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="debitoIngresos" id="debitoIngresos" value="0"></td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <input type="hidden" class="form-control" name="user_id" value="{{ $user_id }}">
                             <input type="hidden" class="form-control" name="vigencia_id" value="{{ $vigencia->id }}">

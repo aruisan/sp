@@ -224,6 +224,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //Registros
 
+        Route::post('changeObject/rp/{id}/', 'Administrativo\Registro\RegistrosController@changeObject');
         Route::get('registros/{id}', 'Administrativo\Registro\RegistrosController@index');
         Route::get('registros/create/{id}', 'Administrativo\Registro\RegistrosController@create');
         Route::get('registros/show/{id}', 'Administrativo\Registro\RegistrosController@show');

@@ -467,7 +467,7 @@ class RegistrosController extends Controller
             $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor[0]->actividad->actividad;
         }
 
-	if (!isset($infoRubro)) $infoRubro = [];
+	    if (!isset($infoRubro)) $infoRubro = [];
 
         $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -476,6 +476,13 @@ class RegistrosController extends Controller
 
         $pdf = \PDF::loadView('administrativo.registros.pdf', compact('registro', 'vigencia', 'dias', 'meses', 'fecha','infoRubro','rubroNameCDP','bpins'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
             return $pdf->stream();
+    }
+
+    public function changeObject($id,Request $request){
+        $rp = Registro::find($id);
+        $rp->objeto = $request->objeto;
+        $rp->save();
+        return $rp;
     }
 }
 
