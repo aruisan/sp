@@ -171,25 +171,40 @@
                                     <tbody>
                                     @for($i = 0; $i < $R->cdpRegistroValor->count(); $i++)
                                         @if($R->cdpRegistroValor[$i]->valor > 0)
-                                            <tr class="text-center">
-                                                <td>
-                                                    @for($x = 0; $x < count($infoRubro); $x++)
-                                                        @if($infoRubro[$x]['id_rubro'] == $R->cdpRegistroValor[$i]->rubro_id)
-                                                            {{ $infoRubro[$x]['codigo'] }}
-                                                        @endif
-                                                    @endfor
-                                                </td>
-                                                <td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
-                                                @if($R->cdpRegistroValor[$i]->fontRubro->sourceFunding)
-                                                <td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} -
-                                                    {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
-                                                @else
-                                                    <td>{{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->code }} -
-                                                        {{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->name }}</td>
-                                                @endif
-                                                <td>{{ $OrdenPago->registros->objeto }}</td>
-                                                <td>$ <?php echo number_format($R->cdpRegistroValor[$i]->valor,0);?></td>
-                                            </tr>
+                                            @if($R->cdpRegistroValor[$i]->cdps->tipo == "Funcionamiento")
+                                                <tr class="text-center">
+                                                    <td>
+                                                        @for($x = 0; $x < count($infoRubro); $x++)
+                                                            @if($infoRubro[$x]['id_rubro'] == $R->cdpRegistroValor[$i]->fontRubro->rubro->id)
+                                                                {{ $infoRubro[$x]['codigo'] }}
+                                                            @endif
+                                                        @endfor
+                                                    </td>
+                                                    <td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
+                                                    @if($R->cdpRegistroValor[$i]->fontRubro->sourceFunding)
+                                                        <td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
+                                                    @else
+                                                        <td>{{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->name }}</td>
+                                                    @endif
+                                                    <td>{{ $OrdenPago->registros->objeto }}</td>
+                                                    <td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+                                                </tr>
+                                            @elseif($R->cdpRegistroValor[$i]->cdps->tipo == "Inversion")
+                                                <tr class="text-center">
+                                                    <td>
+                                                        {{$R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->actividad->cod_actividad}}
+                                                    </td>
+                                                    <td>{{$R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->actividad->actividad}}</td>
+                                                    @if($R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->dependencia_rubro_font_id != null)
+                                                        <td>{{ $R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->depRubroFont->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->depRubroFont->fontRubro->sourceFunding->description }}</td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
+                                                    <td>{{ $OrdenPago->registros->objeto }}</td>
+                                                    <td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+                                                </tr>
+                                            @endif
+
                                         @endif
                                     @endfor
                                     </tbody>
