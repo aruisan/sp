@@ -172,7 +172,7 @@
 								</td>
 								<td>{{$R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->actividad->actividad}}</td>
 								@if($R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->dependencia_rubro_font_id != null)
-									<td>{{ $R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->depRubroFont->fontRubro->sourceFunding }}</td>
+									<td>{{ $R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->depRubroFont->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->depRubroFont->fontRubro->sourceFunding->description }}</td>
 								@else
 									<td></td>
 								@endif
