@@ -170,11 +170,11 @@
 								<td>
 									{{$R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->actividad->cod_actividad}}
 								</td>
-								<td>{{ $R->cdpRegistroValor[$i]->fontRubro->rubro->name}}</td>
-								@if($R->cdpRegistroValor[$i]->fontRubro->sourceFunding)
-									<td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
+								<td>{{$R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->actividad->actividad}}</td>
+								@if($R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->dependencia_rubro_font_id != null)
+									<td>{{ $R->cdpRegistroValor[$i]->cdps->bpinsCdpValor->first()->depRubroFont }}</td>
 								@else
-									<td>{{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->name }}</td>
+									<td></td>
 								@endif
 								<td>{{ $OrdenPago->registros->objeto }}</td>
 								<td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>

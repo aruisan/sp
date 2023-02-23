@@ -18,4 +18,8 @@ class BpinCdpValor extends Model implements Auditable
     public function cdp(){
         return $this->hasOne('App\Model\Administrativo\Cdp\Cdp','id','cdp_id');
     }
+
+    public function depRubroFont(){
+        return $this->hasOne('App\Model\Admin\DependenciaRubroFont','id','dependencia_rubro_font_id');
+    }
 }
