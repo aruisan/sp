@@ -175,7 +175,7 @@
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codBpin']}}</td>
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codActiv']}}</td>
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['nameActiv']}}</td>
-                                        <td class="text-dark" style="vertical-align:middle;">@if($codigo['id_rubro'] != 0) <a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}"> @endif{{ str_replace('.',',',$codigo['cod']) }}</a></td>
+                                        <td class="text-dark" style="vertical-align:middle;">@if($codigo['id_rubro'] != 0) <a href="{{ url('presupuesto/rubro/'.$codigo['id_rubro']) }}"> @endif{{ $codigo['cod'] }}</a></td>
                                         <td class="text-dark" style="vertical-align:middle;">{{ $codigo['name']}}</td>
                                         <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['presupuesto_inicial'],0);?></td>
                                         <td class="text-dark" style="vertical-align:middle;">$ <?php echo number_format($codigo['adicion'],0);?></td>
