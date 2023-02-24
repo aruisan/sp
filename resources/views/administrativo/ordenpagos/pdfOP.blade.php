@@ -160,7 +160,7 @@
 								@if($R->cdpRegistroValor[$i]->fontRubro->sourceFunding)
 									<td>{{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->sourceFunding->description }}</td>
 								@else
-									<td>{{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->name }}</td>
+									<td>1.2.1.0.00 - INGRESOS CORRIENTES DE	LIBRE DESTINACION</td>
 								@endif
 								<td>{{ $OrdenPago->registros->objeto }}</td>
 								<td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
