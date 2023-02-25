@@ -35,7 +35,22 @@
             <td>{{ $codigo['nameActiv']}}</td>
             <td>{{ $codigo['cod'] }}</td>
             <td>{{ $codigo['name']}}</td>
-
+            <td>{{ $codigo['presupuesto_inicial']}}</td>
+            <td>{{ $codigo['adicion']}}</td>
+            <td>{{ $codigo['reduccion']}}</td>
+            <td>{{ $codigo['credito']}}</td>
+            <td>{{ $codigo['ccredito']}}</td>
+            <td>{{ $codigo['presupuesto_def']}}</td>
+            <td>{{ $codigo['cdps']}}</td>
+            <td>{{ $codigo['registros']}}</td>
+            <td>{{ $codigo['saldo_disp']}}</td>
+            <td>{{ $codigo['saldo_cdp']}}</td>
+            <td>{{ $codigo['ordenes_pago']}}</td>
+            <td>{{ $codigo['pagos']}}</td>
+            <td>{{ $codigo['cuentas_pagar']}}</td>
+            <td>{{ $codigo['reservas']}}</td>
+            <td>{{ $codigo['codDep']}}</td>
+            <td>{{ $codigo['dep']}}</td>
         </tr>
     @endforeach
     </tbody>
