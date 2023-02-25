@@ -36,16 +36,12 @@ use Carbon\Carbon;
 use App\Exports\InformePresupuestosExport;
 use Illuminate\Http\Request;
 use Session;
+use PDF;
 
 class InformeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function makeEgresosEXCEL(Request $request)
-    {
+
+    public function prepEgresos(){
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
@@ -904,12 +900,10 @@ class InformeController extends Controller
             }
         }
 
-        return Excel::download(new InfPrepEgrExcExport($añoActual, $presupuesto, $mesActual, $diaActual),
-            'Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
-
+        return $presupuesto;
     }
 
-    public function makeIngresosEXCEL(){
+    public function prepIngresos(){
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
@@ -1282,10 +1276,55 @@ class InformeController extends Controller
             }
         }
 
+        return $prepIng;
+    }
+
+    public function makeEgresosEXCEL(Request $request)
+    {
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+        $presupuesto = $this->prepEgresos();
+
+        return Excel::download(new InfPrepEgrExcExport($añoActual, $presupuesto, $mesActual, $diaActual),
+            'Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
+
+    }
+
+    public function makeIngresosEXCEL()
+    {
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+        $prepIng = $this->prepIngresos();
 
         return Excel::download(new InfPrepIngExcExport($añoActual, $prepIng, $mesActual, $diaActual),
             'Presupuesto de Ingresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
 
+    }
+
+    public function makeEgresosPDF(){
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $dia = Carbon::now()->day;
+        $presupuesto = $this->prepEgresos();
+
+        $pdf = PDF::loadView('hacienda.presupuesto.informes.pdfEgresos', compact('añoActual','mesActual','dia','presupuesto'))
+            ->setPaper('a3', 'landscape')
+            ->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
+    }
+
+    public function makeIngresosPDF(){
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $dia = Carbon::now()->day;
+        $presupuesto = $this->prepIngresos();
+
+        $pdf = PDF::loadView('hacienda.presupuesto.informes.pdfIngresos', compact('añoActual','mesActual','dia','presupuesto'))
+            ->setPaper('a3', 'landscape')
+            ->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
     }
 
 }
