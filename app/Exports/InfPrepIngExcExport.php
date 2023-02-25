@@ -5,7 +5,7 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Contracts\View\View;
 
-class InformePresupuestosExport implements FromView
+class InfPrepIngExcExport implements FromView
 {
     public function __construct(int $año, $presupuesto, $mes, $dia){
 
@@ -18,12 +18,12 @@ class InformePresupuestosExport implements FromView
     public function view(): View
     {
 
-        $presupuesto = $this->presupuesto;
+        $prepIng = $this->presupuesto;
         $mesActual = $this->mesActual;
         $año = $this->año;
         $dia = $this->dia;
 
-        return view('exports.informePresupuestoEgresos', compact('presupuesto','mesActual','año','dia'));
+        return view('exports.infPrepIngExc', compact('prepIng','mesActual','año','dia'));
     }
 }
 

@@ -3,13 +3,15 @@
     <div class="modal-dialog modal-lg">
         <form class="form">
             <div class="modal-content">
-                <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button></div>
+                <div class="modal-header"><button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title text-center">Informe de Presupuestos</h3>
+                </div>
                 <div class="modal-body text-center" id="prog">
-                    <h4>Espere por favor, se esta generando el reporte... </h4>
+                    <h4>De clic a la opción requerida. Se debe tener presente que los reportes toman tiempo en descargarse, por favor espere a que se genere.</h4>
                     <br>
                     <div class="text-center">
-                        <center><span class="spinner"></span></center>
-                        <a href="/presupuesto/informeGeneral"> MAKE</a>
+                        <a class="btn-sm btn-primary" href="/presupuesto/informeGeneralEgresosEXCEL"> Egresos <i class="fa fa-file-excel-o"></i></a>
+                        <a class="btn-sm btn-primary" href="/presupuesto/informeGeneralIngresosEXCEL"> Ingresos <i class="fa fa-file-excel-o"></i></a>
                     </div>
                 </div>
                 <div class="modal-footer">
