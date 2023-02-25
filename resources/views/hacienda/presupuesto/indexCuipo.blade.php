@@ -178,6 +178,7 @@
                                         <th class="text-center">Cod Dependencia</th>
                                         <th class="text-center">Dependencia</th>
                                     @endif
+                                    <th class="text-center">Fuente</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -206,6 +207,7 @@
                                             <td class="text-dark" style="vertical-align:middle;">{{ $codigo['codDep']}}</td>
                                             <td class="text-dark" style="vertical-align:middle;">{{ $codigo['dep']}}</td>
                                         @endif
+                                        <td class="text-dark" style="vertical-align:middle;">{{ $codigo['fuente']}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -234,6 +236,7 @@
                                         <th class="text-center">Cod Dependencia</th>
                                         <th class="text-center">Dependencia</th>
                                     @endif
+                                    <th class="text-center">Fuente</th>
                                 </tr>
                                 </tfoot>
                             </table>

@@ -25,6 +25,7 @@
         <th class="text-center">Reservas</th>
         <th class="text-center">Cod Dependencia</th>
         <th class="text-center">Dependencia</th>
+        <th class="text-center">Fuente</th>
     </tr>
     </thead>
     <tbody>
@@ -51,6 +52,7 @@
             <td>{{ $codigo['reservas']}}</td>
             <td>{{ $codigo['codDep']}}</td>
             <td>{{ $codigo['dep']}}</td>
+            <td>{{ $codigo['fuente']}}</td>
         </tr>
     @endforeach
     </tbody>
