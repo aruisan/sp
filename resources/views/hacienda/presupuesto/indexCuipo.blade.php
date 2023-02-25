@@ -7,7 +7,9 @@
         @include('modal.Informes.reporte')
         @include('modal.Informes.ejecucionPresupuestal')
         @include('modal.Proyectos.asignarubro')
+        @include('modal.Informes.makeInforme')
     @endif
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="row inputCenter">
         <ul class="nav nav-pills">
             @if($mesActual == 12)
@@ -34,11 +36,15 @@
                         </a>
                     </li>
                 @endif
+                <!-- SE DEBE ACTUALIZAR LA EJECUCIÓN PRESUPUESTAL.
                 <li class="nav-item pillPri">
                     <a data-toggle="modal" data-target="#ejecucionPresupuestal" class="nav-link" style="cursor: pointer">Ejecución Presupuestal</a>
                 </li>
+                -->
                 @if($V != "Vacio")
                     <li class="dropdown">
+                        <!-- SE COMENTAN LOS REPORTES QUE NO TIENEN ACCESO FUNCIONAL.
+                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeInforme()">Generar Informe de Presupuestos</a>
                         <a class="nav-item dropdown-toggle pillPri" href="" data-toggle="dropdown">Informes&nbsp;<i class="fa fa-caret-down"></i></a>
                         <ul class="dropdown-menu ">
                             <li class="dropdown-submenu">
@@ -48,7 +54,7 @@
                                     <li><a data-toggle="modal" data-target="#reporteHomologar" class="btn btn-drop text-left">Reporte</a></li>
                                 </ul>
                             </li>
-                            <!-- SE COMENTAN LOS REPORTES QUE NO TIENEN ACCESO FUNCIONAL.
+
                             <li>
                                 <a href="#" class="btn btn-drop text-left">FUT </a>
                             </li>
@@ -62,19 +68,24 @@
                                 <a href="#" class="btn btn-drop text-left">Fuentes</a>
                             </li>
 
-                            -->
+
                         </ul>
+                        -->
                     </li>
+                    <!-- SE COMENTAN LOS AÑOS DEBIDO A QUE REALMENTE NO HAY HISTORICO PARA LA ALCALDIA
                     <li class="dropdown">
                         <a class="nav-item dropdown-toggle pillPri" href="" data-toggle="dropdown">Historico&nbsp;<i class="fa fa-caret-down"></i></a>
                         <ul class="dropdown-menu ">
+
                             @foreach($years as $year)
                                 <li>
                                     <a href="{{ url('/presupuesto/historico/'.$year['id']) }}" class="btn btn-drop text-left">{{ $year['info'] }}</a>
                                 </li>
                             @endforeach
+
                         </ul>
                     </li>
+                    -->
                 @endif
                 @if($V == "Vacio")
                     <li class="nav-item pillPri">
@@ -830,6 +841,12 @@
 
     <!-- tabla de proyectos -->
     <script>
+
+        function getModalToMakeInforme(){
+            $('#modalMakeInforme').modal('show');
+
+        }
+
         const bpins = @json($bpins);
         const rubInvDisp = @json($rubBPIN);
         const vigencia_id = @json($V);

@@ -306,7 +306,6 @@
                 toastr.warning('OCURRIO UN ERROR AL VALIDAR SI SE PUEDE GENERAR EL PAZ Y SALVO.');
             });
 
-
             //this.submit();
         }
 

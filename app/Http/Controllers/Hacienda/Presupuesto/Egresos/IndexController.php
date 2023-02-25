@@ -725,7 +725,7 @@ class IndexController extends Controller
                                                         foreach ($cdpsRegValue as $data){
                                                             if ($data->valor != 0){
                                                                 if ($data->registro->jefe_e == 3){
-                                                                    if ($bpinCDP->depRubroFont->rubro_font_id == $data->fontsRubro_id){
+                                                                    if ($itemFont->id == $data->fontsRubro_id){
                                                                         //VALOR REGISTROS
                                                                         $valueRegistros[] = $data->valor;
                                                                         //ID REGISTROS

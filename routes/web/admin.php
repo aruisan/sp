@@ -498,6 +498,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('presupuesto/proyecto/{code}','Hacienda\Presupuesto\Egresos\ActividadController@certProyecto');
 
     //INFORMES PRESUPUESTO EGRESOS
+
+    Route::get('presupuesto/informeGeneral','Hacienda\Presupuesto\Informes\InformeController@make');
     Route::resource('presupuesto/informes','Hacienda\Presupuesto\Informes\ReportsController');
     Route::get('presupuesto/informes/lvl/{id}/{vigencia}','Hacienda\Presupuesto\Informes\ReportsController@lvl');
     Route::get('presupuesto/informes/rubros/{id}','Hacienda\Presupuesto\Informes\ReportsController@rubros');

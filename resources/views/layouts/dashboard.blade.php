@@ -75,7 +75,30 @@
     @yield('css')
 
     <style>
-
+        .spinner,.spinner:after{
+            display: block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        .spinner {
+            background-color: transparent;
+            border-top: 5px solid #74150b;
+            border-right: 5px solid #74150b;
+            border-bottom: 5px solid #74150b;
+            border-left: 5px solid #eee26e;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            animation-duration: .8s;
+            animation-name: spinner-loading
+        }
+        @keyframes spinner-loading{
+            0% {
+                transform: rotate(0deg)
+            } to {
+                  transform: rotate(1turn)
+              }
+        }
 
     </style>
 
