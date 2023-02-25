@@ -1268,7 +1268,7 @@ class InformeController extends Controller
                                 $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
                                 $prepIng[] = collect(['id' => $rb->id, 'code' => $data->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                     'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
-                                    'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->code, 'name_fuente' => $rb->fontsRubro[0]->description]);
+                                    'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rb->fontsRubro[0]->sourceFunding->description]);
 
                                 if (isset($adicionesH)) unset($adicionesH);
                                 if (isset($reduccionesH)) unset($reduccionesH);
