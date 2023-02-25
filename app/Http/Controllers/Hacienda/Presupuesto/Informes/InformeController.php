@@ -20,6 +20,7 @@ use App\Model\Hacienda\Presupuesto\FontsVigencia;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
+use App\Model\Hacienda\Presupuesto\PlantillaCuipoEgresos;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipoIngresos;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Administrativo\Pago\PagoRubros;
@@ -43,8 +44,7 @@ class InformeController extends Controller
 
     public function prepEgresos(){
         $añoActual = Carbon::now()->year;
-        $mesActual = Carbon::now()->month;
-        $diaActual = Carbon::now()->day;
+
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
         $historico = Vigencia::where('vigencia', '!=', $añoActual)->get();
         foreach ($historico as $his) {
@@ -903,10 +903,571 @@ class InformeController extends Controller
         return $presupuesto;
     }
 
+    public function newEgresos(){
+        $añoActual = Carbon::now()->year;
+
+        $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
+        $historico = Vigencia::where('vigencia', '!=', $añoActual)->get();
+        foreach ($historico as $his) {
+            if ($his->tipo == "0") {
+                $years[] = ['info' => $his->vigencia . " - Egresos", 'id' => $his->id];
+            } else {
+                $years[] = ['info' => $his->vigencia . " - Ingresos", 'id' => $his->id];
+            }
+        }
+        asort($years);
+
+        $V = $vigens[0]->id;
+        $vigencia_id = $V;
+
+        $bpins = BPin::all();
+        foreach ($bpins as $bpin){
+            $bpin['rubro'] = "No";
+            if (count($bpin->rubroFind) > 0) {
+                foreach ($bpin->rubroFind as $rub){
+                    if ($rub->vigencia_id == $V){
+                        $bpin['rubro'] = $rub->dep_rubro_id;
+                    }
+                }
+            }
+        }
+
+        //ORDEN DE PAGO
+        $ordenP = OrdenPagos::all();
+        foreach ($ordenP as $ord){
+            if ($ord->registros->cdpsRegistro->first()->cdp->vigencia_id == $V) {
+                $ordenPagos[] = collect(['id' => $ord->id, 'code' => $ord->code, 'nombre' => $ord->nombre, 'persona' => $ord->registros->persona->nombre, 'valor' => $ord->valor, 'estado' => $ord->estado]);
+                foreach ($ord->rubros as $rubroOP){
+                    //SE LLENAN LAS ORDENES DE PAGO CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
+                    if ($rubroOP->orden_pago->estado == "1") {
+                        if ($ord->registros->cdpsRegistro->first()->cdp->tipo == "Funcionamiento"){
+                            $valores[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
+                        } else {
+                            $bpinCdpValue = $rubroOP->cdps_registro->cdps->bpinsCdpValor->first();
+                            $bpinID = BPin::where('cod_actividad', $bpinCdpValue->cod_actividad )->first();
+                            $idRub = bpinVigencias::where('bpin_id', $bpinID->id)->where('vigencia_id', $V)->first();
+
+                            $depRubFont = DependenciaRubroFont::find($idRub->dep_rubro_id);
+
+                            $valores[] = ['id' => $idRub->dep_rubro_id, 'val' => $rubroOP->valor, 'code' => $depRubFont->fontRubro->rubro->plantilla_cuipos_id];
+                        }
+                    }
+                }
+            }
+        }
+        if (!isset($valores)){
+            $valores[] = null;
+            unset($valores[0]);
+        }
+        if (!isset($ordenPagos)){
+            $ordenPagos[] = null;
+            unset($ordenPagos[0]);
+        } else {
+            //PAGOS
+            foreach ($ordenPagos as $data){
+                $pagoFind = Pagos::where('orden_pago_id',$data['id'])->get();
+                if ($pagoFind->count() == 1){
+                    $oPago = OrdenPagos::find($data['id']);
+                    foreach ($oPago->rubros as $rubroOP){
+                        //SE LLENAN LOS PAGOS CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
+                        if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
+                    }
+                    $pagos[] = collect(['id' => $pagoFind[0]->id, 'code' =>$pagoFind[0]->code, 'nombre' => $data['nombre'], 'persona' => $pagoFind[0]->orden_pago->registros->persona->nombre, 'valor' => $pagoFind[0]->valor, 'estado' => $pagoFind[0]->estado]);
+                } elseif($pagoFind->count() > 1){
+                    foreach ($pagoFind as $info){
+                        $oPago = OrdenPagos::find($info->id);
+                        if (isset($oPago->rubros)){
+                            foreach ($oPago->rubros as $rubroOP){
+                                //SE LLENAN LOS PAGOS CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
+                                if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
+                            }
+                        }
+                        $pagos[] = collect(['id' => $info->id, 'code' => $info->code, 'nombre' => $data['nombre'], 'persona' => $info->orden_pago->registros->persona->nombre, 'valor' => $info->valor, 'estado' => $info->estado]);
+                    }
+                }
+            }
+        }
+        if (!isset($pagos)){
+            $pagos[] = null;
+            unset($pagos[0]);
+        }
+        if (!isset($valoresPagos)){
+            $valoresPagos[] = null;
+            unset($valoresPagos[0]);
+        }
+
+        //NEW PRESUPUESTO
+        $plantilla = PlantillaCuipoEgresos::all();
+        $oldId = "0";
+        $oldCode = "0";
+        $oldName = "0";
+
+        foreach ($plantilla as $data){
+            //RUBROS INICIALES
+            if ($data->id == 318) {
+                //CDPS
+                $cdpsFind = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
+                if (count($cdpsFind) > 0) $valueCDPs[] = $cdpsFind->sum('valor');
+                else $valueCDPs[] = 0;
+
+                //registros
+                $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
+                if (count($registrosFind) > 0) $valueRegistros[] = $registrosFind->sum('valor');
+                else $valueRegistros[] = 0;
+
+                //orden pagos
+                $ordenesPago = OrdenPagos::where('id','>=',708)->where('estado','1')->get();
+                if (count($ordenesPago) > 0) $valueOrdenPago[] = $ordenesPago->sum('valor');
+                else $valueOrdenPago[] = 0;
+
+                //pagos
+                $pagosDB = Pagos::where('id','>=',683)->where('estado','1')->get();
+                if (count($pagosDB) > 0) $valuePagos[] = $pagosDB->sum('valor');
+                else $valuePagos[] = 0;
+
+                $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$data->code.".')");
+                foreach ($otherRubs as $other) {
+                    $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
+                    if($rubroOtherFind->first()) {
+                        //2 ADD - 3 RED  - 1 CRED
+                        if(count($rubroOtherFind->first()->rubrosMov) > 0){
+                            foreach ($rubroOtherFind->first()->rubrosMov as $mov){
+                                if ($mov->valor > 0 ){
+                                    if ($mov->movimiento == "1") {
+                                        $valueRubrosCred[] = $mov->valor;
+                                        $valueRubrosCCred[] = $mov->valor;
+                                    }
+                                    elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
+                                    elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
+                                }
+                            }
+                        } else {
+                            $valueRubrosAdd[] = 0;
+                            $valueRubrosRed[] = 0;
+                            $valueRubrosCred[] = 0;
+                            $valueRubrosCCred[] = 0;
+                        }
+
+                    } else {
+                        $valueRubros[] = 0;
+                        $valueRubrosAdd[] = 0;
+                        $valueRubrosRed[] = 0;
+                        $valueRubrosCred[] = 0;
+                        $valueRubrosCCred[] = 0;
+                        $valueCDPs[] = 0;
+                        $valueRegistros[] = 0;
+                        $valueOrdenPago[] = 0;
+                        $valuePagos[] = 0;
+                    }
+                }
+
+                if (!isset($valueRubrosAdd)) {
+                    $valueRubrosAdd[] = null;
+                    unset($valueRubrosAdd[0]);
+                }
+
+                if (!isset($valueRubrosRed)) {
+                    $valueRubrosRed[] = null;
+                    unset($valueRubrosRed[0]);
+                }
+
+                if (!isset($valueRubrosCred)) {
+                    $valueRubrosCred[] = null;
+                    unset($valueRubrosCred[0]);
+                }
+
+                if (!isset($valueRubrosCCred)) {
+                    $valueRubrosCCred[] = null;
+                    unset($valueRubrosCCred[0]);
+                }
+
+                if (!isset($valueCDPs)) {
+                    $valueCDPs[] = null;
+                    unset($valueCDPs[0]);
+                }
+
+                if (!isset($valueRegistros)) {
+                    $valueRegistros[] = null;
+                    unset($valueRegistros[0]);
+                }
+
+                if (!isset($valueOrdenPago)) {
+                    $valueOrdenPago[] = null;
+                    unset($valueOrdenPago[0]);
+                }
+
+                if (!isset($valuePagos)) {
+                    $valuePagos[] = null;
+                    unset($valuePagos[0]);
+                }
+
+                //PRESUPUESTO DEFINITIVO
+                if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= $vigens[0]->presupuesto_inicial + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+                else $PDef = $vigens[0]->presupuesto_inicial + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+
+                //SOLO SE MUESTRA EL VALOR DEL PRESUPUESTO CUANDO NO SON USUARIOS DE TIPO SECRETARIA
+                if (auth()->user()->roles->first()->id != 2){
+                    $presupuesto[] = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code, 'name' => $data->name,
+                        'presupuesto_inicial' => $vigens[0]->presupuesto_inicial, 'adicion' => array_sum($valueRubrosAdd),
+                        'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                        'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs),
+                        'registros' => array_sum($valueRegistros), 'saldo_disp' => $PDef - array_sum($valueCDPs),
+                        'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                        'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos),
+                        'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago), 'rubros_disp' => 0, 'codBpin' => '',
+                        'codActiv' => '', 'nameActiv' => '','codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => ''];
+                }
+
+                unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
+                unset($valueOrdenPago);unset($valuePagos);
+            } else {
+                $hijos1 = PlantillaCuipoEgresos::where('padre_id', $data->id)->get();
+                if (count($hijos1) > 0) {
+                    foreach ($hijos1 as $h1) {
+                        $hijos2 = PlantillaCuipoEgresos::where('padre_id', $h1->id)->get();
+                        if (count($hijos2) > 0) {
+                            foreach ($hijos2 as $h2) {
+                                $hijos3 = PlantillaCuipoEgresos::where('padre_id', $h2->id)->get();
+                                if (count($hijos3) > 0) {
+                                    foreach ($hijos3 as $h3) {
+                                        $hijos4 = PlantillaCuipoEgresos::where('padre_id', $h3->id)->get();
+                                        if (count($hijos4) > 0) {
+                                            foreach ($hijos4 as $h4) {
+                                                $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h4->id)->get();
+                                                dd($rubro);
+                                                if (count($rubro) > 0) {
+                                                    if (count($rubro) == 1) {
+
+                                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                                        if (isset($adicionesH)) unset($adicionesH);
+                                                        if (isset($reduccionesH)) unset($reduccionesH);
+
+                                                        foreach ($rubro[0]->fontsRubro as $font) {
+                                                            // VALIDACION PARA LAS ADICIONES
+                                                            $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                                            if ($add) $hijosAdicion[] = $add->valor;
+                                                            else $hijosAdicion[] = 0;
+
+                                                            // VALIDACION PARA LAS REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                                            $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                                            if ($red) $hijosReduccion[] = $red->valor;
+                                                            else $hijosReduccion[] = 0;
+
+                                                            if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                                        }
+
+                                                        if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                                        if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                                        $sum[] = $rubro[0]->fontsRubro->sum('valor');
+
+                                                    } else {
+                                                        foreach ($rubro as $rb) {
+
+                                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                                            if (isset($adicionesH)) unset($adicionesH);
+                                                            if (isset($reduccionesH)) unset($reduccionesH);
+
+                                                            // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                                            foreach ($rb->fontsRubro as $font) {
+                                                                $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                                                if ($add) $hijosAdicion[] = $add->valor;
+                                                                else $hijosAdicion[] = 0;
+
+                                                                $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                                                if ($red) $hijosReduccion[] = $red->valor;
+                                                                else $hijosReduccion[] = 0;
+
+                                                                if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                                            }
+
+                                                            if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                                            if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                                            $sum[] = $rb->fontsRubro->sum('valor');
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                        } else {
+                                            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h3->id)->get();
+                                            if (count($rubro) > 0) {
+                                                if (count($rubro) == 1) {
+
+                                                    //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                                    if (isset($adicionesH)) unset($adicionesH);
+                                                    if (isset($reduccionesH)) unset($reduccionesH);
+
+                                                    // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                                    foreach ($rubro[0]->fontsRubro as $font) {
+                                                        $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                                        if ($add) $hijosAdicion[] = $add->valor;
+                                                        else $hijosAdicion[] = 0;
+
+                                                        $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                                        if ($red) $hijosReduccion[] = $red->valor;
+                                                        else $hijosReduccion[] = 0;
+
+                                                        if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                                    }
+
+                                                    if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                                    if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                                    $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                } else {
+                                                    foreach ($rubro as $rb) {
+
+                                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                                        if (isset($adicionesH)) unset($adicionesH);
+                                                        if (isset($reduccionesH)) unset($reduccionesH);
+
+                                                        // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                                        foreach ($rb->fontsRubro as $font) {
+                                                            $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                                            if ($add) $hijosAdicion[] = $add->valor;
+                                                            else $hijosAdicion[] = 0;
+
+                                                            $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                                            if ($red) $hijosReduccion[] = $red->valor;
+                                                            else $hijosReduccion[] = 0;
+
+                                                            if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                                        }
+
+                                                        if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                                        if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                                        $sum[] = $rb->fontsRubro->sum('valor');
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h2->id)->get();
+                                    if (count($rubro) > 0) {
+                                        if (count($rubro) == 1) {
+
+                                            //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                            if (isset($adicionesH)) unset($adicionesH);
+                                            if (isset($reduccionesH)) unset($reduccionesH);
+
+                                            // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                            foreach ($rubro[0]->fontsRubro as $font) {
+                                                $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                                if ($add) $hijosAdicion[] = $add->valor;
+                                                else $hijosAdicion[] = 0;
+
+                                                $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                                if ($red) $hijosReduccion[] = $red->valor;
+                                                else $hijosReduccion[] = 0;
+
+                                                if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                            }
+
+                                            if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                            if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                            $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                        } else {
+                                            foreach ($rubro as $rb) {
+                                                //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                                if (isset($adicionesH)) unset($adicionesH);
+                                                if (isset($reduccionesH)) unset($reduccionesH);
+
+                                                // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                                foreach ($rb->fontsRubro as $font) {
+                                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                                    if ($add) $hijosAdicion[] = $add->valor;
+                                                    else $hijosAdicion[] = 0;
+
+                                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                                    if ($red) $hijosReduccion[] = $red->valor;
+                                                    else $hijosReduccion[] = 0;
+
+                                                    if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                                }
+
+                                                if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                                if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                                $sum[] = $rb->fontsRubro->sum('valor');
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h1->id)->get();
+                            if (count($rubro) > 0) {
+                                if (count($rubro) == 1) {
+                                    //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                    if (isset($adicionesH)) unset($adicionesH);
+                                    if (isset($reduccionesH)) unset($reduccionesH);
+
+                                    // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                    foreach ($rubro[0]->fontsRubro as $font) {
+                                        $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                        if ($add) $hijosAdicion[] = $add->valor;
+                                        else $hijosAdicion[] = 0;
+
+                                        $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                        if ($red) $hijosReduccion[] = $red->valor;
+                                        else $hijosReduccion[] = 0;
+
+                                        if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                    }
+
+                                    if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                    if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                    // VALIDACION PARA EL VALOR INICIAL DE LOS RUBROS PADRES
+                                    $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                } else {
+                                    foreach ($rubro as $rb) {
+                                        //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                        if (isset($adicionesH)) unset($adicionesH);
+                                        if (isset($reduccionesH)) unset($reduccionesH);
+
+                                        // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
+                                        foreach ($rb->fontsRubro as $font) {
+                                            $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                            if ($add) $hijosAdicion[] = $add->valor;
+                                            else $hijosAdicion[] = 0;
+
+                                            $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                            if ($red) $hijosReduccion[] = $red->valor;
+                                            else $hijosReduccion[] = 0;
+
+                                            if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                        }
+
+                                        if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                        if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+
+                                        // VALIDACION PARA EL VALOR INICIAL DE LOS RUBROS PADRES
+                                        $sum[] = $rb->fontsRubro->sum('valor');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (isset($sum)) {
+                        $compIngValue = 0;
+                        $adicionesTot = 0;
+                        $reduccionesTot = 0;
+                        if (isset($civ)) $compIngValue = array_sum($civ);
+                        if (isset($adicionesH)) $adicionesTot = array_sum($adicionesH);
+                        if (isset($reduccionesH)) $reduccionesTot = array_sum($reduccionesH);
+
+                        $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
+
+                        $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
+                            'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
+                            'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
+
+                        unset($sum);
+                        if (isset($civ)) unset($civ);
+                        if (isset($adicionesH)) unset($adicionesH);
+                        if (isset($reduccionesH)) unset($reduccionesH);
+                        if (isset($hijosAdicion)) unset($hijosAdicion);
+                        if (isset($hijosReduccion)) unset($hijosReduccion);
+                    }
+                } else {
+                    //AL NO TENER HIJOS SE TOMA COMO SI FUERA YA EL RUBRO HIJO CON LOS VALORES
+                    $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+                    if (count($rubro) > 0) {
+                        if (count($rubro) == 1) {
+                            $compIngValue = 0;
+                            if (count($rubro[0]->compIng) > 0) $compIngValue = $rubro[0]->compIng->sum('valor');
+                            if (count($rubro[0]->fontsRubro) > 1) {
+                                foreach ($rubro[0]->fontsRubro as $font) {
+                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($add) $adicion = $add->valor;
+                                    else $adicion = 0;
+
+                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($red) $reduccion = $red->valor;
+                                    else $reduccion = 0;
+
+                                    $definitivo = $adicion - $reduccion + $font->valor;
+
+                                    $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name,
+                                        'inicial' => $font->valor, 'adicion' => $adicion, 'reduccion' => $reduccion, 'anulados' => 0,
+                                        'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo, 'hijo' => $data->hijo,
+                                        'cod_fuente' => $font->sourceFunding->code, 'name_fuente' => $font->sourceFunding->description]);
+                                }
+                            } else {
+                                if (count($rubro[0]->fontsRubro) > 0) {
+                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
+                                    if ($add) $adicion = $add->valor;
+                                    else $adicion = 0;
+
+                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
+                                    if ($red) $reduccion = $red->valor;
+                                    else $reduccion = 0;
+
+                                    $definitivo = $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor');
+
+                                    $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
+                                        'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
+                                        'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
+                                }
+
+                            }
+                        } else {
+                            //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
+                            foreach ($rubro as $rb) {
+                                //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
+                                if (isset($adicionesH)) unset($adicionesH);
+                                if (isset($reduccionesH)) unset($reduccionesH);
+
+                                foreach ($rb->fontsRubro as $font) {
+                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($add) {
+                                        if ($add->fonts_rubro_id == $font->id) $hijosAdicion[] = $add->valor;
+                                        else $hijosAdicion[] = 0;
+                                    } else $hijosAdicion[] = 0;
+
+                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($red) {
+                                        if ($red->fonts_rubro_id == $font->id) $hijosReduccion[] = $red->valor;
+                                        else $hijosReduccion[] = 0;
+                                    } else $hijosReduccion[] = 0;
+                                }
+
+                                if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                                if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+                                if (isset($adicionesH)) $adicionesTot = array_sum($adicionesH);
+                                if (isset($reduccionesH)) $reduccionesTot = array_sum($reduccionesH);
+
+                                $compIngValue = 0;
+                                if (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
+                                $sum[] = $rb->fontsRubro->sum('valor');
+                                $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
+                                $prepIng[] = collect(['id' => $rb->id, 'code' => $data->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
+                                    'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
+                                    'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rb->fontsRubro[0]->sourceFunding->description]);
+
+                                unset($sum);
+                                if (isset($adicionesH)) unset($adicionesH);
+                                if (isset($reduccionesH)) unset($reduccionesH);
+                                if (isset($hijosAdicion)) unset($hijosAdicion);
+                                if (isset($hijosReduccion)) unset($hijosReduccion);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        return $presupuesto;
+    }
+
     public function prepIngresos(){
         $añoActual = Carbon::now()->year;
-        $mesActual = Carbon::now()->month;
-        $diaActual = Carbon::now()->day;
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->where('estado', '0')->get();
         $historico = Vigencia::where('vigencia', '!=', $añoActual)->get();
@@ -1307,7 +1868,7 @@ class InformeController extends Controller
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $dia = Carbon::now()->day;
-        $presupuesto = $this->prepEgresos();
+        $presupuesto = $this->newEgresos();
 
         $pdf = PDF::loadView('hacienda.presupuesto.informes.pdfEgresos', compact('añoActual','mesActual','dia','presupuesto'))
             ->setPaper('a3', 'landscape')
