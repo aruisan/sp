@@ -1270,6 +1270,7 @@ class InformeController extends Controller
                                     'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
                                     'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rb->fontsRubro[0]->sourceFunding->description]);
 
+                                unset($sum);
                                 if (isset($adicionesH)) unset($adicionesH);
                                 if (isset($reduccionesH)) unset($reduccionesH);
                                 if (isset($hijosAdicion)) unset($hijosAdicion);

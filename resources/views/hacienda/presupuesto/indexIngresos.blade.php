@@ -99,6 +99,7 @@
                                     <th class="text-center">DEFINITIVO</th>
                                     <th class="text-center">Total Recaudado</th>
                                     <th class="text-center">Saldo Por Recaudar</th>
+                                    <th class="text-center">Fuente</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -117,6 +118,7 @@
                                             <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['definitivo'],0);?></td>
                                             <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['recaudado'],0);?></td>
                                             <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['porRecaudar'],0);?></td>
+                                            <td class="text-dark" style="vertical-align:middle;">{{$rubro['cod_fuente']}} {{$rubro['name_fuente']}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -131,6 +133,7 @@
                                     <th class="text-center">DEFINITIVO</th>
                                     <th class="text-center">Total Recaudado</th>
                                     <th class="text-center">Saldo Por Recaudar</th>
+                                    <th class="text-center">Fuente</th>
                                 </tr>
                                 </tfoot>
                             </table>

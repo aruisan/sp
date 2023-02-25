@@ -316,6 +316,8 @@ class PresupuestoController extends Controller
 
                             $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
+                            if ($data->code == '1.2.06') dd($data, $sum);
+
                             $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                 'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                                 'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
@@ -365,7 +367,7 @@ class PresupuestoController extends Controller
 
                                         $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
-                                            'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro, 'name_fuente' => $rubro[0]->fontsRubro]);
+                                            'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
                                     }
 
                                 }
@@ -403,8 +405,9 @@ class PresupuestoController extends Controller
                                     $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
                                     $prepIng[] = collect(['id' => $rb->id, 'code' => $data->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
-                                        'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->code, 'name_fuente' => $rb->fontsRubro[0]->description]);
+                                        'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rb->fontsRubro[0]->sourceFunding->description]);
 
+                                    unset($sum);
                                     if (isset($adicionesH)) unset($adicionesH);
                                     if (isset($reduccionesH)) unset($reduccionesH);
                                     if (isset($hijosAdicion)) unset($hijosAdicion);
