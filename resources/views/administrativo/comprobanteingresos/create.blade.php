@@ -101,8 +101,8 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center"></th>
-                                    <th class="text-center" style="width: 200px">Credito<span class="text-danger">*</span></th>
                                     <th class="text-center" style="width: 200px">Debito<span class="text-danger">*</span></th>
+                                    <th class="text-center" style="width: 200px">Crédito<span class="text-danger">*</span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -119,8 +119,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="0"></td>
                                         <td><input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="0"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -135,8 +135,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="0"></td>
                                         <td><input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="0"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -151,8 +151,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="0"></td>
                                         <td><input class="form-control" min="0" type="number" name="debitoIngresos" id="debitoIngresos" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="0"></td>
                                     </tr>
                                 </tbody>
                             </table>
