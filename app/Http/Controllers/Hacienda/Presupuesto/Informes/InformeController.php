@@ -6,6 +6,7 @@ use App\BPin;
 use App\bpinVigencias;
 use App\Exports\InfMensualExport;
 use App\Exports\InfPrepIngExcExport;
+use App\Exports\InfPrepEgrExcExport;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Cdp\BpinCdpValor;
@@ -1627,7 +1628,7 @@ class InformeController extends Controller
                             'codBpin' => '','codActiv' => '', 'nameActiv' => '','codDep' => '', 'dep' => '',
                             'depRubID' => '', 'fuente' => '']);
 
-                        //if ($data->code == '2.1.3.01.02') dd($presupuesto, $cdpH, $hijosCDP, $CDPID);
+                        if ($data->code == '2.1') dd($presupuesto, $cdpH, $hijosCDP, $CDPID, $sum);
 
                         unset($sum);
                         if (isset($adicionesH)) unset($adicionesH);
