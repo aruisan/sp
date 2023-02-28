@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Impuestos;
 
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Impuestos\Muellaje;
 use App\Model\Impuestos\Pagos;
 use App\Model\User;
@@ -35,8 +36,9 @@ class MuellajeController extends Controller
         }
         if (!isset($atraquesPend)) $atraquesPend = [];
         if (!isset($atraquesPay)) $atraquesPay = [];
+        $bancos = PucAlcaldia::where('padre_id', 8)->get();
 
-        return view('administrativo.impuestos.muellaje.index', compact('atraquesPend','atraquesPay'));
+        return view('administrativo.impuestos.muellaje.index', compact('atraquesPend','atraquesPay', 'bancos'));
     }
 
     /**
@@ -133,7 +135,7 @@ class MuellajeController extends Controller
     public function show($id)
     {
         $muellaje = Muellaje::find($id);
-        $pago = Pagos::where('entity_id',$id)->first();
+        $pago = Pagos::where('entity_id',$id)->where('modulo','MUELLAJE')->first();
         if ($pago->user_pago_id) $pago->user_pago = User::find($pago->user_pago_id);
         $responsable = User::find($muellaje->funcionario_id);
 
@@ -172,6 +174,7 @@ class MuellajeController extends Controller
             $pago->fechaPago = Carbon::today();
             $pago->resource_id = $resource;
             $pago->user_pago_id = Auth::user()->id;
+            $pago->puc_alcaldia_id = $request->cuenta;
             $pago->save();
 
             Session::flash('success', 'Pago aplicado exitosamente.');

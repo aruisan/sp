@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Administrativo\Impuestos;
 
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Impuestos\Delineacion;
 use App\Model\Administrativo\Impuestos\DelineacionTitulares;
 use App\Model\Administrativo\Impuestos\DelineacionVecinos;
+use App\Model\Impuestos\Pagos;
+use App\Traits\ResourceTraits;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,8 +24,22 @@ class DelineacionController extends Controller
      */
     public function index()
     {
-        $delineacion = Delineacion::orderBy('fecha','DESC')->get();
-        return view('administrativo.impuestos.delineacion.index', compact('delineacion'));
+        $delineaciones = Delineacion::orderBy('fecha','DESC')->get();
+        if ($delineaciones){
+            foreach ($delineaciones as $delineacion){
+                $pago = Pagos::where('entity_id', $delineacion->id)->where('modulo','DELINEACIÓN')->first();
+                if ($pago->estado == "Generado") $delineacionPend[] = $delineacion;
+                else {
+                    $delineacion->fechaPago = $pago->fechaPago;
+                    $delineacion->rutaFile = $pago->Resource->ruta;
+                    $delineacionPay[] = $delineacion;
+                }
+            }
+        }
+        if (!isset($delineacionPend)) $delineacionPend = [];
+        if (!isset($delineacionPay)) $delineacionPay = [];
+        $bancos = PucAlcaldia::where('padre_id', 8)->get();
+        return view('administrativo.impuestos.delineacion.index', compact('delineacionPend','delineacionPay','bancos'));
     }
 
     /**
@@ -188,6 +205,7 @@ class DelineacionController extends Controller
             $delineacion->emailResponsable = $request->emailResponsable;
             $delineacion->telResponsable = $request->telResponsable;
             $delineacion->notificarResponsable = $request->notificarResponsable;
+            $delineacion->valorPago = $request->valorPago;
             ///
             if ($request->modalidadLicenciaConstruccion == "OBRA NUEVA"){
                 $delineacion->tipoUsos = $request->tipoUsos;
@@ -223,6 +241,16 @@ class DelineacionController extends Controller
 
             $delineacion->save();
 
+            $delineacionNumRef = Delineacion::find($delineacion->id);
+            if (strlen($delineacionNumRef->id) < 5){
+                $newValue = $delineacionNumRef->id;
+                for ($i = 0; $i < 6 - strlen($delineacionNumRef->id); $i++) {
+                    $newValue =  '0'.$newValue;
+                }
+            } else $newValue = $delineacionNumRef->id;
+            $delineacionNumRef->numRegistroIngreso = Carbon::today()->format('Ymd').$newValue;
+            $delineacionNumRef->save();
+
             //ALMACENAR LOS VECINOS
             if (count($request->dirPredVecino) > 0) {
                 for ($i = 0; $i <= count($request->dirPredVecino) - 1; $i++) {
@@ -247,6 +275,15 @@ class DelineacionController extends Controller
                 }
             }
 
+            $pago = new Pagos();
+            $pago->modulo = "DELINEACIÓN";
+            $pago->entity_id = $delineacion->id;
+            $pago->estado = "Generado";
+            $pago->valor = $delineacion->valorPago;
+            $pago->fechaCreacion = $delineacion->fecha;
+            $pago->user_id = $delineacion->funcionario_id;
+            $pago->save();
+
             Session::flash('success','Formato registrado exitosamente.');
             return redirect('/administrativo/impuestos/delineacion');
         } else{
@@ -263,7 +300,13 @@ class DelineacionController extends Controller
     public function show($id)
     {
         $delinacion = Delineacion::find($id);
-        dd($delinacion);
+        $pago = Pagos::where('entity_id',$id)->where('modulo','DELINEACIÓN')->first();
+        if ($pago->user_pago_id) $pago->user_pago = User::find($pago->user_pago_id);
+        $responsable = User::find($delinacion->funcionario_id);
+        $vecinos = $delinacion->vecinos;
+        $titulares = $delinacion->titulares;
+        $tramite = 'REVALIDACIÓN';
+        return view('administrativo.impuestos.delineacion.show',compact('responsable', 'delinacion','vecinos','titulares','tramite'));
     }
 
     /**
@@ -295,15 +338,28 @@ class DelineacionController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function pay(Request $request)
     {
-        //
+        if (!$request->hasFile('constanciaPago')){
+            Session::flash('warning', 'Hay algun error en el archivo, intente de nuevo por favor.');
+            return redirect('/administrativo/impuestos/delineacion');
+        } else {
+
+            $file = new ResourceTraits;
+            $resource = $file->resource($request->constanciaPago, 'public/Impuestos/PagosDelineacion');
+
+            $pago = Pagos::where('entity_id',$request->regId)->where('modulo','DELINEACIÓN')->first();
+            $pago->estado = "Pagado";
+            $pago->fechaPago = Carbon::today();
+            $pago->resource_id = $resource;
+            $pago->user_pago_id = Auth::user()->id;
+            $pago->puc_alcaldia_id = $request->cuenta;
+            $pago->save();
+
+            Session::flash('success', 'Pago aplicado exitosamente.');
+            return redirect('/administrativo/impuestos/delineacion');
+
+        }
     }
 
     /**

@@ -1,13 +1,13 @@
 
-<div id="formPagoMuellaje" class="modal fade" role="dialog">
+<div id="formPagoDelineacion" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
-        <form class="form" action="{{ url('/administrativo/impuestos/muellaje/pay') }}" method="POST" id="add" enctype="multipart/form-data">
+        <form class="form" action="{{ url('/administrativo/impuestos/delineacion/pay') }}" method="POST" id="add" enctype="multipart/form-data">
             {!! method_field('POST') !!}
             {{ csrf_field() }}
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Cargar Constancia de Pago Muellaje</h3>
+                    <h3 class="modal-title">Cargar Constancia de Pago Delineacion y Urbanismo</h3>
                 </div>
                 <div class="modal-body text-center" id="prog">
                     <h4>Registro de ingreso No.<b><div id="regIngresoText" name="regIngreso"></div></b></h4>

@@ -386,6 +386,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
             //DELINEACION Y URBANISMO
         Route::resource('impuestos/delineacion','Administrativo\Impuestos\DelineacionController');
+        Route::post('impuestos/delineacion/pay','Administrativo\Impuestos\DelineacionController@pay');
         Route::delete('impuestos/delineacion/vecino/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteVecino');
         Route::delete('impuestos/delineacion/titular/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteTitular');
 

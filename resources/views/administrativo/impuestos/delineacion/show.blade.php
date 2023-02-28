@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('titulo')  FORMULARIO DELINEACION Y URBANISMO  @stop
+@section('titulo')  FORMULARIO DELINEACIÓN Y URBANISMO  @stop
 @section('sidebar')@stop
 @section('content')
     <div class="col-md-12 align-self-center" translate="no">
@@ -23,28 +23,23 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="form-validation">
-                        <form class="form-valide" action="{{url('/administrativo/impuestos/delineacion')}}" method="POST" enctype="multipart/form-data" id="prog">
-                            {{ csrf_field() }}
+                        <form class="form-valide" id="prog">
                             <table id="TABLA1" class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
                                     <th scope="row" colspan="3">DATOS GENERALES</th>
                                 </tr>
                                 <tr style="background-color: #bfc3bf; color: black">
-                                    @if($tramite != "INICIAL")
-                                        <td><b>Fecha: {{ Carbon\Carbon::parse($delinacion->fecha)->format('d-m-Y') }}</b></td>
-                                    @else
-                                        <td><b>Fecha: {{ Carbon\Carbon::today()->Format('d-m-Y')}}</b></td>
-                                    @endif
-                                    <td>Funcionario Responsable: {{ $responsable }}</td>
+                                    <td><b>Fecha: {{ Carbon\Carbon::parse($delinacion->fecha)->format('d-m-Y') }}</b></td>
+                                    <td>Funcionario Responsable: {{ $responsable->name }} - {{ $responsable->email }}</td>
                                     <td> 1.2
-                                        @if($tramite == "INICIAL")
+                                        @if($delinacion->tramite == "INICIAL")
                                             <b>TRAMITE INICIAL</b>
                                             <input type="hidden" name="tramite" value="INICIAL">
-                                        @elseif($tramite == "MODIFICACIÓN")
+                                        @elseif($delinacion->tramite == "MODIFICACIÓN")
                                             <b>MODIFICACIÓN DE LICENCIA VIGENTE</b>
                                             <input type="hidden" name="tramite" value="MODIFICACION">
-                                        @elseif($tramite == "REVALIDACIÓN")
+                                        @elseif($delinacion->tramite == "REVALIDACIÓN")
                                             <b>REVALIDACIÓN</b>
                                             <input type="hidden" name="tramite" value="REVALIDACION">
                                         @endif
@@ -243,22 +238,12 @@
                                 @if($tramite != "INICIAL")
                                     @foreach($vecinos as $vecino)
                                         <tr>
-                                            <td><button type="button" @click.prevent="eliminarVecino({{ $vecino->id }})" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-trash"></i></button></td>
+                                            <td></td>
                                             <td style="vertical-align: middle">DIRECCIÓN DEL PREDIO: {{$vecino->dirPredVecino}}</td>
                                             <td style="vertical-align: middle">DIRECCIÓN DE CORRESPONDENCIA: {{$vecino->dirCorrespVecino}}</td>
                                         </tr>
                                     @endforeach
                                 @endif
-                                <tr>
-                                    <td>
-                                        <button type="button" @click.prevent="nuevaFila" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-plus"></i></button>
-                                        @if($tramite != "INICIAL")
-                                            <button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button>
-                                        @endif
-                                    </td>
-                                    <td>DIRECCIÓN DEL PREDIO<input type="text" required class="form-control" name="dirPredVecino[]" id="dirPredVecino[]"></td>
-                                    <td>DIRECCIÓN DE CORRESPONDENCIA<input type="text" required class="form-control" name="dirCorrespVecino[]" id="dirCorrespVecino[]"></td>
-                                </tr>
                                 </tbody>
                             </table>
                             <table class="table text-center">
@@ -383,7 +368,7 @@
                                 @if($tramite != "INICIAL")
                                     @foreach($titulares as $titular)
                                         <tr>
-                                            <td><button type="button" @click.prevent="eliminarTitular({{ $titular->id }})" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-trash"></i></button></td>
+                                            <td></td>
                                             <td style="vertical-align: middle">NOMBRE: {{$titular->nameTit}}</td>
                                             <td style="vertical-align: middle">C.C. O NIT: {{$titular->ccTit}}</td>
                                             <td style="vertical-align: middle">TELÉFONO /CELULAR: {{$titular->telTit}}</td>
@@ -391,18 +376,6 @@
                                         </tr>
                                     @endforeach
                                 @endif
-                                <tr>
-                                    <td>
-                                        <button type="button" @click.prevent="nuevaFilaTitulares" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-plus"></i></button>
-                                        @if($tramite != "INICIAL")
-                                            <button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button>
-                                        @endif
-                                    </td>
-                                    <td>NOMBRE<input type="text" class="form-control" required name="nameTit[]" id="nameTit[]"></td>
-                                    <td>C.C. O NIT<input type="number" class="form-control" required name="ccTit[]" id="ccTit[]"></td>
-                                    <td>TELÉFONO /CELULAR<input type="number" class="form-control" required name="telTit[]" id="telTit[]"></td>
-                                    <td>CORREO ELECTRÓNICO<input type="email" class="form-control" required name="emailTit[]" id="emailTit[]"></td>
-                                </tr>
                                 </tbody>
                             </table>
                             <table class="table text-center" id="titulares">
@@ -730,18 +703,8 @@
                                 <tbody>
                                 <tr>
                                     <td colspan="4">Valor a pagar:
-                                        <input type="number" class="form-control" name="valorPago" id="valorPago" min="0" required>
+                                        <input type="number" class="form-control" name="valorPago" id="valorPago" min="0" value="{{ $delinacion->valorPago }}" required>
                                     </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <table class="table text-center" id="anexo">
-                                <thead>
-                                <tr style="background-color: #0e7224; color: white"><td colspan="4">ENVIAR</td></tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><button type="submit" class="text-center btn btn-impuesto" style="font-size: 25px; color: white">ENVIAR</button></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -752,212 +715,4 @@
             </div>
         </div>
     </div>
-@stop
-@section('js')
-    <script>
-
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("prog").addEventListener('submit', validarFormulario);
-        });
-
-        function validarFormulario(evento) {
-            evento.preventDefault();
-            //AJUSTAR VALIDACION FORMULARIO
-            var tipoTramite = document.getElementById('tipoTramite').value;
-            if(tipoTramite == 0) {
-                alert('Debe seleccionar el tipo de tramite');
-                return;
-            }
-
-            var usos = document.getElementById('usos').value;
-            if(usos == 0) {
-                alert('Debe seleccionar el uso');
-                return;
-            }
-
-            var modalidadLicenciaConstruccion = document.getElementById('modalidadLicenciaConstruccion').value;
-            if(modalidadLicenciaConstruccion == 0) {
-                alert('Debe seleccionar la modalidad licencia de construccion');
-                return;
-            }
-
-            this.submit();
-        }
-
-        function cambioTipoTramite(value){
-            if(value == "OTRAS ACTUACIONES"){
-                document.getElementById("cualOtraActuacion").value = null;
-                $("#otroTramite").show();
-                document.getElementById("anexo").style.display = "none";
-            }
-            else if(value == "OBRA NUEVA"){
-                $("#anexo").show();
-            }
-            else {
-                document.getElementById("anexo").style.display = "none";
-                document.getElementById("otroTramite").style.display = "none";
-                document.getElementById("cualOtraActuacion").value = null;
-            }
-        }
-
-        function cambioUsos(value){
-            if(value == "Otro"){
-                document.getElementById("cualOtroUso").value = null;
-                $("#otroUso").show();
-            }
-            else {
-                document.getElementById("otroUso").style.display = "none";
-                document.getElementById("cualOtroUso").value = null;
-            }
-        }
-
-        function cambioPlanimetria(value){
-            if(value == "Otro"){
-                document.getElementById("cualotraPlanimetria").value = null;
-                $("#otraPlanimetria").show();
-            }
-            else {
-                document.getElementById("otraPlanimetria").style.display = "none";
-                document.getElementById("cualotraPlanimetria").value = null;
-            }
-        }
-
-        function cambioTipoUsos(value){
-            if(value == "Otro"){
-                document.getElementById("cualotroTipoUso").value = null;
-                $("#otroTipoUso").show();
-            }
-            else {
-                document.getElementById("otroTipoUso").style.display = "none";
-                document.getElementById("cualotroTipoUso").value = null;
-            }
-        }
-
-        function cambioMedidasPasivas(value){
-            if(value == "Otro"){
-                document.getElementById("cualotraMedidaPasiva").value = null;
-                $("#otraMedidaPasiva").show();
-            }
-            else {
-                document.getElementById("otraMedidaPasiva").style.display = "none";
-                document.getElementById("cualotraMedidaPasiva").value = null;
-            }
-        }
-
-        function cambioMedidasActivas(value){
-            if(value == "Otro"){
-                document.getElementById("cualotraMedidaActiva").value = null;
-                $("#otraMedidaActiva").show();
-            }
-            else {
-                document.getElementById("otraMedidaActiva").style.display = "none";
-                document.getElementById("cualotraMedidaActiva").value = null;
-            }
-        }
-
-        function cambioMatExt(value){
-            if(value == "Otro"){
-                document.getElementById("cualotroMuroExt").value = null;
-                $("#otroMuroExt").show();
-            }
-            else {
-                document.getElementById("otroMuroExt").style.display = "none";
-                document.getElementById("cualotroMuroExt").value = null;
-            }
-        }
-
-        function cambioMatInt(value){
-            if(value == "Otro"){
-                document.getElementById("cualotroMuroInt").value = null;
-                $("#otroMuroInt").show();
-            }
-            else {
-                document.getElementById("otroMuroInt").style.display = "none";
-                document.getElementById("cualotroMuroInt").value = null;
-            }
-        }
-
-        function cambioMatCub(value){
-            if(value == "Otro"){
-                document.getElementById("cualotroCub").value = null;
-                $("#otroCub").show();
-            }
-            else {
-                document.getElementById("otroCub").style.display = "none";
-                document.getElementById("cualotroCub").value = null;
-            }
-        }
-
-        function cambioAhorroAgua(value){
-            if(value == "Otro"){
-                document.getElementById("cualotroAhorroAgua").value = null;
-                $("#otroAhorroAgua").show();
-            }
-            else {
-                document.getElementById("otroAhorroAgua").style.display = "none";
-                document.getElementById("cualotroAhorroAgua").value = null;
-            }
-        }
-
-        function cambioZonaClimatica(value){
-            if(value == "Otro"){
-                document.getElementById("cualotroZonificacionClimatica").value = null;
-                $("#otroZonificacionClimatica").show();
-            }
-            else {
-                document.getElementById("otroZonificacionClimatica").style.display = "none";
-                document.getElementById("cualotroZonificacionClimatica").value = null;
-            }
-        }
-
-        $(document).on('click', '.borrar', function (event) {
-            event.preventDefault();
-            $(this).closest('tr').remove();
-        });
-
-        new Vue({
-            el: '#prog',
-
-            methods:{
-
-                eliminarVecino: function(dato){
-                    var opcion = confirm("Esta seguro de eliminar la información del vecino colindante?");
-                    if (opcion == true) {
-                        var urlexogena = '/administrativo/impuestos/delineacion/vecino/delete/'+dato;
-                        axios.delete(urlexogena).then(response => {
-                            location.reload();
-                        });
-                    }
-                },
-
-                eliminarTitular: function(dato){
-                    var opcion = confirm("Esta seguro de eliminar la información del titular?");
-                    if (opcion == true) {
-                        var urlexogena = '/administrativo/impuestos/delineacion/titular/delete/'+dato;
-                        axios.delete(urlexogena).then(response => {
-                            location.reload();
-                        });
-                    }
-                },
-
-                nuevaFila(){
-                    $('#infoVecinos tbody tr:first').after('<tr>\n' +
-                        '<td style="vertical-align: middle"><button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button></td>\n'+
-                        ' <td>DIRECCIÓN DEL PREDIO<input type="text" class="form-control" required name="dirPredVecino[]" id="dirPredVecino[]"></td>\n'+
-                        '<td>DIRECCIÓN DE CORRESPONDENCIA<input type="text" class="form-control" required name="dirCorrespVecino[]" id="dirCorrespVecino[]"></td>\n'+
-                        '</tr>\n');
-                },
-
-                nuevaFilaTitulares(){
-                    $('#titulares tbody tr:first').after('<tr>\n' +
-                        '<td style="vertical-align: middle"><button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button></td>\n'+
-                        '<td>NOMBRE<input type="text" class="form-control" name="nameTit[]" id="nameTit[]" required></td>\n'+
-                        '<td>C.C. O NIT<input type="number" class="form-control" name="ccTit[]" id="ccTit[]" required></td>\n'+
-                        '<td>TELÉFONO /CELULAR<input type="number" class="form-control" name="telTit[]" id="telTit[]" required></td>\n'+
-                        '<td>CORREO ELECTRÓNICO<input type="email" class="form-control" name="emailTit[]" id="emailTit[]" required></td>\n'+
-                        '</tr>\n');
-                },
-            }
-        });
-    </script>
 @stop
