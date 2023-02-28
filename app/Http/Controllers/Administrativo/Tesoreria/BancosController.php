@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria;
 
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
+use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
+use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\bancos;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
@@ -202,5 +207,41 @@ class BancosController extends Controller
     public function destroy(bancos $bancos)
     {
         //
+    }
+
+    public function conciliacion(){
+
+        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
+        foreach ($lv1 as $dato){
+            $result[] = $dato;
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) $result[] = $cuenta;
+        }
+
+        return view('administrativo.tesoreria.bancos.conciliacion',compact('result'));
+    }
+
+    public function movAccount(Request $request){
+
+        $rubroPUC = PucAlcaldia::find($request->id);
+        $total = 0;
+
+        // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
+        $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
+        if (count($pagoBanks) > 0){
+            foreach ($pagoBanks as $pagoBank){
+                if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
+                    $total = $total + $pagoBank->valor;
+                    $pago = Pagos::find($pagoBank->pagos_id);
+                    $tercero = $pago->orden_pago->registros->persona->nombre;
+                    $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                    $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
+                        'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                        'total' => '$'.number_format($total,0)]);
+                }
+            }
+        }
+
+        return $result;
     }
 }

@@ -191,8 +191,11 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::delete('CIRubro/{id}/delete', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController@rubroDelete');
 
             //Bancos
-
+        Route::get('tesoreria/bancos/libros','Administrativo\Tesoreria\BancosController@libros');
+        Route::get('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@conciliacion');
+        Route::post('tesoreria/bancos/movAccount','Administrativo\Tesoreria\BancosController@movAccount');
         Route::resource('bancos','Administrativo\Tesoreria\BancosController');
+
 
 
             //Pac

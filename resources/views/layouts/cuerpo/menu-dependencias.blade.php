@@ -285,7 +285,14 @@
                <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago Nomina</a></li>
                <!-- <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/retefuente')}}">Retención en la Fuente</a></li> -->
                <li><a class="item-menu" tabindex="-1" href="#">Informes</a></li>
-               <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li>
+               <li class="dropdown-submenu">
+                  <a class="dropdown-item item-menu" >Bancos</a>
+                  <ul class="dropdown-menu">
+                     <li><a class="item-menu" href="#">Libro</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/bancos/conciliacion') }}">Conciliación bancaria</a></li>
+                  </ul>
+               </li>
+               <!--  <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li> -->
                <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Comprobante de Egresos </a>
