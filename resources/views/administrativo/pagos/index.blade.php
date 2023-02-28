@@ -118,7 +118,9 @@
                                 </td>
                                 <td>
                                     <a href="{{ url('administrativo/pagos/show/'.$pago['info']->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
-                                    <a href="{{ url('/administrativo/egresos/pdf/'.$pago['info']->id) }}" title="Comprobante de Egresos" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+                                    @if($pago['info']->estado == "1")
+                                        <a href="{{ url('/administrativo/egresos/pdf/'.$pago['info']->id) }}" title="Comprobante de Egresos" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
