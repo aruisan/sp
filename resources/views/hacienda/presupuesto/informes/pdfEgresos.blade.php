@@ -72,7 +72,7 @@
 			<center><h3>PRESUPUESTO DE EGRESOS {{ $dia }}-{{ $mesActual }}-{{ $añoActual }}</h3></center>
 		</div>
 		<div class="br-black-1">
-			<table class="table table-bordered">
+			<table class="table table-bordered table-striped">
 				<thead>
 				<tr>
 					<th class="text-center">Codigo BPIN</th>

@@ -1105,7 +1105,14 @@ class InformeController extends Controller
                                                                 $rubCdpValues = RubrosCdpValor::where('fontsDep_id', $dependencia->id)->get();
                                                                 foreach ($rubCdpValues as $rubCdpValue) {
                                                                     if ($rubCdpValue->cdps->jefe_e == "3") {
-                                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                        if (!isset($CDPID)) {
+                                                                            $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                            $CDPID[] = $rubCdpValue->cdps->id;
+                                                                        }
+                                                                        else if (array_search($rubCdpValue->cdps->id, $CDPID) === false){
+                                                                            $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                            $CDPID[] = $rubCdpValue->cdps->id;
+                                                                        }
                                                                         if (count($rubCdpValue->cdps->cdpsRegistro) > 0){
                                                                             //CONSULTA PARA LOS REGISTROS
                                                                             $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $rubCdpValue->cdp_id)->get();
@@ -1138,7 +1145,14 @@ class InformeController extends Controller
                                                                 $bpinCdpValues = BpinCdpValor::where('dependencia_rubro_font_id', $dependencia->id)->get();
                                                                 foreach ($bpinCdpValues as $bpinCdpValue) {
                                                                     if ($bpinCdpValue->cdp->jefe_e == "3") {
-                                                                        $hijosCDP[] = $bpinCdpValue->cdp->valor;
+                                                                        if (!isset($CDPID)) {
+                                                                            $hijosCDP[] = $bpinCdpValue->cdp->valor;
+                                                                            $CDPID[] = $rubCdpValue->cdps->id;
+                                                                        }
+                                                                        else if (array_search($rubCdpValue->cdps->id, $CDPID) === false) {
+                                                                            $hijosCDP[] = $bpinCdpValue->cdp->valor;
+                                                                            $CDPID[] = $rubCdpValue->cdps->id;
+                                                                        }
                                                                         if (count($bpinCdpValue->cdp->cdpsRegistro) > 0){
                                                                             //CONSULTA PARA LOS REGISTROS
                                                                             $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCdpValue->cdp_id)->get();
@@ -1221,7 +1235,14 @@ class InformeController extends Controller
                                                             $rubCdpValues = RubrosCdpValor::where('fontsDep_id', $dependencia->id)->get();
                                                             foreach ($rubCdpValues as $rubCdpValue) {
                                                                 if ($rubCdpValue->cdps->jefe_e == "3") {
-                                                                    $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                    if (!isset($CDPID)) {
+                                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                                    }
+                                                                    else if (array_search($rubCdpValue->cdps->id, $CDPID) === false) {
+                                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                                    }
                                                                     if (count($rubCdpValue->cdps->cdpsRegistro) > 0){
                                                                         //CONSULTA PARA LOS REGISTROS
                                                                         $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $rubCdpValue->cdp_id)->get();
@@ -1254,7 +1275,14 @@ class InformeController extends Controller
                                                             $bpinCdpValues = BpinCdpValor::where('dependencia_rubro_font_id', $dependencia->id)->get();
                                                             foreach ($bpinCdpValues as $bpinCdpValue) {
                                                                 if ($bpinCdpValue->cdp->jefe_e == "3") {
-                                                                    $hijosCDP[] = $bpinCdpValue->cdp->valor;
+                                                                    if (!isset($CDPID)) {
+                                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                                    }
+                                                                    else if (array_search($rubCdpValue->cdps->id, $CDPID) === false) {
+                                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                                    }
                                                                     if (count($bpinCdpValue->cdp->cdpsRegistro) > 0){
                                                                         //CONSULTA PARA LOS REGISTROS
                                                                         $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCdpValue->cdp_id)->get();
@@ -1339,7 +1367,14 @@ class InformeController extends Controller
                                                     $rubCdpValues = RubrosCdpValor::where('fontsDep_id', $dependencia->id)->get();
                                                     foreach ($rubCdpValues as $rubCdpValue) {
                                                         if ($rubCdpValue->cdps->jefe_e == "3") {
-                                                            $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                            if (!isset($CDPID)) {
+                                                                $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                $CDPID[] = $rubCdpValue->cdps->id;
+                                                            }
+                                                            else if (array_search($rubCdpValue->cdps->id, $CDPID) === false) {
+                                                                $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                $CDPID[] = $rubCdpValue->cdps->id;
+                                                            }
                                                             if (count($rubCdpValue->cdps->cdpsRegistro) > 0){
                                                                 //CONSULTA PARA LOS REGISTROS
                                                                 $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $rubCdpValue->cdp_id)->get();
@@ -1372,7 +1407,14 @@ class InformeController extends Controller
                                                     $bpinCdpValues = BpinCdpValor::where('dependencia_rubro_font_id', $dependencia->id)->get();
                                                     foreach ($bpinCdpValues as $bpinCdpValue) {
                                                         if ($bpinCdpValue->cdp->jefe_e == "3") {
-                                                            $hijosCDP[] = $bpinCdpValue->cdp->valor;
+                                                            if (!isset($CDPID)) {
+                                                                $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                $CDPID[] = $rubCdpValue->cdps->id;
+                                                            }
+                                                            else if (array_search($rubCdpValue->cdps->id, $CDPID) === false) {
+                                                                $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                                $CDPID[] = $rubCdpValue->cdps->id;
+                                                            }
                                                             if (count($bpinCdpValue->cdp->cdpsRegistro) > 0){
                                                                 //CONSULTA PARA LOS REGISTROS
                                                                 $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCdpValue->cdp_id)->get();
@@ -1457,7 +1499,14 @@ class InformeController extends Controller
                                             $rubCdpValues = RubrosCdpValor::where('fontsDep_id', $dependencia->id)->get();
                                             foreach ($rubCdpValues as $rubCdpValue) {
                                                 if ($rubCdpValue->cdps->jefe_e == "3") {
-                                                    $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                    if (!isset($CDPID)) {
+                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                    }
+                                                    else if (array_search($rubCdpValue->cdps->id, $CDPID) === false) {
+                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                    }
                                                     if (count($rubCdpValue->cdps->cdpsRegistro) > 0){
                                                         //CONSULTA PARA LOS REGISTROS
                                                         $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $rubCdpValue->cdp_id)->get();
@@ -1490,7 +1539,14 @@ class InformeController extends Controller
                                             $bpinCdpValues = BpinCdpValor::where('dependencia_rubro_font_id', $dependencia->id)->get();
                                             foreach ($bpinCdpValues as $bpinCdpValue) {
                                                 if ($bpinCdpValue->cdp->jefe_e == "3") {
-                                                    $hijosCDP[] = $bpinCdpValue->cdp->valor;
+                                                    if (!isset($CDPID)) {
+                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                    }
+                                                    else if (array_search($rubCdpValue->cdps->id, $CDPID) === false) {
+                                                        $hijosCDP[] = $rubCdpValue->cdps->valor;
+                                                        $CDPID[] = $rubCdpValue->cdps->id;
+                                                    }
                                                     if (count($bpinCdpValue->cdp->cdpsRegistro) > 0){
                                                         //CONSULTA PARA LOS REGISTROS
                                                         $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCdpValue->cdp_id)->get();
@@ -1584,6 +1640,7 @@ class InformeController extends Controller
                         if (isset($opH)) unset($opH);
                         if (isset($pagosH)) unset($pagosH);
                         if (isset($hijosCDP)) unset($hijosCDP);
+                        if (isset($CDPID)) unset($CDPID);
                         if (isset($hijosRP)) unset($hijosRP);
                         if (isset($hijosOP)) unset($hijosOP);
                         if (isset($hijosPagos)) unset($hijosPagos);
