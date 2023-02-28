@@ -110,6 +110,13 @@
                             </div>
                         @endif
                         <div class="col-md-12 align-self-center">
+                            @if($pago->estado == 2)
+                                <div class="col-lg-12 text-center">
+                                    <div class="col-lg-12">
+                                        <br><div class="alert alert-danger"><center>La orden de pago ha sido anulada</center></div><br>
+                                    </div>
+                                </div>
+                            @endif
                             <hr>
                             <center>
                                 <h3>Movimiento Bancario</h3>
