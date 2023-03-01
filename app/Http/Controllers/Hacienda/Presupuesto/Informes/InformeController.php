@@ -442,7 +442,7 @@ class InformeController extends Controller
                 //}
 
                 $key = array_search($oldId, array_column($presupuesto, 'id'));
-                if ($data->id == 1074) dd($data, end($presupuesto), $rubro->first()->fontsRubro, $key, $oldId);
+                //if ($data->id == 1074) dd($data, end($presupuesto), $rubro->first()->fontsRubro, $key, $oldId);
 
                 if ($key == false) {
                     //VALIDACION DE LOS PADRES DE LOS PADRES
