@@ -145,7 +145,7 @@ class InformeController extends Controller
         //LLENADO DEL PRESUPUESTO
         foreach ($plantilla as $data) {
             $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
-            if ($data->id == 514) dd($data, end($presupuesto), $rubro);
+            //if ($data->id == 514) dd($data, end($presupuesto), $rubro);
             //PRIMER RUBRO
             if ($data->id < '324') {
                 //RUBROS INICIALES
