@@ -145,7 +145,7 @@ class InformeController extends Controller
         //LLENADO DEL PRESUPUESTO
         foreach ($plantilla as $data) {
             $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
-            //if ($data->id == 551) dd($data, end($presupuesto), $rubro);
+            if ($data->id == 514) dd($data, end($presupuesto), $rubro);
             //PRIMER RUBRO
             if ($data->id < '324') {
                 //RUBROS INICIALES
@@ -880,8 +880,8 @@ class InformeController extends Controller
                         'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => ''];
                 }
             } elseif (count($rubro) == 0){
-                if ($data->id == 465 or $data->id == 527 or $data->id == 543 or $data->id == 551 or $data->id == 584 or
-                    $data->id == 589 or $data->id == 624 or $data->id == 827) {
+                if ($data->id == 465 or $data->id == 514 or $data->id == 527 or $data->id == 543 or $data->id == 551 or
+                    $data->id == 584 or $data->id == 589 or $data->id == 624 or $data->id == 827 or $data->id == 923) {
                     $found_key = array_search($data->padre_id, array_column($presupuesto, 'id'));
                     if ($found_key === false){
                         $plantillaCuipoFaltante = PlantillaCuipoEgresos::find($data->padre_id);
