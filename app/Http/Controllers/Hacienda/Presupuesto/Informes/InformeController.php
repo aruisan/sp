@@ -881,7 +881,8 @@ class InformeController extends Controller
                 }
             } elseif (count($rubro) == 0){
                 if ($data->id == 465 or $data->id == 514 or $data->id == 527 or $data->id == 543 or $data->id == 551 or
-                    $data->id == 584 or $data->id == 589 or $data->id == 624 or $data->id == 827 or $data->id == 923) {
+                    $data->id == 584 or $data->id == 589 or $data->id == 624 or $data->id == 827 or $data->id == 923 or
+                    $data->id == 924 or $data->id == 925) {
                     $found_key = array_search($data->padre_id, array_column($presupuesto, 'id'));
                     if ($found_key === false){
                         $plantillaCuipoFaltante = PlantillaCuipoEgresos::find($data->padre_id);
