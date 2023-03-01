@@ -1,81 +1,47 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    Conciliación Bancaria
+    Realizar Conciliación Bancaria
 @stop
 @section('sidebar')@stop
 @section('content')
-    <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/makeConciliacion')}}" method="POST" enctype="multipart/form-data" id="prog">
+    <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/')}}" method="POST" enctype="multipart/form-data" id="prog">
         {{ csrf_field() }}
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <div class="col-md-12 align-self-center">
             <div class="breadcrumb text-center">
                 <strong>
-                    <h4><b>Conciliación Bancaria</b></h4>
+                    <h4><b>Realizar Conciliación Bancaria</b></h4>
                 </strong>
             </div>
-            <h5>Seleccione el mes.</h5>
-            <select class="form-control" id="mes" name="mes">
-                <option value="1">ENERO</option>
-                <option value="2">FEBRERO</option>
-                <option value="3">MARZO</option>
-                <option value="4">ABRIL</option>
-                <option value="5">MAYO</option>
-                <option value="6">JUNIO</option>
-                <option value="7">JULIO</option>
-                <option value="8">AGOSTO</option>
-                <option value="9">SEPTIEMBRE</option>
-                <option value="10">OCTUBRE</option>
-                <option value="11">NOVIEMBRE</option>
-                <option value="12">DICIEMBRE</option>
-            </select>
-            <br>
-            <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
-                <option value="0">Seleccione la cuenta para obtener la conciliación Bancaria</option>
-                @foreach($result as $cuenta)
-                    <option @if($cuenta['hijo'] == 0) disabled @endif value="{{$cuenta['id']}}">{{$cuenta['code']}} -
-                        {{$cuenta['concepto']}} - SALDO INICIAL: $<?php echo number_format($cuenta['saldo_inicial'],0) ?></option>
+            <table class="table table-bordered table-hover" id="tabla">
+                <hr>
+                <thead>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Cuenta</th>
+                    <th class="text-center">Nombre Documento</th>
+                    <th class="text-center">Concepto</th>
+                    <th class="text-center">Tercero</th>
+                    <th class="text-center">NIT/CC</th>
+                    <th class="text-center">Debito</th>
+                    <th class="text-center">Credito</th>
+                    <th class="text-center">Saldo</th>
+                </thead>
+                <tbody id="bodyTabla">
+                @foreach($result as $data)
+                    <tr>
+                        <td>{{$data['fecha']}}</td>
+                        <td>{{$data}}</td>
+                    </tr>
                 @endforeach
-            </select>
-            <div class="table-responsive text-center">
-                <div class="text-center" id="cargando" style="display: none">
-                    <br><br>
-                    <h4>Buscando información para cargar conciliación bancaria...</h4>
-                </div>
-                <table style="display: none" class="table table-bordered table-hover" id="tabla">
-                    <hr>
-                    <thead>
-                    <tr>
-                        <th colspan="9" class="text-center"> <span id="cuentaBanco"></span></th>
-                    </tr>
-                    <tr>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Cuenta</th>
-                        <th class="text-center">Nombre Documento</th>
-                        <th class="text-center">Concepto</th>
-                        <th class="text-center">Tercero</th>
-                        <th class="text-center">NIT/CC</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        <th class="text-center">Saldo</th>
-                    </tr>
-                    </thead>
-                    <tbody id="bodyTabla"></tbody>
-                </table>
-                <button style="display: none" id="buttonMake" class="btn-sm btn-primary">ELABORAR CONCILIACIÓN</button>
-            </div>
+                </tbody>
+            </table>
+
         </div>
     </form>
 @stop
 
 @section('js')
     <script>
-
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 0
-        })
-
 
         $(document).ready(function() {
             toastr.options = {
@@ -111,9 +77,8 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
+                console.log(datos);
                 $("#tabla").show();
-                //$("#buttonMake").show();
                 table.destroy();
                 $("#cargando").hide();
                 table = $('#tabla').DataTable( {
@@ -189,7 +154,6 @@
                 //toastr.warning('SE ESTAN REALIZANDO AJUSTES. INTENTE NUEVAMENTE MAS TARDE.');
             }).fail(function() {
                 $("#tabla").hide();
-                $("#buttonMake").hide();
                 table.destroy();
                 $("#cargando").hide();
                 toastr.warning('NO SE OBTUVIERON DATOS DE ESA CUENTA');

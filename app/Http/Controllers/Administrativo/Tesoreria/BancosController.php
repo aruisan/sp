@@ -224,24 +224,70 @@ class BancosController extends Controller
     public function movAccount(Request $request){
 
         $rubroPUC = PucAlcaldia::find($request->id);
-        $total = 0;
+        $total = $rubroPUC->saldo_inicial;
+        $totDeb = 0;
+        $totCred = 0;
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
                 if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
-                    $total = $total + $pagoBank->valor;
-                    $pago = Pagos::find($pagoBank->pagos_id);
-                    $tercero = $pago->orden_pago->registros->persona->nombre;
-                    $numIdent = $pago->orden_pago->registros->persona->num_dc;
-                    $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
-                        'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                        'total' => '$'.number_format($total,0)]);
+                    if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
+                        $total = $total - $pagoBank->valor;
+                        $pago = Pagos::find($pagoBank->pagos_id);
+                        $tercero = $pago->orden_pago->registros->persona->nombre;
+                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        $totDeb = $totDeb + 0;
+                        $totCred = $totCred + $pagoBank->valor;
+                        $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
+                            'modulo' => 'Pago', 'debito' => '$'.number_format(0,0),
+                            'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
+                            'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
+                            'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                    }
                 }
             }
         }
 
         return $result;
+
+
+    }
+
+    public function makeConciliacion(Request $request){
+
+        $rubroPUC = PucAlcaldia::find($request->cuentaPUC);
+        $añoActual = Carbon::today()->format('Y');
+        $mesFind = $request->mes;
+        $total = $rubroPUC->saldo_inicial;
+        $totDeb = 0;
+        $totCred = 0;
+
+        // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
+        $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
+        if (count($pagoBanks) > 0){
+            foreach ($pagoBanks as $pagoBank){
+                if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
+                    if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
+                        $total = $total - $pagoBank->valor;
+                        $pago = Pagos::find($pagoBank->pagos_id);
+                        $tercero = $pago->orden_pago->registros->persona->nombre;
+                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        $totDeb = $totDeb + 0;
+                        $totCred = $totCred + $pagoBank->valor;
+                        $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
+                            'modulo' => 'Pago', 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
+                            'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                            'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                    }
+                }
+            }
+        }
+
+        return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result'. 'rubroPUC'
+            ,'añoActual','mesFind'));
     }
 }
