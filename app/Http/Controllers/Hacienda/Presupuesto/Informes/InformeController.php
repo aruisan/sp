@@ -145,6 +145,7 @@ class InformeController extends Controller
         //LLENADO DEL PRESUPUESTO
         foreach ($plantilla as $data) {
             $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+            //if ($data->id == 551) dd($data, end($presupuesto), $rubro);
             //PRIMER RUBRO
             if ($data->id < '324') {
                 //RUBROS INICIALES
@@ -879,28 +880,28 @@ class InformeController extends Controller
                         'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => ''];
                 }
             } elseif (count($rubro) == 0){
-                //if($data->id == 527) dd(end($presupuesto), $rubro);
-                $found_key = array_search($data->padre_id, array_column($presupuesto, 'id'));
-                if ($found_key === false){
-                    $plantillaCuipoFaltante = PlantillaCuipoEgresos::find($data->padre_id);
-                    $found_key2 = array_search($plantillaCuipoFaltante->padre_id, array_column($presupuesto, 'id'));
-                    if ($found_key2 === false){
-                        $plantillaCuipoFaltante2 = PlantillaCuipoEgresos::find($plantillaCuipoFaltante->padre_id);
-                        $found_key3 = array_search($plantillaCuipoFaltante2->padre_id, array_column($presupuesto, 'id'));
-                        if ($found_key3 === false){
-                            $plantillaCuipoFaltante3 = PlantillaCuipoEgresos::find($plantillaCuipoFaltante2->padre_id);
-                            $prep = $this->llenarPresupuesto($plantillaCuipoFaltante3, $vigencia_id);
+                if ($data->id == 465 or $data->id == 527 or $data->id == 543 or $data->id == 551 or $data->id == 584) {
+                    $found_key = array_search($data->padre_id, array_column($presupuesto, 'id'));
+                    if ($found_key === false){
+                        $plantillaCuipoFaltante = PlantillaCuipoEgresos::find($data->padre_id);
+                        $found_key2 = array_search($plantillaCuipoFaltante->padre_id, array_column($presupuesto, 'id'));
+                        if ($found_key2 === false){
+                            $plantillaCuipoFaltante2 = PlantillaCuipoEgresos::find($plantillaCuipoFaltante->padre_id);
+                            $found_key3 = array_search($plantillaCuipoFaltante2->padre_id, array_column($presupuesto, 'id'));
+                            if ($found_key3 === false){
+                                $plantillaCuipoFaltante3 = PlantillaCuipoEgresos::find($plantillaCuipoFaltante2->padre_id);
+                                $prep = $this->llenarPresupuesto($plantillaCuipoFaltante3, $vigencia_id);
+                                $presupuesto[] = $prep;
+                            }
+                            $prep = $this->llenarPresupuesto($plantillaCuipoFaltante2, $vigencia_id);
                             $presupuesto[] = $prep;
                         }
-                        $prep = $this->llenarPresupuesto($plantillaCuipoFaltante2, $vigencia_id);
+                        $prep = $this->llenarPresupuesto($plantillaCuipoFaltante, $vigencia_id);
                         $presupuesto[] = $prep;
                     }
-                    $prep = $this->llenarPresupuesto($plantillaCuipoFaltante, $vigencia_id);
+                    $prep = $this->llenarPresupuesto($data, $vigencia_id);
                     $presupuesto[] = $prep;
                 }
-                $prep = $this->llenarPresupuesto($data, $vigencia_id);
-                $presupuesto[] = $prep;
-
             }
             if ($data->hijo == 0) {
                 $oldId = $data->id;
@@ -1827,7 +1828,7 @@ class InformeController extends Controller
                         if (isset($hijosPagos)) unset($hijosPagos);
                     }
                 } else {
-                    //dd($presupuesto);
+                    dd($presupuesto);
                     //AL NO TENER HIJOS SE TOMA COMO SI FUERA YA EL RUBRO HIJO CON LOS VALORES
                     $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
                     if (count($rubro) > 0) {
@@ -2298,7 +2299,6 @@ class InformeController extends Controller
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
         $presupuesto = $this->prepEgresos();
-        dd($presupuesto);
 
         return Excel::download(new InfPrepEgrExcExport($añoActual, $presupuesto, $mesActual, $diaActual),
             'Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
