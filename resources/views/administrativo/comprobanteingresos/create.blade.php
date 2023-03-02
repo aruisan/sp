@@ -96,6 +96,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <br>
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Tercero <span class="text-danger">*</span></label>
+                                    <div class="col-lg-6">
+                                        <select class="select-tercero" name="persona_id">
+                                            @foreach($personas as $persona)
+                                                <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <br>
                             <table class="table">
                                 <thead>
@@ -174,6 +187,8 @@
 @stop
 @section('js')
     <script>
+        $('.select-tercero').select2();
+
         function cambioTipo(value){
             if(value == "Otro"){
                 document.getElementById("cualOtroTipo").value = null;

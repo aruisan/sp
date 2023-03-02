@@ -6,18 +6,17 @@ use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\ComprobanteIngresos\CIRubros;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
-use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipoIngresos;
-use App\Model\Hacienda\Presupuesto\Register;
 use App\Model\Hacienda\Presupuesto\Vigencia;
-use App\Model\Hacienda\Presupuesto\Level;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Http\Controllers\Controller;
+use App\Model\Persona;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Traits\FileTraits;
 use Illuminate\Support\Facades\Auth;
 use Session;
-
+use PDF;
 
 class ComprobanteIngresosController extends Controller
 {
@@ -51,6 +50,7 @@ class ComprobanteIngresosController extends Controller
         $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
         $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
         $rubI = Rubro::where('vigencia_id', $vigencia->id)->orderBy('cod','ASC')->get();
+        $personas = Persona::all();
 
         foreach ($rubI as $rub){
             foreach ($rub->fontsRubro as $fuente){
@@ -60,7 +60,7 @@ class ComprobanteIngresosController extends Controller
         }
 
         return view('administrativo.comprobanteingresos.create', compact('vigencia','user_id',
-        'hijosDebito','rubrosIngresos','hijos'));
+        'hijosDebito','rubrosIngresos','hijos','personas'));
     }
 
     /**
@@ -95,14 +95,17 @@ class ComprobanteIngresosController extends Controller
         $comprobante->ruta = $ruta;
         $comprobante->cuenta_banco = $request->cuentaDeb;
         $comprobante->cuenta_puc_id = $request->cuentaPUC;
-        $comprobante->rubro_font_ingresos_id = $request->rubroIngresos;
+        if ( $request->tipoCI != "Transferencia"){
+            $comprobante->rubro_font_ingresos_id = $request->rubroIngresos;
+            $comprobante->debito_rubro_ing = $request->debitoIngresos;
+            $comprobante->credito_rubro_ing = $request->creditoIngresos;
+        }
         $comprobante->debito_banco = $request->debitoBanco;
         $comprobante->credito_banco = $request->creditoBanco;
         $comprobante->debito_puc = $request->debitoPUC;
         $comprobante->credito_puc = $request->creditoPUC;
-        $comprobante->debito_rubro_ing = $request->debitoIngresos;
-        $comprobante->credito_rubro_ing = $request->creditoIngresos;
         $comprobante->responsable_id = Auth::user()->id;
+        $comprobante->persona_id = $request->persona_id;
         $comprobante->save();
 
         Session::flash('success','El comprobante de ingreso se ha creado exitosamente');
@@ -254,5 +257,20 @@ class ComprobanteIngresosController extends Controller
 
         Session::flash('error','Comprobante de Ingresos Borrado Correctamente');
         return redirect('../administrativo/CIngresos/'.$vigen);
+    }
+
+    public function pdf($id)
+    {
+        $comprobante = ComprobanteIngresos::findOrFail($id);
+        dd($comprobante);
+
+        $fecha = Carbon::createFromTimeString($comprobante->ff.' 00:00:00');
+        $dias = array("Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado");
+        $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+        $pdf = PDF::loadView('administrativo.comprobanteingresos.pdf', compact('comprobante',
+            'dias', 'meses', 'fecha'))->setOptions(['images' => true, 'isRemoteEnabled' => true]);
+
+        return $pdf->stream();
     }
 }

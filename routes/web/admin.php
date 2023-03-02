@@ -184,6 +184,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('CIngresos/{id}', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController@index');
         Route::get('CIngresos/create/{id}', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController@create');
         Route::get('CIngresos/show/{id}', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController@show');
+        Route::get('CIngresos/pdf/{id}', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController@pdf');
         Route::get('CIngresos/fin/{estado}/{id}', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController@estados');
         Route::delete('CIngresos/{vigen}/{id}/delete', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController@destroy');
         Route::resource('CIngresos', 'Administrativo\ComprobanteIngresos\ComprobanteIngresosController');
