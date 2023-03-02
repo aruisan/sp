@@ -138,7 +138,7 @@
                                         <td><input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="0"></td>
                                         <td><input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="0"></td>
                                     </tr>
-                                    <tr>
+                                    <tr id="rubIngSelect">
                                         <td>
                                             <div class="form-group">
                                                 <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>
@@ -178,10 +178,16 @@
             if(value == "Otro"){
                 document.getElementById("cualOtroTipo").value = null;
                 $("#otroTipo").show();
-            }
-            else {
+                $("#rubIngSelect").show();
+            } else {
+                if(value == "Transferencia"){
+                    $("#rubIngSelect").hide();
+                } else {
+                    $("#rubIngSelect").show();
+                }
                 document.getElementById("otroTipo").style.display = "none";
                 document.getElementById("cualOtroTipo").value = null;
+
             }
         }
     </script>
