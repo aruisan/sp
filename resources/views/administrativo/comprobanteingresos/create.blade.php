@@ -162,7 +162,7 @@
                             <br>
                             <div class="form-group row">
                                 <div class="col-lg-12 ml-auto text-center">
-                                    <button type="submit" class="btn btn-primary">GUARDAR COMPROBANTE DE INGRESOS</button>
+                                    <button type="submit" class="btn btn-primary">GUARDAR COMPROBANTE DE CONTABILIDAD</button>
                                 </div>
                             </div>
                         </form>
