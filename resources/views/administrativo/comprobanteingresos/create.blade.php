@@ -152,7 +152,7 @@
                                             </div>
                                         </td>
                                         <td><input class="form-control" min="0" type="number" name="debitoIngresos" id="debitoIngresos" value="0"></td>
-                                        <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="0"></td>
+                                        <td><input class="form-control" min="0" type="hidden" name="creditoIngresos" id="creditoIngresos" value="0"></td>
                                     </tr>
                                 </tbody>
                             </table>
