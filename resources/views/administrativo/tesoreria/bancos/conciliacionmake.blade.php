@@ -4,160 +4,246 @@
 @stop
 @section('sidebar')@stop
 @section('content')
-    <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/')}}" method="POST" enctype="multipart/form-data" id="prog">
-        {{ csrf_field() }}
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <div class="col-md-12 align-self-center">
-            <div class="breadcrumb text-center">
-                <strong>
-                    <h4><b>Realizar Conciliación Bancaria</b></h4>
-                </strong>
-            </div>
-            <table class="table table-bordered table-hover" id="tabla">
-                <hr>
-                <thead>
-                    <th class="text-center">Fecha</th>
-                    <th class="text-center">Cuenta</th>
-                    <th class="text-center">Nombre Documento</th>
-                    <th class="text-center">Concepto</th>
-                    <th class="text-center">Tercero</th>
-                    <th class="text-center">NIT/CC</th>
-                    <th class="text-center">Debito</th>
-                    <th class="text-center">Credito</th>
-                    <th class="text-center">Saldo</th>
-                </thead>
-                <tbody id="bodyTabla">
-                @foreach($result as $data)
+    <div class="breadcrumb text-center">
+        <strong>
+            <h4><b>Realizar Conciliación Bancaria {{ $mesFind }} - {{ $añoActual }}</b></h4>
+        </strong>
+    </div>
+    <ul class="nav nav-pills">
+        <li class="nav-item regresar">
+            <a class="nav-link" href="{{ url('/administrativo/tesoreria/bancos/conciliacion') }}" ><i class="fa fa-arrow-left"></i></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" data-toggle="pill" href="#tabTareas">Realizar Conciliación Bancaria {{ $mesFind }} - {{ $añoActual }}</a>
+        </li>
+    </ul>
+    <div class="tab-content" style="background-color: white" id="app">
+        <div id="tabTareas" class="tab-pane active"><br>
+            <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/conciliacion')}}" method="POST" enctype="multipart/form-data" id="prog">
+                {{ csrf_field() }}
+                <meta name="csrf-token" content="{{ csrf_token() }}">
+                <table class="table table-bordered table-hover" id="tabla">
+                    <thead>
                     <tr>
-                        <td>{{$data['fecha']}}</td>
-                        <td>{{$data}}</td>
+                        <th class="text-center" colspan="4">RESUMEN DE LA INFORMACION</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
-
+                    <tr>
+                        <th class="text-center">Saldo Libros</th>
+                        <th class="text-center">$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></th>
+                        <th class="text-center">Saldo inicial bancos</th>
+                        <th class="text-center">$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></th>
+                    </tr>
+                    </thead>
+                    <tbody id="bodyTabla">
+                    <tr class="text-center">
+                        <td>Ingresos</td>
+                        <td>$<?php echo number_format($totDeb,0) ?></td>
+                        <td>Abonos</td>
+                        <td>$<?php echo number_format($totDeb,0) ?></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Egresos</td>
+                        <td>$<?php echo number_format($totCredAll,0) ?></td>
+                        <td>Cargos</td>
+                        <td>$<?php echo number_format($totCred,0) ?></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Comisiones</td>
+                        <td></td>
+                        <td>Total IVA:</td>
+                        <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Impuestos</td>
+                        <td></td>
+                        <td>Total Retención:</td>
+                        <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Chequeras</td>
+                        <td></td>
+                        <td>Total Intereses:</td>
+                        <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Saldo siguiente</td>
+                        <td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
+                        <td> Saldo final</td>
+                        <td>$<?php echo number_format($totDeb  - $totCred,0) ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-hover" id="tablaBank">
+                    <hr>
+                    <thead>
+                        <th class="text-center">FECHA</th>
+                        <th class="text-center">REFERENCIA</th>
+                        <th class="text-center">DEBITO</th>
+                        <th class="text-center">CREDITO</th>
+                        <th class="text-center">VALOR BANCO</th>
+                        <th class="text-center">ESTADO</th>
+                    </thead>
+                    <tbody id="bodyTabla">
+                    @foreach($result as $data)
+                        <tr class="text-center">
+                            <td>{{$data['fecha']}}</td>
+                            <td>{{$data['pago_id']}}</td>
+                            <td>$<?php echo number_format($data['debito'],0) ?></td>
+                            <td>$<?php echo number_format($data['credito'],0) ?></td>
+                            <td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
+                            <td>
+                                @if($data['pago_estado'] == 1)
+                                    APROBADO
+                                @else
+                                    NO APROBADO
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    <tr class="text-center">
+                        <td colspan="6"><button id="buttonMake" type="button" @click.prevent="nuevaFilaBanks" class="btn-sm btn-primary">AGREGAR CAMPO</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-hover">
+                    <hr>
+                    <thead>
+                    <th></th>
+                    <th class="text-center">DEBITO</th>
+                    <th class="text-center">CREDITO</th>
+                    <th class="text-center">VALOR BANCO</th>
+                    </thead>
+                    <tbody id="bodyTabla">
+                    <tr class="text-center">
+                        <td>SUBTOTAL</td>
+                        <td>$<?php echo number_format($totDeb,0) ?></td>
+                        <td>$<?php echo number_format($totCredAll,0) ?></td>
+                        <td>
+                            <span id="subTotBancoSpan">$<?php echo number_format($totBank,0) ?></span>
+                            <input type="hidden" name="subTotBanco" value="{{ $totBank }}">
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Egresos</td>
+                        <td>$<?php echo number_format($totCredAll,0) ?></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Cobros pendientes</td>
+                        <td></td>
+                        <td></td>
+                        <td>$<?php echo number_format($totCredAll - $totCred,0) ?></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Valor sin conciliar</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Abonos en curso</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Cargos en curso</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>Saldo inicial</td>
+                        <td>$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></td>
+                        <td></td>
+                        <td>$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>SUMAS IGUALES</td>
+                        <td>$<?php echo number_format($totDeb - $totCredAll + $rubroPUC->saldo_inicial,0) ?></td>
+                        <td></td>
+                        <td>
+                            <span id="sumaIgualBankSpan">$<?php echo number_format($totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial ,0) ?></span>
+                            <input type="hidden" name="sumaIgualBank" value="{{ $totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial }}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-hover" id="tablePayPend">
+                    <hr>
+                    <thead>
+                    <tr>
+                        <th class="text-center" colspan="5">Relación de pagos pendientes</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">FECHA</th>
+                        <th class="text-center">CED/NIT</th>
+                        <th class="text-center">BENEFICIARIO</th>
+                        <th class="text-center">DEBITO</th>
+                        <th class="text-center">CREDITO</th>
+                    </tr>
+                    </thead>
+                    <tbody id="bodyTabla">
+                    @foreach($result as $data)
+                        @if($data['pago_estado'] != 1)
+                            <tr class="text-center">
+                                <td>{{ $data['fecha'] }}</td>
+                                <td>{{ $data['CC'] }}</td>
+                                <td>{{ $data['tercero'] }}</td>
+                                <td>$<?php echo number_format($data['debito'],0) ?></td>
+                                <td>$<?php echo number_format($data['credito'],0) ?></td>
+                            </tr>
+                        @endif
+                    @endforeach
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    <button id="buttonMake" type="submit" class="btn-sm btn-primary">ENVIAR CONCILIACIÓN</button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 @stop
-
 @section('js')
     <script>
 
-        $(document).ready(function() {
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": true,
-                "progressBar": true,
-                "positionClass": "toast-bottom-right",
-                "preventDuplicates": false,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": 3000,
-                "extendedTimeOut": 0,
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut",
-                "tapToDismiss": true
-            }
-
+        $(document).on('click', '.borrar', function (event) {
+            event.preventDefault();
+            $(this).closest('tr').remove();
         });
 
-        function findRubroPUC(option){
-            $("#cargando").show();
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
 
-            const mes = document.getElementById("mes").value;
-            var table = $('#tabla').DataTable();
+        function valores(value){
+            console.log(value)
 
-            $.ajax({
-                method: "POST",
-                url: "/administrativo/tesoreria/bancos/movAccount",
-                data: { "id": option.value, "mes": mes,
-                    "_token": $("meta[name='csrf-token']").attr("content"),
-                }
-            }).done(function(datos) {
-                console.log(datos);
-                $("#tabla").show();
-                table.destroy();
-                $("#cargando").hide();
-                table = $('#tabla').DataTable( {
-                    language: {
-                        "lengthMenu": "Mostrar _MENU_ registros",
-                        "zeroRecords": "No se encontraron resultados",
-                        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-                        "sSearch": "Buscar:",
-                        "oPaginate": {
-                            "sFirst": "Primero",
-                            "sLast":"Último",
-                            "sNext":"Siguiente",
-                            "sPrevious": "Anterior"
-                        },
-                        "sProcessing":"Procesando...",
-                    },
-                    "pageLength": 5,
-                    responsive: true,
-                    "searching": true,
-                    ordering: true,
-                    "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
-                    dom: 'Bfrtip',
-                    buttons:[
-                        {
-                            extend:    'copyHtml5',
-                            text:      '<i class="fa fa-clone"></i> ',
-                            titleAttr: 'Copiar',
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            extend:    'excelHtml5',
-                            text:      '<i class="fa fa-file-excel-o"></i> ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            extend:    'pdfHtml5',
-                            text:      '<i class="fa fa-file-pdf-o"></i> ',
-                            titleAttr: 'Exportar a PDF',
-                            message : 'SIEX-Providencia',
-                            header :true,
-                            orientation : 'landscape',
-                            pageSize: 'LEGAL',
-                            className: 'btn btn-primary',
-                        },
-                        {
-                            extend:    'print',
-                            text:      '<i class="fa fa-print"></i> ',
-                            titleAttr: 'Imprimir',
-                            className: 'btn btn-primary'
-                        },
-                    ],
-                    data: datos,
-                    columns: [
-                        { title: "Fecha", data: "fecha"},
-                        { title: "Cuenta", data: "cuenta"},
-                        { title: "Nombre Documento", data: "modulo"},
-                        { title: "Concepto", data: "concepto"},
-                        { title: "Tercero", data: "tercero"},
-                        { title: "NIT/CC", data: "CC"},
-                        { title: "Debito", data: "debito"},
-                        { title: "Credito", data: "credito"},
-                        { title: "Saldo", data: "total"}
-                    ]
-                } );
-
-
-                //$("#tabla").hide();
-                //table.destroy();
-                //$("#cargando").hide();
-                //toastr.warning('SE ESTAN REALIZANDO AJUSTES. INTENTE NUEVAMENTE MAS TARDE.');
-            }).fail(function() {
-                $("#tabla").hide();
-                table.destroy();
-                $("#cargando").hide();
-                toastr.warning('NO SE OBTUVIERON DATOS DE ESA CUENTA');
-            });
+            //const sumaBank = document.getElementById('sumaIgualBank').value;
+            const subTotBanco = document.getElementById('subTotBanco').value;
+            document.getElementById('sumaIgualBankSpan').innerHTML = formatter.format(subTotBanco + value);
+            document.getElementById('subTotBancoSpan').innerHTML = formatter.format(subTotBanco + value);
         }
+
+
+        let app = new Vue({
+            el: '#app',
+            methods:{
+
+                nuevaFilaBanks(){
+                    $('#tablaBank tbody tr:last').after('<tr>\n' +
+                        '<td class="text-center" style="vertical-align: middle"><button type="button" class="btn-sm btn-primary borrar">&nbsp;-&nbsp; </button></td>\n'+
+                        '<td><input type="text" class="form-control" name="ref[]" required></td>\n'+
+                        '<td><input type="hidden" class="form-control" name="deb[]"></td>\n'+
+                        '<td><input type="hidden" class="form-control" name="cred[]" required></td>\n'+
+                        '<td><input onchange="valores(this.value)" type="number" value="0" class="form-control" name="banco[]" required></td>\n'+
+                        '<td></td>\n'+
+                        '</tr>\n');
+                },
+            }
+        });
     </script>
 @stop
