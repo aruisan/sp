@@ -18,8 +18,8 @@ class ComprobanteIngresos extends Model implements Auditable
         return $this->hasMany('App\User','user_id');
     }
 
-    public function rubros(){
-        return $this->hasMany('App\Model\Administrativo\ComprobanteIngresos\CIRubros','comprobante_ingreso_id');
+    public function fontRubro(){
+        return $this->belongsTo('App\Model\Hacienda\Presupuesto\FontsRubro','rubro_font_ingresos_id');
 
     }
 

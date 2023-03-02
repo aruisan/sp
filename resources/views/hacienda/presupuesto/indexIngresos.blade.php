@@ -151,35 +151,23 @@
                                     <thead>
                                     <tr>
                                         <th class="text-center">#</th>
+                                        <th class="text-center">Fecha</th>
                                         <th class="text-center">Concepto</th>
-                                        <th class="text-center">Estado</th>
-                                        <th class="text-center">Valor</th>
                                         <th class="text-center">Ver</th>
+                                        <th class="text-center">PDF</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     @foreach ($comprobanteIng as $key => $data)
                                         <tr>
                                             <td class="text-center">{{ $data->code }}</td>
+                                            <td class="text-center">{{ $data->ff }}</td>
                                             <td class="text-center">{{ $data->concepto }}</td>
                                             <td class="text-center">
-                                    <span class="badge badge-pill badge-danger">
-                                        @if($data->estado == "0")
-                                            Pendiente
-                                        @elseif($data->estado == "1")
-                                            Rechazado
-                                        @elseif($data->estado == "2")
-                                            Anulado
-                                        @elseif($data->estado == "3")
-                                            Aprobado
-                                        @else
-                                            En Espera
-                                        @endif
-                                    </span>
-                                            </td>
-                                            <td class="text-center">$<?php echo number_format($data->valor,0) ?></td>
-                                            <td class="text-center">
                                                 <a href="{{ url('administrativo/CIngresos/'.$data->id.'/edit') }}" title="Ver Comprobante de Contabilidad" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{{ url('administrativo/CIngresos/pdf/'.$data->id) }}" target="_blank" title="Generar PDF" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -257,8 +245,8 @@
                                 <br><br>
                                 <div class="alert alert-danger">
                                     <center>
-                                        No se encuentra ningun PAC almacenado en la plataforma, para crearlo de click al siguiente link:
-                                        <a href="{{ url('administrativo/pac/create') }}" class="alert-link">Crear PAC</a>.
+                                        No se encuentra ningun PAC almacenado en la plataforma.
+                                        <!-- para crearlo de click al siguiente link: <a href="{{ url('administrativo/pac/create') }}" class="alert-link">Crear PAC</a>. -->
                                     </center>
                                 </div>
                             @endif
@@ -284,4 +272,43 @@
 @section('js')
     <!-- Datatables personalizadas buttons-->
     <script src="{{ asset('/js/datatableCustom.js') }}"></script>
+    <script>
+        $('#tabla_CIng').DataTable( {
+            responsive: true,
+            "searching": true,
+            dom: 'Bfrtip',
+            order: [[0, 'desc']],
+            buttons:[
+                {
+                    extend:    'copyHtml5',
+                    text:      '<i class="fa fa-clone"></i> ',
+                    titleAttr: 'Copiar',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'excelHtml5',
+                    text:      '<i class="fa fa-file-excel-o"></i> ',
+                    titleAttr: 'Exportar a Excel',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'pdfHtml5',
+                    text:      '<i class="fa fa-file-pdf-o"></i> ',
+                    titleAttr: 'Exportar a PDF',
+                    message : 'SIEX-Providencia',
+                    header :true,
+                    orientation : 'landscape',
+                    pageSize: 'LEGAL',
+                    className: 'btn btn-primary',
+                },
+                {
+                    extend:    'print',
+                    text:      '<i class="fa fa-print"></i> ',
+                    titleAttr: 'Imprimir',
+                    className: 'btn btn-primary'
+                },
+            ]
+        } );
+    </script>
+
 @stop

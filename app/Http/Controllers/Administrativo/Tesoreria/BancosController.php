@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria;
 
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\bancos;
+use App\Model\Persona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -251,6 +253,39 @@ class BancosController extends Controller
             }
         }
 
+        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
+        $compsCont = ComprobanteIngresos::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        if (count($compsCont) > 0){
+            foreach ($compsCont as $compCont){
+                if (Carbon::parse($compCont->ff)->format('Y') == Carbon::today()->format('Y')) {
+                    if (Carbon::parse($compCont->ff)->format('m') == $request->mes) {
+                        $persona = Persona::find($compCont->persona_id);
+                        $tercero = $persona->nombre;
+                        $numIdent = $persona->num_dc;
+                        if ($compCont->cuenta_banco == $rubroPUC->id){
+                            $total = $total + $compCont->debito_banco;
+                            $total = $total - $compCont->credito_banco;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_banco,0),
+                                'credito' => '$'.number_format($compCont->credito_banco,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                                'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                        } else{
+                            $total = $total + $compCont->debito_puc;
+                            $total = $total - $compCont->credito_puc;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_puc,0),
+                                'credito' => '$'.number_format($compCont->credito_puc,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                                'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                        }
+                    }
+                }
+            }
+        }
+
         return $result;
 
 
@@ -287,7 +322,46 @@ class BancosController extends Controller
                             'modulo' => 'Pago #'.$pago->code, 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
                             'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                             'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                            'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                            'referencia' => 'Pago #'.$pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                    }
+                }
+            }
+        }
+
+        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
+        $compsCont = ComprobanteIngresos::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        if (count($compsCont) > 0){
+            foreach ($compsCont as $compCont){
+                if (Carbon::parse($compCont->ff)->format('Y') == $añoActual) {
+                    if (Carbon::parse($compCont->ff)->format('m') == $request->mes) {
+                        $persona = Persona::find($compCont->persona_id);
+                        $tercero = $persona->nombre;
+                        $numIdent = $persona->num_dc;
+                        if ($compCont->cuenta_banco == $rubroPUC->id){
+                            $total = $total + $compCont->debito_banco;
+                            $total = $total - $compCont->credito_banco;
+                            $totDeb = $totDeb + $compCont->debito_banco;
+                            $totCred = $totCred + $compCont->credito_banco;
+                            $totCredAll = $totCred + $compCont->credito_banco;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_banco,
+                                'credito' => $compCont->credito_banco, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                        } else{
+                            $total = $total + $compCont->debito_puc;
+                            $total = $total - $compCont->credito_puc;
+                            $totDeb = $totDeb + $compCont->debito_puc;
+                            $totCred = $totCred + $compCont->credito_puc;
+                            $totCredAll = $totCred + $compCont->credito_puc;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_puc,
+                                'credito' => $compCont->credito_puc, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                        }
                     }
                 }
             }

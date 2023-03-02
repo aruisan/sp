@@ -89,8 +89,18 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
+                        <br>
+                        <div class="row">
+                            <br>
+                            <div class="form-group">
+                                <label class="col-lg-4 col-form-label text-right" for="nombre">Tercero</label>
+                                <div class="col-lg-6">
+                                    <input type="text" value="{{ $persona->num_dc }} - {{ $persona->nombre }}" disabled class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <br>
                     <table class="table">
                         <thead>
                         <tr>

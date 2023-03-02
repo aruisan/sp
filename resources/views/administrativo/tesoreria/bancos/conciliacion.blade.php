@@ -113,7 +113,7 @@
             }).done(function(datos) {
                 document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
                 $("#tabla").show();
-                //$("#buttonMake").show();
+                $("#buttonMake").show();
                 table.destroy();
                 $("#cargando").hide();
                 table = $('#tabla').DataTable( {
@@ -135,7 +135,7 @@
                     "pageLength": 5,
                     responsive: true,
                     "searching": true,
-                    ordering: true,
+                    ordering: false,
                     "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
                     dom: 'Bfrtip',
                     buttons:[

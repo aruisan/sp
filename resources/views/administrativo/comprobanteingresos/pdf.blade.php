@@ -7,6 +7,10 @@
 					<td>COMPROBANTE CONTABLE No: {{ $comprobante->code }}</td>
 					<td><?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y')?></td>
 				</tr>
+				<tr class="text-center">
+					<td>Beneficiario: {{ $persona->nombre }}</td>
+					<td>Nit o Cedula: {{ $persona->num_dc }}</td>
+				</tr>
 			</table>
 		</div>
 		<div>
@@ -46,6 +50,34 @@
 				</tbody>
 			</table>
 		</div>
+		@if(isset($comprobante->rubro_font_ingresos_id))
+			<div class="table-responsive br-black-1">
+				<table class="table-bordered" id="tablaP" style="width: 100%">
+					<thead>
+					<tr>
+						<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO</th>
+					</tr>
+					<tr>
+						<th class="text-center">Codigo</th>
+						<th class="text-center">Descripción</th>
+						<th class="text-center">Fuente Financiación</th>
+						<th class="text-center">Concepto</th>
+						<th class="text-center">Valor</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="text-center">
+						<td>{{ $comprobante->fontRubro->rubro->cod }} </td>
+						<td>{{ $comprobante->fontRubro->rubro->name }}</td>
+						<td>{{ $comprobante->fontRubro->sourceFunding->code }} - {{ $comprobante->fontRubro->sourceFunding->description }}</td>
+						<td>{{ $comprobante->concepto }}</td>
+						<td>$ <?php echo number_format($comprobante->debito_rubro_ing,0);?></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		@endif
+
 		<div class="table-responsive br-black-1">
 			<table class="table-bordered" id="tablaP" style="width: 100%">
 				<thead>
@@ -55,41 +87,26 @@
 				<tr>
 					<th class="text-center">Codigo</th>
 					<th class="text-center">Descripción</th>
+					<th class="text-center">Tercero</th>
 					<th class="text-center">Debito</th>
 					<th class="text-center">Credito</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr class="text-center">
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td>{{ $banco->code }}</td>
+					<td>{{ $banco->concepto }}</td>
+					<td>{{ $persona->num_dc }} - {{ $persona->nombre }}</td>
+					<td>$ <?php echo number_format($comprobante->debito_banco,0);?></td>
+					<td>$ <?php echo number_format($comprobante->credito_banco,0);?></td>
 				</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="table-responsive br-black-1">
-			<table class="table-bordered" id="tablaP" style="width: 100%">
-				<thead>
-				<tr>
-					<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO DE INGRESOS</th>
+				<tr class="text-center">
+					<td>{{ $puc->code }}</td>
+					<td>{{ $puc->concepto }}</td>
+					<td>{{ $persona->num_dc }} - {{ $persona->nombre }}</td>
+					<td>$ <?php echo number_format($comprobante->debito_puc,0);?></td>
+					<td>$ <?php echo number_format($comprobante->credito_puc,0);?></td>
 				</tr>
-				<tr>
-					<th class="text-center">Codigo</th>
-					<th class="text-center">Descripción</th>
-					<th class="text-center">Fuente Financiación</th>
-					<th class="text-center">Valor</th>
-				</tr>
-				</thead>
-				<tbody>
-					<tr class="text-center">
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>$ <?php echo number_format(0,0);?></td>
-					</tr>
-
 				</tbody>
 			</table>
 		</div>
@@ -102,7 +119,6 @@
 						<td>
 							<center>
 								_______________________ <br>
-								<!-- Presidente 2020 Léri Aniseto Henry Taylor  -->
 								HELLEN GARCIA ALEGRIA<br>
 								PROFESIONAL UNIVERSITARIO
 							</center>
@@ -110,16 +126,15 @@
 						<td>
 							<center>
 								_______________________ <br>
-								<!-- Presidente 2020 Léri Aniseto Henry Taylor  -->
-								&nbsp;<br>
-								SECRETARIO DE HACIENDA
+								JUSTINO BRITTON<br>
+								TESORERO
 							</center>
 						</td>
 						<td>
 							<center>
 								_________________________ <br>
-								JIM HENRY BENT<br>
-								RESPONSABLE PRESUPUESTO
+								ELIANA<br>
+								ELABORADOR
 							</center>
 						</td>
 					</tr>

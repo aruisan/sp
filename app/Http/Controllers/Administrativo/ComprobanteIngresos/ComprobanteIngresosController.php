@@ -119,6 +119,7 @@ class ComprobanteIngresosController extends Controller
         $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
         $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
         $rubI = Rubro::where('vigencia_id', $vigencia->id)->orderBy('cod','ASC')->get();
+        $persona = Persona::find($comprobante->persona_id);
 
         foreach ($rubI as $rub){
             foreach ($rub->fontsRubro as $fuente){
@@ -128,7 +129,7 @@ class ComprobanteIngresosController extends Controller
         }
 
         return view('administrativo.comprobanteingresos.edit', compact('vigencia','user_id',
-            'hijosDebito','rubrosIngresos','hijos','comprobante'));
+            'hijosDebito','rubrosIngresos','hijos','comprobante','persona'));
     }
 
     /**
@@ -262,14 +263,16 @@ class ComprobanteIngresosController extends Controller
     public function pdf($id)
     {
         $comprobante = ComprobanteIngresos::findOrFail($id);
-        dd($comprobante);
+        $persona = Persona::find($comprobante->persona_id);
+        $banco = PucAlcaldia::find($comprobante->cuenta_banco);
+        $puc = PucAlcaldia::find($comprobante->cuenta_puc_id);
 
         $fecha = Carbon::createFromTimeString($comprobante->ff.' 00:00:00');
         $dias = array("Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado");
         $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
         $pdf = PDF::loadView('administrativo.comprobanteingresos.pdf', compact('comprobante',
-            'dias', 'meses', 'fecha'))->setOptions(['images' => true, 'isRemoteEnabled' => true]);
+            'dias', 'meses', 'fecha','persona','banco','puc'))->setOptions(['images' => true, 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
     }

@@ -87,7 +87,7 @@
                     @foreach($result as $data)
                         <tr class="text-center">
                             <td>{{$data['fecha']}}</td>
-                            <td>{{$data['pago_id']}}</td>
+                            <td>{{$data['referencia']}}</td>
                             <td>$<?php echo number_format($data['debito'],0) ?></td>
                             <td>$<?php echo number_format($data['credito'],0) ?></td>
                             <td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
