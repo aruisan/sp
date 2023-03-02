@@ -1,21 +1,21 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    Creación del Comprobante de Ingresos
+    Creación del Comprobante de Contabilidad
 @stop
 @section('content')
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>NUEVO COMPROBANTE DE INGRESOS</b></h4>
+                <h4><b>NUEVO COMPROBANTE DE CONTABILIDAD</b></h4>
             </strong>
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills">
                 <li class="nav-item regresar">
-                    <a class="nav-link "  href="{{ url('/administrativo/CIngresos/'.$vigencia->id) }}">Volver a Comprobantes de Ingresos</a>
+                    <a class="nav-link "  href="{{ url('/administrativo/CIngresos/'.$vigencia->id) }}">Volver a Comprobantes de Contabilidad</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#nuevo" >NUEVO COMPROBANTE DE INGRESOS</a>
+                    <a class="nav-link" href="#nuevo" >NUEVO COMPROBANTE DE CONTABILIDAD</a>
                 </li>
             </ul>
 

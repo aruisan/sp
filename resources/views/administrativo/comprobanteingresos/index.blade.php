@@ -7,7 +7,7 @@
 @section('content')
     <div class="breadcrumb text-center">
         <strong>
-            <h4><b>Comprobantes de Ingresos Vigencia {{ $vigencia->vigencia }}</b></h4>
+            <h4><b>Comprobantes de Contabilidad Vigencia {{ $vigencia->vigencia }}</b></h4>
         </strong>
     </div>
 
@@ -19,7 +19,7 @@
             <a class="nav-link" data-toggle="pill" href="#tabTareas">Comprobantes</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/administrativo/CIngresos/create/'.$vigencia->id) }}" >NUEVO COMPROBANTE DE INGRESOS</a>
+            <a class="nav-link" href="{{ url('/administrativo/CIngresos/create/'.$vigencia->id) }}" >NUEVO COMPROBANTE DE CONTABILIDAD</a>
         </li>
     </ul>
 
@@ -44,7 +44,7 @@
                                 <td class="text-center">{{ $historico->concepto }}</td>
                                 <td class="text-center">$<?php echo number_format($historico->valor,0) ?></td>
                                 <td class="text-center">
-                                    <a href="{{ url('administrativo/CIngresos/'.$historico->id.'/edit') }}" title="Ver Comprobante de Ingreso" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ url('administrativo/CIngresos/'.$historico->id.'/edit') }}" title="Ver Comprobante de Contabilidad" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -54,7 +54,7 @@
                     <br><br>
                     <div class="alert alert-danger">
                         <center>
-                            No hay Comprobantes de Ingresos
+                            No hay Comprobantes de Contabilidad
                         </center>
                     </div>
                 @endif

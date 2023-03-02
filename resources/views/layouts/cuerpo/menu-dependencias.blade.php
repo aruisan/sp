@@ -264,10 +264,8 @@
          <ul class="dropdown-menu">
             @if(auth()->user()->id != 54)
                <li class="dropdown-submenu">
-                  <a class="dropdown-item item-menu" >Comprobante de Ingresos </a>
+                  <a class="dropdown-item item-menu" >Comprobante de Contabilidad </a>
                   <ul class="dropdown-menu">
-                     <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/4') }}">2020</a></li>
-                     <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/8') }}">2022</a></li>
                      <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/12') }}">2023</a></li>
                   </ul>
                </li>
@@ -294,6 +292,7 @@
                </li>
                <!--  <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li> -->
                <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
+               <!-- SE OCULTAN LOS COMPROBANTES DE EGRESO, EL DOC DICE QUE LUEGO SE VUELVEN A MOSTRAR
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Comprobante de Egresos </a>
                   <ul class="dropdown-menu">
@@ -303,6 +302,7 @@
                      <li><a class="item-menu" href="{{ url('/administrativo/pagos/11') }}">2023</a></li>
                   </ul>
                </li>
+               -->
             @else
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Impuestos</a>

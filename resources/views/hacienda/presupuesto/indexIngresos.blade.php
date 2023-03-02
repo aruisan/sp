@@ -75,7 +75,7 @@
                         <a class="nav-link" data-toggle="pill" href="#tabHome"><i class="fa fa-home"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill"  href="@can('fuentes-list') #tabFuente @endcan">Comprobantes de Ingresos</a>
+                        <a class="nav-link" data-toggle="pill"  href="@can('fuentes-list') #tabFuente @endcan">Comprobantes de Contabilidad</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="pill" href="@can('rubros-list') #tabRubros @endcan">Rubros</a>
@@ -145,7 +145,7 @@
                     <div id="tabFuente" class="tab-pane fade"><br>
                         <div class="table-responsive">
                             @if(count($comprobanteIng) >= 1)
-                                <a href="{{ url('administrativo/CIngresos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Comprobantes de Ingresos</a>
+                                <a href="{{ url('administrativo/CIngresos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Comprobantes de Contabilidad</a>
                                 <br><br>
                                 <table class="table table-bordered" id="tabla_CIng">
                                     <thead>
@@ -179,7 +179,7 @@
                                             </td>
                                             <td class="text-center">$<?php echo number_format($data->valor,0) ?></td>
                                             <td class="text-center">
-                                                <a href="{{ url('administrativo/CIngresos/show/'.$data->id) }}" title="Ver Comprobante de Ingreso" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                                <a href="{{ url('administrativo/CIngresos/'.$data->id.'/edit') }}" title="Ver Comprobante de Contabilidad" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -189,8 +189,8 @@
                                 <br>
                                 <div class="alert alert-danger">
                                     <center>
-                                        No hay comprobantes de ingresos.<br><br>
-                                        <a href="{{ url('administrativo/CIngresos/create/'.$V) }}" class="btn btn-danger ">Crear Comprobante de Ingresos</a>
+                                        No hay comprobantes de contabilidad.<br><br>
+                                        <a href="{{ url('administrativo/CIngresos/create/'.$V) }}" class="btn btn-danger ">Crear Comprobante de Contabilidad</a>
                                     </center>
                                 </div>
                             @endif

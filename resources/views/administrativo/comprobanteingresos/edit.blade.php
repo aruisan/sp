@@ -1,18 +1,18 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    C.I. {{ $comprobante->code }} - {{ $vigencia->vigencia }}
+    C.C. {{ $comprobante->code }} - {{ $vigencia->vigencia }}
 @stop
 @section('content')
     <div class="breadcrumb text-center">
         <strong>
-            <h4><b>Comprobante de Ingresos {{ $comprobante->code }} - {{ $vigencia->vigencia }}</b></h4>
+            <h4><b>Comprobante de Contabilidad {{ $comprobante->code }} - {{ $vigencia->vigencia }}</b></h4>
         </strong>
     </div>
     <div class="col-md-12 align-self-center">
 
         <ul class="nav nav-pills">
-            <li class="nav-item regresar"><a class="nav-link "  href="{{ url('/administrativo/CIngresos/'.$comprobante->vigencia_id) }}">Volver a Comprobante de Ingresos</a></li>
-            <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Comprobante de Ingresos {{ $comprobante->code }}</a></li>
+            <li class="nav-item regresar"><a class="nav-link "  href="{{ url('/administrativo/CIngresos/'.$comprobante->vigencia_id) }}">Volver a Comprobante de Contabilidad</a></li>
+            <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Comprobante de Contabilidad {{ $comprobante->code }}</a></li>
         </ul>
         <div class="col-lg-12 ">
             <br><br>
@@ -92,6 +92,14 @@
                     </div>
                     <br>
                     <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="text-center"></th>
+                            <th class="text-center" style="width: 200px">Debito<span class="text-danger">*</span></th>
+                            <th class="text-center" style="width: 200px">Crédito<span class="text-danger">*</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <tr>
                             <td>
                                 <div class="form-group">
@@ -105,22 +113,8 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="{{ $comprobante->credito_banco}}">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="{{ $comprobante->debito_banco}}">
-                                    </div>
-                                </div>
-                            </td>
+                            <td><input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="{{ $comprobante->credito_banco}}"></td>
+                            <td><input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="{{ $comprobante->debito_banco}}"></td>
                         </tr>
                         <tr>
                             <td>
@@ -135,22 +129,8 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="{{ $comprobante->credito_puc}}">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="{{ $comprobante->debito_puc}}">
-                                    </div>
-                                </div>
-                            </td>
+                            <td><input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="{{ $comprobante->credito_puc}}"></td>
+                            <td><input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="{{ $comprobante->debito_puc}}"></td>
                         </tr>
                         <tr>
                             <td>
@@ -165,22 +145,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Credito<span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="{{ $comprobante->credito_rubro_ing}}">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Debito<span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <input class="form-control" min="0" type="number" name="debitoIngresos" id="debitoIngresos" value="{{ $comprobante->debito_rubro_ing}}">
-                                    </div>
-                                </div>
-                            </td>
+                            <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="{{ $comprobante->credito_rubro_ing}}"></td>
                         </tr>
                     </table>
                     <br>
