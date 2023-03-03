@@ -75,21 +75,23 @@ class IndexController extends Controller
             //ORDEN DE PAGO
             $ordenP = OrdenPagos::all();
             foreach ($ordenP as $ord){
-                if ($ord->registros->cdpsRegistro->first()->cdp->vigencia_id == $V) {
-                    $ordenPagos[] = collect(['id' => $ord->id, 'code' => $ord->code, 'nombre' => $ord->nombre, 'persona' => $ord->registros->persona->nombre, 'valor' => $ord->valor, 'estado' => $ord->estado]);
-                    foreach ($ord->rubros as $rubroOP){
-                        //SE LLENAN LAS ORDENES DE PAGO CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
-                        if ($rubroOP->orden_pago->estado == "1") {
-                            if ($ord->registros->cdpsRegistro->first()->cdp->tipo == "Funcionamiento"){
-                                $valores[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
-                            } else {
-                                $bpinCdpValue = $rubroOP->cdps_registro->cdps->bpinsCdpValor->first();
-                                $bpinID = BPin::where('cod_actividad', $bpinCdpValue->cod_actividad )->first();
-                                $idRub = bpinVigencias::where('bpin_id', $bpinID->id)->where('vigencia_id', $V)->first();
+                if (isset($ord->registros->cdpsRegistro)) {
+                    if ($ord->registros->cdpsRegistro->first()->cdp->vigencia_id == $V) {
+                        $ordenPagos[] = collect(['id' => $ord->id, 'code' => $ord->code, 'nombre' => $ord->nombre, 'persona' => $ord->registros->persona->nombre, 'valor' => $ord->valor, 'estado' => $ord->estado]);
+                        foreach ($ord->rubros as $rubroOP) {
+                            //SE LLENAN LAS ORDENES DE PAGO CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
+                            if ($rubroOP->orden_pago->estado == "1") {
+                                if ($ord->registros->cdpsRegistro->first()->cdp->tipo == "Funcionamiento") {
+                                    $valores[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
+                                } else {
+                                    $bpinCdpValue = $rubroOP->cdps_registro->cdps->bpinsCdpValor->first();
+                                    $bpinID = BPin::where('cod_actividad', $bpinCdpValue->cod_actividad)->first();
+                                    $idRub = bpinVigencias::where('bpin_id', $bpinID->id)->where('vigencia_id', $V)->first();
 
-                                $depRubFont = DependenciaRubroFont::find($idRub->dep_rubro_id);
+                                    $depRubFont = DependenciaRubroFont::find($idRub->dep_rubro_id);
 
-                                $valores[] = ['id' => $idRub->dep_rubro_id, 'val' => $rubroOP->valor, 'code' => $depRubFont->fontRubro->rubro->plantilla_cuipos_id];
+                                    $valores[] = ['id' => $idRub->dep_rubro_id, 'val' => $rubroOP->valor, 'code' => $depRubFont->fontRubro->rubro->plantilla_cuipos_id];
+                                }
                             }
                         }
                     }
