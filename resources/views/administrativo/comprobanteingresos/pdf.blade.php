@@ -19,37 +19,6 @@
 				<p>{{ $comprobante->concepto }}</p>
 			</center>
 		</div>
-		<div class="table-responsive br-black-1">
-			<table class="table table-borderless">
-				<thead>
-				<tr>
-					<th class="text-center" colspan="3" style="background-color: rgba(19,165,255,0.14)">LIQUIDACIÓN</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr class="text-center">
-					<td>
-						<div class="col-md-12">
-							<div class="col-md-6">VALOR DE CONTROL</div>
-							<div class="col-md-6">$ <?php echo number_format($comprobante->valor - $comprobante->iva,0);?></div>
-						</div>
-					</td>
-					<td>
-						<div class="col-md-12">
-							<div class="col-md-6">VALOR IVA</div>
-							<div class="col-md-6">$ <?php echo number_format($comprobante->iva,0);?></div>
-						</div>
-					</td>
-					<td>
-						<div class="col-md-12">
-							<div class="col-md-6">VALOR TOTAL</div>
-							<div class="col-md-6">$ <?php echo number_format($comprobante->valor + $comprobante->iva,0);?></div>
-						</div>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
 		@if(isset($comprobante->rubro_font_ingresos_id))
 			<div class="table-responsive br-black-1">
 				<table class="table-bordered" id="tablaP" style="width: 100%">
