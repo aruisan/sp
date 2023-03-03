@@ -200,15 +200,79 @@ class BancosController extends Controller
         return redirect('administrativo/bancos/'.$bank->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\bancos  $bancos
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(bancos $bancos)
-    {
-        //
+
+    public function libros(){
+
+        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
+        foreach ($lv1 as $dato){
+            $result[] = $dato;
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) $result[] = $cuenta;
+        }
+
+        return view('administrativo.tesoreria.bancos.libros',compact('result'));
+    }
+
+    public function movAccountLibros(Request $request){
+
+        $rubroPUC = PucAlcaldia::find($request->id);
+        $total = $rubroPUC->saldo_inicial;
+        $totDeb = 0;
+        $totCred = 0;
+        $fechaIni = Carbon::parse($request->fechaInicial);
+        $fechaFin = Carbon::parse($request->fechaFinal);
+
+        // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
+        $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
+        if (count($pagoBanks) > 0){
+            foreach ($pagoBanks as $pagoBank){
+                $total = $total - $pagoBank->valor;
+                $pago = Pagos::find($pagoBank->pagos_id);
+                $tercero = $pago->orden_pago->registros->persona->nombre;
+                $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                $totDeb = $totDeb + 0;
+                $totCred = $totCred + $pagoBank->valor;
+                $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
+                    'modulo' => 'Pago #'.$pago->code, 'debito' => '$'.number_format(0,0),
+                    'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
+                    'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                    'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
+                    'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+            }
+        }
+
+        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
+        $compsCont = ComprobanteIngresos::whereBetween('ff',array($fechaIni, $fechaFin))->where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        if (count($compsCont) > 0){
+            foreach ($compsCont as $compCont){
+                $persona = Persona::find($compCont->persona_id);
+                $tercero = $persona->nombre;
+                $numIdent = $persona->num_dc;
+                if ($compCont->cuenta_banco == $rubroPUC->id){
+                    $total = $total + $compCont->debito_banco;
+                    $total = $total - $compCont->credito_banco;
+                    $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                        'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_banco,0),
+                        'credito' => '$'.number_format($compCont->credito_banco,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                        'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                        'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                        'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                } else{
+                    $total = $total + $compCont->debito_puc;
+                    $total = $total - $compCont->credito_puc;
+                    $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                        'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_puc,0),
+                        'credito' => '$'.number_format($compCont->credito_puc,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                        'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                        'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                        'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                }
+            }
+        }
+
+        return $result;
+
+
     }
 
     public function conciliacion(){

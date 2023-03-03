@@ -137,8 +137,8 @@
                             <tr>
                                 <td>
                                     <select class="form-control" name="banco[]" required>
-                                        @foreach($hijosPUC as $hijo)
-                                            <option value="{{ $hijo->id }}">{{ $hijo->code }} - {{ $hijo->concepto }}</option>
+                                        @foreach($cuentasBanc as $hijo)
+                                            <option @if($hijo->hijo == 0) disabled @endif value="{{ $hijo->id }}">{{ $hijo->code }} - {{ $hijo->concepto }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -202,8 +202,8 @@
                     var nivel=parseInt($("#banks tr").length);
                     $('#banks tbody tr:last').after('<tr><td>\n' +
                         '                                <select class="form-control" name="banco[]" required>\n' +
-                        '                                    @foreach($hijosPUC as $hijo)\n' +
-                        '                                            <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>\n' +
+                        '                                    @foreach($cuentasBanc as $hijo)\n' +
+                        '                                            <option @if($hijo->hijo == 0) disabled @endif value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>\n' +
                         '                                        @endforeach\n' +
                         '                                </select>\n' +
                         '                            </td>\n' +

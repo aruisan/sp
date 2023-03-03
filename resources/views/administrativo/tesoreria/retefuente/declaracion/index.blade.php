@@ -27,7 +27,7 @@
                 </li>
              
             </ul>
-            
+
                 <div class="table-responsive">
                     <br>
                     @if(count($data) > 0)

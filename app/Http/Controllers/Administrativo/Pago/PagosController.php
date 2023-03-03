@@ -85,8 +85,10 @@ class PagosController extends Controller
                 }
             } else {
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
-                if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                    $ordenPagos[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                if (isset($tesoreriaRetefuentePago)) {
+                    if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                        $ordenPagos[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                    }
                 }
             }
 
@@ -252,6 +254,13 @@ class PagosController extends Controller
             $PUCS = RubrosPuc::where('naturaleza','1')->get();
             $hijosPUC = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
 
+            $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
+            foreach ($lv1 as $dato){
+                $cuentasBanc[] = $dato;
+                $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+                foreach ($lv2 as $cuenta) $cuentasBanc[] = $cuenta;
+            }
+
             if (isset($pago->orden_pago->rubros[0]->cdps_registro)) $vigencia_id = $pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id;
             else {
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();
@@ -259,7 +268,7 @@ class PagosController extends Controller
             }
 
             return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC',
-            'cuentas24', 'personas', 'vigencia_id'));
+            'cuentas24', 'personas', 'vigencia_id','cuentasBanc'));
         } else {
             Session::flash('warning','El pago no ha recibido la asignación del monto, por favor realizarla');
             return redirect('administrativo/pagos/asignacion/'.$pago->id);

@@ -54,7 +54,7 @@ class OrdenPagosController extends Controller
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
-                if (isset($OrdenPago->registros->cdpsRegistro)) {
+                if (isset($tesoreriaRetefuentePago)) {
                     if ($tesoreriaRetefuentePago->vigencia_id == $id) {
                         $ordenPagos[] = collect(['info' => $data, 'tercero' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
                     }

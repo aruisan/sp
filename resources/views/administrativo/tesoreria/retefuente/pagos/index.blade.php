@@ -12,6 +12,7 @@
         </li>
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/1') }}">Pago Enero</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/2') }}">Pago Febrero</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/3') }}">Pago Marzo</a></li>
     </ul>
 
     <div class="tab-content" >

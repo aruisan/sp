@@ -103,7 +103,7 @@
                                 <td>8</td>
                                 <td>TOTAL INGRESOS ORDINARIOS Y EXTRAORDINARIOS DEL PERIODO EN TODO EL PAIS</td>
                                 <td><input type="number" class="form-control" min="0" name="totIngreOrd" @if($action == "Corrección" ) value="{{ $ica->totIngreOrd }}" @else value="0" @endif id="totIngreOrd"
-                                    onchange="operation()"></td>
+                                    onchange="changeValueInic()"></td>
                             </tr>
                             <tr>
                                 <td>9</td>
@@ -244,8 +244,8 @@
                             <tr>
                                 <td>21. IMPUESTO DE AVISOS Y TABLEROS (15% DEL RENGLÓN 20)</td>
                                 <td>
-                                    <span id="impAviyTablerosSpan">@if($action == "Corrección") $<?php echo number_format($ica->impAviyTableros,0) ?> @else $0 @endif</span>
-                                    <input class="form-control" type="hidden" min="0" @if($action == "Corrección" ) value="{{ $ica->impAviyTableros }}" @else value="0" @endif name="impAviyTableros" id="impAviyTableros">
+                                    <input class="form-control" style="display: none" type="number" min="0" @if($action == "Corrección" ) value="{{ $ica->impAviyTableros }}" @else value="-1" @endif
+                                    name="impAviyTableros" id="impAviyTableros" onchange="operation()">
                             </tr>
                             <tr>
                                 <td>22. PAGO POR UNIDADES COMERCIALES ADICIONALES DEL SECTOR FINANCIERO</td>
@@ -464,6 +464,11 @@
             minimumFractionDigits: 0
         })
 
+        function changeValueInic(){
+            document.getElementById('impAviyTableros').value = -1;
+            operation()
+        }
+
         function operation(){
             var añoGravable = document.getElementById("añoGravable").value;
 
@@ -546,17 +551,20 @@
             document.getElementById('totImpIndyComSpan').innerHTML = formatter.format(totImpuestoIndyComer);
             document.getElementById('totImpIndyCom').value = totImpuestoIndyComer;
 
+            $("#impAviyTableros").show();
             //21. IMPUESTO DE AVISS Y TABLEROS
-            var impAyT = (totImpuestoIndyComer * 15)/100;
-            if(impAyT < 0) impAyT = 0;
-            document.getElementById('impAviyTablerosSpan').innerHTML = formatter.format(impAyT);
-            document.getElementById('impAviyTableros').value = impAyT;
+            var impAyT = document.getElementById('impAviyTableros').value;
+            if(parseInt(impAyT) == -1){
+                var impAyT = (totImpuestoIndyComer * 15)/100;
+                if(impAyT < 0) impAyT = 0;
+                document.getElementById('impAviyTableros').value = impAyT;
+            }
 
             //25. TOTAL IMPUESTO A CARGO
             var pagoUndComer = document.getElementById("pagoUndComer").value;
             var sobretasaBomberil = document.getElementById("sobretasaBomberil").value;
             var sobretasaSeguridad = document.getElementById("sobretasaSeguridad").value;
-            var totImpCargo = totImpuestoIndyComer + impAyT + parseInt(pagoUndComer) + parseInt(sobretasaBomberil) + parseInt(sobretasaSeguridad);
+            var totImpCargo = totImpuestoIndyComer + parseInt(impAyT) + parseInt(pagoUndComer) + parseInt(sobretasaBomberil) + parseInt(sobretasaSeguridad);
             if(totImpCargo < 0) totImpCargo = 0;
             document.getElementById('totImpCargoSpan').innerHTML = formatter.format(totImpCargo);
             document.getElementById('totImpCargo').value = totImpCargo;

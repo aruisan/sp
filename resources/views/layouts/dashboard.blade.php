@@ -71,7 +71,9 @@
 
      <!-- Dropdown.js -->
      {{-- <link href="//cdn.rawgit.com/FezVrasta/dropdown.js/master/jquery.dropdown.css" rel="stylesheet"> --}}
-        <link rel="stylesheet" href="{{asset('/assets/adminLTE/style.css') }}">
+    <link rel="stylesheet" href="{{asset('/assets/adminLTE/style.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     @yield('css')
 
     <style>
@@ -320,6 +322,9 @@
     <script src="{{asset('/assets/morrisjs/morris.min.js')}}"></script>
     <script src="{{asset('/assets/sb-admin/js/sb-admin-2.js')}}"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 
      <!-- SlimScroll -->
