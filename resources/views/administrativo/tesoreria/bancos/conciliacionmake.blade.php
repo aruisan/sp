@@ -22,6 +22,9 @@
             <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/conciliacion')}}" method="POST" enctype="multipart/form-data" id="prog">
                 {{ csrf_field() }}
                 <meta name="csrf-token" content="{{ csrf_token() }}">
+                <input type="hidden" name="cuenta" value="{{ $rubroPUC->id }}">
+                <input type="hidden" name="mes" value="{{ $mesFind }}">
+                <input type="hidden" name="año" value="{{ $añoActual }}">
                 <table class="table table-bordered table-hover" id="tabla">
                     <thead>
                     <tr>
@@ -120,7 +123,8 @@
                         <td>$<?php echo number_format($totCredAll,0) ?></td>
                         <td>
                             <span id="subTotBancoSpan">$<?php echo number_format($totBank,0) ?></span>
-                            <input type="hidden" name="subTotBanco" value="{{ $totBank }}">
+                            <input type="hidden" name="subTotBancoInicial" id="subTotBancoInicial" value="{{ $totBank }}">
+                            <input type="hidden" name="subTotBancoFinal" id="subTotBancoFinal" value="{{ $totBank }}">
                         </td>
                     </tr>
                     <tr class="text-center">
@@ -165,7 +169,7 @@
                         <td></td>
                         <td>
                             <span id="sumaIgualBankSpan">$<?php echo number_format($totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial ,0) ?></span>
-                            <input type="hidden" name="sumaIgualBank" value="{{ $totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial }}">
+                            <input type="hidden" name="sumaIgualBank" id="sumaIgualBank" value="{{ $totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial }}">
                         </td>
                     </tr>
                     </tbody>
@@ -199,7 +203,7 @@
                     </tbody>
                 </table>
                 <div class="text-center">
-                    <button id="buttonMake" type="submit" class="btn-sm btn-primary">ENVIAR CONCILIACIÓN</button>
+                    <button type="submit" class="btn-sm btn-primary">ENVIAR CONCILIACIÓN</button>
                 </div>
             </form>
         </div>
@@ -211,6 +215,7 @@
         $(document).on('click', '.borrar', function (event) {
             event.preventDefault();
             $(this).closest('tr').remove();
+            valores();
         });
 
         const formatter = new Intl.NumberFormat('en-US', {
@@ -219,13 +224,18 @@
             minimumFractionDigits: 0
         })
 
-        function valores(value){
-            console.log(value)
-
+        function valores(){
             //const sumaBank = document.getElementById('sumaIgualBank').value;
-            const subTotBanco = document.getElementById('subTotBanco').value;
-            document.getElementById('sumaIgualBankSpan').innerHTML = formatter.format(subTotBanco + value);
-            document.getElementById('subTotBancoSpan').innerHTML = formatter.format(subTotBanco + value);
+            var subTotBancoInicial = document.getElementById('subTotBancoInicial').value;
+            const cantidadBanco = document.querySelectorAll('input[name="banco[]"]');
+            var total = 0;
+            cantidadBanco.forEach((elemento) => {
+                total = parseInt(total) + parseInt(elemento.value);
+            });
+
+            document.getElementById('subTotBancoFinal').value = parseInt(subTotBancoInicial) + parseInt(total);
+            document.getElementById('sumaIgualBankSpan').innerHTML = formatter.format(parseInt(subTotBancoInicial) + parseInt(total));
+            document.getElementById('subTotBancoSpan').innerHTML = formatter.format(parseInt(subTotBancoInicial) + parseInt(total));
         }
 
 
@@ -239,7 +249,7 @@
                         '<td><input type="text" class="form-control" name="ref[]" required></td>\n'+
                         '<td><input type="hidden" class="form-control" name="deb[]"></td>\n'+
                         '<td><input type="hidden" class="form-control" name="cred[]" required></td>\n'+
-                        '<td><input onchange="valores(this.value)" type="number" value="0" class="form-control" name="banco[]" required></td>\n'+
+                        '<td><input onchange="valores()" type="number" value="0" class="form-control" name="banco[]" required></td>\n'+
                         '<td></td>\n'+
                         '</tr>\n');
                 },

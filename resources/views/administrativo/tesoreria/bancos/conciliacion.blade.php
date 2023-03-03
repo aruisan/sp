@@ -113,7 +113,7 @@
             }).done(function(datos) {
                 document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
                 $("#tabla").show();
-                $("#buttonMake").show();
+                //$("#buttonMake").show();
                 table.destroy();
                 $("#cargando").hide();
                 table = $('#tabla').DataTable( {
@@ -132,7 +132,7 @@
                         },
                         "sProcessing":"Procesando...",
                     },
-                    "pageLength": 5,
+                    "pageLength": 15,
                     responsive: true,
                     "searching": true,
                     ordering: false,
