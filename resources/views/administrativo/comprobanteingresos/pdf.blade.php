@@ -11,6 +11,9 @@
 					<td>Beneficiario: {{ $persona->nombre }}</td>
 					<td>Nit o Cedula: {{ $persona->num_dc }}</td>
 				</tr>
+				<tr class="text-center">
+					<td colspan="2">Tipo de Documento: {{ $comprobante->tipoCI }}</td>
+				</tr>
 			</table>
 		</div>
 		<div>
