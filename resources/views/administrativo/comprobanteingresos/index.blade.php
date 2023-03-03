@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    Comprobantes de Ingresos
+    Comprobantes de Contabilidad
 @stop
 @section('sidebar')
 @stop
