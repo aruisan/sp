@@ -20,7 +20,7 @@
 
             <br>
             <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC()">
-                <option value="0">Seleccione la cuenta para obtener la conciliación Bancaria</option>
+                <option value="0">Seleccione la cuenta para obtener el libro</option>
                 @foreach($result as $cuenta)
                     <option @if($cuenta['hijo'] == 0) disabled @endif value="{{$cuenta['id']}}">{{$cuenta['code']}} -
                         {{$cuenta['concepto']}} - SALDO INICIAL: $<?php echo number_format($cuenta['saldo_inicial'],0) ?></option>
