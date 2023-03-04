@@ -124,7 +124,8 @@ class IndexController extends Controller
                                 }
                             }
                         }
-                        $pagos[] = collect(['id' => $pagoFind[0]->id, 'code' =>$pagoFind[0]->code, 'nombre' => $data['nombre'], 'persona' => $pagoFind[0]->orden_pago->registros->persona->nombre, 'valor' => $pagoFind[0]->valor, 'estado' => $pagoFind[0]->estado]);
+                        if (isset($pagoFind[0]->orden_pago->registros)) $pagos[] = collect(['id' => $pagoFind[0]->id, 'code' =>$pagoFind[0]->code, 'nombre' => $data['nombre'], 'persona' => $pagoFind[0]->orden_pago->registros->persona->nombre, 'valor' => $pagoFind[0]->valor, 'estado' => $pagoFind[0]->estado]);
+                        else $pagos[] = collect(['id' => $pagoFind[0]->id, 'code' =>$pagoFind[0]->code, 'nombre' => $data['nombre'], 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN', 'valor' => $pagoFind[0]->valor, 'estado' => $pagoFind[0]->estado]);
                     } elseif($pagoFind->count() > 1){
                         foreach ($pagoFind as $info){
                             $oPago = OrdenPagos::find($info->id);
@@ -139,7 +140,8 @@ class IndexController extends Controller
                                     }
                                 }
                             }
-                            $pagos[] = collect(['id' => $info->id, 'code' => $info->code, 'nombre' => $data['nombre'], 'persona' => $info->orden_pago->registros->persona->nombre, 'valor' => $info->valor, 'estado' => $info->estado]);
+                            if (isset($info->orden_pago->registros)) $pagos[] = collect(['id' => $info->id, 'code' => $info->code, 'nombre' => $data['nombre'], 'persona' => $info->orden_pago->registros->persona->nombre, 'valor' => $info->valor, 'estado' => $info->estado]);
+                            else $pagos[] = collect(['id' => $info->id, 'code' => $info->code, 'nombre' => $data['nombre'], 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN', 'valor' => $info->valor, 'estado' => $info->estado]);
                         }
                     }
                 }
