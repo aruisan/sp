@@ -14,12 +14,12 @@
                 </strong>
             </div>
             <h5>Seleccione la fecha</h5>
-            <input type="text" name="fecha" id="fecha" class="form-control" value="{{ Carbon\Carbon::today()->Format('d/m/Y')}} - {{ Carbon\Carbon::today()->Format('d/m/Y')}}" required>
+            <input type="text" name="fecha" id="fecha" class="form-control"  value="{{ Carbon\Carbon::today()->Format('d/m/Y')}} - {{ Carbon\Carbon::today()->Format('d/m/Y')}}" required>
             <input type="hidden" name="fechaInicial" id="fechaInicial" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
             <input type="hidden" name="fechaFinal" id="fechaFinal" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
 
             <br>
-            <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
+            <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC()">
                 <option value="0">Seleccione la cuenta para obtener la conciliación Bancaria</option>
                 @foreach($result as $cuenta)
                     <option @if($cuenta['hijo'] == 0) disabled @endif value="{{$cuenta['id']}}">{{$cuenta['code']}} -
@@ -71,6 +71,11 @@
         }, function(start, end) {
             document.getElementById("fechaInicial").value = start.format('YYYY-MM-DD');
             document.getElementById("fechaFinal").value = end.format('YYYY-MM-DD');
+
+            const cuenta = document.getElementById("cuentaPUC").value;
+            if(parseInt(cuenta) != 0){
+                findRubroPUC();
+            }
         });
 
         $(document).ready(function() {
@@ -94,8 +99,10 @@
 
         });
 
-        function findRubroPUC(option){
+        function findRubroPUC(){
             $("#cargando").show();
+
+            const cuenta = document.getElementById("cuentaPUC").value;
 
             const fechaInicial = document.getElementById("fechaInicial").value;
             const fechaFinal =document.getElementById("fechaFinal").value;
@@ -104,11 +111,10 @@
             $.ajax({
                 method: "POST",
                 url: "/administrativo/tesoreria/bancos/movAccountLibros",
-                data: { "id": option.value, "fechaInicial": fechaInicial, "fechaFinal": fechaFinal,
+                data: { "id": cuenta, "fechaInicial": fechaInicial, "fechaFinal": fechaFinal,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                console.log(datos);
                 document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
                 $("#tabla").show();
                 table.destroy();

@@ -286,7 +286,7 @@
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Bancos</a>
                   <ul class="dropdown-menu">
-                     <li><a class="item-menu" href="#">Libros</a></li>
+                     <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/bancos/libros') }}">Libros</a></li>
                      <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/bancos/conciliacion') }}">Conciliación bancaria</a></li>
                   </ul>
                </li>

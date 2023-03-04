@@ -95,6 +95,12 @@ class IndexController extends Controller
                             }
                         }
                     }
+                } else {
+                    $añoOP = Carbon::parse($ord->created_at)->format('Y');
+                    if (intval($añoOP) == $añoActual){
+                        $ordenPagos[] = collect(['id' => $ord->id, 'code' => $ord->code, 'nombre' => $ord->nombre, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN', 'valor' => $ord->valor, 'estado' => $ord->estado]);
+                    }
+                    //SE AÑADE LA ORDEN DE PAGO AL LISTADO, PERO COMO SE APLICA EL DINERO CUANDO LA ORDEN DE PAGO NO TIENE UN RP?
                 }
             }
             if (!isset($valores)){
