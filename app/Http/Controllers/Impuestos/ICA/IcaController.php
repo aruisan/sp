@@ -138,7 +138,7 @@ class IcaController extends Controller
             $ICA->genEnergiaCapacidad = $request->genEnergiaCapacidad;
             $ICA->impLey56 = $request->impLey56;
             $ICA->totImpIndyCom = $ICA->totImpuesto + $ICA->impLey56;
-            $ICA->impAviyTableros = $ICA->totImpIndyCom * 15 / 100;
+            $ICA->impAviyTableros = $request->impAviyTableros;
             $ICA->pagoUndComer = $request->pagoUndComer;
             $ICA->sobretasaBomberil = $request->sobretasaBomberil;
             $ICA->sobretasaSeguridad = $request->sobretasaSeguridad;
@@ -224,7 +224,7 @@ class IcaController extends Controller
             $ICA->genEnergiaCapacidad = $request->genEnergiaCapacidad;
             $ICA->impLey56 = $request->impLey56;
             $ICA->totImpIndyCom = $ICA->totImpuesto + $ICA->impLey56;
-            $ICA->impAviyTableros = $ICA->totImpIndyCom * 15 / 100;
+            $ICA->impAviyTableros = $request->impAviyTableros;
             $ICA->pagoUndComer = $request->pagoUndComer;
             $ICA->sobretasaBomberil = $request->sobretasaBomberil;
             $ICA->sobretasaSeguridad = $request->sobretasaSeguridad;
