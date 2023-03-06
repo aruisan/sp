@@ -127,16 +127,10 @@
                             <div class="row">
                                 <br> <br>
                                 @if($vigens->tipo != 1)
-                                    <div class="col-lg-6 form-group">
-                                        <center><h4><b>Valor Total del Rubro</b></h4></center>
+                                    <div class="col-lg-12 form-group">
+                                        <center><h4><b>Valor Inicial Total del Rubro</b></h4></center>
                                         <div class="text-center">$ <?php echo number_format($valor,0);?>.00</div>
                                         <br>
-                                    </div>
-                                    <div class="col-lg-6 form-group">
-                                        <center><h4><b>Valor Disponible del Rubro</b></h4></center>
-                                        <div class="text-center">
-                                            $ <?php echo number_format($valorDisp,0);?>.00
-                                        </div>
                                     </div>
                                 @else
                                     <div class="col-lg-4 form-group">
