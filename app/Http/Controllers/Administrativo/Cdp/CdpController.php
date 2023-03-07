@@ -550,30 +550,6 @@ class CdpController extends Controller
         }
     }
 
-    public function actualizarValorActividad($id)
-    {
-        $cdp = Cdp::findOrFail($id);
-        foreach ($cdp->bpinsCdpValor as $actividad){
-            $validateVig = bpinVigencias::where('bpin_id',$actividad->actividad->id)->first();
-            $valor = $actividad->valor;
-            $total = $validateVig->saldo - $valor;
-            $validateVig->saldo = $total;
-            if ($validateVig->saldo < 0){
-                Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la bpinVigencia');
-                return redirect('/administrativo/cdp/' . $cdp->vigencia_id . '/' . $id);
-            }
-            $validateVig->save();
-
-            $depRubroFont = DependenciaRubroFont::find($validateVig->dep_rubro_id);
-            $depRubroFont->saldo = $depRubroFont->saldo - $cdp->valor;
-            if ($depRubroFont->saldo < 0){
-                Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la dependenciaRubroFont');
-                return redirect('/administrativo/cdp/' . $cdp->vigencia_id . '/' . $id);
-            }
-            $depRubroFont->save();
-        }
-    }
-
     public function pdf($id, $vigen)
     {
         $roles = auth()->user()->roles;
@@ -670,36 +646,6 @@ class CdpController extends Controller
         $pdf = PDF::loadView('administrativo.cdp.pdfBorrador', compact('cdp','rubros','valores','rol','infoRubro', 'vigencia', 'dias', 'meses', 'fecha'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
 
-    }
-
-    public function cdpActividad(Request $request, $cdp, $vigencia){
-        if (array_sum($request->valUsedActividad) == 0){
-            Session::flash('warning','El CDP no se puede enviar en $0');
-            return back();
-        } else {
-            for ($i = 0; $i < count($request->codActividad); $i++) {
-                if ( $request->valUsedActividad[$i] > 0){
-                    $bpinCdpValor = new BpinCdpValor();
-                    $bpinCdpValor->valor = $request->valUsedActividad[$i];
-                    $bpinCdpValor->valor_disp = $request->valUsedActividad[$i];
-                    $bpinCdpValor->cdp_id = $cdp;
-                    $bpinCdpValor->cod_actividad = $request->codActividad[$i];
-                    $bpinCdpValor->dependencia_rubro_font_id = $request->depRubro_id[$i];
-                    $bpinCdpValor->save();
-                }
-            }
-
-            $CDP = Cdp::findOrFail($cdp);
-            $CDP->valor = array_sum($request->valUsedActividad);
-            $CDP->saldo = array_sum($request->valUsedActividad);
-            $CDP->secretaria_e = '3';
-            $CDP->jefe_e = "0";
-            $CDP->ff_secretaria_e = Carbon::today();
-            $CDP->save();
-
-            Session::flash('success','El CDP ha sido enviado exitosamente');
-            return redirect('/administrativo/cdp/'.$vigencia);
-        }
     }
 
     public function DeleteInv($id){
