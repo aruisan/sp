@@ -473,16 +473,15 @@ class CdpController extends Controller
                                 return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                             }
                             $depRubroFont->save();
-
                             $update->save();
 
-                            Session::flash('success', 'El CDP ha sido finalizado con exito');
-                            return redirect('/administrativo/cdp/' . $update->vigencia_id);
                         } else{
                             Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la actividad');
                             return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                         }
                     }
+                    Session::flash('success', 'El CDP ha sido finalizado con exito');
+                    return redirect('/administrativo/cdp/' . $update->vigencia_id);
                 }
             }
         }
