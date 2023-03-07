@@ -449,7 +449,8 @@ class CdpController extends Controller
                 } else{
                     //VALIDACION DEL CDP CUANDO ES DE INVERSION
                     foreach ($update->bpinsCdpValor as $actividad) {
-                        $validateVig = bpinVigencias::where('bpin_id',$actividad->actividad->id)->first();
+                        $validateVig = bpinVigencias::where('bpin_id',$actividad->actividad->id)
+                            ->where('dep_rubro_id', $actividad->dependencia_rubro_font_id)->first();
 
                         if ($validateVig->saldo >= $actividad->valor){
                             $update->jefe_e = $estado;
