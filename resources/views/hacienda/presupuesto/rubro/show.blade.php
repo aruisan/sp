@@ -408,9 +408,9 @@
                                                 @endforeach
                                             </td>
                                             <td class="text-center">
-                                                @foreach($valores as $valAdd)
-                                                    @if($fuentes->id == $valAdd['id'])
-                                                        $ <?php echo number_format($valAdd['reduccion'],0);?>.00
+                                                @foreach($red as $reduccion)
+                                                    @if($reduccion->dep_rubro_font_id == $depFont->id)
+                                                        $ <?php echo number_format($reduccion->valor,0);?>.00
                                                     @endif
                                                 @endforeach
                                             </td>
