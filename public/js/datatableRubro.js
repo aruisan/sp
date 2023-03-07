@@ -211,7 +211,7 @@ buttons:[
 
 	$('#tablaMovimientos').DataTable( {
 	responsive: true,
-		"searching": false,
+		"searching": true,
 		"pageLength": 5,
 		language: {
 	  "lengthMenu": "Mostrar _MENU_ registros",
