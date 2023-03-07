@@ -30,9 +30,12 @@
                                             <!--
                                                 <input type="hidden" name="fuente_id[]" value="@foreach($fuentesRubro->rubrosMov as $mov) @if($mov->rubro_id == $rubro->id and $mov->movimiento == 3) {{  $mov->fonts_id }}@endif @endforeach">
                                                 <input type="hidden" name="fuenteBase_id[]" value="{{ $fuentesRubro->sourceFunding->id }}">
-                                            -->
+                                                
+                                                //ERROR EN EL FOREACH
                                                 <input type="hidden" name="mov_id[]" value="@foreach($red as $mov) @if($mov->rubro_id == $rubro->id and $mov->movimiento == 3) {{  $mov->id }} @endif @endforeach">
                                                 <input type="text" required  name="valorCred[]" value="@foreach($fuentesRubro->fontRubro as $mov) @if($mov->rubro_id == $rubro->id and $mov->movimiento == 3) {{  $mov->valor }} @endif @endforeach" style="text-align: center">
+                                            -->
+
                                             @else
                                                 <input type="hidden" name="fuente_id[]" value="{{ $fuentesRubro->fontRubro }}">
                                                 <input type="hidden" name="mov_id[]" value="">
