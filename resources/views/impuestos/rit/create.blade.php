@@ -458,27 +458,7 @@
                                                 <td style="vertical-align: middle">{{ $establecimiento->clasificacion }}</td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <tr>
-                                            <td style="vertical-align: middle"><button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button></td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="nombre[]" required></td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="matMercantil[]" required></td>
-                                            <td style="vertical-align: middle"><input type="number" class="form-control" name="telefono[]" required></td>
-                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaInicio[]" required></td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="direccion[]" required></td>
-                                            <td style="vertical-align: middle"><input type="text" class="form-control" name="barrio[]" required></td>
-                                            <td style="vertical-align: middle"><input type="date" class="form-control" name="fechaCancel[]"></td>
-                                            <td style="vertical-align: middle">
-                                                <select style="width: 100%" class="form-control" name="clasificacion[]" required>
-                                                    <option value="Servicios">Servicios</option>
-                                                    <option value="Servicio Comercial">Servicio Comercial</option>
-                                                    <option value="Servicio Industrial">Servicio Industrial</option>
-                                                    <option value="Servicio Financiero">Servicio Financiero</option>
-                                                </select>
-                                            </td>
-                                        </tr>
                                     @endif
-
                                     </tbody>
                                 </table>
                                 <div class="text-center" id="buttonAddEstable">

@@ -112,7 +112,7 @@ class RitController extends Controller
             $RIT->save();
 
             //TABLA IV. DATOS DE ESTABLECIMIENTOS DE COMERCIO UBICADOS EN PROVIDENCIA
-            if (count($request->nombre) > 0){
+            if (isset($request->nombre)){
                 for ($i = 0; $i <= count($request->nombre) -1; $i++) {
                     $establecimientos = new RitEstablecimientos();
                     $establecimientos->rit_id = $RIT->id;
