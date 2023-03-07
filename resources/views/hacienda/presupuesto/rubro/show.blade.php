@@ -408,11 +408,16 @@
                                                 @endforeach
                                             </td>
                                             <td class="text-center">
+                                                @php($put = false)
                                                 @foreach($red as $reduccion)
                                                     @if($reduccion->dep_rubro_font_id == $depFont->id)
                                                         $ <?php echo number_format($reduccion->valor,0);?>.00
+                                                        @php($put = true)
                                                     @endif
                                                 @endforeach
+                                                @if(!$put)
+                                                    $ 0.00
+                                                @endif
                                             </td>
                                             @if($vigens->tipo != 1)
                                                 <td class="text-center">
