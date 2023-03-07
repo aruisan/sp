@@ -9,12 +9,15 @@ use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\bancos;
+use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
+use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancariaCuentas;
 use App\Model\Persona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Session;
+use PDF;
 
 class BancosController extends Controller
 {
@@ -283,8 +286,9 @@ class BancosController extends Controller
             $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
             foreach ($lv2 as $cuenta) $result[] = $cuenta;
         }
+        $conciliaciones = ConciliacionBancaria::where('año', Carbon::today()->format('Y') )->get();
 
-        return view('administrativo.tesoreria.bancos.conciliacion',compact('result'));
+        return view('administrativo.tesoreria.bancos.conciliacion',compact('result','conciliaciones'));
     }
 
     public function movAccount(Request $request){
@@ -436,6 +440,117 @@ class BancosController extends Controller
     }
 
     public function saveConciliacion(Request $request){
-        dd($request);
+
+        $conciliacion = new ConciliacionBancaria();
+        $conciliacion->año = $request->año;
+        $conciliacion->mes = $request->mes;
+        $conciliacion->puc_id = $request->cuenta;
+        $conciliacion->subTotBancoInicial = $request->subTotBancoInicial;
+        $conciliacion->subTotBancoFinal = $request->subTotBancoFinal;
+        $conciliacion->sumaIgualBank = $request->sumaIgualBank;
+        $conciliacion->responsable_id = auth()->user()->id;
+        $conciliacion->save();
+
+        if (isset($request->ref)){
+            for ($i = 0; $i < count($request->ref); $i++) {
+                $conciliacionCuentas = new ConciliacionBancariaCuentas();
+                $conciliacionCuentas->conciliacion_id = $conciliacion->id;
+                $conciliacionCuentas->referencia = $request->ref[$i];
+                $conciliacionCuentas->valor = $request->banco[$i];
+                $conciliacionCuentas->save();
+            }
+
+        }
+
+        Session::flash('success','Se ha realizado la conciliación bancaria exitosamente.');
+        return redirect('administrativo/tesoreria/bancos/conciliacion');
+    }
+
+    public function pdf($id){
+
+        $conciliacion = ConciliacionBancaria::findOrFail($id);
+        $cuentas = ConciliacionBancariaCuentas::where('conciliacion_id', $id)->get();
+
+        $rubroPUC = PucAlcaldia::find($conciliacion->puc_id);
+        $añoActual = $conciliacion->año;
+        $mesFind = $conciliacion->mes;
+        $total = $rubroPUC->saldo_inicial;
+        $totDeb = 0;
+        $totCred = 0;
+        $totCredAll = 0;
+        $totBank = 0;
+
+        // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
+        $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
+        if (count($pagoBanks) > 0){
+            foreach ($pagoBanks as $pagoBank){
+                if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
+                    if (Carbon::parse($pagoBank->created_at)->format('m') == $mesFind){
+                        $total = $total - $pagoBank->valor;
+                        $pago = Pagos::find($pagoBank->pagos_id);
+                        $tercero = $pago->orden_pago->registros->persona->nombre;
+                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        $totDeb = $totDeb + 0;
+                        $totCredAll = $totCredAll + $pagoBank->valor;
+                        if ($pago->estado == 1) {
+                            $totCred = $totCred + $pagoBank->valor;
+                            $totBank = $totBank - $pagoBank->valor;
+                        }
+                        $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
+                            'modulo' => 'Pago #'.$pago->code, 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
+                            'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                            'referencia' => 'Pago #'.$pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                    }
+                }
+            }
+        }
+
+        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
+        $compsCont = ComprobanteIngresos::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        if (count($compsCont) > 0){
+            foreach ($compsCont as $compCont){
+                if (Carbon::parse($compCont->ff)->format('Y') == $añoActual) {
+                    if (Carbon::parse($compCont->ff)->format('m') == $mesFind) {
+                        $persona = Persona::find($compCont->persona_id);
+                        $tercero = $persona->nombre;
+                        $numIdent = $persona->num_dc;
+                        if ($compCont->cuenta_banco == $rubroPUC->id){
+                            $total = $total + $compCont->debito_banco;
+                            $total = $total - $compCont->credito_banco;
+                            $totDeb = $totDeb + $compCont->debito_banco;
+                            $totCred = $totCred + $compCont->credito_banco;
+                            $totCredAll = $totCred + $compCont->credito_banco;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_banco,
+                                'credito' => $compCont->credito_banco, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                        } else{
+                            $total = $total + $compCont->debito_puc;
+                            $total = $total - $compCont->credito_puc;
+                            $totDeb = $totDeb + $compCont->debito_puc;
+                            $totCred = $totCred + $compCont->credito_puc;
+                            $totCredAll = $totCred + $compCont->credito_puc;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_puc,
+                                'credito' => $compCont->credito_puc, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                        }
+                    }
+                }
+            }
+        }
+
+        $fecha = Carbon::createFromTimeString($conciliacion->created_at);
+        $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+        $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha',
+        'cuentas','rubroPUC','totDeb','totCred','totCredAll','result','totBank'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
     }
 }

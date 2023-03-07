@@ -194,6 +194,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
             //Bancos
         Route::get('tesoreria/bancos/libros','Administrativo\Tesoreria\BancosController@libros');
         Route::get('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@conciliacion');
+        Route::get('tesoreria/bancos/conciliacion/{id}/pdf','Administrativo\Tesoreria\BancosController@pdf');
         Route::get('tesoreria/bancos/libros','Administrativo\Tesoreria\BancosController@libros');
         Route::post('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@saveConciliacion');
         Route::post('tesoreria/bancos/movAccount','Administrativo\Tesoreria\BancosController@movAccount');
