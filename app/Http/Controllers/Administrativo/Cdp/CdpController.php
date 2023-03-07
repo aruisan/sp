@@ -453,10 +453,6 @@ class CdpController extends Controller
                             ->where('dep_rubro_id', $actividad->dependencia_rubro_font_id)->first();
 
                         if ($validateVig->saldo >= $actividad->valor){
-                            $update->jefe_e = $estado;
-                            $update->ff_jefe_e = $fecha;
-                            $update->valor = $valor;
-                            $update->saldo = $valor;
 
                             //SE RESTA A BPIN VIGENCIA
                             $validateVig->saldo = $validateVig->saldo - $actividad->valor;
@@ -473,13 +469,20 @@ class CdpController extends Controller
                                 return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                             }
                             $depRubroFont->save();
-                            $update->save();
 
                         } else{
                             Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la actividad');
                             return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                         }
                     }
+
+                    //SI LOS DESCUENTOS FUERON SATISFACTORIOS SE ACTUALIZA EL CDP A FINALIZADO
+                    $update->jefe_e = $estado;
+                    $update->ff_jefe_e = $fecha;
+                    $update->valor = $valor;
+                    $update->saldo = $valor;
+                    $update->save();
+
                     Session::flash('success', 'El CDP ha sido finalizado con exito');
                     return redirect('/administrativo/cdp/' . $update->vigencia_id);
                 }
@@ -775,21 +778,41 @@ class CdpController extends Controller
                             }
                         }
                     } else{
+
                         //VALIDACION DEL CDP CUANDO ES DE INVERSION
                         foreach ($update->bpinsCdpValor as $actividad) {
-                            if ($actividad->actividad->saldo >= $actividad->valor){
-                                $update->jefe_e = '3';
-                                $update->ff_jefe_e = Carbon::today();
-                                $update->saldo = $update->valor;
+                            $validateVig = bpinVigencias::where('bpin_id',$actividad->actividad->id)
+                                ->where('dep_rubro_id', $actividad->dependencia_rubro_font_id)->first();
 
-                                $this->actualizarValorActividad($request->$input);
+                            if ($validateVig->saldo >= $actividad->valor){
 
-                                $update->save();
+                                //SE RESTA A BPIN VIGENCIA
+                                $validateVig->saldo = $validateVig->saldo - $actividad->valor;
+                                if ($validateVig->saldo < 0){
+                                    Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la bpinVigencia');
+                                    return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $request->$input);
+                                }
+                                $validateVig->save();
+
+                                $depRubroFont = DependenciaRubroFont::find($validateVig->dep_rubro_id);
+                                $depRubroFont->saldo = $depRubroFont->saldo - $actividad->valor;
+                                if ($depRubroFont->saldo < 0){
+                                    Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la dependenciaRubroFont');
+                                    return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $request->$input);
+                                }
+                                $depRubroFont->save();
+
                             } else{
                                 Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la actividad');
                                 return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $request->$input);
                             }
                         }
+
+                        //SI LOS DESCUENTOS FUERON SATISFACTORIOS SE ACTUALIZA EL CDP A FINALIZADO
+                        $update->jefe_e = '3';
+                        $update->ff_jefe_e = Carbon::today();
+                        $update->saldo = $update->valor;
+                        $update->save();
                     }
                 }
             }
