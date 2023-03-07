@@ -42,7 +42,6 @@ use PDF;
 
 class InformeController extends Controller
 {
-
     public function prepEgresos(){
         $añoActual = Carbon::now()->year;
 
@@ -59,82 +58,6 @@ class InformeController extends Controller
 
         $V = $vigens[0]->id;
         $vigencia_id = $V;
-
-        $bpins = BPin::all();
-        foreach ($bpins as $bpin){
-            $bpin['rubro'] = "No";
-            if (count($bpin->rubroFind) > 0) {
-                foreach ($bpin->rubroFind as $rub){
-                    if ($rub->vigencia_id == $V){
-                        $bpin['rubro'] = $rub->dep_rubro_id;
-                    }
-                }
-            }
-        }
-
-        //ORDEN DE PAGO
-        $ordenP = OrdenPagos::all();
-        foreach ($ordenP as $ord){
-            if ($ord->registros->cdpsRegistro->first()->cdp->vigencia_id == $V) {
-                $ordenPagos[] = collect(['id' => $ord->id, 'code' => $ord->code, 'nombre' => $ord->nombre, 'persona' => $ord->registros->persona->nombre, 'valor' => $ord->valor, 'estado' => $ord->estado]);
-                foreach ($ord->rubros as $rubroOP){
-                    //SE LLENAN LAS ORDENES DE PAGO CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
-                    if ($rubroOP->orden_pago->estado == "1") {
-                        if ($ord->registros->cdpsRegistro->first()->cdp->tipo == "Funcionamiento"){
-                            $valores[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
-                        } else {
-                            $bpinCdpValue = $rubroOP->cdps_registro->cdps->bpinsCdpValor->first();
-                            $bpinID = BPin::where('cod_actividad', $bpinCdpValue->cod_actividad )->first();
-                            $idRub = bpinVigencias::where('bpin_id', $bpinID->id)->where('vigencia_id', $V)->first();
-
-                            $depRubFont = DependenciaRubroFont::find($idRub->dep_rubro_id);
-
-                            $valores[] = ['id' => $idRub->dep_rubro_id, 'val' => $rubroOP->valor, 'code' => $depRubFont->fontRubro->rubro->plantilla_cuipos_id];
-                        }
-                    }
-                }
-            }
-        }
-        if (!isset($valores)){
-            $valores[] = null;
-            unset($valores[0]);
-        }
-        if (!isset($ordenPagos)){
-            $ordenPagos[] = null;
-            unset($ordenPagos[0]);
-        } else {
-            //PAGOS
-            foreach ($ordenPagos as $data){
-                $pagoFind = Pagos::where('orden_pago_id',$data['id'])->get();
-                if ($pagoFind->count() == 1){
-                    $oPago = OrdenPagos::find($data['id']);
-                    foreach ($oPago->rubros as $rubroOP){
-                        //SE LLENAN LOS PAGOS CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
-                        if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
-                    }
-                    $pagos[] = collect(['id' => $pagoFind[0]->id, 'code' =>$pagoFind[0]->code, 'nombre' => $data['nombre'], 'persona' => $pagoFind[0]->orden_pago->registros->persona->nombre, 'valor' => $pagoFind[0]->valor, 'estado' => $pagoFind[0]->estado]);
-                } elseif($pagoFind->count() > 1){
-                    foreach ($pagoFind as $info){
-                        $oPago = OrdenPagos::find($info->id);
-                        if (isset($oPago->rubros)){
-                            foreach ($oPago->rubros as $rubroOP){
-                                //SE LLENAN LOS PAGOS CON LOS VALORES PARA EL LLENADO DE LA TABLA DEL PRESUPUESTO
-                                if ($rubroOP->orden_pago->estado == "1") $valoresPagos[] = ['id' => $rubroOP->cdps_registro->fontRubro->rubro->id, 'val' => $rubroOP->valor, 'code' => $rubroOP->cdps_registro->fontRubro->rubro->plantilla_cuipos_id];
-                            }
-                        }
-                        $pagos[] = collect(['id' => $info->id, 'code' => $info->code, 'nombre' => $data['nombre'], 'persona' => $info->orden_pago->registros->persona->nombre, 'valor' => $info->valor, 'estado' => $info->estado]);
-                    }
-                }
-            }
-        }
-        if (!isset($pagos)){
-            $pagos[] = null;
-            unset($pagos[0]);
-        }
-        if (!isset($valoresPagos)){
-            $valoresPagos[] = null;
-            unset($valoresPagos[0]);
-        }
 
         //NEW PRESUPUESTO
         $plantilla = PlantillaCuipoEgresos::all();
