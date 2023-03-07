@@ -809,7 +809,7 @@ class InformeController extends Controller
                     $data->id == 923 or $data->id == 924 or $data->id == 925 or $data->id == 1014 or $data->id == 1026 or
                     $data->id == 1044 or $data->id == 1046 or $data->id == 1070) {
                     $found_key = array_search($data->padre_id, array_column($presupuesto, 'id'));
-                    if ($data->id == 750) dd($data, $found_key);
+                    if ($data->id == 750) dd($data, end($presupuesto), $presupuesto);
                     if ($found_key === false){
                         $plantillaCuipoFaltante = PlantillaCuipoEgresos::find($data->padre_id);
                         $found_key2 = array_search($plantillaCuipoFaltante->padre_id, array_column($presupuesto, 'id'));
