@@ -28,8 +28,9 @@
                     <br>
                     <h4>Seleccione la cuenta bancaria a la que se le realizo el pago</h4>
                     <select name="cuenta" id="cuenta" class="form-control" required>
-                        @foreach($bancos as $banco)
-                            <option value="{{ $banco->id }}">{{ $banco->concepto }}</option>
+                        @foreach($bancos as $cuenta)
+                        <option @if($cuenta['hijo'] == 0) disabled @endif value="{{$cuenta['id']}}">{{$cuenta['code']}} -
+                            {{$cuenta['concepto']}} - SALDO INICIAL: $<?php echo number_format($cuenta['saldo_inicial'],0) ?></option>
                         @endforeach
                     </select>
                     <br>
