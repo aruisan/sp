@@ -773,6 +773,36 @@ class CdpController extends Controller
         }
     }
 
+    public function cdpActividad(Request $request, $cdp, $vigencia){
+        if (array_sum($request->valUsedActividad) == 0){
+            Session::flash('warning','El CDP no se puede enviar en $0');
+            return back();
+        } else {
+            for ($i = 0; $i < count($request->codActividad); $i++) {
+                if ( $request->valUsedActividad[$i] > 0){
+                    $bpinCdpValor = new BpinCdpValor();
+                    $bpinCdpValor->valor = $request->valUsedActividad[$i];
+                    $bpinCdpValor->valor_disp = $request->valUsedActividad[$i];
+                    $bpinCdpValor->cdp_id = $cdp;
+                    $bpinCdpValor->cod_actividad = $request->codActividad[$i];
+                    $bpinCdpValor->dependencia_rubro_font_id = $request->depRubro_id[$i];
+                    $bpinCdpValor->save();
+                }
+            }
+
+            $CDP = Cdp::findOrFail($cdp);
+            $CDP->valor = array_sum($request->valUsedActividad);
+            $CDP->saldo = array_sum($request->valUsedActividad);
+            $CDP->secretaria_e = '3';
+            $CDP->jefe_e = "0";
+            $CDP->ff_secretaria_e = Carbon::today();
+            $CDP->save();
+
+            Session::flash('success','El CDP ha sido enviado exitosamente');
+            return redirect('/administrativo/cdp/'.$vigencia);
+        }
+    }
+
     public function findActividades(Request $request){
         $actividadesFind = BPin::where('cod_proyecto', $request->proyecto)->get();
         foreach ($actividadesFind as $actividad){

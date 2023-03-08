@@ -203,7 +203,7 @@
                     </tbody>
                 </table>
                 <div class="text-center">
-                    <!-- <button type="submit" class="btn-sm btn-primary">ENVIAR CONCILIACIÓN</button> -->
+                    <button type="submit" class="btn-sm btn-primary">ENVIAR CONCILIACIÓN</button>
                 </div>
             </form>
         </div>
