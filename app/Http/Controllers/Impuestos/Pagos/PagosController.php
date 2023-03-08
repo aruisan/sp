@@ -40,7 +40,12 @@ class PagosController extends Controller
     public function index($modulo)
     {
         $user = User::find(Auth::user()->id);
-        $bancos = PucAlcaldia::where('padre_id', 8)->get();
+        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
+        foreach ($lv1 as $dato){
+            $result[] = $dato;
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) $result[] = $cuenta;
+        }
 
         if ($modulo == "PRED"){
             $pagosPendientes = Pagos::where('user_id', $user->id)->where('estado','Generado')->where('modulo','PREDIAL')->get();
@@ -52,7 +57,7 @@ class PagosController extends Controller
             $pagosHistoricos = Pagos::where('user_id', $user->id)->where('estado','Pagado')->where('modulo','!=','PREDIAL')->get();
         }
 
-        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos','pagosBorrador','modulo','bancos'));
+        return view('impuestos.pagos.index', compact('pagosPendientes', 'pagosHistoricos','pagosBorrador','modulo','result'));
     }
 
     /**

@@ -29,7 +29,12 @@ class ImpAdminController extends Controller
         $pagos = Pagos::all();
         $rits = RIT::all();
         $comunicados = Comunicado::all();
-        $bancos = PucAlcaldia::where('padre_id', 8)->get();
+        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
+        foreach ($lv1 as $dato){
+            $result[] = $dato;
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) $result[] = $cuenta;
+        }
         $año = Carbon::today()->year;
         $uvts = ImpUVT::all();
         $smls = ImpSalarioMin::all();
@@ -38,7 +43,7 @@ class ImpAdminController extends Controller
             $pago->impPred = Predial::find($pago->entity_id);
             $pago->contribuyente = PredialContribuyentes::find($pago->impPred->imp_pred_contri_id);
         }
-        return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits', 'comunicados','bancos'
+        return view('administrativo.impuestos.admin.index', compact('usersPredial','pagos','rits', 'comunicados','result'
         ,'pagosFinalizados','uvts','smls'));
     }
 
