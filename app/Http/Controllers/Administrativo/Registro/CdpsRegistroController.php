@@ -68,10 +68,8 @@ class CdpsRegistroController extends Controller
                         }
                     }
                 } else{
-                    $rubroId = $request->rubro_id;
                     $valorActividad = $request->valorActividadUsar;
                     $rubrosCdpId = $request->rubros_cdp_id;
-                    $bpinCdpValorId = $request->bpin_cdp_valor_id;
 
                     if ($valorActividad != null){
 
@@ -79,18 +77,28 @@ class CdpsRegistroController extends Controller
 
                         for($i = 0; $i < $countV; $i++){
 
-                            if ($bpinCdpValorId[$i]){
-                                $this->updateV($bpinCdpValorId[$i], $valorActividad[$i]);
+                            if (isset($request->cdp_registro_valor_id[$i])){
+                                $bpinCdpValor = BpinCdpValor::find($request->bpin_cdp_valor_id[$i]);
+                                if ($bpinCdpValor->valor_disp >= intval($valorActividad[$i])){
+                                    $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
+
+                                    $cdpsRegistroValor = CdpsRegistroValor::find($request->cdp_registro_valor_id[$i]);
+                                    $cdpsRegistroValor->valor = $valorActividad[$i];
+                                    $cdpsRegistroValor->valor_disp = $valorActividad[$i];
+                                    $cdpsRegistroValor->fontsRubro_id = $depRubroFont->rubro_font_id;
+                                    $cdpsRegistroValor->registro_id = $registro_id;
+                                    $cdpsRegistroValor->cdp_id = $cdps[$i];
+                                    $cdpsRegistroValor->cdps_registro_id = $rubrosCdpId[$i];
+                                    $cdpsRegistroValor->bpin_cdp_valor_id = $request->bpin_cdp_valor_id[$i];
+                                    $cdpsRegistroValor->save();
+                                } else{
+                                    Session::flash('warning','Dinero disponible de la fuente del CDP es menos al solicitado. Revisar valores');
+                                    return back();
+                                }
                             }else{
-                                $bpin = BPin::find($request->bpin_id[$i]);
-                                if ($bpin){
-                                    $bpinCdpValor = BpinCdpValor::where('cdp_id', $cdps[$i])->first();
-                                    if ($bpinCdpValor->dependencia_rubro_font_id){
-                                        $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
-                                    } else {
-                                        $bpinVigencia = bpinVigencias::where('bpin_id', $request->bpin_id[$i])->first();
-                                        $depRubroFont = DependenciaRubroFont::find($bpinVigencia->dep_rubro_id);
-                                    }
+                                $bpinCdpValor = BpinCdpValor::find($request->bpin_cdp_valor_id[$i]);
+                                if ($bpinCdpValor->valor_disp >= intval($valorActividad[$i])){
+                                    $depRubroFont = DependenciaRubroFont::find($bpinCdpValor->dependencia_rubro_font_id);
 
                                     $cdpsRegistroValor = new CdpsRegistroValor();
                                     $cdpsRegistroValor->valor = $valorActividad[$i];
@@ -98,22 +106,20 @@ class CdpsRegistroController extends Controller
                                     $cdpsRegistroValor->fontsRubro_id = $depRubroFont->rubro_font_id;
                                     $cdpsRegistroValor->registro_id = $registro_id;
                                     $cdpsRegistroValor->cdp_id = $cdps[$i];
-                                    //$cdpsRegistroValor->rubro_id = $rubroId[$i];
                                     $cdpsRegistroValor->cdps_registro_id = $rubrosCdpId[$i];
+                                    $cdpsRegistroValor->bpin_cdp_valor_id = $request->bpin_cdp_valor_id[$i];
                                     $cdpsRegistroValor->save();
-
                                 } else{
-                                    Session::flash('warning','BPIN no detectado');
+                                    Session::flash('warning','Dinero disponible de la fuente del CDP es menos al solicitado. Revisar valores');
                                     return back();
                                 }
-
                             }
                         }
                     }
                 }
             }
         }
-        Session::flash('success','Cdps asignados correctamente');
+        Session::flash('success','Dinero tomado de las fuentes del CDP correctamente');
         return back();
     }
 

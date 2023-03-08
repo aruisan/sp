@@ -371,9 +371,15 @@ class RegistrosController extends Controller
                             }
                         } else {
                             //SE DESCUENTA EL DINERO DE LA FUENTE DEL BPIN DEL CDP
-                            $bpinCdp = BpinCdpValor::where('cdp_id',$value->cdp_id )->first();
-                            $bpinCdp->valor_disp = $bpinCdp->valor_disp - $value->valor;
-                            $bpinCdp->save();
+                            if (isset($value->bpin_cdp_valor_id)){
+                                $bpinCdp = BpinCdpValor::find($value->bpin_cdp_valor_id);
+                                $bpinCdp->valor_disp = $bpinCdp->valor_disp - $value->valor;
+                                $bpinCdp->save();
+                            } else{
+                                $bpinCdp = BpinCdpValor::where('cdp_id',$value->cdp_id )->first();
+                                $bpinCdp->valor_disp = $bpinCdp->valor_disp - $value->valor;
+                                $bpinCdp->save();
+                            }
                         }
                     }
                 }
@@ -383,7 +389,7 @@ class RegistrosController extends Controller
 
             }
         } else{
-            Session::flash('error','Secretaria, esta sobrepasando el valor disponible de los CDPs, verifique las sumas asignadas y el valor del iva.');
+            Session::flash('error','Se esta sobrepasando el valor disponible de los CDPs, verifique las sumas asignadas y el valor del iva.');
             return back();
         }
     }
