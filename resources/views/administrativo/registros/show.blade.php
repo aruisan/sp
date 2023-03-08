@@ -333,8 +333,10 @@
                                                                 Valor Usado de la Actividad {{ $item->actividad->actividad }}:
                                                                 @if($cdpsRegistroData->cdpRegistroValor->count() != 0)
                                                                     @foreach($cdpsRegistroData->cdpRegistroValor as $valoresRV)
-                                                                        @if($registro->secretaria_e == "0")
-                                                                            <input type="number" required  name="valorActividadUsar[]" id="id{{$item->actividad->id}}" class="valor{{ $cdpsRegistroData->id }}" value="{{ $item->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
+                                                                        @if(isset($valoresRV->bpin_cdp_valor_id))
+                                                                            @if($item->id == $valoresRV->bpin_cdp_valor_id)
+                                                                                $<?php echo number_format( $valoresRV->valor,0) ?>
+                                                                            @endif
                                                                         @else
                                                                             $<?php echo number_format( $item->valor,0) ?>
                                                                         @endif
@@ -352,20 +354,12 @@
                                                                         @if(isset($valoresRV->bpin_cdp_valor_id))
                                                                             @if($item->id == $valoresRV->bpin_cdp_valor_id)
                                                                                 <input type="hidden" name="cdp_registro_valor_id[]" value="{{ $valoresRV->id }}">
-                                                                                @if($registro->secretaria_e == "0")
-                                                                                    <input type="number" required  name="valorActividadUsar[]" id="id{{$item->actividad->id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
-                                                                                @else
-                                                                                    $<?php echo number_format( $valoresRV->valor,0) ?>
-                                                                                @endif
+                                                                                $<?php echo number_format( $valoresRV->valor,0) ?>
                                                                             @endif
                                                                         @else
                                                                             @if($cdpsRegistroData->cdp->id == $valoresRV->cdp_id and $item->actividad->rubro_id == $valoresRV->rubro_id)
                                                                                 <input type="hidden" name="cdp_registro_valor_id[]" value="{{ $valoresRV->id }}">
-                                                                                @if($registro->secretaria_e == "0")
-                                                                                    <input type="number" required  name="valorActividadUsar[]" id="id{{$item->actividad->id}}" class="valor{{ $valoresRV->cdps_registro_id }}" value="{{ $valoresRV->valor }}" max="{{ $cdpsRegistroData->cdp->saldo }}" style="text-align: center">
-                                                                                @else
-                                                                                    $<?php echo number_format( $valoresRV->valor,0) ?>
-                                                                                @endif
+                                                                                $<?php echo number_format( $valoresRV->valor,0) ?>
                                                                             @endif
                                                                         @endif
                                                                     @endforeach
