@@ -105,7 +105,7 @@
 						<td>{{ $codigo['codBpin']}}</td>
 						<td>{{ $codigo['codActiv']}}</td>
 						<td>{{ $codigo['nameActiv']}}</td>
-						<td>{{ $codigo['code'] }}</td>
+						<td>{{ $codigo['cod'] }}</td>
 						<td>{{ $codigo['name']}}</td>
 						<td>{{ $codigo['presupuesto_inicial']}}</td>
 						<td>{{ $codigo['adicion']}}</td>
