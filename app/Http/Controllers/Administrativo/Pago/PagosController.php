@@ -247,7 +247,20 @@ class PagosController extends Controller
     }
 
     public function bank($id){
-        $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
+        $lv1 = PucAlcaldia::where('padre_id', 618 )->get();
+        foreach ($lv1 as $dato){
+            //$result[] = $dato;
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) {
+                //$result[] = $cuenta;
+                $lv3 = PucAlcaldia::where('padre_id', $cuenta->id )->get();
+                foreach ($lv3 as $level3) {
+                    //$result[] = $level3;
+                    $hijos = PucAlcaldia::where('padre_id', $level3->id )->get();
+                    foreach ($hijos as $hijo)  $cuentas[] = $hijo;
+                }
+            }
+        }
         $personas = Persona::all();
         $pago = Pagos::findOrFail($id);
         if (count($pago->rubros) > 0){
@@ -268,7 +281,7 @@ class PagosController extends Controller
             }
 
             return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC',
-            'cuentas24', 'personas', 'vigencia_id','cuentasBanc'));
+            'cuentas', 'personas', 'vigencia_id','cuentasBanc'));
         } else {
             Session::flash('warning','El pago no ha recibido la asignación del monto, por favor realizarla');
             return redirect('administrativo/pagos/asignacion/'.$pago->id);

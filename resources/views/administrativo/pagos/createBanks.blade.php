@@ -225,7 +225,7 @@
                     $('#tabla_desc_muni tbody tr:last').after('<tr>\n' +
                         '<td colspan ="2">Seleccione la cuenta del PUC <br>' +
                         '<select class="form-control" name="cuentaDesc[]">\n' +
-                        '                                        @foreach($cuentas24 as $cuenta)\n' +
+                        '                                        @foreach($cuentas as $cuenta)\n' +
                         '                                            <option value="{{$cuenta->id}}">{{$cuenta->code}} - {{$cuenta->concepto}}</option>\n' +
                         '                                        @endforeach\n' +
                         '                                    </select></td>\n'+
