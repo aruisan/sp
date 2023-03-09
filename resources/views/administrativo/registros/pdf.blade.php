@@ -49,17 +49,17 @@
 				<table style="margin: 5px 10px;">
 					<tbody>
 					@foreach($bpins as $bpin)
-						<tr style="font-size: 16px;">
+						<tr>
 							<td style="width: 30px;">Proyecto: </td>
 							<td>{{$bpin->actividad->cod_proyecto}} - {{$bpin->actividad->nombre_proyecto}}</td>
 						</tr>
-						<tr style="font-size: 16px;">
+						<tr>
 							<td style="width: 30px;">Actividad: </td>
 							<td>{{$bpin->actividad->cod_actividad}} - {{$bpin->actividad->actividad}}</td>
 						</tr>
-						<tr style="font-size: 16px;">
+						<tr>
 							<td style="width: 30px;">Valor usado: </td>
-							<td>$ {{number_format($bpin->valor)}} ({{\NumerosEnLetras::convertir($bpin->valor)}})</td>
+							<td>$ {{number_format($bpin->valor)}}</td>
 						</tr>
 					@endforeach
 					</tbody>
@@ -70,19 +70,19 @@
 		<div class="br-black-1">
 			<table style="margin: 5px 10px;">
 				<tbody>
-					<tr>
+					<tr style="font-size: 16px;">
 						<td># Documento: </td>
 						<td>{{$registro->num_doc}}</td>
 					</tr>
-					<tr>
+					<tr style="font-size: 16px;">
 						<td>OBJETO: </td>
 						<td> {{$registro->objeto}} </td>
 					</tr>
-					<tr>
+					<tr style="font-size: 16px;">
 						<td>VALOR TOTAL: </td>
-						<td> $ {{number_format($registro->valor)}} ({{\NumerosEnLetras::convertir($registro->valor)}})</td>
+						<td> $ {{number_format($registro->valor)}}</td>
 					</tr>
-					<tr>
+					<tr style="font-size: 16px;">
 						<td>Beneficiario: </td>
 						<td>{{$registro->persona->num_dc}} - {{$registro->persona->nombre}}</td>
 					</tr>
