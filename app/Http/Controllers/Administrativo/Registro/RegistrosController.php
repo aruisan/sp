@@ -465,12 +465,11 @@ class RegistrosController extends Controller
                         'name' =>$cdpRegVal->fontRubro->rubro->name,'value' => $cdpRegVal->valor];
                 }
 	        }
-
-            $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->rubrosCdp->first()->rubros->name;
             $bpins = [];
         }else {
-            $bpins = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor;
-            $rubroNameCDP = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor[0]->actividad->actividad;
+            if (isset($registro->cdpRegistroValor->first()->bpin_cdp_valor_id)){
+                foreach ($registro->cdpRegistroValor as $cdpReg) $bpins[] = BpinCdpValor::find($cdpReg->bpin_cdp_valor_id);
+            } else $bpins = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor;
         }
 
 	    if (!isset($infoRubro)) $infoRubro = [];
@@ -480,7 +479,7 @@ class RegistrosController extends Controller
 
         $fecha = Carbon::createFromTimeString($registro->created_at);
 
-        $pdf = \PDF::loadView('administrativo.registros.pdf', compact('registro', 'vigencia', 'dias', 'meses', 'fecha','infoRubro','rubroNameCDP','bpins'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        $pdf = \PDF::loadView('administrativo.registros.pdf', compact('registro', 'vigencia', 'dias', 'meses', 'fecha','infoRubro','bpins'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
             return $pdf->stream();
     }
 

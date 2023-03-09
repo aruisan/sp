@@ -253,11 +253,12 @@ class ComprobanteIngresosController extends Controller
      */
     public function destroy($vigen, $id)
     {
-        $comprobante = ComprobanteIngresos::findOrFail($id);
-        $comprobante->delete();
+        if (auth()->user()->id == 223){
+            $comprobante = ComprobanteIngresos::findOrFail($id);
+            $comprobante->delete();
+            return "OK";
 
-        Session::flash('error','Comprobante de Ingresos Borrado Correctamente');
-        return redirect('../administrativo/CIngresos/'.$vigen);
+        } else return "PERMISOS";
     }
 
     public function pdf($id)

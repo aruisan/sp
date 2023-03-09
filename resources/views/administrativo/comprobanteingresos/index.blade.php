@@ -5,6 +5,7 @@
 @section('sidebar')
 @stop
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Comprobantes de Contabilidad Vigencia {{ $vigencia->vigencia }}</b></h4>
@@ -36,6 +37,7 @@
                             <th class="text-center">Concepto</th>
                             <th class="text-center">Ver</th>
                             <th class="text-center">PDF</th>
+                            <th class="text-center"><i class="fa fa-trash"></i></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -49,6 +51,9 @@
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/CIngresos/pdf/'.$historico->id) }}" target="_blank" title="Generar PDF" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                </td>
+                                <td class="text-center">
+                                    <a onclick="deleteCompCont({{$historico->id}})" title="Eliminar Comprobante Contable" class="btn-sm btn-primary"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -78,6 +83,28 @@
     </script>
 
     <script>
+        const vigenciaID = @json($vigencia->id);
+        function deleteCompCont(id){
+            var opcion = confirm("ESTA SEGURO DE ELIMIAR EL COMPROBANTE CONTABLE? AL ACEPTAR NO SE VAN A PODER REVERTIR LOS CAMBIOS REALIZADOS.");
+            if (opcion == true) {
+
+                $.ajax({
+                    method: "DELETE",
+                    url: "/administrativo/CIngresos/"+vigenciaID+"/"+id+"/delete",
+                    data: { "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(response) {
+                    if (response == "OK"){
+                        toastr.warning('COMPROBANTE CONTABLE ELIMINADO EXITOSAMENTE. RECARGANDO LA PAGINA....');
+                        location. reload();
+                    } else {
+                        toastr.warning('SU USARIO NO TIENE PERMISOS PARA REALIZAR ESTA ACCIÓN.');
+                    }
+
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL ELIMINAR EL COMPROBANTE CONTABLE.');
+                });
+            }
+        }
 
         $('#tabla_Historico').DataTable( {
         responsive: true,

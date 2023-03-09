@@ -84,22 +84,18 @@
                         <th class="text-center">DEBITO</th>
                         <th class="text-center">CREDITO</th>
                         <th class="text-center">VALOR BANCO</th>
-                        <th class="text-center">ESTADO</th>
+                        <th class="text-center">APROBADO</th>
                     </thead>
                     <tbody id="bodyTabla">
                     @foreach($result as $data)
                         <tr class="text-center">
                             <td>{{$data['fecha']}}</td>
-                            <td>{{$data['referencia']}}</td>
+                            <td>{{$data['referencia']}} - {{$data['CC']}} -  {{$data['tercero']}}</td>
                             <td>$<?php echo number_format($data['debito'],0) ?></td>
                             <td>$<?php echo number_format($data['credito'],0) ?></td>
                             <td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
                             <td>
-                                @if($data['pago_estado'] == 1)
-                                    APROBADO
-                                @else
-                                    NO APROBADO
-                                @endif
+                                <input type="checkbox" checked>
                             </td>
                         </tr>
                     @endforeach
