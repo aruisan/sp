@@ -106,7 +106,13 @@
                         @if($pago->referenciaPago != null)
                             <div class="col-lg-12 text-center">
                                 <br>
-                                <h4><b>REFERENCIA DE PAGO:</b> {{$pago->referenciaPago}}</h4>
+                                <h4><b>
+                                        @if($pago->estado == 2)
+                                            MOTIVO DE ANULACIÓN:
+                                        @else
+                                            REFERENCIA DE PAGO:
+                                        @endif
+                                    </b> {{$pago->referenciaPago}}</h4>
                             </div>
                         @endif
                         <div class="col-md-12 align-self-center">
