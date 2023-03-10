@@ -95,7 +95,11 @@
                         @if($OrdenPago->estado == 2)
                             <div class="col-lg-12 text-center">
                                 <div class="col-lg-12">
-                                    <br><div class="alert alert-danger"><center>La orden de pago ha sido anulada</center></div><br>
+                                    <br><div class="alert alert-danger">
+                                        <center>La orden de pago ha sido anulada</center>
+                                        <br>
+                                        <center>Motivo: {{$OrdenPago->observacion}}</center>
+                                    </div><br>
                                 </div>
                             </div>
                         @endif
@@ -240,6 +244,14 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @include('modal.anularOP')
+                            @if($OrdenPago->saldo > 0 and $OrdenPago->estado == 1 and $rol == 3)
+                                <center>
+                                    <a data-toggle="modal" data-target="#anularOP" class="btn btn-success">
+                                        Anular Orden de Pago
+                                    </a>
+                                </center>
+                            @endif
                             @if(isset($OrdenPago->pago))
                                 <hr>
                                 <center>

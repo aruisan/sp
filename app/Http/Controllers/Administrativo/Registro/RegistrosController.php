@@ -439,12 +439,18 @@ class RegistrosController extends Controller
                 $rubrosCdpValor->valor_disp = $rubrosCdpValor->valor_disp + $valor;
                 $rubrosCdpValor->save();
             } else{
-                $actividadCdp = BpinCdpValor::where('cdp_id', $id)->first();
-                $actividadCdp->valor_disp = $actividadCdp->valor_disp + $valor;
-                $actividadCdp->save();
+                //SE RETORNA EL DINERO DE LA FUENTE DEL BPIN DEL CDP
+                if (isset($valCDPR->bpin_cdp_valor_id)){
+                    $bpinCdp = BpinCdpValor::find($valCDPR->bpin_cdp_valor_id);
+                    $bpinCdp->valor_disp = $bpinCdp->valor_disp + $valCDPR->valor;
+                    $bpinCdp->save();
+                } else{
+                    $bpinCdp = BpinCdpValor::where('cdp_id',$valCDPR->cdp_id )->first();
+                    $bpinCdp->valor_disp = $bpinCdp->valor_disp + $valCDPR->valor;
+                    $bpinCdp->save();
+
+                }
             }
-
-
         }
 
         Session::flash('error','El Registro ha sido anulado');

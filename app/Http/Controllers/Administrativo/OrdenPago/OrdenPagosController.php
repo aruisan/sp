@@ -349,7 +349,9 @@ class OrdenPagosController extends Controller
             } elseif (count($rubro) > 0) $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
         }
 
-        return view('administrativo.ordenpagos.show', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro','vigencia_id'));
+        $rol = auth()->user()->roles->first()->id;
+
+        return view('administrativo.ordenpagos.show', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro','vigencia_id','rol'));
     }
 
 
@@ -631,5 +633,20 @@ class OrdenPagosController extends Controller
 
     public function getEmbargo(Request $request){
         dd($request);
+    }
+
+    public function anular($id, Request $request){
+        $ordenPago = OrdenPagos::find($id);
+        $ordenPago->saldo = 0;
+        $ordenPago->observacion = $request->observacion;
+        $ordenPago->estado = '2';
+        $ordenPago->save();
+
+        $registro = Registro::find($ordenPago->registros_id);
+        $registro->saldo = $registro->saldo + $ordenPago->valor;
+        $registro->save();
+
+        Session::flash('error','La orden de pago ha sido anulada');
+        return redirect('/administrativo/ordenPagos/show/'.$id);
     }
 }

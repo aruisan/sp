@@ -298,6 +298,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::delete('ordenPagos/descuento/m/{id}','Administrativo\OrdenPago\OrdenPagosController@deleteM');
         Route::delete('ordenPagos/puc/delete/{id}','Administrativo\OrdenPago\OrdenPagosController@deleteP');
         Route::put('ordenPagos/monto/delete','Administrativo\OrdenPago\OrdenPagosRubrosController@massiveDelete');
+        Route::post('ordenPagos/{id}/anular/', 'Administrativo\OrdenPago\OrdenPagosController@anular');
         //PDF OrdenPago y ComprobanteEgresos
         Route::get('ordenPagos/pdf/{id}','Administrativo\OrdenPago\OrdenPagosController@pdf_OP')->name('op-pdf');
         Route::get('egresos/pdf/{id}','Administrativo\OrdenPago\OrdenPagosController@pdf_CE')->name('ce-pdf');
