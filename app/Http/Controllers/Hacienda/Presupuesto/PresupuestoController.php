@@ -316,8 +316,6 @@ class PresupuestoController extends Controller
 
                             $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
-                            if ($data->code == '1.2.06') dd($data, $sum);
-
                             $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                 'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                                 'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
@@ -334,7 +332,6 @@ class PresupuestoController extends Controller
                         $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
                         if (count($rubro) > 0){
                             if (count($rubro) == 1){
-                                $compIngValue = 0;
                                 if (count($rubro[0]->fontsRubro) > 1){
                                     foreach ($rubro[0]->fontsRubro as $font){
                                         $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
@@ -347,14 +344,24 @@ class PresupuestoController extends Controller
 
                                         $definitivo = $adicion - $reduccion + $font->valor;
 
-                                        if (count($font->compIng) > 0) $compIngValue = $font->compIng->sum('debito_rubro_ing');
+                                        if (count($font->compIng) > 0) {
+                                            foreach ($font->compIng as $comprobante){
+                                                if ($comprobante->rubro_font_ingresos_id == $font->id) $compIngValueArray[] = $comprobante->debito_rubro_ing;
+                                            }
+                                        }
+
+                                        if (isset($compIngValueArray)) $compIngValue = array_sum($compIngValueArray);
+                                        else $compIngValue = 0;
 
                                         $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name,
                                             'inicial' => $font->valor, 'adicion' => $adicion, 'reduccion' => $reduccion, 'anulados' => 0,
                                             'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,'hijo' => $data->hijo,
                                             'cod_fuente' => $font->sourceFunding->code, 'name_fuente' => $font->sourceFunding->description]);
+
+                                        if (isset($compIngValueArray)) unset($compIngValueArray);
                                     }
                                 } else {
+                                    $compIngValue = 0;
                                     if (count($rubro[0]->fontsRubro) > 0){
                                         $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
                                         if ($add) $adicion = $add->valor;
@@ -418,6 +425,7 @@ class PresupuestoController extends Controller
                                     if (isset($reduccionesH)) unset($reduccionesH);
                                     if (isset($hijosAdicion)) unset($hijosAdicion);
                                     if (isset($hijosReduccion)) unset($hijosReduccion);
+                                    if (isset($civHijo)) unset($civHijo);
                                 }
                             }
                         }

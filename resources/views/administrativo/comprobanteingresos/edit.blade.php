@@ -155,7 +155,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="{{ $comprobante->credito_rubro_ing}}"></td>
+                            <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="{{ $comprobante->debito_rubro_ing}}"></td>
                         </tr>
                     </table>
                     <br>

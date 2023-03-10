@@ -1887,7 +1887,7 @@ class InformeController extends Controller
                 $reducciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','3')->get();
                 $definitivo = $adiciones->sum('valor') - $reducciones->sum('valor') + $vigens[0]->presupuesto_inicial;
                 $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $vigens[0]->presupuesto_inicial, 'adicion' => $adiciones->sum('valor'), 'reduccion' => $reducciones->sum('valor'),
-                    'anulados' => 0, 'recaudado' => $comprobanteIng->sum('val_total') , 'porRecaudar' => $definitivo - $comprobanteIng->sum('val_total'), 'definitivo' => $definitivo,
+                    'anulados' => 0, 'recaudado' => $comprobanteIng->sum('debito_rubro_ing') , 'porRecaudar' => $definitivo - $comprobanteIng->sum('debito_rubro_ing'), 'definitivo' => $definitivo,
                     'hijo' => 0, 'cod_fuente' => '', 'name_fuente' => '']);
             } else {
                 $hijos1 = PlantillaCuipoIngresos::where('padre_id', $data->id)->get();
@@ -1921,7 +1921,7 @@ class InformeController extends Controller
                                                             if ($red) $hijosReduccion[] = $red->valor;
                                                             else $hijosReduccion[] = 0;
 
-                                                            if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
+                                                            if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito_rubro_ing');
                                                         }
 
                                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -1946,7 +1946,7 @@ class InformeController extends Controller
                                                                 if ($red) $hijosReduccion[] = $red->valor;
                                                                 else $hijosReduccion[] = 0;
 
-                                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
+                                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito_rubro_ing');
                                                             }
 
                                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -1977,7 +1977,7 @@ class InformeController extends Controller
                                                         if ($red) $hijosReduccion[] = $red->valor;
                                                         else $hijosReduccion[] = 0;
 
-                                                        if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
+                                                        if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito_rubro_ing');
                                                     }
 
                                                     if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2001,7 +2001,7 @@ class InformeController extends Controller
                                                             if ($red) $hijosReduccion[] = $red->valor;
                                                             else $hijosReduccion[] = 0;
 
-                                                            if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
+                                                            if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito_rubro_ing');
                                                         }
 
                                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2032,7 +2032,7 @@ class InformeController extends Controller
                                                 if ($red) $hijosReduccion[] = $red->valor;
                                                 else $hijosReduccion[] = 0;
 
-                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
+                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito_rubro_ing');
                                             }
 
                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2055,7 +2055,7 @@ class InformeController extends Controller
                                                     if ($red) $hijosReduccion[] = $red->valor;
                                                     else $hijosReduccion[] = 0;
 
-                                                    if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
+                                                    if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito_rubro_ing');
                                                 }
 
                                                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2085,7 +2085,7 @@ class InformeController extends Controller
                                         if ($red) $hijosReduccion[] = $red->valor;
                                         else $hijosReduccion[] = 0;
 
-                                        if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('valor');
+                                        if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito_rubro_ing');
                                     }
 
                                     if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2109,7 +2109,7 @@ class InformeController extends Controller
                                             if ($red) $hijosReduccion[] = $red->valor;
                                             else $hijosReduccion[] = 0;
 
-                                            if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('valor');
+                                            if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('debito_rubro_ing');
                                         }
 
                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2148,8 +2148,6 @@ class InformeController extends Controller
                     $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
                     if (count($rubro) > 0){
                         if (count($rubro) == 1){
-                            $compIngValue = 0;
-                            if (count($rubro[0]->compIng) > 0) $compIngValue = $rubro[0]->compIng->sum('valor');
                             if (count($rubro[0]->fontsRubro) > 1){
                                 foreach ($rubro[0]->fontsRubro as $font){
                                     $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
@@ -2162,12 +2160,24 @@ class InformeController extends Controller
 
                                     $definitivo = $adicion - $reduccion + $font->valor;
 
+                                    if (count($font->compIng) > 0) {
+                                        foreach ($font->compIng as $comprobante){
+                                            if ($comprobante->rubro_font_ingresos_id == $font->id) $compIngValueArray[] = $comprobante->debito_rubro_ing;
+                                        }
+                                    }
+
+                                    if (isset($compIngValueArray)) $compIngValue = array_sum($compIngValueArray);
+                                    else $compIngValue = 0;
+
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name,
                                         'inicial' => $font->valor, 'adicion' => $adicion, 'reduccion' => $reduccion, 'anulados' => 0,
                                         'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,'hijo' => $data->hijo,
                                         'cod_fuente' => $font->sourceFunding->code, 'name_fuente' => $font->sourceFunding->description]);
+
+                                    if (isset($compIngValueArray)) unset($compIngValueArray);
                                 }
                             } else {
+                                $compIngValue = 0;
                                 if (count($rubro[0]->fontsRubro) > 0){
                                     $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
                                     if ($add) $adicion = $add->valor;
@@ -2178,6 +2188,8 @@ class InformeController extends Controller
                                     else $reduccion = 0;
 
                                     $definitivo = $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor');
+
+                                    if (count($font->compIng) > 0) $compIngValue = $font->compIng->sum('debito_rubro_ing');
 
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
@@ -2206,6 +2218,8 @@ class InformeController extends Controller
                                         else $hijosReduccion[] = 0;
                                     }
                                     else $hijosReduccion[] = 0;
+
+                                    if (count($font->compIng) > 0) $civHijo[] = $font->compIng->sum('debito_rubro_ing');
                                 }
 
                                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2214,6 +2228,7 @@ class InformeController extends Controller
                                 if (isset($reduccionesH)) $reduccionesTot = array_sum($reduccionesH);
 
                                 $compIngValue = 0;
+                                if (isset($civHijo)) $compIngValue = array_sum($civHijo);
                                 if (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                 $sum[] = $rb->fontsRubro->sum('valor');
                                 $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
@@ -2226,6 +2241,7 @@ class InformeController extends Controller
                                 if (isset($reduccionesH)) unset($reduccionesH);
                                 if (isset($hijosAdicion)) unset($hijosAdicion);
                                 if (isset($hijosReduccion)) unset($hijosReduccion);
+                                if (isset($civHijo)) unset($civHijo);
                             }
                         }
                     }
