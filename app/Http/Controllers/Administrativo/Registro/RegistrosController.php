@@ -451,6 +451,9 @@ class RegistrosController extends Controller
 
                 }
             }
+
+            $valCDPR->valor_disp = 0;
+            $valCDPR->save();
         }
 
         Session::flash('error','El Registro ha sido anulado');
