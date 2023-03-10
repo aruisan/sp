@@ -41,7 +41,7 @@
                     <a data-toggle="modal" data-target="#ejecucionPresupuestal" class="nav-link" style="cursor: pointer">Ejecución Presupuestal</a>
                 </li>
                 -->
-                @if($V != "Vacio")
+                @if($V != "Vacio" and auth()->user()->roles->first()->id != 2)
                     <li class="dropdown">
                         <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeInforme()">Generar Informe de Presupuestos</a>
                         <!-- SE COMENTAN LOS REPORTES QUE NO TIENEN ACCESO FUNCIONAL.
