@@ -124,7 +124,7 @@
                                             <div class="form-group">
                                                 <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
                                                 <div class="col-lg-6">
-                                                    <select class="form-control" name="cuentaDeb" id="cuentaDeb">
+                                                    <select class="select-cuentaBancaria" name="cuentaDeb" id="cuentaDeb">
                                                         @foreach($hijosDebito as $hijo)
                                                             <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
                                                         @endforeach
@@ -140,7 +140,7 @@
                                             <div class="form-group">
                                                 <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>
                                                 <div class="col-lg-6">
-                                                    <select class="form-control" name="cuentaPUC" id="cuentaPUC">
+                                                    <select class="select-cuentaPUC" name="cuentaPUC" id="cuentaPUC">
                                                         @foreach($hijos as $hijo)
                                                             <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
                                                         @endforeach
@@ -188,6 +188,8 @@
 @section('js')
     <script>
         $('.select-tercero').select2();
+        $('.select-cuentaBancaria').select2();
+        $('.select-cuentaPUC').select2();
 
         function cambioTipo(value){
             if(value == "Otro"){

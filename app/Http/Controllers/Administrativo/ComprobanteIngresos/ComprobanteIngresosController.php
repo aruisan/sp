@@ -47,7 +47,14 @@ class ComprobanteIngresosController extends Controller
     {
         $vigencia = Vigencia::findOrFail($id);
         $user_id = auth()->user()->id;
-        $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
+        $lv1 = PucAlcaldia::where('padre_id', 2 )->get();
+        foreach ($lv1 as $dato){
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) {
+                $lv3 = PucAlcaldia::where('padre_id', $cuenta->id )->get();
+                foreach ($lv3 as $hijo)  $hijosDebito[] = $hijo;
+            }
+        }
         $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
         $rubI = Rubro::where('vigencia_id', $vigencia->id)->orderBy('cod','ASC')->get();
         $personas = Persona::all();
@@ -59,8 +66,9 @@ class ComprobanteIngresosController extends Controller
             }
         }
 
+
         return view('administrativo.comprobanteingresos.create', compact('vigencia','user_id',
-        'hijosDebito','rubrosIngresos','hijos','personas'));
+        'rubrosIngresos','hijos','personas','hijosDebito'));
     }
 
     /**
