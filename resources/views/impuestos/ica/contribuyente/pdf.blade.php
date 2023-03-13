@@ -46,6 +46,10 @@
 					</td>
 				</tr>
 			</table>
+			<br>
+			PUNTOS DE PAGO <br>
+			Banco De Bogota Cta Cte 540047529 FONDOS COMUNES RECAUDADORA<br>
+			Banco Bogota-fondos Comunes-04751-1 (6)
 		</div>
 	</div>
 @stop
