@@ -147,8 +147,8 @@
                     </table>
                     <br>
                     PUNTOS DE PAGO <br>
-                    Banco Popular No.00130487010000441-8 <br>
-                    Banco Agrario No.8110-002647-3
+                    Banco de Bogota No. 540047529 Cuente Corriente <br>
+                    Banco Agrario No.381100000557 Cuenta Corriente
                 </div>
                 <div class="col-md-4 s50 text-center">
                     <b>FACTURA OFICIAL</b><br>
