@@ -9,10 +9,10 @@ class PersonasController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:terceros-list');
-         $this->middleware('permission:terceros-create', ['only' => ['create','store']]);
-         $this->middleware('permission:terceros-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:terceros-delete', ['only' => ['destroy']]);
+         //$this->middleware('permission:terceros-list');
+         //$this->middleware('permission:terceros-create', ['only' => ['create','store']]);
+         //$this->middleware('permission:terceros-edit', ['only' => ['edit','update']]);
+         //$this->middleware('permission:terceros-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
