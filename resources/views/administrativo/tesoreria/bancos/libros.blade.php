@@ -14,7 +14,7 @@
                 </strong>
             </div>
             <h5>Seleccione la fecha</h5>
-            <input type="text" name="fecha" id="fecha" class="form-control"  value="{{ Carbon\Carbon::today()->Format('d/m/Y')}} - {{ Carbon\Carbon::today()->Format('d/m/Y')}}" required>
+            <input type="text" name="fecha" id="fecha" class="form-control" required>
             <input type="hidden" name="fechaInicial" id="fechaInicial" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
             <input type="hidden" name="fechaFinal" id="fechaFinal" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
 
