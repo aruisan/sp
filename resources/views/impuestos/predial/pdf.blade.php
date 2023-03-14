@@ -41,7 +41,7 @@
                 <tr style="background-color: #0e7224; color: white">
                     <td>Años</td>
                     <td>Avalúos</td>
-                    <td>Imp Predial</td>
+                    <td>Coralina</td>
                     <td>Imp Adicional</td>
                     <td>Int. Predial</td>
                     <td>TOTALES</td>
@@ -54,7 +54,23 @@
                         <td>$ <?php echo number_format($item->avaluo,0) ?></td>
                         <td>$ <?php echo number_format($item->imp_predial,0) ?></td>
                         <td>$ <?php echo number_format($item->tasa_bomberil,0) ?></td>
-                        <td>$ <?php echo number_format($item->int_mora,0) ?></td>
+                        <td>
+                            @if($item->año == 2023)
+                                $ <?php echo number_format($item->int_mora,0) ?>
+                            @elseif($item->año == 2022)
+                                @php($totValue = intval($item->int_mora) / 2 )
+                                $ <?php echo number_format($totValue,0) ?>
+                            @elseif($item->año == 2021)
+                                $ <?php echo number_format(0,0) ?>
+                            @elseif($item->año == 2020)
+                                $ <?php echo number_format(0,0) ?>
+                            @elseif($item->año == 2019)
+                                @php($totValue = intval($item->int_mora) * 0.03 )
+                                $ <?php echo number_format($totValue,0) ?>
+                            @else
+                                $ <?php echo number_format($item->int_mora,0) ?>
+                            @endif
+                        </td>
                         <td>$ <?php echo number_format($item->tot_año,0) ?></td>
 
                     </tr>
