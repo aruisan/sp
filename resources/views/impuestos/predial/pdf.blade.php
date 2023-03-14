@@ -79,7 +79,25 @@
                     <td colspan="2"><b>TOTALES</b></td>
                     <td>$ <?php echo number_format($totImpPredial,0) ?></td>
                     <td>$ <?php echo number_format($totImpAdi,0) ?></td>
-                    <td>$ <?php echo number_format(110514,0) ?></td>
+                    <td>
+                        @php($totDesc = 0)
+                        @foreach($liquidacion as $item)
+                            @if($item->año == 2023)
+                                @php($totDesc = $totDesc + intval($item->int_mora))
+                            @elseif($item->año == 2022)
+                                @php($totDesc = $totDesc + intval($item->int_mora) / 2)
+                            @elseif($item->año == 2021)
+                                @php($totDesc = $totDesc + 0)
+                            @elseif($item->año == 2020)
+                                @php($totDesc = $totDesc + 0)
+                            @elseif($item->año == 2019)
+                                @php($totDesc = $totDesc + intval($item->int_mora) * 0.03)
+                            @else
+                                @php($totDesc = $totDesc + intval($item->int_mora))
+                            @endif
+                        @endforeach
+                        $ <?php echo number_format($totDesc,0) ?>
+                    </td>
                     <td>$ <?php echo number_format($predial->tot_pago,0) ?></td>
                 </tr>
                 </tbody>
