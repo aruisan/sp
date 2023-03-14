@@ -79,7 +79,7 @@
                     <td colspan="2"><b>TOTALES</b></td>
                     <td>$ <?php echo number_format($totImpPredial,0) ?></td>
                     <td>$ <?php echo number_format($totImpAdi,0) ?></td>
-                    <td>$ <?php echo number_format($totIntPred,0) ?></td>
+                    <td>$ <?php echo number_format(110514,0) ?></td>
                     <td>$ <?php echo number_format($predial->tot_pago,0) ?></td>
                 </tr>
                 </tbody>
