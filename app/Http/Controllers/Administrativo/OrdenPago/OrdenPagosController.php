@@ -7,6 +7,7 @@ use App\Model\Administrativo\Contabilidad\LevelPUC;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
@@ -365,7 +366,8 @@ class OrdenPagosController extends Controller
     {
         $Registros = Registro::where('secretaria_e', '3')->get();
         $ordenPago = OrdenPagos::findOrFail($id);
-        return view('administrativo.ordenpagos.edit', compact('Registros','ordenPago'));
+        $vigenc = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+        return view('administrativo.ordenpagos.edit', compact('Registros','ordenPago', 'vigenc'));
     }
 
     /**
@@ -422,13 +424,21 @@ class OrdenPagosController extends Controller
      */
     public function destroy($id)
     {
-        $descuentos = OrdenPagosDescuentos::where('orden_pagos_id','=',$id)->get();
         $orden = OrdenPagos::findOrFail($id);
         $vigenc = $orden->registros->cdpsRegistro[0]->cdp->vigencia_id;
-        if (count($descuentos) > 0){
-            Session::flash('warning', 'Tiene '.count($descuentos).' Descuentos Relacionados a la Orden de Pago. Elimine los Descuentos para Poder Eliminar la Orden de Pago');
-            return redirect('/administrativo/ordenPagos/'.$id.'/edit');
+        if ($orden->estado != 0){
+            Session::flash('warning', 'La orden de pago ya ha sido finalizada y no se puede eliminar.');
+            return redirect('/administrativo/ordenPagos/'.$vigenc);
         }else{
+            $descuentos = OrdenPagosDescuentos::where('orden_pagos_id','=',$id)->get();
+            foreach ($descuentos as $descuento) $descuento->delete();
+
+            $rubros = OrdenPagosRubros::where('orden_pagos_id','=',$id)->get();
+            foreach ($rubros as $rubro) $rubro->delete();
+
+            $pucs = OrdenPagosPuc::where('orden_pago_id','=',$id)->get();
+            foreach ($pucs as $puc) $puc->delete();
+
             $orden->delete();
             Session::flash('error','Orden de pago eliminada correctamente');
             return redirect('/administrativo/ordenPagos/'.$vigenc);
