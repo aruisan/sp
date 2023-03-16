@@ -471,7 +471,9 @@ class RegistrosController extends Controller
                 if ($cdpRegVal->valor > 0){
                     $infoRubro[] = ['codCDP' => $cdpRegVal->cdps->code, 'nameCDP' => $cdpRegVal->cdps->name,
                         'id_rubro' => $cdpRegVal->fontRubro->rubro->id ,'id' => '', 'codigo' => $cdpRegVal->fontRubro->rubro->cod,
-                        'name' =>$cdpRegVal->fontRubro->rubro->name,'value' => $cdpRegVal->valor];
+                        'name' =>$cdpRegVal->fontRubro->rubro->name,'value' => $cdpRegVal->valor, 'font' =>
+                            $cdpRegVal->fontRubro->sourceFunding->code.' - '.$cdpRegVal->fontRubro->sourceFunding->description
+                    ];
                 }
 	        }
             $bpins = [];

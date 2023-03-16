@@ -23,13 +23,14 @@
 				<table class="table table-condensed" style="margin: 5px 10px;">
 					<thead>
 					<tr>
-						<th class="text-center" colspan="5">DINERO TOMADO DE LOS RUBROS DE CDPs</th>
+						<th class="text-center" colspan="6">DINERO TOMADO DE LOS RUBROS DE CDPs</th>
 					</tr>
 					<tr>
 						<th class="text-center"># CDP</th>
 						<th class="text-center">Nombre CDP</th>
 						<th class="text-center">Codigo</th>
 						<th class="text-center">Nombre</th>
+						<th class="text-center">Fuente</th>
 						<th class="text-center">Valor</th>
 					</tr>
 					</thead>
@@ -40,6 +41,7 @@
 							<td>{{$rubro['nameCDP']}} </td>
 							<td>{{$rubro['codigo']}} </td>
 							<td> {{$rubro['name']}}</td>
+							<td> {{$rubro['font']}}</td>
 							<td>${{number_format($rubro['value'])}}</td>
 						</tr>
 					@endforeach
@@ -49,6 +51,16 @@
 				<table style="margin: 5px 10px;">
 					<tbody>
 					@foreach($bpins as $bpin)
+						@if(isset($bpin->depRubroFont->fontRubro))
+							<tr>
+								<td style="width: 30px;">Rubro: </td>
+								<td>{{$bpin->depRubroFont->fontRubro->rubro->cod}} - {{$bpin->depRubroFont->fontRubro->rubro->name}}</td>
+							</tr>
+							<tr>
+								<td style="width: 30px;">Fuente: </td>
+								<td>{{$bpin->depRubroFont->fontRubro->sourceFunding->code}} - {{$bpin->depRubroFont->fontRubro->sourceFunding->description}}</td>
+							</tr>
+						@endif
 						<tr>
 							<td style="width: 30px;">Proyecto: </td>
 							<td>{{$bpin->actividad->cod_proyecto}} - {{$bpin->actividad->nombre_proyecto}}</td>
