@@ -41,8 +41,8 @@
                 <tr style="background-color: #0e7224; color: white">
                     <td>Años</td>
                     <td>Avalúos</td>
+                    <td>Imp Predial</td>
                     <td>Coralina</td>
-                    <td>Imp Adicional</td>
                     <td>Int. Predial</td>
                     <td>TOTALES</td>
                 </tr>
