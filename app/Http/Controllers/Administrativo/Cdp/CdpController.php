@@ -187,16 +187,16 @@ class CdpController extends Controller
         $cdp->valueControl = $request->valueControl;
         $cdp->valor = 0;
         //$cdp->fecha = $request->fecha;
-        $cdp->fecha = '2023-03-14';
+        $cdp->fecha = '2023-03-15';
         $cdp->dependencia_id = $request->dependencia_id;
         $cdp->observacion = $request->observacion;
         $cdp->saldo = 0;
         $cdp->secretaria_e = $request->secretaria_e;
         //$cdp->ff_secretaria_e = $request->fecha;
-        $cdp->ff_secretaria_e = '2023-03-14';
+        $cdp->ff_secretaria_e = '2023-03-15';
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
-        $cdp->created_at = '2023-03-14 12:00:00';
+        $cdp->created_at = '2023-03-15 12:00:00';
         $cdp->secretaria_user_id = auth()->user()->id;
         $cdp->save();
 
@@ -370,7 +370,7 @@ class CdpController extends Controller
     {
         $update = Cdp::findOrFail($id);
 
-        $fecha = '2023-03-14';
+        $fecha = '2023-03-15';
         if ($rol == 2){
 
             //SE VALIDA QUE SE TENGA DINERO EN LA FUENTE PARA EL ENVIO DEL CDP
@@ -503,7 +503,7 @@ class CdpController extends Controller
 
     public function rechazar(Request $request, $id, $vigen)
     {
-        $fecha = '2023-03-14';
+        $fecha = '2023-03-15';
         if ($request->rol == "3"){
             $update = Cdp::findOrFail($id);
             $update->jefe_e = "1";
