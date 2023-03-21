@@ -887,7 +887,7 @@ class IndexController extends Controller
                                     else $PDef = array_sum($value) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                                     $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
 
-                                    if ($PDef > 0){
+                                    if ($PDef > 0 or array_sum($valueRubrosCCred) == array_sum($value)){
                                         $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
 
                                         $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro[0]->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => array_sum($value),
