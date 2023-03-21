@@ -102,7 +102,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 col-form-label text-right" for="nombre">Tercero <span class="text-danger">*</span></label>
                                     <div class="col-lg-6">
-                                        <select class="select-tercero" name="persona_id">
+                                        <select class="form-control" name="persona_id">
                                             @foreach($personas as $persona)
                                                 <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
                                             @endforeach
