@@ -22,63 +22,66 @@
 				<p>{{ $comprobante->concepto }}</p>
 			</center>
 		</div>
-		@if(isset($comprobante->rubro_font_ingresos_id))
-			<div class="table-responsive br-black-1">
-				<table class="table-bordered" id="tablaP" style="width: 100%">
-					<thead>
-					<tr>
-						<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO</th>
-					</tr>
-					<tr>
-						<th class="text-center">Codigo</th>
-						<th class="text-center">Descripción</th>
-						<th class="text-center">Fuente Financiación</th>
-						<th class="text-center">Concepto</th>
-						<th class="text-center">Valor</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr class="text-center">
-						<td>{{ $comprobante->fontRubro->rubro->cod }} </td>
-						<td>{{ $comprobante->fontRubro->rubro->name }}</td>
-						<td>{{ $comprobante->fontRubro->sourceFunding->code }} - {{ $comprobante->fontRubro->sourceFunding->description }}</td>
-						<td>{{ $comprobante->concepto }}</td>
-						<td>$ <?php echo number_format($comprobante->debito_rubro_ing,0);?></td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-		@endif
-
 		<div class="table-responsive br-black-1">
 			<table class="table-bordered" id="tablaP" style="width: 100%">
 				<thead>
 				<tr>
-					<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
+					<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
 				</tr>
 				<tr>
 					<th class="text-center">Codigo</th>
 					<th class="text-center">Descripción</th>
-					<th class="text-center">Tercero</th>
 					<th class="text-center">Debito</th>
 					<th class="text-center">Credito</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr class="text-center">
-					<td>{{ $banco->code }}</td>
-					<td>{{ $banco->concepto }}</td>
-					<td>{{ $persona->num_dc }} - {{ $persona->nombre }}</td>
-					<td>$ <?php echo number_format($comprobante->debito_banco,0);?></td>
-					<td>$ <?php echo number_format($comprobante->credito_banco,0);?></td>
+				@foreach($comprobante->movs as $mov)
+					@if(isset($mov->cuenta_banco))
+						<tr class="text-center">
+							<td>{{ $mov->banco->code}}</td>
+							<td>{{ $mov->banco->concepto}}</td>
+							<td>$ <?php echo number_format($mov->debito,0);?></td>
+							<td>$ <?php echo number_format($mov->credito,0);?></td>
+						</tr>
+					@endif
+					@if(isset($mov->cuenta_puc_id))
+						<tr class="text-center">
+							<td>{{ $mov->puc->code}}</td>
+							<td>{{ $mov->puc->concepto}}</td>
+							<td>$ <?php echo number_format($mov->debito,0);?></td>
+							<td>$ <?php echo number_format($mov->credito,0);?></td>
+						</tr>
+					@endif
+				@endforeach
+				</tbody>
+			</table>
+		</div>
+		<br>
+		<div class="table-responsive br-black-1">
+			<table class="table-bordered" id="tablaP" style="width: 100%">
+				<thead>
+				<tr>
+					<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO</th>
 				</tr>
-				<tr class="text-center">
-					<td>{{ $puc->code }}</td>
-					<td>{{ $puc->concepto }}</td>
-					<td>{{ $persona->num_dc }} - {{ $persona->nombre }}</td>
-					<td>$ <?php echo number_format($comprobante->debito_puc,0);?></td>
-					<td>$ <?php echo number_format($comprobante->credito_puc,0);?></td>
+				<tr>
+					<th class="text-center">Código</th>
+					<th class="text-center">Descripción</th>
+					<th class="text-center">Fuente Financiación</th>
+					<th class="text-center">Valor</th>
 				</tr>
+				</thead>
+				<tbody>
+				@foreach($comprobante->movs as $mov)
+					@if(isset($mov->rubro_font_ingresos_id))
+						<tr class="text-center">
+							<td>{{ $mov->fontRubro->rubro->cod}}</td>
+							<td>{{ $mov->fontRubro->rubro->name}}</td>
+							<td>{{ $mov->fontRubro->sourceFunding->code}} - {{$mov->fontRubro->sourceFunding->description}}</td>
+							<td>$ <?php echo number_format($mov->debito,0);?></td>
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 			</table>
 		</div>

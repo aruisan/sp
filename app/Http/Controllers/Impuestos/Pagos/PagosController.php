@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\Impuestos\Pagos;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Impuestos\IcaRetenedor;
 use App\Model\Impuestos\PazySalvo;
 use App\Model\Impuestos\Predial;
@@ -166,7 +169,11 @@ class PagosController extends Controller
             $pago->resource_id = $resource;
             $pago->user_pago_id = Auth::user()->id;
             $pago->puc_alcaldia_id = $request->cuenta;
+            $pago->confirmed = "TRUE";
             $pago->save();
+
+            //SE DEBE ELABORAR EL COMPROBANTE CONTABLE
+            $this->makeCC($pago->id);
 
             Session::flash('success', 'Pago aplicado exitosamente.');
             return redirect('/administrativo/impuestos/admin');
@@ -306,6 +313,213 @@ class PagosController extends Controller
         }else {
             Session::flash('warning','El pago no se encuentra en el sistema.');
             return back();
+        }
+    }
+
+    /**
+     * Confirm Pay
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function confirmPay(Request $request){
+        return $this->makeCC($request->payId);
+    }
+
+    public function makeCC($id){
+        $pago = Pagos::find($id);
+        $pago->confirmed = "TRUE";
+        $pago->save();
+
+        $añoActual = Carbon::now()->year;
+        $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->where('estado', '0')->first();
+        $countCI = ComprobanteIngresos::where('vigencia_id', $vigens->id)->orderBy('id')->get()->last();
+        if ($countCI == null)  $count = 0;
+        else $count = $countCI->code;
+
+        //SE ELABORA EL COMPROBANTE CONTABLE
+        $comprobante = new ComprobanteIngresos();
+        $comprobante->code = $count + 1;
+        $comprobante->valor = $pago->valor;
+        $comprobante->iva = 0;
+        $comprobante->val_total = $pago->valor;
+        $comprobante->estado = '3';
+        $comprobante->ff = $pago->fechaPago;
+        $comprobante->tipoCI = 'Comprobante de Ingresos';
+        $comprobante->user_id = $pago->user_id;
+        $comprobante->vigencia_id = $vigens->id;
+        $comprobante->responsable_id = Auth::user()->id;
+        $comprobante->persona_id = $pago->user_id;
+        if ($pago->modulo == 'PREDIAL') $comprobante->concepto = "IMPUESTO PREDIAL ".$pago->fechaPago." #".$pago->id;
+        elseif ($pago->modulo == 'ICA-Contribuyente') $comprobante->concepto = "IMPUESTO ICA CONTRIBUYENTE ".$pago->fechaPago." #".$pago->id;
+        $comprobante->save();
+
+        //BANCO DEL COMPROBANTE CONTABLE
+        $comprobanteMov = new ComprobanteIngresosMov();
+        $comprobanteMov->comp_id = $comprobante->id;
+        $comprobanteMov->fechaComp = $pago->fechaPago;
+        $comprobanteMov->cuenta_banco = $pago->puc_alcaldia_id;
+        $comprobanteMov->debito = $pago->valor;
+        $comprobanteMov->credito = 0;
+        $comprobanteMov->save();
+
+        if ($pago->modulo == 'PREDIAL'){
+
+            $predial = Predial::find($pago->entity_id);
+            $liquidacion = $predial->liquidacion;
+            $totImpPredial = 0;
+            $totImpAdi = 0;
+            $totDesc = 0;
+            foreach ($liquidacion as $item){
+                if($item->año == 2023) $totDesc = $totDesc + intval($item->int_mora);
+                elseif($item->año == 2022) $totDesc = $totDesc + intval($item->int_mora) / 2;
+                elseif($item->año == 2021) $totDesc = $totDesc + 0;
+                elseif($item->año == 2020) $totDesc = $totDesc + 0;
+                elseif($item->año == 2019)  $totDesc = $totDesc + intval($item->int_mora) * 0.03;
+                else $totDesc = $totDesc + intval($item->int_mora);
+
+                if($item->año == 2023) {
+                    //DESCUENTO DEL 50% PARA EL 2023
+                    $desc = $item->imp_predial / 2;
+                    $totImpPredial = $totImpPredial + $desc;
+                } else $totImpPredial = $totImpPredial + $item->imp_predial;
+
+                if($item->año == 2023) {
+                    //DESCUENTO DEL 50% PARA EL 2023
+                    $descBomb = $item->tasa_bomberil / 2;
+                    $totImpAdi = $totImpAdi + $descBomb;
+                } else $totImpAdi = $totImpAdi + $item->tasa_bomberil;
+            }
+
+            //PUCs DEL COMPROBANTE CONTABLE
+                //Predial unificado - vigencia actual
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 103;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $totImpPredial;
+            $comprobanteMov->save();
+
+                //Sobretasa ambiental CORALINA
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 1074;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $totImpAdi;
+            $comprobanteMov->save();
+
+                //Intereses tributarios
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 1072;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $totDesc;
+            $comprobanteMov->save();
+
+            //RUBROS DEL COMPROBANTE CONTABLE
+                //1.1.01.01.200.02 Impuesto predial unificado- rural vigencia actual 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 854;
+            $comprobanteMov->debito = $totImpPredial;
+            $comprobanteMov->save();
+
+                //1.1.01.01.014.02 Sobretasa ambiental - Corporaciones Autónomas Regionales - Rural 1.2.3.1.01 Sobretasa ambiental
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 853;
+            $comprobanteMov->debito = $totImpAdi;
+            $comprobanteMov->save();
+
+                //1.1.02.03.002	Intereses de mora (Triburarios) 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 871;
+            $comprobanteMov->debito = $totDesc;
+            $comprobanteMov->save();
+
+            return 'OK';
+
+        } elseif ($pago->modulo == 'ICA-Contribuyente'){
+            $ica = IcaContri::find($pago->entity_id);
+
+            //PUCs DEL COMPROBANTE CONTABLE
+                //IMPUESTO INDUSTRIA Y COMERCIO
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 1068;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $ica->totImpIndyCom;
+            $comprobanteMov->save();
+
+                //AVISOS Y TABLEROS
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 1069;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $ica->impAviyTableros;
+            $comprobanteMov->save();
+
+                //SOBRETASA BOMBERIL
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 1070;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $ica->sobretasaBomberil;
+            $comprobanteMov->save();
+
+                //INTERESES TRIBUTARIOS (INTERESES DE MORA)
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 1072;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $ica->interesesMora;
+            $comprobanteMov->save();
+
+            //RUBROS DEL COMPROBANTE CONTABLE
+                //1.1.01.02.200.01 Impuesto de Industria y comercio - sobre actividades comerciales 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 856;
+            $comprobanteMov->debito = $ica->totImpIndyCom;
+            $comprobanteMov->save();
+
+                // 1.1.01.02.201 Impuesto complementario de avisos y tableros 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 858;
+            $comprobanteMov->debito = $ica->impAviyTableros;
+            $comprobanteMov->save();
+
+                // 1.1.01.02.212 Impuesto bomberil 1.2.3.1.15 Sobretasa bomberil
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 861;
+            $comprobanteMov->debito = $ica->sobretasaBomberil;
+            $comprobanteMov->save();
+
+            // 1.1.02.03.002 Intereses de mora (Tributarios) 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 871;
+            $comprobanteMov->debito = $ica->interesesMora;
+            $comprobanteMov->save();
+
+            return 'OK';
         }
     }
 }

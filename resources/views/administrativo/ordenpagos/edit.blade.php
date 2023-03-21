@@ -4,7 +4,7 @@
 @stop
 @section('sidebar')
     <li>
-        <a href="{{ url('/administrativo/ordenPagos') }}" class="btn btn-success">
+        <a href="{{ url('/administrativo/ordenPagos/'.$vigenc) }}" class="btn btn-success">
             <span class="hide-menu">Ordenes de Pago</span></a>
     </li>
     <li>

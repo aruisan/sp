@@ -19,7 +19,7 @@
                 </li>
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content" id="prog">
                 <div id="nuevo" class="tab-pane fade in active">
                     <div class="form-validation">
                         <br>
@@ -60,6 +60,7 @@
                                                 <option value="SGP Salud">SGP Salud</option>
                                                 <option value="SGP Educacion">SGP Educacion</option>
                                                 <option value="SGP Otros sectores">SGP Otros sectores</option>
+                                                <option value="SGP Otros sectores">Comprobante de Ingresos</option>
                                                 <option value="Otro">Otro</option>
                                             </select>
                                             <span style="display: none" id="otroTipo">
@@ -110,9 +111,10 @@
                                 </div>
                             </div>
                             <br>
-                            <table class="table">
+                            <table class="table" id="tablaCC">
                                 <thead>
                                 <tr>
+                                    <th class="text-center"></th>
                                     <th class="text-center"></th>
                                     <th class="text-center" style="width: 200px">Debito<span class="text-danger">*</span></th>
                                     <th class="text-center" style="width: 200px">Crédito<span class="text-danger">*</span></th>
@@ -120,52 +122,53 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td style="width: 3%"></td>
                                         <td>
                                             <div class="form-group">
-                                                <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
-                                                <div class="col-lg-6">
-                                                    <select class="select-cuentaBancaria" name="cuentaDeb" id="cuentaDeb">
-                                                        @foreach($hijosDebito as $hijo)
-                                                            <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                <label class="col-form-label" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
+                                                <select class="form-control" name="cuentaDeb" id="cuentaDeb">
+                                                    @foreach($hijosDebito as $hijo)
+                                                        <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </td>
                                         <td><input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="0"></td>
                                         <td><input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="0"></td>
                                     </tr>
                                     <tr>
+                                        <td style="width: 3%">
+                                            <button type="button" class="btn btn-primary" v-on:click.prevent="nuevaFilaPrograma"><i class="fa fa-plus-circle"></i></button>
+                                        </td>
                                         <td>
                                             <div class="form-group">
-                                                <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>
-                                                <div class="col-lg-6">
-                                                    <select class="select-cuentaPUC" name="cuentaPUC" id="cuentaPUC">
-                                                        @foreach($hijos as $hijo)
-                                                            <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                <label class="col-form-label" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>
+                                                <select class="form-control" name="cuentaPUC[]" id="cuentaPUC[]">
+                                                    @foreach($hijos as $hijo)
+                                                        <option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </td>
-                                        <td><input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="0"></td>
-                                        <td><input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="debitoPUC[]" id="debitoPUC[]" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="creditoPUC[]" id="creditoPUC[]" value="0"></td>
                                     </tr>
                                     <tr id="rubIngSelect">
+                                        <td style="width: 3%">
+                                            <button type="button" class="btn btn-primary" v-on:click.prevent="nuevaFilaRubros"><i class="fa fa-plus-circle"></i></button>
+                                        </td>
                                         <td>
                                             <div class="form-group">
-                                                <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>
-                                                <div class="col-lg-6">
-                                                    <select class="form-control" name="rubroIngresos" id="rubroIngresos">
-                                                        @foreach($rubrosIngresos as $rubro)
-                                                            <option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                <label class="col-form-label" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>
+                                                <select class="form-control" name="rubroIngresos[]" id="rubroIngresos[]">
+                                                    @foreach($rubrosIngresos as $rubro)
+                                                        <option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </td>
-                                        <td><input class="form-control" min="0" type="number" name="debitoIngresos" id="debitoIngresos" value="0"></td>
-                                        <td><input class="form-control" min="0" type="hidden" name="creditoIngresos" id="creditoIngresos" value="0"></td>
+                                        <td><input class="form-control" min="0" type="number" name="debitoIngresos[]" id="debitoIngresos[]" value="0"></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -188,8 +191,6 @@
 @section('js')
     <script>
         $('.select-tercero').select2();
-        $('.select-cuentaBancaria').select2();
-        $('.select-cuentaPUC').select2();
 
         function cambioTipo(value){
             if(value == "Otro"){
@@ -207,5 +208,56 @@
 
             }
         }
+
+
+        $(document).on('click', '.borrar', function (event) {
+            event.preventDefault();
+            $(this).closest('tr').remove();
+        });
+
+        new Vue({
+            el: '#prog',
+
+            methods:{
+
+                nuevaFilaPrograma: function(){
+                    var nivel=parseInt($("#tablaCC tr").length);
+                    $('#tablaCC tbody tr:last').before('<tr>'+
+                        '<td style="width: 3%">\n' +
+                        '<button type="button" class="btn-sm btn-danger borrar">&nbsp;-&nbsp; </button>\n' +
+                    '</td>\n' +
+                    '<td>\n' +
+                        '<div class="form-group">\n' +
+                            '<label class="col-form-label" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>\n' +
+                            '<select class="form-control" name="cuentaPUC[]" id="cuentaPUC[]">\n' +
+                                '@foreach($hijos as $hijo)<option value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>@endforeach\n' +
+                            '</select></div>\n' +
+                    '</td>\n' +
+                    '<td><input class="form-control" min="0" type="number" name="debitoPUC[]" id="debitoPUC[]" value="0"></td>\n' +
+                    '<td><input class="form-control" min="0" type="number" name="creditoPUC[]" id="creditoPUC[]" value="0"></td>\n' +
+                '</tr>');
+                },
+
+                nuevaFilaRubros: function(){
+                    var nivel2=parseInt($("#tablaCC tr").length);
+                    $('#tablaCC tbody tr:last').before('<tr>'+
+                        '<td style="width: 3%">\n' +
+                        '<button type="button" class="btn-sm btn-danger borrar">&nbsp;-&nbsp; </button>\n' +
+                        '</td>\n' +
+                        '<td>\n' +
+                        '<div class="form-group">\n' +
+                        '<label class="col-form-label" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>\n' +
+                        '<select class="form-control" name="rubroIngresos[]" id="rubroIngresos[]">\n' +
+                            '@foreach($rubrosIngresos as $rubro)\n' +
+                            '<option value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}} </option>\n' +
+                    '@endforeach\n' +
+                '</select></div>\n' +
+                        '</td>\n' +
+                        '<td><input class="form-control" min="0" type="number" name="debitoIngresos[]" id="debitoIngresos[]" value="0"></td>\n' +
+                        '<td></td>\n' +
+                        '</tr>');
+                }
+            }
+        });
     </script>
 @stop

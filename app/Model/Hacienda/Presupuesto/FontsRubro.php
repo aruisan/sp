@@ -40,6 +40,6 @@ class FontsRubro extends Model implements Auditable
     }
 
     public function compIng(){
-        return $this->hasMany('App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos','rubro_font_ingresos_id');
+        return $this->hasMany('App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov','rubro_font_ingresos_id');
     }
 }

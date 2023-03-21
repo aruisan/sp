@@ -394,40 +394,24 @@ class PagosController extends Controller
             $vigencia_id = $tesoreriaRetefuentePago->vigencia_id;
         }
 
-        return view('administrativo.pagos.show', compact('pago','ordenPago','banks','vigencia_id'));
+        $rol = auth()->user()->roles->first()->id;
+
+        return view('administrativo.pagos.show', compact('pago','ordenPago','banks','vigencia_id',
+        'rol'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Pagos  $pagos
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Pagos $pagos)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Pagos  $pagos
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Pagos $pagos)
-    {
-        //
-    }
+    public function anular($id, Request $request){
+        $pago = Pagos::find($id);
+        $pago->observacion = $request->observacion;
+        $pago->estado = '2';
+        $pago->save();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Pagos  $pagos
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Pagos $pagos)
-    {
-        //
+        $ordenPago = OrdenPagos::find($pago->orden_pago_id);
+        $ordenPago->saldo = $ordenPago->saldo + $pago->valor;
+        $ordenPago->save();
+
+        Session::flash('error','El pago ha sido anulado');
+        return redirect('/administrativo/pagos/show/'.$id);
     }
 }

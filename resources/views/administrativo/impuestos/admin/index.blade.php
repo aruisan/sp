@@ -87,6 +87,7 @@
                             <th class="text-center">Comprobante Pago</th>
                             <th class="text-center">Cargar Pago</th>
                             <th class="text-center">Eliminar Formulario</th>
+                            <th class="text-center">Confirmar Pago</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -132,6 +133,13 @@
                                 <td class="text-center">
                                     @if($pago->estado != "Pagado")
                                         <button onclick="eliminarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-trash"></i></button>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if($pago->estado == "Pagado" and $pago->confirmed == "FALSE")
+                                        <button onclick="confirmarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos">Confirmar Pago</button>
+                                    @elseif($pago->estado == "Pagado" and $pago->confirmed == "TRUE")
+                                        CONFIRMADO
                                     @endif
                                 </td>
                             </tr>
@@ -269,6 +277,30 @@
 
                 }).fail(function() {
                     toastr.warning('OCURRIO UN ERROR AL ELIMINAR EL PAGO Y SU FORMULARIO.');
+                });
+            }
+
+        }
+
+        function confirmarPago(id){
+            var opcion = confirm("ESTA SEGUR@ DE CONFIRMAR EL PAGO? ESTA ACCIÓN NO SE PUEDE DESHACER");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/impuestos/Pagos/confirmPay",
+                    data: { "payId": id,
+                        "_token": $("meta[name='csrf-token']").attr("content"),
+                    }
+                }).done(function(response) {
+                    if (response == "OK"){
+                        toastr.success('PAGO CONFIRMADO');
+                        location. reload();
+                    } else {
+                        toastr.warning('EL PAGO NO EXISTE. ACTUALICE LA PAGINA.');
+                    }
+
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL CONFIRMAR EL PAGO.');
                 });
             }
 

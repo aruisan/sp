@@ -54,6 +54,7 @@
                                         <option value="SGP Salud" @if($comprobante->tipoCI == 'SGP Salud') selected @endif>SGP Salud</option>
                                         <option value="SGP Educacion" @if($comprobante->tipoCI == 'SGP Educacion') selected @endif>SGP Educacion</option>
                                         <option value="SGP Otros sectores" @if($comprobante->tipoCI == 'SGP Otros sectores') selected @endif>SGP Otros sectores</option>
+                                        <option value="SGP Otros sectores" @if($comprobante->tipoCI == 'Comprobante de Ingresos') selected @endif>Comprobante de Ingresos</option>
                                         <option value="Otro" @if($comprobante->tipoCI == 'Otro') selected @endif>Otro</option>
                                     </select>
                                     <span style="display: none" id="otroTipo">
@@ -101,64 +102,66 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table">
+                    <br><br>
+                    <table class="table table-bordered" id="tablaCont" style="width: 100%">
                         <thead>
                         <tr>
-                            <th class="text-center"></th>
-                            <th class="text-center" style="width: 200px">Debito<span class="text-danger">*</span></th>
-                            <th class="text-center" style="width: 200px">Crédito<span class="text-danger">*</span></th>
+                            <th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">CONTABILIZACIÓN</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Codigo</th>
+                            <th class="text-center">Descripción</th>
+                            <th class="text-center">Debito</th>
+                            <th class="text-center">Credito</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Bancaria <span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <select class="form-control" name="cuentaDeb" id="cuentaDeb">
-                                            @foreach($hijosDebito as $hijo)
-                                                <option @if($comprobante->cuenta_banco == $hijo->id) selected @endif value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><input class="form-control" min="0" type="number" name="creditoBanco" id="creditoBanco" value="{{ $comprobante->credito_banco}}"></td>
-                            <td><input class="form-control" min="0" type="number" name="debitoBanco" id="debitoBanco" value="{{ $comprobante->debito_banco}}"></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione cuenta PUC <span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <select class="form-control" name="cuentaPUC" id="cuentaPUC">
-                                            @foreach($hijos as $hijo)
-                                                <option @if($comprobante->cuenta_puc_id == $hijo->id) selected @endif value="{{$hijo->id}}">{{$hijo->code}} - {{$hijo->concepto}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><input class="form-control" min="0" type="number" name="creditoPUC" id="creditoPUC" value="{{ $comprobante->credito_puc}}"></td>
-                            <td><input class="form-control" min="0" type="number" name="debitoPUC" id="debitoPUC" value="{{ $comprobante->debito_puc}}"></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <label class="col-lg-4 col-form-label text-right" for="nombre">Seleccione Rubro Ingresos <span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <select class="form-control" name="rubroIngresos" id="rubroIngresos">
-                                            @foreach($rubrosIngresos as $rubro)
-                                                <option @if($comprobante->rubro_font_ingresos_id == $rubro['id']) selected @endif value="{{$rubro['id']}}">{{$rubro['code']}} - {{$rubro['nombre']}} - {{$rubro['fCode']}}  - {{$rubro['fName']}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><input class="form-control" min="0" type="number" name="creditoIngresos" id="creditoIngresos" value="{{ $comprobante->debito_rubro_ing}}"></td>
-                        </tr>
+                        @foreach($comprobante->movs as $mov)
+                            @if(isset($mov->cuenta_banco))
+                                <tr class="text-center">
+                                    <td>{{ $mov->banco->code}}</td>
+                                    <td>{{ $mov->banco->concepto}}</td>
+                                    <td>$ <?php echo number_format($mov->debito,0);?></td>
+                                    <td>$ <?php echo number_format($mov->credito,0);?></td>
+                                </tr>
+                            @endif
+                            @if(isset($mov->cuenta_puc_id))
+                                <tr class="text-center">
+                                    <td>{{ $mov->puc->code}}</td>
+                                    <td>{{ $mov->puc->concepto}}</td>
+                                    <td>$ <?php echo number_format($mov->debito,0);?></td>
+                                    <td>$ <?php echo number_format($mov->credito,0);?></td>
+                                </tr>
+                            @endif
+                        @endforeach
+                        </tbody>
                     </table>
                     <br>
+                    <table class="table table-bordered" id="tablaP" style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Codigo</th>
+                            <th class="text-center">Descripción</th>
+                            <th class="text-center">Fuente Financiación</th>
+                            <th class="text-center">Valor</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($comprobante->movs as $mov)
+                            @if(isset($mov->rubro_font_ingresos_id))
+                                <tr class="text-center">
+                                    <td>{{ $mov->fontRubro->rubro->cod}}</td>
+                                    <td>{{ $mov->fontRubro->rubro->name}}</td>
+                                    <td>{{ $mov->fontRubro->sourceFunding->code}} - {{$mov->fontRubro->sourceFunding->description}}</td>
+                                    <td>$ <?php echo number_format($mov->debito,0);?></td>
+                                </tr>
+                            @endif
+                        @endforeach
+                        </tbody>
+                    </table>
                 </form>
             </div>
         </div>

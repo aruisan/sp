@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\ComprobanteIngresos;
 
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\ComprobanteIngresos\CIRubros;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipoIngresos;
@@ -66,7 +67,6 @@ class ComprobanteIngresosController extends Controller
             }
         }
 
-
         return view('administrativo.comprobanteingresos.create', compact('vigencia','user_id',
         'rubrosIngresos','hijos','personas','hijosDebito'));
     }
@@ -82,7 +82,7 @@ class ComprobanteIngresosController extends Controller
         if($request->hasFile('file')) {
             $file = new FileTraits;
             $ruta = $file->File($request->file('file'), 'CertificadoIngresos');
-        }else $ruta = "";
+        } else $ruta = "";
 
         $countCI = ComprobanteIngresos::where('vigencia_id', $request->vigencia_id)->orderBy('id')->get()->last();
         if ($countCI == null)  $count = 0;
@@ -101,20 +101,41 @@ class ComprobanteIngresosController extends Controller
         $comprobante->user_id = $request->user_id;
         $comprobante->vigencia_id = $request->vigencia_id;
         $comprobante->ruta = $ruta;
-        $comprobante->cuenta_banco = $request->cuentaDeb;
-        $comprobante->cuenta_puc_id = $request->cuentaPUC;
-        if ( $request->tipoCI != "Transferencia"){
-            $comprobante->rubro_font_ingresos_id = $request->rubroIngresos;
-            $comprobante->debito_rubro_ing = $request->debitoIngresos;
-            $comprobante->credito_rubro_ing = $request->creditoIngresos;
-        }
-        $comprobante->debito_banco = $request->debitoBanco;
-        $comprobante->credito_banco = $request->creditoBanco;
-        $comprobante->debito_puc = $request->debitoPUC;
-        $comprobante->credito_puc = $request->creditoPUC;
         $comprobante->responsable_id = Auth::user()->id;
         $comprobante->persona_id = $request->persona_id;
         $comprobante->save();
+
+        //BANCO DEL COMPROBANTE CONTABLE
+        $comprobanteMov = new ComprobanteIngresosMov();
+        $comprobanteMov->comp_id = $comprobante->id;
+        $comprobanteMov->fechaComp = $request->fecha;
+        $comprobanteMov->cuenta_banco = $request->cuentaDeb;
+        $comprobanteMov->debito = $request->debitoBanco;
+        $comprobanteMov->credito = $request->creditoBanco;
+        $comprobanteMov->save();
+
+        //PUCs DEL COMPROBANTE CONTABLE
+        for ($i = 0; $i < count($request->cuentaPUC); $i++){
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $request->fecha;
+            $comprobanteMov->cuenta_puc_id = $request->cuentaPUC[$i];
+            $comprobanteMov->debito = $request->debitoPUC[$i];
+            $comprobanteMov->credito = $request->creditoPUC[$i];
+            $comprobanteMov->save();
+        }
+
+        //RUBROS DE INGRESOS DEL COMPROBANTE CONTABLE
+        if ( $request->tipoCI != "Transferencia"){
+            for ($i = 0; $i < count($request->rubroIngresos); $i++){
+                $comprobanteMov = new ComprobanteIngresosMov();
+                $comprobanteMov->comp_id = $comprobante->id;
+                $comprobanteMov->fechaComp = $request->fecha;
+                $comprobanteMov->rubro_font_ingresos_id = $request->rubroIngresos[$i];
+                $comprobanteMov->debito = $request->debitoIngresos[$i];
+                $comprobanteMov->save();
+            }
+        }
 
         Session::flash('success','El comprobante de ingreso se ha creado exitosamente');
         return redirect('/administrativo/CIngresos/'.$request->vigencia_id);
@@ -262,6 +283,9 @@ class ComprobanteIngresosController extends Controller
     public function destroy($vigen, $id)
     {
         if (auth()->user()->id == 223){
+            $comprobanteMovs = ComprobanteIngresosMov::where('comp_id', $id)->get();
+            foreach ($comprobanteMovs as $mov) $mov->delete();
+
             $comprobante = ComprobanteIngresos::findOrFail($id);
             $comprobante->delete();
             return "OK";
@@ -273,15 +297,13 @@ class ComprobanteIngresosController extends Controller
     {
         $comprobante = ComprobanteIngresos::findOrFail($id);
         $persona = Persona::find($comprobante->persona_id);
-        $banco = PucAlcaldia::find($comprobante->cuenta_banco);
-        $puc = PucAlcaldia::find($comprobante->cuenta_puc_id);
 
         $fecha = Carbon::createFromTimeString($comprobante->ff.' 00:00:00');
         $dias = array("Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado");
         $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
         $pdf = PDF::loadView('administrativo.comprobanteingresos.pdf', compact('comprobante',
-            'dias', 'meses', 'fecha','persona','banco','puc'))->setOptions(['images' => true, 'isRemoteEnabled' => true]);
+            'dias', 'meses', 'fecha','persona'))->setOptions(['images' => true, 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
     }

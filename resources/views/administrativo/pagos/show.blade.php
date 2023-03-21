@@ -155,6 +155,14 @@
                                     </tbody>
                                 </table>
                             </div>
+                                @include('modal.anularPago')
+                                @if($pago->estado == 1 and $rol == 3)
+                                    <center>
+                                        <a data-toggle="modal" data-target="#anularOP" class="btn btn-success">
+                                            Anular Pago
+                                        </a>
+                                    </center>
+                                @endif
                         </div>
                     </div>
                 </div>

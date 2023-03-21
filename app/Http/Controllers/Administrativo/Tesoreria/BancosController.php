@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria;
 
-use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
-use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\bancos;
@@ -15,7 +14,6 @@ use App\Model\Persona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
 use Session;
 use PDF;
 
@@ -231,8 +229,14 @@ class BancosController extends Controller
             foreach ($pagoBanks as $pagoBank){
                 $total = $total - $pagoBank->valor;
                 $pago = Pagos::find($pagoBank->pagos_id);
-                $tercero = $pago->orden_pago->registros->persona->nombre;
-                $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                if (isset($pago->orden_pago->registros->persona)){
+                    $tercero = $pago->orden_pago->registros->persona->nombre;
+                    $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                } else{
+                    $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                    $numIdent = 800197268;
+                }
+
                 $totDeb = $totDeb + 0;
                 $totCred = $totCred + $pagoBank->valor;
                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
@@ -245,31 +249,31 @@ class BancosController extends Controller
         }
 
         //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
-        $compsCont = ComprobanteIngresos::whereBetween('ff',array($fechaIni, $fechaFin))->get();
+        $compsCont = ComprobanteIngresosMov::whereBetween('fechaComp',array($fechaIni, $fechaFin))->get();
         if (count($compsCont) > 0){
             foreach ($compsCont as $compCont){
                 if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
-                    $persona = Persona::find($compCont->persona_id);
+                    $persona = Persona::find($compCont->comprobante->persona_id);
                     $tercero = $persona->nombre;
                     $numIdent = $persona->num_dc;
                     if ($compCont->cuenta_banco == $rubroPUC->id){
-                        $total = $total + $compCont->debito_banco;
-                        $total = $total - $compCont->credito_banco;
-                        $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                            'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_banco,0),
-                            'credito' => '$'.number_format($compCont->credito_banco,0), 'tercero' => $tercero, 'CC' => $numIdent,
-                            'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                        $total = $total + $compCont->debito;
+                        $total = $total - $compCont->credito;
+                        $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                            'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
+                            'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                            'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                             'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                            'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                            'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->comprobante->id]);
                     } else{
-                        $total = $total + $compCont->debito_puc;
-                        $total = $total - $compCont->credito_puc;
-                        $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                            'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_puc,0),
-                            'credito' => '$'.number_format($compCont->credito_puc,0), 'tercero' => $tercero, 'CC' => $numIdent,
-                            'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                        $total = $total + $compCont->debito;
+                        $total = $total - $compCont->credito;
+                        $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                            'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
+                            'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                            'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                             'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                            'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                            'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->comprobante->id]);
                     }
                 }
             }
@@ -306,8 +310,13 @@ class BancosController extends Controller
                     if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
                         $total = $total - $pagoBank->valor;
                         $pago = Pagos::find($pagoBank->pagos_id);
-                        $tercero = $pago->orden_pago->registros->persona->nombre;
-                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        if (isset($pago->orden_pago->registros->persona)){
+                            $tercero = $pago->orden_pago->registros->persona->nombre;
+                            $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        } else{
+                            $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                            $numIdent = 800197268;
+                        }
                         $totDeb = $totDeb + 0;
                         $totCred = $totCred + $pagoBank->valor;
                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
@@ -322,32 +331,32 @@ class BancosController extends Controller
         }
 
         //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
-        $compsCont = ComprobanteIngresos::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        $compsCont = ComprobanteIngresosMov::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
         if (count($compsCont) > 0){
             foreach ($compsCont as $compCont){
-                if (Carbon::parse($compCont->ff)->format('Y') == Carbon::today()->format('Y')) {
-                    if (Carbon::parse($compCont->ff)->format('m') == $request->mes) {
-                        $persona = Persona::find($compCont->persona_id);
+                if (Carbon::parse($compCont->fechaComp)->format('Y') == Carbon::today()->format('Y')) {
+                    if (Carbon::parse($compCont->fechaComp)->format('m') == $request->mes) {
+                        $persona = Persona::find($compCont->comprobante->persona_id);
                         $tercero = $persona->nombre;
                         $numIdent = $persona->num_dc;
                         if ($compCont->cuenta_banco == $rubroPUC->id){
-                            $total = $total + $compCont->debito_banco;
-                            $total = $total - $compCont->credito_banco;
-                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_banco,0),
-                                'credito' => '$'.number_format($compCont->credito_banco,0), 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
+                                'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                 'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                                'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->comprobante->id]);
                         } else{
-                            $total = $total + $compCont->debito_puc;
-                            $total = $total - $compCont->credito_puc;
-                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => '$'.number_format($compCont->debito_puc,0),
-                                'credito' => '$'.number_format($compCont->credito_puc,0), 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
+                                'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                 'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->id]);
+                                'pago_id' => '', 'pago_estado' => '', 'CC_id' => $compCont->comprobante->id]);
                         }
                     }
                 }
@@ -378,57 +387,64 @@ class BancosController extends Controller
                     if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
                         $total = $total - $pagoBank->valor;
                         $pago = Pagos::find($pagoBank->pagos_id);
-                        $tercero = $pago->orden_pago->registros->persona->nombre;
-                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        if (isset($pago->orden_pago->registros->persona)){
+                            $tercero = $pago->orden_pago->registros->persona->nombre;
+                            $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        } else{
+                            $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                            $numIdent = 800197268;
+                        }
                         $totDeb = $totDeb + 0;
                         $totCredAll = $totCredAll + $pagoBank->valor;
                         if ($pago->estado == 1) {
                             $totCred = $totCred + $pagoBank->valor;
                             $totBank = $totBank - $pagoBank->valor;
                         }
+                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pagoBank->pagos_id." # Cheque ".$pago->num;
+                        else $referencia = "Pago #".$pagoBank->pagos_id;
                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
                             'modulo' => 'Pago #'.$pago->code, 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
                             'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                             'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                            'referencia' => 'Pago #'.$pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                            'referencia' => $referencia, 'pago_estado' => $pago->estado]);
                     }
                 }
             }
         }
 
         //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
-        $compsCont = ComprobanteIngresos::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        $compsCont = ComprobanteIngresosMov::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
         if (count($compsCont) > 0){
             foreach ($compsCont as $compCont){
-                if (Carbon::parse($compCont->ff)->format('Y') == $añoActual) {
-                    if (Carbon::parse($compCont->ff)->format('m') == $request->mes) {
-                        $persona = Persona::find($compCont->persona_id);
+                if (Carbon::parse($compCont->fechaComp)->format('Y') == $añoActual) {
+                    if (Carbon::parse($compCont->fechaComp)->format('m') == $request->mes) {
+                        $persona = Persona::find($compCont->comprobante->persona_id);
                         $tercero = $persona->nombre;
                         $numIdent = $persona->num_dc;
                         if ($compCont->cuenta_banco == $rubroPUC->id){
-                            $total = $total + $compCont->debito_banco;
-                            $total = $total - $compCont->credito_banco;
-                            $totDeb = $totDeb + $compCont->debito_banco;
-                            $totCred = $totCred + $compCont->credito_banco;
-                            $totCredAll = $totCred + $compCont->credito_banco;
-                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_banco,
-                                'credito' => $compCont->credito_banco, 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $totDeb = $totDeb + $compCont->debito;
+                            $totCred = $totCred + $compCont->credito;
+                            $totCredAll = $totCred + $compCont->credito;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => $compCont->debito,
+                                'credito' => $compCont->credito, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                 'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                                'referencia' => 'CC #'.$compCont->comprobante->id, 'pago_estado' => '1']);
                         } else{
-                            $total = $total + $compCont->debito_puc;
-                            $total = $total - $compCont->credito_puc;
-                            $totDeb = $totDeb + $compCont->debito_puc;
-                            $totCred = $totCred + $compCont->credito_puc;
-                            $totCredAll = $totCred + $compCont->credito_puc;
-                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_puc,
-                                'credito' => $compCont->credito_puc, 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $totDeb = $totDeb + $compCont->debito;
+                            $totCred = $totCred + $compCont->credito;
+                            $totCredAll = $totCred + $compCont->credito;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => $compCont->debito,
+                                'credito' => $compCont->credito, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                 'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                                'referencia' => 'CC #'.$compCont->comprobante->id, 'pago_estado' => '1']);
                         }
                     }
                 }
@@ -488,57 +504,64 @@ class BancosController extends Controller
                     if (Carbon::parse($pagoBank->created_at)->format('m') == $mesFind){
                         $total = $total - $pagoBank->valor;
                         $pago = Pagos::find($pagoBank->pagos_id);
-                        $tercero = $pago->orden_pago->registros->persona->nombre;
-                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        if (isset($pago->orden_pago->registros->persona)){
+                            $tercero = $pago->orden_pago->registros->persona->nombre;
+                            $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                        } else{
+                            $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                            $numIdent = 800197268;
+                        }
                         $totDeb = $totDeb + 0;
                         $totCredAll = $totCredAll + $pagoBank->valor;
                         if ($pago->estado == 1) {
                             $totCred = $totCred + $pagoBank->valor;
                             $totBank = $totBank - $pagoBank->valor;
                         }
+                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pagoBank->pagos_id." # Cheque ".$pago->num;
+                        else $referencia = "Pago #".$pagoBank->pagos_id;
                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
                             'modulo' => 'Pago #'.$pago->code, 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
                             'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                             'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                            'referencia' => 'Pago #'.$pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                            'referencia' => $referencia, 'pago_estado' => $pago->estado]);
                     }
                 }
             }
         }
 
         //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
-        $compsCont = ComprobanteIngresos::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        $compsCont = ComprobanteIngresosMov::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
         if (count($compsCont) > 0){
             foreach ($compsCont as $compCont){
-                if (Carbon::parse($compCont->ff)->format('Y') == $añoActual) {
-                    if (Carbon::parse($compCont->ff)->format('m') == $mesFind) {
-                        $persona = Persona::find($compCont->persona_id);
+                if (Carbon::parse($compCont->fechaComp)->format('Y') == $añoActual) {
+                    if (Carbon::parse($compCont->fechaComp)->format('m') == $mesFind) {
+                        $persona = Persona::find($compCont->comprobante->persona_id);
                         $tercero = $persona->nombre;
                         $numIdent = $persona->num_dc;
                         if ($compCont->cuenta_banco == $rubroPUC->id){
-                            $total = $total + $compCont->debito_banco;
-                            $total = $total - $compCont->credito_banco;
-                            $totDeb = $totDeb + $compCont->debito_banco;
-                            $totCred = $totCred + $compCont->credito_banco;
-                            $totCredAll = $totCred + $compCont->credito_banco;
-                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_banco,
-                                'credito' => $compCont->credito_banco, 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $totDeb = $totDeb + $compCont->debito;
+                            $totCred = $totCred + $compCont->credito;
+                            $totCredAll = $totCred + $compCont->credito;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => $compCont->debito,
+                                'credito' => $compCont->credito, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                 'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                                'referencia' => 'CC #'.$compCont->comprobante->id, 'pago_estado' => '1']);
                         } else{
-                            $total = $total + $compCont->debito_puc;
-                            $total = $total - $compCont->credito_puc;
-                            $totDeb = $totDeb + $compCont->debito_puc;
-                            $totCred = $totCred + $compCont->credito_puc;
-                            $totCredAll = $totCred + $compCont->credito_puc;
-                            $result[] = collect(['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $compCont->debito_puc,
-                                'credito' => $compCont->credito_puc, 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $totDeb = $totDeb + $compCont->debito;
+                            $totCred = $totCred + $compCont->credito;
+                            $totCredAll = $totCred + $compCont->credito;
+                            $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
+                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => $compCont->debito,
+                                'credito' => $compCont->credito, 'tercero' => $tercero, 'CC' => $numIdent,
+                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                 'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'referencia' => 'CC #'.$compCont->id, 'pago_estado' => '1']);
+                                'referencia' => 'CC #'.$compCont->comprobante->id, 'pago_estado' => '1']);
                         }
                     }
                 }

@@ -96,6 +96,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //VALIDAR SI EL PAGO SE PUEDE DESCARGAR
         Route::post('/Pagos/validatePay','Impuestos\Pagos\PagosController@validatePagoDownload');
         Route::post('/Pagos/deletePay','Impuestos\Pagos\PagosController@deletePago');
+        Route::post('/Pagos/confirmPay','Impuestos\Pagos\PagosController@confirmPay');
 
         //DESCARGAR PAZ Y SALVO
         Route::get('/Pagos/certPyS/{id}','Impuestos\Pagos\PagosController@certDownload');
@@ -318,6 +319,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::put('pagos/asignacion/delete','Administrativo\Pago\PagosController@asignacionDelete');
         Route::get('pagos/banks/{id}','Administrativo\Pago\PagosController@bank');
         Route::put('pagos/banks/store','Administrativo\Pago\PagosController@bankStore');
+        Route::post('pagos/{id}/anular/', 'Administrativo\Pago\PagosController@anular');
 
         //CONTABILIDAD
 
