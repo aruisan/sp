@@ -716,6 +716,8 @@ class IndexController extends Controller
 
                                     //BPIN
                                     $bpinVigen = bpinVigencias::where('dep_rubro_id', $depFont->id)->where('vigencia_id',$vigencia_id)->get();
+                                    if ($depFont->id == 351) dd($bpinVigen, $value);
+
 
                                     if (count($bpinVigen) > 0){
 
@@ -724,8 +726,6 @@ class IndexController extends Controller
                                         $codBpin = $bpinVigen->first()->bpin->cod_proyecto;
                                         $codActiv = $bpinVigen->first()->bpin->cod_actividad;
                                         $nameActiv = $bpinVigen->first()->bpin->actividad;
-
-                                        if ($codActiv == '20228856400083') dd($codActiv, $value);
 
                                         if (isset($rubrosCC)){
                                             foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
