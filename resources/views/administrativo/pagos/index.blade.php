@@ -41,6 +41,7 @@
                             <th class="text-center">Concepto</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Estado</th>
+                            <th class="text-center">Num Identi Tercero</th>
                             <th class="text-center">Tercero</th>
                             <th class="text-center">Acciones</th>
                         </tr>
@@ -62,6 +63,7 @@
                                         @endif
                                     </span>
                                 </td>
+                                <td class="text-center">{{ $pagoT['cc'] }}</td>
                                 <td class="text-center">{{ $pagoT['persona'] }}</td>
                                 <td>
                                     <a href="{{ url('administrativo/pagos/show/'.$pagoT['info']->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
@@ -92,6 +94,7 @@
                             <th class="text-center">Orden de Pago</th>
                             <th class="text-center">Concepto</th>
                             <th class="text-center">Valor Pago</th>
+                            <th class="text-center">Num Identi Tercero</th>
                             <th class="text-center">Tercero</th>
                             <th class="text-center">Estado</th>
                             <th class="text-center">Acciones</th>
@@ -104,6 +107,7 @@
                                 <td><a href="{{ url('administrativo/ordenPagos/show/'.$pago['info']->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a></td>
                                 <td>{{ $pago['info']->concepto }}</td>
                                 <td>$<?php echo number_format($pago['info']->valor,0) ?></td>
+                                <td>{{ $pago['info']->persona->num_dc }}</td>
                                 <td>{{ $pago['info']->persona->nombre }}</td>
                                 <td>
                                     <span class="badge badge-pill badge-danger">

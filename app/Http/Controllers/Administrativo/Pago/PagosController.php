@@ -34,12 +34,12 @@ class PagosController extends Controller
         foreach ($pT as $data){
             if (isset($data->orden_pago->registros)) {
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id) {
-                    $pagosTarea[] = collect(['info' => $data, 'persona' => $data->persona->nombre]);
+                    $pagosTarea[] = collect(['info' => $data, 'cc' => $data->persona->num_dc, 'persona' => $data->persona->nombre]);
                 }
             } else {
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                    $pagosTarea[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                    $pagosTarea[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
                 }
             }
         }
