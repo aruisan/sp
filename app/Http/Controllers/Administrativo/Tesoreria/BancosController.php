@@ -239,8 +239,8 @@ class BancosController extends Controller
 
                 $totDeb = $totDeb + 0;
                 $totCred = $totCred + $pagoBank->valor;
-                if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pagoBank->code." - # Cheque ".$pago->num;
-                else $referencia = "Pago #".$pagoBank->code;
+                if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
+                else $referencia = "Pago #".$pago->code;
                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
                     'modulo' => $referencia, 'debito' => '$'.number_format(0,0),
                     'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
@@ -321,8 +321,8 @@ class BancosController extends Controller
                         }
                         $totDeb = $totDeb + 0;
                         $totCred = $totCred + $pagoBank->valor;
-                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pagoBank->code." - # Cheque ".$pago->num;
-                        else $referencia = "Pago #".$pagoBank->code;
+                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
+                        else $referencia = "Pago #".$pago->code;
                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
                             'modulo' => $referencia, 'debito' => '$'.number_format(0,0),
                             'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
@@ -402,8 +402,8 @@ class BancosController extends Controller
                             $totCred = $totCred + $pagoBank->valor;
                             $totBank = $totBank - $pagoBank->valor;
                         }
-                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pagoBank->code." - # Cheque ".$pago->num;
-                        else $referencia = "Pago #".$pagoBank->code;
+                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
+                        else $referencia = "Pago #".$pago->code;
                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
                             'modulo' => $referencia, 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
                             'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
@@ -519,8 +519,8 @@ class BancosController extends Controller
                             $totCred = $totCred + $pagoBank->valor;
                             $totBank = $totBank - $pagoBank->valor;
                         }
-                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pagoBank->code." - # Cheque ".$pago->num;
-                        else $referencia = "Pago #".$pagoBank->code;
+                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
+                        else $referencia = "Pago #".$pago->code;
                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
                             'modulo' => $referencia, 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
                             'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
