@@ -293,7 +293,7 @@ class CdpController extends Controller
         $activateAnul = true;
         if ($cdp->cdpsRegistro->count() > 0){
             foreach ($cdp->cdpsRegistro as $registro){
-                if ($registro->secretaria_e == 2){
+                if ($registro->secretaria_e == 3){
                     $activateAnul = false;
                 }
             }
