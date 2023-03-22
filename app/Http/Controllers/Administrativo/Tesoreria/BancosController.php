@@ -316,7 +316,7 @@ class BancosController extends Controller
         $totCred = 0;
 
         if($request->mes >= 2) {
-            $newSaldo = $this->validateBeforeMonths('01-'.$request->mes."-".Carbon::today()->format('Y'), $rubroPUC);
+            $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
             $total = $newSaldo['total'];
             $result[] = collect(['fecha' => $newSaldo['fecha'],
                 'modulo' => '', 'debito' => '',
