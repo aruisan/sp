@@ -244,8 +244,8 @@
                             <tr>
                                 <td>21. IMPUESTO DE AVISOS Y TABLEROS (15% DEL RENGLÓN 20)</td>
                                 <td>
-                                    <input class="form-control" style="display: none" type="number" min="0" @if($action == "Corrección" ) value="{{ $ica->impAviyTableros }}" @else value="-1" @endif
-                                    name="impAviyTableros" id="impAviyTableros" onchange="operation()">
+                                    <input class="form-control" style="display: none" type="float" min="0" @if($action == "Corrección" ) value="{{ $ica->impAviyTableros }}" @else value="-1" @endif
+                                    name="impAviyTableros" id="impAviyTableros" step=".01" onchange="operation()">
                             </tr>
                             <tr>
                                 <td>22. PAGO POR UNIDADES COMERCIALES ADICIONALES DEL SECTOR FINANCIERO</td>
