@@ -59,7 +59,6 @@
 		</div>
 		<div class="col-md-4 s57 text-center">
 			<p>
-
 				<b>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					&nbsp;&nbsp;&nbsp;&nbsp;Formulario ICA<br>

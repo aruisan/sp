@@ -292,11 +292,25 @@ class RitController extends Controller
     public function restoreRIT()
     {
         $action = "Restaurar";
+        $ciius = Ciuu::all();
         $user = User::find(Auth::user()->id);
         $rit = $user->rit;
+        if ($rit->ResourceRUT) $rit->rutaFileRUT = $rit->ResourceRUT->ruta;
+        else $rit->rutaFileRUT = null;
+        if ($rit->ResourceCC)  $rit->rutaFileCC = $rit->ResourceCC->ruta;
+        else $rit->rutaFileCC = null;
         $actividades = $rit->actividades;
+
+        foreach ($actividades as $actividad){
+            $ciuu = Ciuu::find($actividad->codCIIU);
+            if ($ciuu){
+                $actividad['code'] = $ciuu->code_ciuu;
+                $actividad['description'] = $ciuu->description;
+            }
+        }
+
         $establecimientos = $rit->establecimientos;
-        return view('impuestos.rit.create', compact('action','rit','actividades','establecimientos'));
+        return view('impuestos.rit.create', compact('action','rit','actividades','establecimientos','ciius'));
     }
 
     /**
