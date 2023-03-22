@@ -1,7 +1,5 @@
 @extends('layouts.dashboard')
-@section('titulo')
-    Libros - Tesoreria
-@stop
+@section('titulo') Libros - Tesoreria @stop
 @section('sidebar')@stop
 @section('content')
     <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/makeConciliacion')}}" method="POST" enctype="multipart/form-data" id="prog">

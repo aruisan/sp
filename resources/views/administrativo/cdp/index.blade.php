@@ -348,7 +348,6 @@
             var id = document.getElementById('idCdpChange').value;
             var object = document.getElementById('objeto').value;
 
-            console.log(id, object);
             $.ajax({
                 method: "POST",
                 url: "/administrativo/changeObject/cdp/"+id,

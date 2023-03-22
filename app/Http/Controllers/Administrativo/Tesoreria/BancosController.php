@@ -223,6 +223,17 @@ class BancosController extends Controller
         $fechaIni = Carbon::parse($request->fechaInicial);
         $fechaFin = Carbon::parse($request->fechaFinal);
 
+        if($fechaIni->month >= 2) {
+            $newSaldo = $this->validateBeforeMonths($request->fechaInicial, $rubroPUC);
+            $total = $newSaldo['total'];
+            $result[] = collect(['fecha' => $newSaldo['fecha'],
+                'modulo' => '', 'debito' => '',
+                'credito' => '', 'tercero' => '',
+                'CC' => '', 'concepto' => 'SALDO HASTA EL MES '.$newSaldo['fecha'], 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
+                'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => '', 'pago_estado' => '']);
+        }
+
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
         if (count($pagoBanks) > 0){
@@ -303,6 +314,17 @@ class BancosController extends Controller
         $total = $rubroPUC->saldo_inicial;
         $totDeb = 0;
         $totCred = 0;
+
+        if($request->mes >= 2) {
+            $newSaldo = $this->validateBeforeMonths($request->fechaInicial, $rubroPUC);
+            $total = $newSaldo['total'];
+            $result[] = collect(['fecha' => $newSaldo['fecha'],
+                'modulo' => '', 'debito' => '',
+                'credito' => '', 'tercero' => '',
+                'CC' => '', 'concepto' => 'SALDO HASTA EL MES '.$newSaldo['fecha'], 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
+                'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => '', 'pago_estado' => '']);
+        }
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
@@ -577,5 +599,43 @@ class BancosController extends Controller
         $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha',
         'cuentas','rubroPUC','totDeb','totCred','totCredAll','result','totBank'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
+    }
+
+    public function validateBeforeMonths($lastDate, $rubroPUC){
+        $lastDate = Carbon::parse($lastDate." 23:59:59");
+        $fechaFin = $lastDate->subDays(1);
+        $today = Carbon::today();
+        $fechaIni = Carbon::parse($today->year."-01-01");
+        $total = $rubroPUC->saldo_inicial;
+        $totDeb = 0;
+        $totCred = 0;
+        $mes = $fechaFin->month.'-'.$today->year;
+
+        $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
+        if (count($pagoBanks) > 0){
+            foreach ($pagoBanks as $pagoBank){
+                $total = $total - $pagoBank->valor;
+                $totDeb = $totDeb + 0;
+                $totCred = $totCred + $pagoBank->valor;
+            }
+        }
+
+        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
+        $compsCont = ComprobanteIngresosMov::whereBetween('fechaComp',array($fechaIni, $fechaFin))->get();
+        if (count($compsCont) > 0){
+            foreach ($compsCont as $compCont){
+                if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
+                    if ($compCont->cuenta_banco == $rubroPUC->id){
+                        $total = $total + $compCont->debito;
+                        $total = $total - $compCont->credito;
+                    } else{
+                        $total = $total + $compCont->debito;
+                        $total = $total - $compCont->credito;
+                    }
+                }
+            }
+        }
+
+        return collect(['total' => $total, 'fecha' => $mes]);
     }
 }

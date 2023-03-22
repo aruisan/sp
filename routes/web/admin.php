@@ -310,6 +310,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //PAGOS
 
+        Route::post('changeCheque/pago/{id}/', 'Administrativo\Pago\PagosController@changeCheque');
         Route::get('pagos/{id}', 'Administrativo\Pago\PagosController@index');
         Route::get('pagos/create/{id}', 'Administrativo\Pago\PagosController@create');
         Route::get('pagos/show/{id}', 'Administrativo\Pago\PagosController@show');

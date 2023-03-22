@@ -1,8 +1,7 @@
 @extends('layouts.dashboard')
-@section('titulo')
-    Pagos
-@stop
+@section('titulo') Pagos @stop
 @section('content')
+    @include('modal.chequePago')
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Pagos</b></h4>
@@ -31,6 +30,7 @@
         @endif
     </ul>
     <div class="tab-content" style="background-color: white">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <div id="tabTareas" class="tab-pane active"><br>
             <div class="table-responsive">
                 @if(count($pagosTarea) > 0)
@@ -124,6 +124,9 @@
                                     <a href="{{ url('administrativo/pagos/show/'.$pago['info']->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
                                     @if($pago['info']->estado == "1")
                                         <a href="{{ url('/administrativo/egresos/pdf/'.$pago['info']->id) }}" title="Comprobante de Egresos" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+                                        @if($pago['info']->type_pay == 'CHEQUE')
+                                            <a onclick="showFormCheque({{ $pago['info']->id }}, {{ $pago['info']->code }},'{{ $pago['info']->num }}')" title="Editar Cheque" class="btn-sm btn-success"><i class="fa fa-edit"></i></a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
@@ -143,6 +146,32 @@
 @stop
 @section('js')
     <script>
+
+        function showFormCheque(id, code, cheque){
+            document.getElementById('idPagoChange').value = parseInt(id);
+            document.getElementById('codePago').innerHTML = code;
+            document.getElementById('cheque').value = cheque;
+            $("#chequePagoedit").modal('show');
+        }
+
+        function editCheque(){
+            var id = document.getElementById('idPagoChange').value;
+            var cheque = document.getElementById('cheque').value;
+
+            $.ajax({
+                method: "POST",
+                url: "/administrativo/changeCheque/pago/"+id,
+                data: { "id": id, "cheque": cheque,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function() {
+                location.reload();
+                toastr.success('SE CAMBIO EL NÚMERO DE CHEQUE CORRECTAMENTE.');
+            }).fail(function() {
+                toastr.warning('OCURRIO UN ERROR AL CAMBIAR EL NÚMERO DE CHEQUE DEL PAGO.');
+            });
+        }
+
         $('#tabla_Fin').DataTable( {
             responsive: true,
             "searching": true,

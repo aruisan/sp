@@ -414,4 +414,11 @@ class PagosController extends Controller
         Session::flash('error','El pago ha sido anulado');
         return redirect('/administrativo/pagos/show/'.$id);
     }
+
+    public function changeCheque($id,Request $request){
+        $pago = Pagos::find($id);
+        $pago->num = $request->cheque;
+        $pago->save();
+        return $pago;
+    }
 }

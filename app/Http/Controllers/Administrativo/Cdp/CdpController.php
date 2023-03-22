@@ -145,7 +145,8 @@ class CdpController extends Controller
                     $depRubroFont->saldo = $depRubroFont->saldo + $actividadCdp->valor;
                     $depRubroFont->save();
 
-                    $bpinVigencia = bpinVigencias::where('bpin_id',$actividadCdp->actividad->id)->first();
+                    $bpinVigencia = bpinVigencias::where('bpin_id',$actividadCdp->actividad->id)
+                        ->where('dep_rubro_id',$depRubroFont->id)->first();
                     $bpinVigencia->saldo = $bpinVigencia->saldo + $actividadCdp->valor;
                     $bpinVigencia->save();
                     
