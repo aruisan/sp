@@ -406,12 +406,7 @@ class BancosController extends Controller
         if($request->mes >= 2) {
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
             $totalLastMonth = $newSaldo['total'];
-            $result[] = collect(['fecha' => $newSaldo['fecha'],
-                'modulo' => '', 'debito' => '',
-                'credito' => '', 'tercero' => '',
-                'CC' => '', 'concepto' => 'SALDO HASTA EL MES '.$newSaldo['fecha'], 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
-                'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => '', 'pago_estado' => '']);
+            $total = $newSaldo['total'];
         }
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
