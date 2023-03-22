@@ -747,7 +747,25 @@ class IndexController extends Controller
                                                                 if ($data->registro->jefe_e == 3){
                                                                     if ($itemFont->id == $data->fontsRubro_id){
                                                                         $validateValuedepFont = BpinCdpValor::find($data->bpin_cdp_valor_id);
-                                                                        if ($validateValuedepFont->dependencia_rubro_font_id == $depFont->id){
+                                                                        if ($validateValuedepFont->dependencia_rubro_font_id){
+                                                                            if ($validateValuedepFont->dependencia_rubro_font_id == $depFont->id){
+                                                                                //VALOR REGISTROS
+                                                                                $valueRegistros[] = $data->valor;
+                                                                                //ID REGISTROS
+                                                                                $IDRegistros[] = $data->registro_id;
+                                                                                //VALOR ORDENES DE PAGO
+                                                                                $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $data->id)->get();
+                                                                                if (count($ordenPagoRubros) > 0){
+                                                                                    $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                                    if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
+                                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                        if ($ordenPagoRubro->orden_pago->pago){
+                                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        } else{
                                                                             //VALOR REGISTROS
                                                                             $valueRegistros[] = $data->valor;
                                                                             //ID REGISTROS
@@ -764,6 +782,7 @@ class IndexController extends Controller
                                                                                 }
                                                                             }
                                                                         }
+
                                                                     }
                                                                 }
                                                             }
