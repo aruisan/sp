@@ -76,34 +76,36 @@
                     </tr>
                     </tbody>
                 </table>
-                <table class="table table-bordered table-hover" id="tablaBank">
-                    <hr>
-                    <thead>
-                        <th class="text-center">FECHA</th>
-                        <th class="text-center">REFERENCIA</th>
-                        <th class="text-center">DEBITO</th>
-                        <th class="text-center">CREDITO</th>
-                        <th class="text-center">VALOR BANCO</th>
-                        <th class="text-center">APROBADO</th>
-                    </thead>
-                    <tbody id="bodyTabla">
-                    @foreach($result as $data)
-                        <tr class="text-center">
-                            <td>{{$data['fecha']}}</td>
-                            <td>{{$data['referencia']}} - {{$data['CC']}} -  {{$data['tercero']}}</td>
-                            <td>$<?php echo number_format($data['debito'],0) ?></td>
-                            <td>$<?php echo number_format($data['credito'],0) ?></td>
-                            <td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
-                            <td>
-                                <input type="checkbox" checked>
-                            </td>
+
+                <div class="text-center">
+                    <table class="table table-bordered table-hover" id="tablaBank">
+                        <thead>
+                        <tr>
+                            <th class="text-center">FECHA</th>
+                            <th class="text-center">REFERENCIA</th>
+                            <th class="text-center">DEBITO</th>
+                            <th class="text-center">CREDITO</th>
+                            <th class="text-center">VALOR BANCO</th>
+                            <th class="text-center">APROBADO</th>
                         </tr>
-                    @endforeach
-                    <tr class="text-center">
-                        <td colspan="6"><button id="buttonMake" type="button" @click.prevent="nuevaFilaBanks" class="btn-sm btn-primary">AGREGAR CAMPO</button></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="bodyTabla">
+                        @foreach($result as $data)
+                            <tr class="text-center">
+                                <td>{{$data['fecha']}}</td>
+                                <td>{{$data['referencia']}} - {{$data['CC']}} -  {{$data['tercero']}}</td>
+                                <td>$<?php echo number_format($data['debito'],0) ?></td>
+                                <td>$<?php echo number_format($data['credito'],0) ?></td>
+                                <td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
+                                <td>
+                                    <input type="checkbox" checked>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <button id="buttonMake" type="button" @click.prevent="nuevaFilaBanks" class="btn-sm btn-primary">AGREGAR CAMPO</button>
+                </div>
                 <table class="table table-bordered table-hover">
                     <hr>
                     <thead>
@@ -207,6 +209,32 @@
 @stop
 @section('js')
     <script>
+
+        $('#tablaBank').DataTable( {
+            responsive: true,
+            "searching": false,
+            dom: 'Bfrtip',
+            order: false,
+            "pageLength": 100000,
+            buttons:[
+                {
+                    extend:    'excelHtml5',
+                    text:      '<i class="fa fa-file-excel-o"></i> ',
+                    titleAttr: 'Exportar a Excel',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'pdfHtml5',
+                    text:      '<i class="fa fa-file-pdf-o"></i> ',
+                    titleAttr: 'Exportar a PDF',
+                    message : 'SIEX-Providencia',
+                    header :true,
+                    orientation : 'landscape',
+                    pageSize: 'LEGAL',
+                    className: 'btn btn-primary',
+                }
+            ]
+        } );
 
         $(document).on('click', '.borrar', function (event) {
             event.preventDefault();
