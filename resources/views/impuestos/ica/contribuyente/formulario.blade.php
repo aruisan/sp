@@ -23,7 +23,7 @@
 			</table>
 			{{-- TABLA B. BASE GRAVABLE --}}
 			<br>
-			<table class="table text-center table-bordered table-condensed">
+			<table class="table text-center table-condensed">
 				<tbody>
 				<tr style="background-color: #0e7224; color: white">
 					<th scope="row" colspan="2">B. BASE GRAVABLE</th>
