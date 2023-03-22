@@ -627,7 +627,8 @@ class InformeController extends Controller
                                                 if ($bpinCDP->dependencia_rubro_font_id != null){
                                                     if ($bpinCDP->dependencia_rubro_font_id == $depFont->id) $valueCDPs[] = $bpinCDP->valor;
                                                 } else $valueCDPs[] = $bpinCDP->valor;
-                                                $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)->get();
+                                                $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)
+                                                    ->where('bpin_cdp_valor_id', $bpinCDP->id)->get();
                                                 if (count($cdpsRegValue) > 0){
                                                     //CONSULTA PARA LOS REGISTROS
                                                     foreach ($cdpsRegValue as $valueCdpReg){
