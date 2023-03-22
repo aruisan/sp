@@ -747,7 +747,7 @@ class IndexController extends Controller
                                                                 if ($data->registro->jefe_e == 3){
                                                                     if ($itemFont->id == $data->fontsRubro_id){
                                                                         $validateValuedepFont = BpinCdpValor::find($data->bpin_cdp_valor_id);
-                                                                        if ($validateValuedepFont->dependencia_rubro_font_id){
+                                                                        if (isset($validateValuedepFont->dependencia_rubro_font_id)){
                                                                             if ($validateValuedepFont->dependencia_rubro_font_id == $depFont->id){
                                                                                 //VALOR REGISTROS
                                                                                 $valueRegistros[] = $data->valor;
