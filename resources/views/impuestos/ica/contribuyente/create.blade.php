@@ -244,6 +244,7 @@
                             <tr>
                                 <td>21. IMPUESTO DE AVISOS Y TABLEROS (15% DEL RENGLÓN 20)</td>
                                 <td>
+                                    @if($action == "Corrección" ) <span>$<?php echo number_format($ica->impAviyTableros,0) ?></span>@endif
                                     <input class="form-control" style="display: none" type="float" min="0" @if($action == "Corrección" ) value="{{ $ica->impAviyTableros }}" @else value="-1" @endif
                                     name="impAviyTableros" id="impAviyTableros" step=".01" onchange="operation()">
                             </tr>
