@@ -155,7 +155,7 @@
                     </tr>
                     <tr class="text-center">
                         <td>Saldo inicial</td>
-                        <td>$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></td>
+                        <td>$<?php echo number_format($totalLastMonth,0) ?></td>
                         <td></td>
                         <td>$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></td>
                     </tr>
