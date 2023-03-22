@@ -32,7 +32,7 @@
                     </tr>
                     <tr>
                         <th class="text-center">Saldo Libros</th>
-                        <th class="text-center">$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></th>
+                        <th class="text-center">$<?php echo number_format($totalLastMonth,0) ?></th>
                         <th class="text-center">Saldo inicial bancos</th>
                         <th class="text-center">$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></th>
                     </tr>

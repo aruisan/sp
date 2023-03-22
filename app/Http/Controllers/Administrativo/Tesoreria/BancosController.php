@@ -403,6 +403,17 @@ class BancosController extends Controller
         $totCredAll = 0;
         $totBank = 0;
 
+        if($request->mes >= 2) {
+            $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
+            $totalLastMonth = $newSaldo['total'];
+            $result[] = collect(['fecha' => $newSaldo['fecha'],
+                'modulo' => '', 'debito' => '',
+                'credito' => '', 'tercero' => '',
+                'CC' => '', 'concepto' => 'SALDO HASTA EL MES '.$newSaldo['fecha'], 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
+                'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => '', 'pago_estado' => '']);
+        }
+
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
         if (count($pagoBanks) > 0){
@@ -476,7 +487,7 @@ class BancosController extends Controller
         }
 
         return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result', 'rubroPUC'
-            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank'));
+            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth'));
     }
 
     public function saveConciliacion(Request $request){
