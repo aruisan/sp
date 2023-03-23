@@ -487,6 +487,7 @@ class BancosController extends Controller
 
     public function saveConciliacion(Request $request){
 
+        dd($request);
         $conciliacion = new ConciliacionBancaria();
         $conciliacion->año = $request->año;
         $conciliacion->mes = $request->mes;
