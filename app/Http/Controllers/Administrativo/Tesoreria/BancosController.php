@@ -495,7 +495,7 @@ class BancosController extends Controller
         $conciliacion->subTotBancoFinal = $request->subTotBancoFinal;
         $conciliacion->sumaIgualBank = $request->sumaIgualBank;
         $conciliacion->responsable_id = auth()->user()->id;
-        //$conciliacion->save();
+        $conciliacion->save();
 
         if (isset($request->fecha)){
             for ($i = 0; $i < count($request->fecha); $i++) {
@@ -509,7 +509,7 @@ class BancosController extends Controller
                     $conciliacionCuentas->credito = $request->credito[$i];
                     $conciliacionCuentas->valor = $request->banco[$i];
                     $conciliacionCuentas->aprovado = "OFF";
-                    //$conciliacionCuentas->save();
+                    $conciliacionCuentas->save();
                 }else{
                     $conciliacionCuentas = new ConciliacionBancariaCuentas();
                     $conciliacionCuentas->conciliacion_id = $conciliacion->id;
@@ -519,7 +519,7 @@ class BancosController extends Controller
                     $conciliacionCuentas->credito = $request->credito[$i];
                     $conciliacionCuentas->valor = $request->banco[$i];
                     $conciliacionCuentas->aprovado = "ON";
-                    //$conciliacionCuentas->save();
+                    $conciliacionCuentas->save();
                 }
             }
         }
@@ -530,10 +530,9 @@ class BancosController extends Controller
                 $conciliacionCuentas->conciliacion_id = $conciliacion->id;
                 $conciliacionCuentas->referencia = $request->ref[$i];
                 $conciliacionCuentas->valor = $request->banco[$i];
-                //$conciliacionCuentas->save();
+                $conciliacionCuentas->save();
             }
         }
-        dd($conciliacionCuentas);
 
         Session::flash('success','Se ha realizado la conciliación bancaria exitosamente.');
         return redirect('administrativo/tesoreria/bancos/conciliacion');
