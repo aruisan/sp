@@ -108,7 +108,7 @@
                                 <td>{{ $ordenPago['info']['code'] }}</td>
                                 <td>{{ $ordenPago['info']['nombre'] }}</td>
                                 <td>{{ $ordenPago['tercero'] }}</td>
-                                <td>{{ $ordenPagoT['cc'] }}</td>
+                                <td>{{ $ordenPagoT['ccH'] }}</td>
                                 <td>$<?php echo number_format($ordenPago['info']['valor'],0) ?></td>
                                 <td>$<?php echo number_format($ordenPago['info']['saldo'],0) ?></td>
                                 <td>
