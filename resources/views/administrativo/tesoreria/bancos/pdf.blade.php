@@ -219,9 +219,9 @@
 			</tr>
 			<tr class="text-center">
 				<td>SUMAS IGUALES</td>
-				<td>$<?php echo number_format($totDeb - $totCredAll + $rubroPUC->saldo_inicial,0) ?></td>
+				<td>$<?php echo number_format($totDeb - $totCredAll + $totalLastMonth,0) ?></td>
 				<td></td>
-				<td>$<?php echo number_format($conciliacion->subTotBancoFinal ,0) ?></td>
+				<td>$<?php echo number_format($totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial ,0) ?></td>
 			</tr>
 			</tbody>
 		</table>
