@@ -633,7 +633,48 @@ class BancosController extends Controller
             $total = $newSaldo['total'];
         }
 
+        // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
+        $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
+        if (count($pagoBanks) > 0){
+            foreach ($pagoBanks as $pagoBank){
+                if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
+                    if (Carbon::parse($pagoBank->created_at)->format('m') == $mesFind){
+                        $total = $total - $pagoBank->valor;
+                        $pago = Pagos::find($pagoBank->pagos_id);
+                        $totDeb = $totDeb + 0;
+                        $totCredAll = $totCredAll + $pagoBank->valor;
+                        if ($pago->estado == 1) {
+                            $totCred = $totCred + $pagoBank->valor;
+                            $totBank = $totBank - $pagoBank->valor;
+                        }
+                    }
+                }
+            }
+        }
 
+        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
+        $compsCont = ComprobanteIngresosMov::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
+        if (count($compsCont) > 0){
+            foreach ($compsCont as $compCont){
+                if (Carbon::parse($compCont->fechaComp)->format('Y') == $añoActual) {
+                    if (Carbon::parse($compCont->fechaComp)->format('m') == $mesFind) {
+                        if ($compCont->cuenta_banco == $rubroPUC->id){
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $totDeb = $totDeb + $compCont->debito;
+                            $totCred = $totCred + $compCont->credito;
+                            $totCredAll = $totCred + $compCont->credito;
+                        } else{
+                            $total = $total + $compCont->debito;
+                            $total = $total - $compCont->credito;
+                            $totDeb = $totDeb + $compCont->debito;
+                            $totCred = $totCred + $compCont->credito;
+                            $totCredAll = $totCred + $compCont->credito;
+                        }
+                    }
+                }
+            }
+        }
 
         $fecha = Carbon::createFromTimeString($conciliacion->created_at);
         $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");

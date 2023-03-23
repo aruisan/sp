@@ -137,7 +137,7 @@
 		</table>
 	</div>
 	<div class="table-responsive br-black-1">
-		<table class="table table-bordered">
+		<table class="table table-condensed">
 			<thead>
 			<tr style="background-color: rgba(19,165,255,0.14)">
 				<th class="text-center">FECHA</th>
@@ -230,7 +230,7 @@
 		<table class="table table-bordered">
 			<thead>
 			<tr>
-				<th class="text-center" colspan="5" style="background-color: rgba(19,165,255,0.14)">Relación de pagos pendientes</th>
+				<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">Relación de pagos pendientes</th>
 			</tr>
 			<tr>
 				<th class="text-center">FECHA</th>
