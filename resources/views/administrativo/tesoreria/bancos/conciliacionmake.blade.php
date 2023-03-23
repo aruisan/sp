@@ -92,30 +92,12 @@
                         <tbody id="bodyTabla">
                         @foreach($result as $index => $data)
                             <tr class="text-center">
-                                <td>
-                                    {{$data['fecha']}}
-                                    <input type="hidden" name="fecha[]" value="{{$data['fecha']}}">
-                                </td>
-                                <td>
-                                    {{$data['referencia']}} - {{$data['CC']}} - {{$data['tercero']}}
-                                    <input type="hidden" name="referencia[]" value="{{$data['referencia']}} - {{$data['CC']}} -  {{$data['tercero']}}">
-                                </td>
-                                <td>
-                                    $<?php echo number_format($data['debito'],0) ?>
-                                    <input type="hidden" name="debito[]" value="{{$data['debito']}}">
-                                </td>
-                                <td>
-                                    $<?php echo number_format($data['credito'],0) ?>
-                                    <input type="hidden" name="credito[]" value="{{$data['credito']}}">
-                                </td>
-                                <td>
-                                    $<?php echo number_format($data['debito'] - $data['credito'],0) ?>
-                                    @php($bank = $data['debito'] - $data['credito'])
-                                    <input type="hidden" name="banco[]" value="{{$bank}}">
-                                </td>
-                                <td>
-                                    <input type="checkbox" name="check[]" value="{{ $index }}" checked>
-                                </td>
+                                <td>{{$data['fecha']}}</td>
+                                <td>{{$data['referencia']}} - {{$data['CC']}} - {{$data['tercero']}}</td>
+                                <td>$<?php echo number_format($data['debito'],0) ?></td>
+                                <td>$<?php echo number_format($data['credito'],0) ?></td>
+                                <td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
+                                <td><input type="checkbox" name="check[]" value="{{ $index }}" checked></td>
                             </tr>
                         @endforeach
                         </tbody>

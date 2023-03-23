@@ -149,31 +149,17 @@
 			</tr>
 			</thead>
 			<tbody>
-			@foreach($result as $data)
+			@foreach($cuentas as $data)
+				@if($data->aprobado == "ON")
 				<tr class="text-center">
-					<td>{{$data['fecha']}}</td>
-					<td>{{$data['referencia']}}</td>
-					<td>$<?php echo number_format($data['debito'],0) ?></td>
-					<td>$<?php echo number_format($data['credito'],0) ?></td>
-					<td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
-					<td>
-						@if($data['pago_estado'] == 1)
-							APROBADO
-						@else
-							NO APROBADO
-						@endif
-					</td>
+					<td>{{ \Carbon\Carbon::parse($data->fecha)->format('d-m-Y') }}</td>
+					<td>{{$data->referencia}}</td>
+					<td>$<?php echo number_format($data->debito,0) ?></td>
+					<td>$<?php echo number_format($data->credito,0) ?></td>
+					<td>$<?php echo number_format($data->valor,0) ?></td>
+					<td>APROBADO</td>
 				</tr>
-			@endforeach
-			@foreach($cuentas as $cuenta)
-				<tr class="text-center">
-					<td> {{ \Carbon\Carbon::parse($cuenta->created_at)->format('d-m-Y') }}</td>
-					<td>{{ $cuenta->referencia }}</td>
-					<td></td>
-					<td></td>
-					<td>$<?php echo number_format($cuenta->valor,0) ?></td>
-					<td></td>
-				</tr>
+				@endif
 			@endforeach
 			</tbody>
 		</table>
@@ -248,21 +234,19 @@
 			</tr>
 			<tr>
 				<th class="text-center">FECHA</th>
-				<th class="text-center">CED/NIT</th>
-				<th class="text-center">BENEFICIARIO</th>
+				<th class="text-center">REFERENCIA</th>
 				<th class="text-center">DEBITO</th>
 				<th class="text-center">CREDITO</th>
 			</tr>
 			</thead>
 			<tbody id="bodyTabla">
-			@foreach($result as $data)
-				@if($data['pago_estado'] != 1)
+			@foreach($cuentas as $data)
+				@if($data->aprobado == "OFF")
 					<tr class="text-center">
-						<td>{{ $data['fecha'] }}</td>
-						<td>{{ $data['CC'] }}</td>
-						<td>{{ $data['tercero'] }}</td>
-						<td>$<?php echo number_format($data['debito'],0) ?></td>
-						<td>$<?php echo number_format($data['credito'],0) ?></td>
+						<td>{{ $data->fecha }}</td>
+						<td>{{ $data->referencia }}</td>
+						<td>$<?php echo number_format($data->debito,0) ?></td>
+						<td>$<?php echo number_format($data->credito,0) ?></td>
 					</tr>
 				@endif
 			@endforeach
