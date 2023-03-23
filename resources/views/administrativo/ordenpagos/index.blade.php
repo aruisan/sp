@@ -41,6 +41,7 @@
                             <th class="text-center">Estado</th>
                             <th class="text-center">Registro</th>
                             <th class="text-center">Tercero</th>
+                            <th class="text-center">Num Ident Tercero</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                         </thead>
@@ -63,6 +64,7 @@
                                 </td>
                                 <td class="text-center">{{ $ordenPagoT['info']->registros->objeto }}</td>
                                 <td class="text-center">{{ $ordenPagoT['persona'] }}</td>
+                                <td class="text-center">{{ $ordenPagoT['cc'] }}</td>
                                 <td>
                                     <a href="{{ url('administrativo/ordenPagos/'.$ordenPagoT['info']->id.'/edit') }}" title="Editar" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                     <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPagoT['info']->id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
@@ -93,6 +95,7 @@
                             <th class="text-center">#</th>
                             <th class="text-center">Concepto</th>
                             <th class="text-center">Tercero</th>
+                            <th class="text-center">Num Ident Tercero</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
                             <th class="text-center">Estado</th>
@@ -105,6 +108,7 @@
                                 <td>{{ $ordenPago['info']['code'] }}</td>
                                 <td>{{ $ordenPago['info']['nombre'] }}</td>
                                 <td>{{ $ordenPago['tercero'] }}</td>
+                                <td>{{ $ordenPagoT['cc'] }}</td>
                                 <td>$<?php echo number_format($ordenPago['info']['valor'],0) ?></td>
                                 <td>$<?php echo number_format($ordenPago['info']['saldo'],0) ?></td>
                                 <td>

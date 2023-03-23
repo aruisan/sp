@@ -44,20 +44,23 @@ class OrdenPagosController extends Controller
         $oPT = OrdenPagos::where('estado', '0')->get();
         foreach ($oPT as $data){
             if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $ordenPagoTarea[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre]);
+                $ordenPagoTarea[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre,
+                    'cc' => $data->registros->persona->num_dc]);
             }
         }
         $oPH = OrdenPagos::where('estado','!=', '0')->get();
         foreach ($oPH as $data){
             if (isset($data->registros->cdpsRegistro)){
                 if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                    $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre]);
+                    $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre,
+                        'cc' => $data->registros->persona->num_dc]);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
                 if (isset($tesoreriaRetefuentePago)) {
                     if ($tesoreriaRetefuentePago->vigencia_id == $id) {
-                        $ordenPagos[] = collect(['info' => $data, 'tercero' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                        $ordenPagos[] = collect(['info' => $data, 'tercero' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN',
+                            'cc' => 800197268]);
                     }
                 }
             }
