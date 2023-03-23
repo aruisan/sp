@@ -495,7 +495,34 @@ class BancosController extends Controller
         $conciliacion->subTotBancoFinal = $request->subTotBancoFinal;
         $conciliacion->sumaIgualBank = $request->sumaIgualBank;
         $conciliacion->responsable_id = auth()->user()->id;
-        $conciliacion->save();
+        //$conciliacion->save();
+
+        if (isset($request->fecha)){
+            for ($i = 0; $i < count($request->fecha); $i++) {
+                $find = array_search($i, $request->check);
+                if ($find === false){
+                    $conciliacionCuentas = new ConciliacionBancariaCuentas();
+                    $conciliacionCuentas->conciliacion_id = $conciliacion->id;
+                    $conciliacionCuentas->fecha = $request->fecha[$i];
+                    $conciliacionCuentas->referencia = $request->referencia[$i];
+                    $conciliacionCuentas->debito = $request->debito[$i];
+                    $conciliacionCuentas->credito = $request->credito[$i];
+                    $conciliacionCuentas->valor = $request->banco[$i];
+                    $conciliacionCuentas->aprovado = "OFF";
+                    //$conciliacionCuentas->save();
+                }else{
+                    $conciliacionCuentas = new ConciliacionBancariaCuentas();
+                    $conciliacionCuentas->conciliacion_id = $conciliacion->id;
+                    $conciliacionCuentas->fecha = $request->fecha[$i];
+                    $conciliacionCuentas->referencia = $request->referencia[$i];
+                    $conciliacionCuentas->debito = $request->debito[$i];
+                    $conciliacionCuentas->credito = $request->credito[$i];
+                    $conciliacionCuentas->valor = $request->banco[$i];
+                    $conciliacionCuentas->aprovado = "ON";
+                    //$conciliacionCuentas->save();
+                }
+            }
+        }
 
         if (isset($request->ref)){
             for ($i = 0; $i < count($request->ref); $i++) {
@@ -503,10 +530,10 @@ class BancosController extends Controller
                 $conciliacionCuentas->conciliacion_id = $conciliacion->id;
                 $conciliacionCuentas->referencia = $request->ref[$i];
                 $conciliacionCuentas->valor = $request->banco[$i];
-                $conciliacionCuentas->save();
+                //$conciliacionCuentas->save();
             }
-
         }
+        dd($conciliacionCuentas);
 
         Session::flash('success','Se ha realizado la conciliación bancaria exitosamente.');
         return redirect('administrativo/tesoreria/bancos/conciliacion');
@@ -525,6 +552,12 @@ class BancosController extends Controller
         $totCred = 0;
         $totCredAll = 0;
         $totBank = 0;
+
+        if($mesFind >= 2) {
+            $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$mesFind."-01", $rubroPUC);
+            $totalLastMonth = $newSaldo['total'];
+            $total = $newSaldo['total'];
+        }
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
@@ -603,7 +636,7 @@ class BancosController extends Controller
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
         $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha',
-        'cuentas','rubroPUC','totDeb','totCred','totCredAll','result','totBank'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        'cuentas','rubroPUC','totDeb','totCred','totCredAll','result','totBank','totalLastMonth'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
     }
 
