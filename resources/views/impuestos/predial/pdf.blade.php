@@ -28,7 +28,7 @@
                     <td colspan="4">Propietario:<br><b>{{ $contribuyente->numIdent }} {{ $contribuyente->contribuyente }}</b></td>
                 </tr>
                 <tr>
-                    <td>Area de Terreno:<br><b>{{$contribuyente->areaTerreno}}</b></td>
+                    <td>Area de Terreno:<br><b>{{$contribuyente->hect}} Hc - {{ $contribuyente->metros }} M2</b></td>
                     <td>Fecha Liquidación:<br><b>{{ \Carbon\Carbon::parse($predial->presentacion)->format('d-m-Y') }}</b></td>
                     <td>Tarifa:<br><b>{{$predial->tarifaMil}}</b></td>
                     <td>Descuento<br><b>{{$predial->tasaDesc}} %</b></td>
