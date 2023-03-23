@@ -681,7 +681,9 @@ class BancosController extends Controller
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
         $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha',
-        'cuentas','rubroPUC','totDeb','totCred','totCredAll','totBank','totalLastMonth'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        'cuentas','rubroPUC','totDeb','totCred','totCredAll','totBank','totalLastMonth'))
+            ->setPaper('a3', 'landscape')
+            ->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
     }
 

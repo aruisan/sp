@@ -137,7 +137,7 @@
 		</table>
 	</div>
 	<div class="table-responsive br-black-1">
-		<table class="table table-striped">
+		<table class="table table-condensed">
 			<thead>
 			<tr style="background-color: rgba(19,165,255,0.14)">
 				<th class="text-center">FECHA</th>
