@@ -407,7 +407,7 @@ class BancosController extends Controller
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
             $totalLastMonth = $newSaldo['total'];
             $total = $newSaldo['total'];
-        }
+        } else $totalLastMonth = $total;
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
@@ -631,7 +631,7 @@ class BancosController extends Controller
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$mesFind."-01", $rubroPUC);
             $totalLastMonth = $newSaldo['total'];
             $total = $newSaldo['total'];
-        }
+        } else $totalLastMonth = $total;
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();

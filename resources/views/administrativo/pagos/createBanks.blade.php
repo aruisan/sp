@@ -88,6 +88,18 @@
                     <input type="hidden" name="ordenPago_id" value="{{ $pago->orden_pago->id }}">
                     <input type="hidden" name="pago_id" value="{{ $pago->id }}">
 
+                    <div>
+                        <label>Adulto Mayor: </label>
+                        <div class="input-group text-center">
+                            <select class="select-tercero" name="adultoMayor">
+                                <option value="0">NO APLICA</option>
+                                @foreach($personas as $persona)
+                                    <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <br><br>
                     <div class="col-md-4 align-self-center">
                         <div class="form-group">
                             <select class="form-control" id="form_pay" name="type_pay" onchange="var date= document.getElementById('fecha'); var cheque = document.getElementById('cheque'); var tarjeta = document.getElementById('tarjeta'); var bank = document.getElementById('table_bank'); if(this.value=='1'){ fecha.style.display='inline'; cheque.style.display='inline'; bank.style.display='inline'; tarjeta.style.display='none';}else if(this.value=='2'){ fecha.style.display='inline'; cheque.style.display='none'; bank.style.display='inline'; tarjeta.style.display='inline';}else{fecha.style.display='none'; bank.style.display='none'; cheque.style.display='none'; tarjeta.style.display='none'; }">
@@ -165,6 +177,9 @@
 @stop
 @section('js')
     <script type="text/javascript">
+
+        $('.select-tercero').select2();
+
         $('#tabla_Pago').DataTable( {
             responsive: true,
             "searching": false
