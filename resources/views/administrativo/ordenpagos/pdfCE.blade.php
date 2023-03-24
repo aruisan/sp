@@ -8,7 +8,7 @@
 					<td><?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y')?></td>
 				</tr>
 				<tr class="text-center">
-					<td>Beneficiario: {{$Pago->persona->nombre}}</td>
+					<td>Beneficiario: {{ $Pago->persona->nombre }}</td>
 					<td>Nit o Cedula: {{ $Pago->persona->num_dc }}</td>
 				</tr>
 				<tr class="text-center">
@@ -223,8 +223,8 @@
 						<td>
 							<center>
 								_____________________ <br>
-								{{$OrdenPago->registros->persona->nombre}} 	<br>
-								{{ $OrdenPago->registros->persona->num_dc }}
+								{{ $Pago->persona->nombre}} 	<br>
+								{{ $Pago->persona->num_dc }}
 							</center>
 						</td>
 					</tr>
