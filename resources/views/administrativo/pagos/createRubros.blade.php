@@ -110,6 +110,7 @@
         $('#tabla_Pago').DataTable( {
             responsive: true,
             "searching": false,
+            "pageLength": 50,
             order: false
         } );
     </script>
