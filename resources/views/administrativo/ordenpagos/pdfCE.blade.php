@@ -8,8 +8,8 @@
 					<td><?=$dias[$fecha->format('w')]." ".$fecha->format('d')." de ".$meses[$fecha->format('n')-1]. " del ".$fecha->format('Y')?></td>
 				</tr>
 				<tr class="text-center">
-					<td>Beneficiario: {{$OrdenPago->pago->persona->nombre}}</td>
-					<td>Nit o Cedula: {{ $OrdenPago->pago->persona->num_dc }}</td>
+					<td>Beneficiario: {{$Pago->persona->nombre}}</td>
+					<td>Nit o Cedula: {{ $Pago->persona->num_dc }}</td>
 				</tr>
 				<tr class="text-center">
 					<td>Orden de Pago No: {{$OrdenPago->code}}</td>
@@ -20,9 +20,7 @@
 		<div class="br-black-1">
 			<center>
 				<h4>CONCEPTO</h4>
-				<p>
-					<h5>{{ $OrdenPago->pago->concepto }}</h5>
-				</p>
+				<p><h5>{{ $Pago->concepto }}</h5>
 			</center>
 		</div>
 		<br>
@@ -68,18 +66,15 @@
 						</div>
 					</td>
 					<td>
-						<?php
-						$pay= $OrdenPago->valor - $OrdenPagoDescuentos->sum('valor');
-						?>
 						<div class="col-md-12">
 							<div class="col-md-6">A CANCELAR</div>
-							<div class="col-md-6">$<?php echo number_format($pay,0) ?></div>
+							<div class="col-md-6">$<?php echo number_format($Pago->valor,0) ?></div>
 						</div>
 					</td>
 				</tr>
 				<tr class="text-center">
 					<td colspan="3">
-						SON: {{\NumerosEnLetras::convertir($pay)}} Pesos M/CTE
+						SON: {{\NumerosEnLetras::convertir($Pago->valor)}} Pesos M/CTE
 					</td>
 				</tr>
 				</tbody>
@@ -199,10 +194,10 @@
 						<td>{{ $banks[$y]->data_puc->code }}</td>
 						@if($OrdenPago->pago->type_pay == "ACCOUNT")
 							@php( $date = strftime("%d of %B %Y", strtotime($OrdenPago->pago->created_at)))
-							<td> Núm Cuenta: {{$OrdenPago->pago->num}} - Fecha: {{$date}}</td>
+							<td> Núm Cuenta: {{$Pago->num}} - Fecha: {{$date}}</td>
 						@elseif($OrdenPago->pago->type_pay == "CHEQUE")
 							@php( $date = strftime("%d of %B %Y", strtotime($OrdenPago->pago->created_at)))
-							<td> Núm Cheque: {{$OrdenPago->pago->num}} - Fecha: {{$date}}</td>
+							<td> Núm Cheque: {{$Pago->num}} - Fecha: {{$date}}</td>
 						@endif
 						<td>{{ $banks[$y]->data_puc->concepto }}</td>
 						<td>0$</td>

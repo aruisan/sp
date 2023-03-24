@@ -602,7 +602,8 @@ class OrdenPagosController extends Controller
                 $name_contador = "POR DEFINIR";
             }
 
-            $pdf = PDF::loadView('administrativo.ordenpagos.pdfCE', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro', 'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador','banks'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+            $pdf = PDF::loadView('administrativo.ordenpagos.pdfCE', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro',
+                'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador','banks','Pago'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
             return $pdf->stream();
         } else{
             $fecha = Carbon::createFromTimeString($OrdenPago->pago->created_at);
@@ -613,7 +614,7 @@ class OrdenPagosController extends Controller
             $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $OrdenPago->id)->first();
 
             $pdf = PDF::loadView('administrativo.ordenpagos.pdfCERF', compact('OrdenPago','OrdenPagoDescuentos', 'dias',
-                'meses', 'fecha','fechaO','Egreso_id','banks','tesoreriaRetefuentePago'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+                'meses', 'fecha','fechaO','Egreso_id','banks','tesoreriaRetefuentePago','Pago'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
             return $pdf->stream();
         }
     }
