@@ -31,6 +31,7 @@
                                     <th class="text-center hidden"><i class="fa fa-hashtag"></i></th>
                                     <th class="text-center"><i class="fa fa-hashtag"></i></th>
                                     <th class="text-center">Nombre</th>
+                                    <th class="text-center">Num Ident Tercero</th>
                                     <th class="text-center">Tercero</th>
                                     <th class="text-center">Valor</th>
                                     <th class="text-center">Saldo</th>
@@ -44,8 +45,10 @@
                                 @foreach ($ordenPagos as $key => $data)
                                     @if(isset($data['info']->registros))
                                         @php($personaName = $data['info']->registros->persona->nombre)
+                                        @php($personaCC = $data['info']->registros->persona->num_dc)
                                     @else
                                         @php($personaName = $data['persona'])
+                                        @php($personaCC = $data['cc'])
                                     @endif
 
                                     <?php $desc = $data['info']->valor - $data['info']->descuentos->sum('valor');?>
@@ -53,6 +56,7 @@
                                         <td id="col{{$data['info']->id}}" class="text-center hidden">{{ $data['info']->id }}</td>
                                         <td class="text-center">{{ $data['info']->code}}</td>
                                         <td id="Obj{{$data['info']->nombre}}" class="text-center">{{ $data['info']->nombre }}</td>
+                                        <td id="CC{{$personaCC}}" class="text-center">{{ $personaCC }}</td>
                                         <td id="Name{{$personaName}}" class="text-center">{{ $personaName }}</td>
                                         <td class="text-center">$<?php echo number_format($data['info']->saldo,0) ?></td>
                                         <td class="text-center">$<?php echo number_format($data['info']->saldo,0) ?></td>

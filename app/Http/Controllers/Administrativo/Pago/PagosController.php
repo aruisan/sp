@@ -87,7 +87,7 @@ class PagosController extends Controller
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
                 if (isset($tesoreriaRetefuentePago)) {
                     if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                        $ordenPagos[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                        $ordenPagos[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
                     }
                 }
             }
@@ -97,12 +97,13 @@ class PagosController extends Controller
         foreach ($pagos as $data){
             if (isset($data->orden_pago->registros)) {
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id) {
-                    $pagosAll[] = collect(['info' => $data, 'persona' => $data->orden_pago->registros->persona->nombre]);
+                    $pagosAll[] = collect(['info' => $data, 'cc' =>  $data->orden_pago->registros->persona->num_dc
+                        , 'persona' => $data->orden_pago->registros->persona->nombre]);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                    $pagosAll[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                    $pagosAll[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
                 }
             }
         }
