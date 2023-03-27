@@ -88,7 +88,17 @@
                     <input type="hidden" name="ordenPago_id" value="{{ $pago->orden_pago->id }}">
                     <input type="hidden" name="pago_id" value="{{ $pago->id }}">
 
-
+                    <div>
+                        <label>Adulto Mayor: </label>
+                        <div class="input-group text-center">
+                            <select class="select-tercero" name="adultoMayor">
+                                <option value="0">NO APLICA</option>
+                                @foreach($personas as $persona)
+                                    <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <br><br>
                     <div class="col-md-4 align-self-center">
                         <div class="form-group">
