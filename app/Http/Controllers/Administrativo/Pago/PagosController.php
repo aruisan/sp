@@ -294,6 +294,7 @@ class PagosController extends Controller
         $valReceived =array_sum($request->val);
         $pago = Pagos::findOrFail($request->pago_id);
         if ($request->adultoMayor != 0){
+            $pago->persona_id = $request->adultoMayor;
             $adultoMayor = Persona::find($request->adultoMayor);
             $pago->concepto = $pago->concepto." - ".$adultoMayor->num_dc." ".$adultoMayor->nombre;
         }
