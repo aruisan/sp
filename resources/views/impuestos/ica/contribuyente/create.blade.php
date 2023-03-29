@@ -602,8 +602,7 @@
             //38. TOTAL A PAGAR
 
             //VALIDACION DEL DESCUENTO CORRESPONDIENTE
-            if(añoGravable == 2023) tasaDesc = 0.3;
-            else if(añoGravable == 2022)  tasaDesc = 0.3;
+            if(añoGravable >= 2022) tasaDesc = 0.3;
             else if(añoGravable == 2021)  tasaDesc = 0.0;
             else if(añoGravable == 2020)  tasaDesc = 0.8;
             else tasaDesc = 0.2;
