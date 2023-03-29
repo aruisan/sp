@@ -738,7 +738,7 @@ class IndexController extends Controller
                                                     if ($bpinCDP->dependencia_rubro_font_id != null){
                                                         if ($bpinCDP->dependencia_rubro_font_id == $depFont->id) $valueCDPs[] = $bpinCDP->valor;
                                                     } else $valueCDPs[] = $bpinCDP->valor;
-                                                    $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)
+                                                    $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp_id)
                                                         ->where('bpin_cdp_valor_id', $bpinCDP->id)->get();
                                                     if (count($cdpsRegValue) > 0){
                                                         //CONSULTA PARA LOS REGISTROS
