@@ -34,7 +34,6 @@ class IndexController extends Controller
     }
 
     public function index(){
-
         if (auth()->user()->roles->first()->id == 4){
             return redirect('/impuestos');
         }
