@@ -10,7 +10,8 @@ class GraficoController extends Controller
     private $ages = [2020,2021,2022,2023,2024,2025];
     private $months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     public function grafico($tipo){
-        $age = date('Y');
+        //$age = date('Y');
+        $age = 2022;
         if($tipo == 'educacion'){
             $items = EstadisticaData::whereIn('coleccion', ['colegio', 'sena', 'ludoteca'])->whereYear('created_at', $age)->get();
         }elseif($tipo == 'salud'){
@@ -20,6 +21,8 @@ class GraficoController extends Controller
         }elseif($tipo == 'gobierno'){
             $items = EstadisticaData::whereIn('coleccion', ['policia', 'notaria', 'bomberos'])->whereYear('created_at', $age)->get();
         }
+
+        //dd([$tipo, $items]);
 
 
         return view('estadistica.graficos.educacion', compact('items'));

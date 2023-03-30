@@ -23,14 +23,14 @@ $(document).ready(function() {
 	   "ordering": false,
 	  dom: 'Bfrtilp',       
 	  buttons:[ 
-			  {
-			  extend:    'copyHtml5',
-			  text:      '<i class="fa fa-clone"></i> ',
-			  titleAttr: 'Copiar',
-			  className: 'btn btn-primary'
-		  },
+		{
+			extend:    'csv',
+			text:      '<i class="fa fa-clone"></i> ',
+			titleAttr: 'Exportar a Csv',
+			className: 'btn btn-primary'
+		},
 		  {
-			  extend:    'excelHtml5',
+			  extend:    'csv',//'excelHtml5',
 			  text:      '<i class="fa fa-file-excel-o"></i> ',
 			  titleAttr: 'Exportar a Excel',
 			  className: 'btn btn-primary'

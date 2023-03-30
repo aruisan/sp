@@ -331,6 +331,7 @@ class PagosController extends Controller
 
                 $pago->estado = "1";
                 $pago->ff_fin = today()->format("Y-m-d");
+                //$pago->ff_fin = "2023-03-29";
                 $pago->save();
 
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();

@@ -27,6 +27,8 @@
                 
             </tbody>
         </table>   
+
+        <button class="btn btn-primary" onclick="location.reload();">Guardar</button>
     </div>
 @stop
 

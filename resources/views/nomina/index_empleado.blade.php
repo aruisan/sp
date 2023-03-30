@@ -62,6 +62,9 @@
 											<a href="{{route('nomina.edit', $nomina->id)}}" class="btn btn-sm btn-primary" title="editar nomina">
 												<i class="fa fa-pencil" aria-hidden="true"></i>
 											</a>
+											<a href="{{route('nomina.edit', $nomina->id)}}" class="btn btn-sm btn-primary" title="editar nomina">
+												<i class="fa fa-list" aria-hidden="true"></i>
+											</a>
 										@else
 											<a href="{{route('nomina.pdf', $nomina->id)}}" class="btn btn-sm btn-primary" title="pdf nomina" target="_blank">
 												<i class="fa fa-file-pdf-o" aria-hidden="true"></i>

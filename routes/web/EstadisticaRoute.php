@@ -12,7 +12,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){
 
     Route::get('/colegio', 'Estadistica\ColegioController@index')->name('colegio.index');
     Route::get('/sena', 'Estadistica\SenaController@index')->name('sena.index');
-    Route::get('/capuitania-puerto', 'Estadistica\CapitaniaPuertoController@index')->name('capitania.puerto.index');
+    Route::get('/capitania-puerto', 'Estadistica\CapitaniaPuertoController@index')->name('capitania.puerto.index');
     Route::get('/policia', 'Estadistica\PoliciaController@index')->name('policia.index');
     Route::get('/empresa-energia', 'Estadistica\EmpresaEnergiaController@index')->name('empresa.energia.index');
     Route::get('/empresa-aaa', 'Estadistica\EmpresaAController@index')->name('empresa.aaa.index');

@@ -27,45 +27,53 @@ class NominaEmpleadoNomina extends Model
         return $this->belongsTo(NominaEmpleado::class, 'nomina_empleado_id');
     }
 
+    public function getSueldoAttribute($value)
+    {
+        return $value == 0 ? $this->empleado->salario : $value;
+    }
+
+    public function getVDiaAttribute(){
+        return $this->sueldo /30;
+    }
+
+    public function getVHoraAttribute(){
+        return $this->v_dia/8;
+    }
+
     public function getFspAttribute(){
-        return $this->nomina->tipo == 'empleado' && $this->v_ibc >= $this->salario_minimo * 4 ? $this->v_ibc * 0.01 : 0;
+        return $this->nomina->tipo == 'empleado' && $this->v_ibc >= $this->salario_minimo * 4 ? ceil(($this->v_ibc * 0.01)/100)*100 : 0;
     }
 
     public function getVDiasLaboradosAttribute(){
-        $v_dias = $this->sueldo/30;
-        return $this->nomina->tipo == 'empleado' ? $this->dias_laborados * $v_dias : 30 * $v_dias;
+        return $this->nomina->tipo == 'empleado' ? $this->dias_laborados * $this->v_dia : 30 * $this->v_dia;
     }
 
     public function getVHorasExtrasAttribute(){
-        $v_horas = $this->sueldo/240;
-        return  $v_horas * 1.25 * $this->horas_extras;
+        return  $this->round_up($this->v_hora * 1.25 * $this->horas_extras, 100);
     }
 
     public function getVHorasExtrasFestivosAttribute(){
-        $v_horas = $this->sueldo/240;
-        return  $v_horas * 1.75 * $this->horas_extras_festivos;
+        return  $this->round_up($this->v_hora * 1.75 * $this->horas_extras_festivos, 100);
     }
 
     public function getVHorasExtrasNocturnasAttribute(){
-        $v_horas = $this->sueldo/240;
-        return  $v_horas * 1.35 * $this->horas_extras_nocturnas;
+        return  $this->round_up($this->v_hora * 1.35 * $this->horas_extras_nocturnas, 100);
     }
 
     public function getVRecargosNocturnosAttribute(){
-        $v_horas = $this->sueldo/240;
-        return $v_horas * 2 * $this->recargos_nocturnos;
+        return $this->round_up($this->v_hora * 2 * $this->recargos_nocturnos, 100);
     }
 
     public function getVBonificacionServiciosAttribute(){
-        return  $this->sueldo * ($this->bonificacion_servicios/100);
+        return $this->round_up( $this->sueldo * ($this->bonificacion_servicios/100), 100);
     }
 
     public function getVBonificacionRecreacionAttribute(){
-        return  $this->sueldo * ($this->bonificacion_recreacion/100);
+        return  $this->round_up($this->sueldo * ($this->bonificacion_recreacion/100), 100);
     }
 
     public function getVPrimaAntiguedadAttribute(){
-        return  $this->sueldo * ($this->prima_antiguedad/100);
+        return  $this->round_up($this->sueldo * ($this->prima_antiguedad/100), 100);
     }
 
     public function getVRetroactivoAttribute(){
@@ -73,38 +81,44 @@ class NominaEmpleadoNomina extends Model
     }
 
     public function getDevengadoAttribute(){
-        return $this->TotalDevengado - $this->v_dias_laborados;
+        return $this->round_up($this->TotalDevengado - $this->v_dias_laborados, 100);
     }
 
     public function getVIbcAttribute(){
-        return $this->v_dias_laborados + $this->v_horas_extras + $this->v_horas_extras_festivos + $this->v_horas_extras_nocturnas 
+        return $this->nomina->tipo == 'pensionado' ? $this->sueldo : $this->v_dias_laborados + $this->v_horas_extras + $this->v_horas_extras_festivos + $this->v_horas_extras_nocturnas 
         + $this->v_recargos_nocturnos + $this->v_prima_antiguedad + $this->v_bonificacion_servicios + $this->v_retroactivo;
     }
 
 
     public function getTotalDevengadoAttribute(){
-        return $this->v_ibc + $this->bonificacion_direccion + $this->v_bonificacion_recreacion;
+        return $this->v_ibc + $this->bonificacion_direccion + $this->v_bonificacion_recreacion + $this->total_vacaciones;
     }
 
-    public function getVSaludAttribute() {
+    public function getPorcSaludAttribute(){
         $porc = 0.04;
         if($this->nomina->tipo == 'pensionado'){
-            if($this->ibc <= $this->salario_minimo ){
+            if($this->v_ibc <= $this->salario_minimo ){
                 $porc = 0.04;
-            }else if($this->ibc > $this->salario_minimo && $this->ibc <= ($this->salario_minimo*2)){
+            }else if($this->v_ibc > $this->salario_minimo && $this->v_ibc <= $this->salario_minimo*2){
                 $porc = 0.1;
             }else{
                 $porc = 0.12;
             }
         }
+
+        return $porc;
+    }
+
+    public function getVSaludAttribute() {
+       
         return collect([
-            "empleador" => $this->v_ibc * 0.085,
-            "empleado" => $this->v_ibc * $porc
+            "empleador" => $this->round_up($this->v_ibc * 0.085, 100),
+            "empleado" => $this->round_up($this->v_ibc * $this->porc_salud , 100)
         ]);
     }
 
     public function getVSaludEmpleadorAttribute() {
-        return $this->v_ibc * 0.085;
+        return $this->round_up($this->v_ibc * 0.085, 100);
     }
 
     public function getVPensionAttribute() {
@@ -115,8 +129,8 @@ class NominaEmpleadoNomina extends Model
             ]);
         else:
             return collect([
-                "empleador" => strtolower($this->empleado->cargo) == "bombero" ? $this->v_ibc * 0.22 : $this->v_ibc * 0.12,
-                "empleado" => $this->v_ibc * 0.04
+                "empleador" => $this->round_up(strtolower($this->empleado->cargo) == "bombero" ? $this->v_ibc * 0.22 : $this->v_ibc * 0.12, 100),
+                "empleado" => $this->round_up($this->v_ibc * 0.04, 100)
             ]);
         endif;
     }
@@ -125,40 +139,100 @@ class NominaEmpleadoNomina extends Model
         if($this->nomina->tipo == 'pensionado'):
             return 0;
         else:
-            return strtolower($this->empleado->cargo) == "bombero" ? $this->v_ibc * 0.22 : $this->v_ibc * 0.12;
+            return $this->round_up(strtolower($this->empleado->cargo) == "bombero" ? $this->v_ibc * 0.22 : $this->v_ibc * 0.12, 100);
         endif;
     }
 
     public function getVRiesgosAttribute(){
         $porc = [0,0.522, 1.044, 2.436, 4.350, 6.960];
-        return 0;
+        return [
+            'valor' => $this->round_up($this->empleado->porc_riesgos > 0 ? $this->sueldo * $porc[$this->empleado->porc_riesgos - 1] : 0, 100),
+            'porc' => $this->round_up($this->empleado->porc_riesgos > 0 ? $porc[$this->empleado->porc_riesgos - 1] : 0, 100)
+        ];
     }
 
     public function getVCajaCompensacionAttribute(){
-        return $this->v_ibc * 0.04;
+        return $this->round_up($this->v_ibc * 0.04, 100);
     }
 
     public function getVSenaAttribute(){
-        return $this->v_ibc * 0.005;
+        return $this->round_up($this->v_ibc * 0.005, 100);
     }
 
     public function getVIcbfAttribute(){
-        return $this->v_ibc * 0.03;
+        return $this->round_up($this->v_ibc * 0.03, 100);
     }
 
     public function getVEsapAttribute(){
-        return $this->v_ibc * 0.005;
+        return $this->round_up($this->v_ibc * 0.005, 100);
     }
 
     public function getVMenAttribute(){
-        return $this->v_ibc * 0.01;
+        return $this->round_up($this->v_ibc * 0.01, 100);
     }
 
     public function getTotalDeduccionAttribute() {
-        return $this->descuentos->sum('valor') + $this->v_salud['empleado'] + $this->v_pension['empleado'] + $this->fsp;
+        $descuentos = $this->descuentos->count() > 0 ? array_sum($this->descuento_x_entidad) : 0;
+        return ceil( $descuentos+ $this->v_salud['empleado'] + $this->v_pension['empleado'] + $this->fsp + $this->retencion_fuente);
     }
 
     public function getNetoPagarAttribute() {
-        return $this->total_devengado - $this->total_deduccion;
+        return ceil($this->total_devengado - $this->total_deduccion);
+    }
+
+    public function getRetencionFuenteAttribute(){
+        return $this->round_up($this->sueldo > 7000000 ? $this->v_ibc * 0.025 : 0, 100);
+    }
+
+    //atributos vacaciones
+    public function getVDiarioVacacionesAttribute(){
+        return $this->round_up((($this->vacaciones_basicas + $this->vacaciones_prima_servicios)/2)/30, 100);
+    }
+    
+    public function getBSAttribute(){
+        return $this->round_up($this->sueldo <= 1901879 ? $this->sueldo * 0.5 : $this->sueldo * 0.35, 100);
+    }
+
+    public function getPSAttribute(){
+        return $this->round_up($this->sueldo+($this->b_s/12), 100);
+    }
+    
+    //pv
+    public function getVPrimaVacacionesAttribute(){
+        return $this->round_up(!is_null($this->ind_vac) ? ($this->sueldo+($this->b_s/12)+($this->p_s/12))/30*15 : 0, 100);
+    }
+
+    //vac
+    public function getVVacacionesAttribute(){
+        return $this->round_up((($this->b_s/12)+($this->p_s/12))/30*$this->dias_vacaciones, 100);
+    }
+
+    //ind
+    public function getVIndAttribute(){
+        return $this->round_up(($this->sueldo+($this->p_s/12)+($this->b_s/12))/30*$this->dias_vacaciones_laborados, 100);
+    }
+
+    public function getTotalVacacionesAttribute(){
+        return $this->round_up($this->ind_vac == 'vacaciones' ? $this->v_vacaciones+$this->v_prima_vacaciones : $this->v_prima_vacaciones+$this->v_ind, 100);
+    }
+
+
+    public function getDescuentoXEntidadAttribute(){
+        $entidad_nombre = ['Popular', 'Bogota', 'Agrario', 'Coosepark', 'Davivienda', 'Judicial', 'Coocasa', 'Sindicato'];
+        $entidad_id = [1940, 1854, 1855, 1858, 1856, 1866, 1859, 2129];
+        $data = [0,0,0,0,0,0,0,0];
+        foreach($this->descuentos as $descuento):
+            if(in_array($descuento->tercero_id, $entidad_id)):
+                $index = array_search($descuento->tercero_id, $entidad_id);
+                $data[$index] = $descuento->valor;
+            endif;
+        endforeach;
+        return $data;
+    }
+
+    public function round_up($v, $f){
+
+        $a = ceil($v/$f);
+        return $v != 0 ? $a *$f : 0;
     }
 }

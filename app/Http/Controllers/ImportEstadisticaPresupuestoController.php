@@ -8,6 +8,7 @@ use App\ImportEstadisticaPresupuesto;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Model\Persona;
 use App\NominaEmpleado;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 
 class ImportEstadisticaPresupuestoController extends Controller
 {
@@ -91,5 +92,41 @@ class ImportEstadisticaPresupuestoController extends Controller
         endforeach;
 
         return response()->json('listo');
+    }
+
+    public function create_bancos_saldos_iniciales(){
+        return view('import.bancos_saldos_iniciales');
+    }
+
+    public function import_bancos_saldos_iniciales(Request $request)
+    {
+        $encontrados = collect();
+        $nuevos = collect();
+        foreach($request->data as $item):
+            $code = intval($item[0]);
+            $concepto = $item[1];
+            $hijo = $item[2];
+            $padre = intval($item[3]) != 0 ? PucAlcaldia::where('code', intval($item[3]))->first()->id : 0;
+            $valor = intval($item[4]);
+            $naturaleza = $item[5];
+            $categoria = $item[6];
+
+            $new_person = PucAlcaldia::where('code', $code)->get()->first();
+            
+            if(is_null($new_person)){
+                $new_person = new PucAlcaldia;
+                $new_person->code = $code;
+                $new_person->concepto = $concepto;
+                $new_person->hijo = $hijo;
+                $new_person->padre_id = $padre;
+            }
+
+            $new_person->saldo_inicial = $hijo ? $valor : 0;
+            $new_person->naturaleza = $naturaleza;
+            $new_person->categoria = $categoria;
+            $new_person->save();
+        endforeach;
+
+        return response()->json('ok');
     }
 }

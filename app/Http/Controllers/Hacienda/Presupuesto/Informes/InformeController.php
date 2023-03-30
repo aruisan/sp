@@ -2279,9 +2279,19 @@ class InformeController extends Controller
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
-        $presupuesto = $this->prepEgresos();
 
-        return Excel::download(new InfPrepEgrExcExport($añoActual, $presupuesto, $mesActual, $diaActual),
+        //$presupuesto = $this->prepEgresos();
+
+        $añoActual = Carbon::now()->year;
+
+        $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
+        $plantilla = PlantillaCuipoEgresos::get()->first();
+
+       // dd($plantilla->format_hijos);
+
+        //$rubro = Rubro::where('vigencia_id', $vigencia->id)->whereIn('plantilla_cuipos_id', $plantillas_id)->get();
+
+        return Excel::download(new InfPrepEgrExcExport($añoActual, $plantilla, $mesActual, $diaActual),
             'Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
 
     }

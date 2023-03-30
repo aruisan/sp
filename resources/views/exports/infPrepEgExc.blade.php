@@ -4,11 +4,14 @@
         <th colspan="16"><b>Presupuesto de Egresos {{ $año }}-{{ $mesActual }}-{{ $dia }}</b></th>
     </tr>
     <tr>
+        {{--
         <th class="text-center">Codigo BPIN</th>
         <th class="text-center">Codigo Actividad</th>
         <th class="text-center">Nombre Actividad</th>
+        --}}
         <th class="text-center">Rubro</th>
         <th class="text-center">Nombre</th>
+        {{--
         <th class="text-center">P. Inicial</th>
         <th class="text-center">Adición</th>
         <th class="text-center">Reducción</th>
@@ -26,11 +29,37 @@
         <th class="text-center">Cod Dependencia</th>
         <th class="text-center">Dependencia</th>
         <th class="text-center">Fuente</th>
+        --}}
     </tr>
     </thead>
     <tbody>
+           <tr><td>{{$plantilla['code']}}</td><td>{{$plantilla['name']}}</td></tr>
+           {!!$plantilla['format_hijos']!!}
+        {{--
     @foreach($presupuesto as $codigo)
         <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>{{ $codigo['codBpin']}}</td>
             <td>{{ $codigo['codActiv']}}</td>
             <td>{{ $codigo['nameActiv']}}</td>
@@ -55,5 +84,6 @@
             <td>{{ $codigo['fuente']}}</td>
         </tr>
     @endforeach
+        --}}
     </tbody>
 </table>

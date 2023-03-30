@@ -25,13 +25,6 @@
 		<a class="dropdown-item item-menu">Nomina</a>
 		<ul class="dropdown-menu">
 			<li><a class="item-menu" href="{{route('nomina.index', 'pensionado')}}">Sueldo</a></li>
-			{{--
-			<li><a class="item-menu" href="">Prima Navidad</a></li>
-			<li><a class="item-menu" href="">Vacaciones</a></li>
-			<li><a class="item-menu" href="">Prima de Vacaciones</a></li>
-			<li><a class="item-menu" href="">Prima de Antiguedad</a></li>
-			<li><a class="item-menu" href="">Bonificación</a></li>
-			--}}
 		</ul>
 	</li>
 </ul>

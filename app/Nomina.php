@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Nomina extends Model
 {
-    protected $fillable = ['salud', 'pension', 'riesgos', 'sena','icbf','caja_compensacion','cesantias','interes_cesantias','prima_navidad','vacaciones', 'mes', 'tipo'];
+    protected $fillable = ['salud', 'pension', 'riesgos', 'sena','icbf','caja_compensacion','cesantias','interes_cesantias','prima_navidad','vacaciones', 'mes', 'tipo', 'finalizado'];
+
+    public function modalidades(){
+        return hasMany(NominaModalidad::class, 'nomina_id');
+    }
 
 
     public function empleados_nominas(){

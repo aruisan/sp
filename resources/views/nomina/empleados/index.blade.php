@@ -25,11 +25,11 @@
 		<a class="dropdown-item item-menu">Nomina</a>
 		<ul class="dropdown-menu">
 			<li><a class="item-menu" href="{{route('nomina.index', 'empleado')}}">Sueldo</a></li>
-			<li><a class="item-menu" href="">Prima Navidad</a></li>
-			<li><a class="item-menu" href="">Vacaciones</a></li>
-			<li><a class="item-menu" href="">Prima de Vacaciones</a></li>
-			<li><a class="item-menu" href="">Prima de Antiguedad</a></li>
-			<li><a class="item-menu" href="">Bonificación</a></li>
+			<li><a class="item-menu" href="{{route('nomina-vacaciones.index')}}">Vacaciones</a></li>
+			<li><a class="item-menu" href="{{route('nomina-horas.index')}}">Horas Extras</a></li>
+			<li><a class="item-menu" href="#">Descuentos</a></li>
+			<li><a class="item-menu" href="#">Prima Servicios</a></li>
+			<li><a class="item-menu" href="#">Prima Navidad</a></li>
 		</ul>
 	</li>
 </ul>

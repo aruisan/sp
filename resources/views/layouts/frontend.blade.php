@@ -109,6 +109,7 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://cobro-coactivo.providenciaislas.com.co">Cobro Coactivo</a></li>
                     <li><a href="#">Politicas</a></li>
 
                     <li>
@@ -190,7 +191,7 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
                     </li>
                     <li>
                       <a href="{{route('estadistica.index')}}">
-                        ESTADISTICA
+                        ESTADISTICA 
                       </a>
                     </li>
                     <li class="dropdown li-nav_2">
@@ -206,6 +207,11 @@ box-shadow: 0px 10px 9px -1px rgba(156,150,156,1);
                         <li><a href="#">Presupuesto</a></li>
                         <li><a href="#">Plan de acción</a></li>
                       </ul>
+                    </li>
+                    <li>
+                      <a href="#">
+                        NOTIFICACIONESS
+                      </a>
                     </li>
                   </ul>
                 </div><!-- /.navbar-collapse -->

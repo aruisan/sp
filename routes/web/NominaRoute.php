@@ -29,4 +29,40 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina'] ,function(){
 
 
     Route::get('/pagos', "Nomina\PagoController@index")->name('nomina.pagos.index');
+    
+});
+
+Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-vacaciones'] ,function(){
+    Route::get('/', "Nomina\VacacionesController@index")->name('nomina-vacaciones.index');
+    Route::get('/crear', "Nomina\VacacionesController@create")->name('nomina-vacaciones.create');
+    Route::post('/', "Nomina\VacacionesController@store")->name('nomina-vacaciones.store');
+    Route::get('/edit/{nomina}', "Nomina\VacacionesController@edit")->name('nomina-vacaciones.edit');
+    Route::post('/update/{nomina}', "Nomina\VacacionesController@update")->name('nomina-vacaciones.update');
+    Route::get('/{nomina}', "Nomina\VacacionesController@show")->name('nomina-vacaciones.show');
+    Route::get('/pdf/{nomina}', "Nomina\VacacionesController@pdf_nomina")->name('nomina-vacaciones.pdf');
+    Route::get('/pdf-desprendibles/{nomina}', "Nomina\VacacionesController@pdf_desprendibles")->name('nomina-vacaciones.pdf-desprendibles');
+});
+
+Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-horas'] ,function(){
+    Route::get('/', "Nomina\HorasController@index")->name('nomina-horas.index');
+    Route::get('/crear', "Nomina\HorasController@create")->name('nomina-horas.create');
+    Route::post('/', "Nomina\HorasController@store")->name('nomina-horas.store');
+    Route::get('/edit/{nomina}', "Nomina\HorasController@edit")->name('nomina-horas.edit');
+    Route::post('/update/{nomina}', "Nomina\HorasController@update")->name('nomina-horas.update');
+    Route::get('/{nomina}', "Nomina\HorasController@show")->name('nomina-horas.show');
+    Route::get('/pdf/{nomina}', "Nomina\HorasController@pdf_nomina")->name('nomina-horas.pdf');
+    /*
+    Route::get('/pdf-desprendibles/{nomina}', "Nomina\VacacionesController@pdf_desprendibles")->name('nomina-vacaciones.pdf-desprendibles');
+    */
+});
+
+
+Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-descuentos'] ,function(){
+    Route::get('/', "Nomina\DescuentosController@index")->name('nomina-descuentos.index');
+    Route::get('/crear', "Nomina\DescuentosController@create")->name('nomina-descuentos.create');
+    Route::post('/', "Nomina\DescuentosController@store")->name('nomina-descuentos.store');
+    Route::get('/edit/{nomina}', "Nomina\DescuentosController@edit")->name('nomina-descuentos.edit');
+    Route::post('/update/{nomina}', "Nomina\DescuentosController@update")->name('nomina-descuentos.update');
+    Route::get('/{nomina}', "Nomina\DescuentosController@show")->name('nomina-descuentos.show');
+    Route::get('/pdf/{nomina}', "Nomina\DescuentosController@pdf_nomina")->name('nomina-descuentos.pdf');
 });

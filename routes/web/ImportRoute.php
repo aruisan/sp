@@ -12,4 +12,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'import'] ,function(){
 
     Route::get('/empleados-cuentas', "ImportEstadisticaPresupuestoController@create_empleados_cuentas");
     Route::post('/empleados-cuentas', "ImportEstadisticaPresupuestoController@import_empleados_cuentas")->name('import.empleado-cuentas');
+
+    Route::get('/bancos-saldos-iniciales', "ImportEstadisticaPresupuestoController@create_bancos_saldos_iniciales");
+    Route::post('/bancos-saldos-iniciales', "ImportEstadisticaPresupuestoController@import_bancos_saldos_iniciales")->name('import.bancos_saldos_iniciales');
 });

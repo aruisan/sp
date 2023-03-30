@@ -22,7 +22,7 @@ class Rubro extends Model implements Auditable
 	  //va la clase que lo relaciona el id de la tabla y la llave foranea
 	}
 
-	 public function fontsRubro(){
+	public function fontsRubro(){
 		return $this->hasMany('App\Model\Hacienda\Presupuesto\FontsRubro','rubro_id');
 	}
 
@@ -63,6 +63,22 @@ class Rubro extends Model implements Auditable
     }
 
     public function bpin(){
-        return $this->hasOne('App\BPin','id', 'bpin_id');
+        return $this->hasOne('App\BPin','id', 'rubro_id');
     }
+
+    /*
+    public function getFormatFontRubro(){
+        $grupo_f_r = "";
+        foreach($this->hijos as $item):
+            $grupo_plantillas .= $this->format_plantilla($item);
+            $grupo_plantillas .= $item->format_hijos;
+        endforeach;
+            
+        return $grupo_plantillas;
+    }
+
+    public function format_f_r($f_r){
+
+    }
+    */
 }

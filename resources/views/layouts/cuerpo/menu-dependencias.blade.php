@@ -10,40 +10,56 @@
       <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
       <li><a class="item-menu" tabindex="-1" href="{{route('nomina.pensionados.index')}}">Pensionados</a></li>
    </ul>
-
-{{--
-   <li class="dropdown-submenu">
-         <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
-         <ul class="dropdown-menu">
-            <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Empleados</a></li>
-            <li><a class="item-menu" tabindex="-1" href="{{route('nomina.empleados.index')}}">Pensionados</a></li>
-         </ul>
-
-      {{--
-         <li class="dropdown-submenu">
-               <a class="dropdown-item item-menu" >Nomina de Pensionados</a>
-               <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="{{url('/administrativo/muebles/create')}}">Sueldo</a></li>
-                  <li><a class="item-menu" href="{{url('/administrativo/inventario/create')}}">Prima</a></li>
-               </ul>
-            </li>
-            <li class="dropdown-submenu">
-               <a class="dropdown-item item-menu">Nomina de Empleados</a>
-               <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="">Sueldo</a></li>
-                  <li><a class="item-menu" href="">Prima Navidad</a></li>
-                  <li><a class="item-menu" href="">Vacaciones</a></li>
-                  <li><a class="item-menu" href="">Prima de Vacaciones</a></li>
-                  <li><a class="item-menu" href="">Prima de Antiguedad</a></li>
-               </ul>
-            </li>
-            <li><a class="item-menu" href="">Nomina de Bonificación</a></li>
-      --}}
 </li>
 @endcan
 
+@can('ver-estadistica')
+<li class="dropdown ">
+   <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
+   ESTADISTICAS
+   <span class="caret"></span>
+   </a>
+   <ul class="dropdown-menu">
+      @can('gestionar-informacion-vuelos')
+      <li><a class="item-menu" tabindex="-1" href="{{route('reservaVuelo.index')}}">Aeropuerto</a></li>
+      @endcan
+      @can('gestionar-informacion-barcos')
+      <li><a class="item-menu" tabindex="-1" href="{{route('barco.index')}}">Puerto</a></li>
+      @endcan
+      @can('gestionar-informacion-colegios')
+      <li><a class="item-menu" tabindex="-1" href="{{route('colegio.index')}}">Colegios</a></li>
+      @endcan
+      @can('gestionar-informacion-sena')
+      <li><a class="item-menu" tabindex="-1" href="{{route('sena.index')}}">SENA</a></li>
+      @endcan
+      @can('gestionar-informacion-capitania-puerto')
+      <li><a class="item-menu" tabindex="-1" href="{{route('capitania.puerto.index')}}">Capitania Puerto</a></li>
+      @endcan
+      @can('gestionar-informacion-policia')
+      <li><a class="item-menu" tabindex="-1" href="{{route('policia.index')}}">Policia</a></li>
+      @endcan
+      @can('gestionar-informacion-empresa-energia')
+      <li><a class="item-menu" tabindex="-1" href="{{route('empresa.energia.index')}}">Empresa de Energia</a></li>
+      @endcan
+      @can('gestionar-informacion-empresa-aaa')
+      <li><a class="item-menu" tabindex="-1" href="{{route('empresa.aaa.index')}}">Empresa AAA</a></li>
+      @endcan
+      @can('gestionar-informacion-notaria')
+      <li><a class="item-menu" tabindex="-1" href="{{route('notaria.index')}}">Notaria</a></li>
+      @endcan
+      @can('gestionar-informacion-hospital')
+      <li><a class="item-menu" tabindex="-1" href="{{route('hospital.index')}}">Hospital</a></li>
+      @endcan
+      @can('gestionar-informacion-bomberos')
+      <li><a class="item-menu" tabindex="-1" href="{{route('bomberos.index')}}">Bomberos</a></li>
+      @endcan
+      @can('gestionar-informacion-ludoteca')
+      <li><a class="item-menu" tabindex="-1" href="{{route('ludoteca.index')}}">Ludoteca</a></li>
+      @endcan
 
-
+   </ul>
+</li>
+@endcan
 
 @if(auth()->user()->roles->first()->id == 1)
    <li >
@@ -51,11 +67,7 @@
        COSO
       </a>
    </li>
-   <li class="dropdown ">
-      <a class="btn btn-default btn-sm item-menu" href="{{route('estadistica.index')}}">
-      ESTADISTICA
-      </a>
-   </li>
+   
          <li class="page-scroll ">
             <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
              ARCHIVOS
@@ -149,20 +161,6 @@
 </li> --}}
   
 
-    
-{{--
-<li class="dropdown ">
-   <a class="btn btn-default btn-sm item-menu" href="{{ url('/admin/ordenDia') }}">
-   ORDEN DEL DÍA
-   </a>
-</li>
-
-<li class="dropdown ">
-   <a class="btn btn-default btn-sm item-menu" href="{{ url('/dashboard/concejales') }}">
-   CONCEJALES
-   </a>
-</li>
---}}
    @if(auth()->user()->roles->first()->id == 1)
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
@@ -222,13 +220,27 @@
             <li><a class="item-menu" tabindex="-1" href="#">Comprobantes de Contabilidad</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Estado de Resultados</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Notas al Balance</a></li>
+            <li><a class="item-menu" tabindex="-1" href="#">Estado al cambio del patrimonio</a></li>
+            <li><a class="item-menu" tabindex="-1" href="#">Estado de FLujo de Caja</a></li>
             <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/config')}}">Configuración</a></li>
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Balances </a>
                <ul class="dropdown-menu">
+                  <li><a class="item-menu" href="#">Balance Inicial</a></li>
+                  <li><a class="item-menu" href="#">Comparativo</a></li>
+                  <li><a class="item-menu" href="#">Por Niveles</a></li>
                   <li><a class="item-menu" href="#">Prueba</a></li>
                   <li><a class="item-menu" href="#">Terceros</a></li>
                   <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
+               </ul>
+            </li>
+            <li class="dropdown-submenu">
+               <a class="dropdown-item item-menu" >Informes Chip </a>
+               <ul class="dropdown-menu">
+                  <li><a class="item-menu" href="#">CHIP Contaduria</a></li>
+                  <li><a class="item-menu" href="#">Deudores Morosos</a></li>
+                  <li><a class="item-menu" href="#">Exogeno</a></li>
+                  <li><a class="item-menu" href="#">Reciprocas</a></li>
                </ul>
             </li>
             <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/libros')}}">Libros</a></li>

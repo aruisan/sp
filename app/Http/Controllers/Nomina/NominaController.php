@@ -31,11 +31,72 @@ class NominaController extends Controller
     }
 
     public function create($tipo){
-        //$empleados = NominaEmpleado::where('id', '<', 3)->get();
-        $empleados = NominaEmpleado::where('activo', True)->where('tipo', $tipo)->get();
-        $terceros = Persona::where('tipo_tercero', 'especial')->get();
-        
-        return view("{$this->view}.create_{$tipo}", compact('empleados', 'terceros'));
+        $clon = Nomina::where('tipo', $tipo)->orderBy('id', 'desc')->first();
+
+        if(is_null($clon)):
+            $age_actual = date('Y');
+            $empleados = NominaEmpleado::where('activo', True)->where('tipo', $tipo)->get();
+            $terceros = Persona::where('tipo_tercero', 'especial')->get();
+            $meses = Nomina::whereYear('created_at', $age_actual)->where('tipo', $tipo)->pluck('mes');
+            
+            return view("{$this->view}.create_{$tipo}", compact('empleados', 'terceros', 'meses'));
+        else:
+            $meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+            $mes_index = array_search($clon->mes, $meses);
+            $nomina = Nomina::create([
+                'salud' => '8.5',
+                'pension' => '12',
+                'riesgos' => '0.522',
+                'sena' => '2',
+                'icbf' => '3',
+                'caja_compensacion' => '4',
+                'cesantias' => '8.33',
+                'interes_cesantias' => 1,
+                'prima_navidad' => '8.33',
+                'vacaciones' => '4.17',
+                'tipo' => $clon->tipo,
+                'mes' => $meses[$mes_index+1],
+                'finalizado' =>  0
+            ]);
+
+            foreach($clon->empleados_nominas as $movimiento):
+                if($clon->tipo == 'empleado'):
+                    $nomina_empleado = NominaEmpleadoNomina::create([
+                        'nomina_id' => $nomina->id,
+                        'nomina_empleado_id' => $movimiento->empleado->id,
+                        'dias_laborados' => $movimiento->dias_laborados,
+                        'horas_extras' => $movimiento->horas_extras,
+                        'horas_extras_festivos' => $movimiento->horas_extras_festivos,
+                        'horas_extras_nocturnas' => $movimiento->horas_extras_nocturnas,
+                        'recargos_nocturnos' => $movimiento->recargos_nocturnos,
+                        'sueldo' => $movimiento->empleado->salario,
+                        'bonificacion_direccion' => $movimiento->bonificacion_direccion,
+                        'bonificacion_servicios' => $movimiento->bonificacion_servicios,
+                        'bonificacion_recreacion' => $movimiento->bonificacion_recreacion,
+                        'prima_antiguedad' => $movimiento->prima_antiguedad
+                    ]);
+                else:
+                    $nomina_empleado = NominaEmpleadoNomina::create([
+                        'nomina_id' => $nomina->id,
+                        'nomina_empleado_id' => $movimiento->empleado->id,
+                        'sueldo' => $movimiento->empleado->salario,
+                        'tiene_eps' => $movimiento->tiene_eps,
+                    ]);
+                endif;
+
+                if($movimiento->descuentos->count() > 0):
+                    foreach($movimiento->descuentos as $descuento):
+                        $nomina_empleado->descuentos()->create([
+                            'nombre' => $descuento->nombre,
+                            'valor' =>  $descuento->valor,
+                            'tercero_id' => $descuento->tercero_id,
+                        ]);
+                    endforeach;
+                endif;
+            endforeach;
+
+            return redirect()->route('nomina.edit', $nomina->id);
+        endif;
     }
 
     public function store(Request $request){
@@ -50,7 +111,7 @@ class NominaController extends Controller
             'cesantias' => '8.33',
             'interes_cesantias' => 1,
             'prima_navidad' => '8.33',
-            'vacaciones' => '4.17',
+            'vacaciones' => 0,
             'tipo' => $request->tipo,
             'mes' => $request->mes,
             'finalizado' => $request->accion == 'finalizar' ? 1 : 0
@@ -85,7 +146,8 @@ class NominaController extends Controller
                 foreach($request["descuento_".$k] as $y => $descuento):
                     $nomina_empleado->descuentos()->create([
                         'nombre' => $descuento,
-                        'valor' =>  $request["descuento_valor_".$k][$y]
+                        'valor' =>  $request["descuento_valor_".$k][$y],
+                        'tercero_id' => $request["descuento_tercero_".$k][$y]
                     ]);
                 endforeach;
             endif;
@@ -105,6 +167,7 @@ class NominaController extends Controller
         //dd($nomina->empleados);
         $empleados =  $nomina->empleados_nominas->map(function($e){
             return [
+                'id' => $e->empleado->id,
                 'salario' => !is_null($e->empleado->salario) ? $e->empleado->salario : 0,
                 'datos' => $e->empleado,
                 'movimiento' => [
@@ -150,28 +213,40 @@ class NominaController extends Controller
                 'v_horas_extras_festivos' => $e->v_horas_extras_festivos,
                 'v_horas_extras_nocturnas' => $e->v_horas_extras_nocturnas,
                 'v_recargos_nocturnos' => $e->v_recargos_nocturnos,
-                'v_bonificacion_direccion' => $e->bonificacion_direccion,
                 'v_bonificacion_servicios' => $e->v_bonificacion_servicios,
-                'v_bonificacion_recreacion' => $e->v_bonificacion_recreacion,
-                'retroactivo' => 0,
                 'v_prima_antiguedad' => $e->v_prima_antiguedad,
+                'retroactivo' => 0,
+                'v_vacaciones' => $e->v_vacaciones,
+                'v_prima_vacaciones' => $e->v_prima_vacaciones,
+                'v_ind' => $e->v_ind,
                 'total_devengado' => $e->total_devengado,
+                'ibc' => $e->v_ibc,
+                'eps' => $e->empleado->eps,
                 'salud' => $e->v_salud,
+                'porc_salud' => $e->porc_salud,
+                'fondo_pensiones' => $e->empleado->fondo_pensiones,
                 'pension' => $e->v_pension,
                 'fsp' => $e->fsp,
-                'retefuente' => 0,
-                'descuentos' => $e->descuentos->pluck('cop'),
-                'total_descuentos' => $e->descuentos->sum('valor'),
-                'embargos' => 0,
+                'tarifa_retefuente' => $e->retencion_fuente > 0 ? '2.5%' : "0%",
+                'retefuente' => $e->retencion_fuente,
+                'descuentos' => $e->descuento_x_entidad,
+                'total_descuentos' => array_sum($e->descuento_x_entidad),
                 'total_deduccion' => $e->total_deduccion,
                 'neto' => $e->neto_pagar,
                 'tipo_cuenta_bancaria' => $e->empleado->tipo_cuenta_bancaria,
                 'banco_cuenta_bancaria' => $e->empleado->banco_cuenta_bancaria,
-                'numero_cuenta_bancaria' => $e->empleado->numero_cuenta_bancaria              
+                'numero_cuenta_bancaria' => $e->empleado->numero_cuenta_bancaria,
+                'v_caja' => $e->v_caja_compensacion,     
+                'tarifa_riesgos' => $e->empleado->porc_riesgos,    
+                'v_riesgos' => $e->v_riesgos, 
+                'v_sena' => $e->v_sena,   
+                'v_icbf' => $e->v_icbf,  
+                'v_esap' => $e->v_esap,  
+                'v_men' => $e->v_men,  
             ];
         });
 
-        //dd($movimientos[0]);
+        //dd($movimientos);
         return view("{$this->view}.show", compact('nomina', 'movimientos'));
     }
 
@@ -186,7 +261,7 @@ class NominaController extends Controller
         $nomina->cesantias = '8.33';
         $nomina->interes_cesantias = 1;
         $nomina->prima_navidad = '8.33';
-        $nomina->vacaciones = '4.17';
+        $nomina->vacaciones = $nomina->vacaciones ? 1 : 0;
         $nomina->mes = $request->mes;
         $nomina->finalizado = $request->accion == 'finalizar' ? 1 : 0;
         $nomina->save();
@@ -201,22 +276,22 @@ class NominaController extends Controller
             if($request->tipo == 'empleado'):
                 $nomina_empleado->nomina_id = $nomina->id;
                 $nomina_empleado->nomina_empleado_id = $empleado;
-                $nomina_empleado->dias_laborados = $request->dias_laborados[$k];
-                $nomina_empleado->horas_extras = $request->horas_extras[$k];
-                $nomina_empleado->horas_extras_festivos = $request->horas_extras_festivos[$k];
-                $nomina_empleado->horas_extras_nocturnas = $request->horas_extras_nocturnas[$k];
-                $nomina_empleado->recargos_nocturnos = $request->recargos_nocturnos[$k];
-                $nomina_empleado->sueldo = $request->sueldo[$k];
-                $nomina_empleado->bonificacion_direccion = $request->bonificacion_direccion[$k];
-                $nomina_empleado->bonificacion_servicios = $request->bonificacion_servicios[$k];
-                $nomina_empleado->bonificacion_recreacion = $request->bonificacion_recreacion[$k];
-                $nomina_empleado->prima_antiguedad = $request->prima_antiguedad[$k];
+                $nomina_empleado->dias_laborados = $request["dias_laborados_{$empleado}"];
+                $nomina_empleado->horas_extras = $request["horas_extras_{$empleado}"];
+                $nomina_empleado->horas_extras_festivos = $request["horas_extras_festivos_{$empleado}"];
+                $nomina_empleado->horas_extras_nocturnas = $request["horas_extras_nocturnas_{$empleado}"];
+                $nomina_empleado->recargos_nocturnos = $request["recargos_nocturnos_{$empleado}"];
+                $nomina_empleado->sueldo = $request["sueldo_{$empleado}"];
+                $nomina_empleado->bonificacion_direccion = $request["bonificacion_direccion_{$empleado}"];
+                $nomina_empleado->bonificacion_servicios = $request["bonificacion_servicios_{$empleado}"];
+                $nomina_empleado->bonificacion_recreacion = $request["bonificacion_recreacion_{$empleado}"];
+                $nomina_empleado->prima_antiguedad = $request["prima_antiguedad_{$empleado}"];
                 $nomina_empleado->save();
             else:
                 $nomina_empleado->nomina_id = $nomina->id;
                 $nomina_empleado->nomina_empleado_id = $empleado;
-                $nomina_empleado->sueldo = $request->sueldo[$k];
-                $nomina_empleado->tiene_eps = $request["tiene_eps_{$k}"];
+                $nomina_empleado->sueldo = $request["sueldo_{$empleado}"];
+                $nomina_empleado->tiene_eps = $request["tiene_eps_{$empleado}"];
             endif;
             $nomina_empleado->save();
 

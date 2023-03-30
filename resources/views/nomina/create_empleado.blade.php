@@ -47,7 +47,7 @@
 		</strong>
 	</div>
 	<div class="container-fluid">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <form id="formulario" class="form-horizontal" method="post" action="{{route('nomina.store')}}">
                 {{ csrf_field() }}
                 <input name="mes" id="input_mes" type="hidden">
@@ -57,7 +57,7 @@
             <div class="btn-group row" id="btn_anterior_siguiente">
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3" style="display:none">
             <embed src="{{asset('file_public/AYUDAS DE NOMINA.pdf')}}" type="application/pdf" width="100%" height="600px" />
         </div>
 	</div>
@@ -69,6 +69,7 @@
 
 @section('js')
     <script>
+        const meses_nomina = {!!$meses!!};
         const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
         const terceros = {!!$terceros!!};
 		let empleados = {!!$empleados!!};
@@ -79,10 +80,19 @@
         let descuentos = [];
 
         $(document).ready(function(){
+           filtrar_meses();
            pintar_empleados();
            pintar_meses({{date('m')}});
         })
 
+        const filtrar_meses = () => {
+            if(meses_nomina.length > 0){
+                meses_nomina.forEach(mn => {
+                    let index = meses.findIndex(m => m == mn);
+                    meses.splice(index, 1);
+                });
+            }
+        }
 
         const pintar_empleados = () =>{
             empleados.forEach((e,index) => {
@@ -119,47 +129,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12"> 
-                            <div class="form-group">
-                                <label class="col-md-6">Horas Extras:</label>
-                                <div class="input-group col-md-6">
-                                    <div class="input-group-addon">#</div>
-                                    <input name="horas_extras[]" class="form-control" type="integer" value="0" onchange="horas_extras_change(this, ${index})">
-                                    <div class="input-group-addon" id="v_horas_extras_${index}"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12"> 
-                            <div class="form-group">
-                                <label class="col-md-6">Horas Extras Festivos:</label>
-                                <div class="input-group col-md-6">
-                                    <div class="input-group-addon">#</div>
-                                    <input name="horas_extras_festivos[]" class="form-control" type="integer" value="0" onchange="horas_extras_festivos_change(this, ${index})">
-                                    <div class="input-group-addon" id="v_horas_extras_festivos_${index}"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12"> 
-                            <div class="form-group">
-                                <label class="col-md-6">Horas Extras Nocturnas:</label>
-                                <div class="input-group col-md-6">
-                                    <div class="input-group-addon">#</div>
-                                    <input name="horas_extras_nocturnas[]" class="form-control" type="integer" value="0" onchange="horas_extras_nocturnas_change(this, ${index})">
-                                    <div class="input-group-addon" id="v_horas_extras_nocturnas_${index}"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12"> 
-                            <div class="form-group">
-                                <label class="col-md-6">Recargos Nocturnos:</label>
-                                <div class="input-group col-md-6">
-                                    <div class="input-group-addon">#</div>
-                                    <input name="recargos_nocturnos[]" class="form-control" type="integer" value="0" onchange="recargos_nocturnos_change(this, ${index})">
-                                    <div class="input-group-addon" id="v_recargos_nocturnos_${index}"></div>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <div class="col-md-12"> 
                             <div class="form-group">
                                 <label class="col-md-6">Bonificación Dirección:</label>
@@ -337,37 +307,6 @@
             total(i);
         }
 
-        const horas_extras_change = (e,i) =>{
-            let valor_hora = parseInt(empleados[i].salario)/240;
-            let pago = valor_hora * extras[0] * parseInt(e.value);
-            sumatorias[i][1] = pago;
-            $(`#v_horas_extras_${i}`).html(formatterPeso.format(pago));
-            total(i);
-        }
-
-        const horas_extras_festivos_change = (e,i) =>{
-            let valor_hora = parseInt(empleados[i].salario)/240;
-            let pago = valor_hora * extras[1] * parseInt(e.value);
-            sumatorias[i][2] = pago;
-            $(`#v_horas_extras_festivos_${i}`).html(formatterPeso.format(pago));
-            total(i);
-        }
-
-        const horas_extras_nocturnas_change = (e,i) =>{
-            let valor_hora = parseInt(empleados[i].salario)/240;
-            let pago = valor_hora * extras[2] * parseInt(e.value);
-            sumatorias[i][3] = pago;
-            $(`#v_horas_extras_nocturnas_${i}`).html(formatterPeso.format(pago));
-            total(i);
-        }
-
-         const recargos_nocturnos_change = (e,i) =>{
-            let valor_hora = parseInt(empleados[i].salario)/240;
-            let pago = valor_hora * extras[4] * parseInt(e.value);
-            sumatorias[i][4] = pago;
-            $(`#v_recargos_nocturnos_${i}`).html(formatterPeso.format(pago));
-            total(i);
-        }
 
         const bonificacion_direccion_change = (e,i) =>{
             let pago = parseInt(e.value);

@@ -14,6 +14,6 @@ class NominaEmpleadoDescuentos extends Model
     }
 
     public function getCopAttribute(){
-        return "<li><b>{$this->tercero->nombre}:</b>$".number_format($this->valor, 0, ',', '.')."</li>";
+        return "<li><b>{$this->tercero->nombre}:</b> ".$this->valor."</li>";
     }
 }

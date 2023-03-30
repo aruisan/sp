@@ -183,6 +183,7 @@
         <!-- /#page-wrapper -->
         {{-- modales--}}
         @include('modal.participantes')
+        @include('modal.participantes2')
         @include('modal.password')
         @include('administrativo.gestiondocumental.correspondencia.modals.modals')
         @include('administrativo.gestiondocumental.archivo.modals.modals')

@@ -10,6 +10,10 @@ class DashboardController extends Controller
 {
     public function  index()
     {
+        if(!is_null(Auth::user()->route_autenticacion)){
+            return redirect()->route(Auth::user()->route_autenticacion);
+        }
+
     	if(Auth::user()->type_id > 4){
             if (auth()->user()->roles[0]->id == 9){
                 return redirect('/nomina/empleados');
@@ -27,9 +31,7 @@ class DashboardController extends Controller
                 return redirect('/administrativo/contabilidad/libros');
             } elseif (auth()->user()->roles[0]->id == 8){
                 return redirect('/administrativo/bancos');
-            } elseif (auth()->user()->roles[0]->id == 9){
-                return redirect('/nomina/empleados');
-            }else {
+            } else {
                 return redirect()->route('notificaciones.index');
             }
     	}

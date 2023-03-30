@@ -204,7 +204,6 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::resource('bancos','Administrativo\Tesoreria\BancosController');
 
 
-
             //Pac
         Route::resource('pac','Administrativo\Tesoreria\PacController');
 

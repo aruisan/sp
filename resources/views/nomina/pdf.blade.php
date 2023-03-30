@@ -87,7 +87,7 @@
                     </td>
                     <td class="text-center" style="width:25%">
                         ______________________________<br>
-                            LIZBETH VALENZUELA <br>
+                            JIM ANDERSON HENRY <br>
                             SECRETARIA HACIENDA
                     </td>
                     <td class="text-center" style="width:25%">

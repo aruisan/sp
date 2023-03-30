@@ -47,7 +47,7 @@
 		</strong>
 	</div>
 	<div class="container-fluid">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <form id="formulario" class="form-inline" method="post" action="{{route('nomina.store')}}">
                 {{ csrf_field() }}
                 <input name="mes" id="input_mes" type="hidden">
@@ -57,7 +57,7 @@
             <div class="btn-group" id="btn_anterior_siguiente">
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3" style="display:none">
             <embed src="{{asset('file_public/AYUDAS DE NOMINA.pdf')}}" type="application/pdf" width="100%" height="600px" />
         </div>
 	</div>
@@ -66,6 +66,7 @@
 
 @section('js')
     <script>
+        const meses_nomina = {!!$meses!!};
         const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
         const terceros = {!!$terceros!!};
 		let empleados = {!!$empleados!!};
@@ -75,9 +76,19 @@
 
 
         $(document).ready(function(){
+            filtrar_meses();
            pintar_empleados();
            pintar_meses({{date('m')}});
         })
+
+        const filtrar_meses = () => {
+            if(meses_nomina.length > 0){
+                meses_nomina.forEach(mn => {
+                    let index = meses.findIndex(m => m == mn);
+                    meses.splice(index, 1);
+                });
+            }
+        }
 
 
         const pintar_empleados = () =>{
