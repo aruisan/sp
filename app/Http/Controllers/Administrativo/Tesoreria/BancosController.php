@@ -239,7 +239,6 @@ class BancosController extends Controller
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
-                dd($pagoBank->pago);
                 if ($pagoBank->pago->estado == 1){
                     $total = $total - $pagoBank->valor;
                     $pago = Pagos::find($pagoBank->pagos_id);
