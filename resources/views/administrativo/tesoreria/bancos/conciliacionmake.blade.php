@@ -168,25 +168,31 @@
                         <td id="td_saldo_final"></td>
                     </tr>
                     <tr class="text-center">
-                        <td>cheques en mano</td>
-                        <td></td>
+                        <td>cheques en mano</td>{{--los deschuleados de deivith--}}
+                        <td></td>{{--aqui--}}
                         <td></td>
                         <td></td>
                     </tr>
                     <tr class="text-center">
-                        <td>cheques cobrados</td>
+                        <td>cheques cobrados</td>{{--los chuleados de oscar y de otros meses--}}
                         <td></td>
+                        <td></td>{{--aqui--}}
                         <td></td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>partidas sin conciliar</td>{{--input manual que digita el usuario--}}
+                        <td><input type="text" class="form-control"></td>
                         <td></td>
+                        <td><input type="text" class="form-control"></td>
                     </tr>
                     <tr class="text-center">
                         <td>SUMAS IGUALES</td>
-                        <td>$<?php echo number_format($totDeb - $totCredAll + $totalLastMonth,0) ?></td>
+                        <td>$<?php echo number_format($totDeb - $totCredAll + $totalLastMonth,0) ?></td>{{-- se suma saldo siguiente ms cheques en mano mas el primer input--}}
                         <td></td>
                         <td>
                             <span id="sumaIgualBankSpan">$<?php echo number_format($totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial ,0) ?></span>
                             <input type="hidden" name="sumaIgualBank" id="sumaIgualBank" value="{{ $totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial }}">
-                        </td>
+                        </td>{{-- se suma saldo final mas cheques cobrados mas el segundo input--}}
                     </tr>
                     </tbody>
                 </table>
