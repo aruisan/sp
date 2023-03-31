@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria;
 
+use App\ComprobanteIngresoTemporal;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
@@ -481,8 +482,9 @@ class BancosController extends Controller
             }
         }
 
+        $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->where('check', FALSE)->get();
         return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result', 'rubroPUC'
-            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth'));
+            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth', 'comprobantes_old'));
     }
 
     public function saveConciliacion(Request $request){

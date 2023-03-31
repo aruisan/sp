@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ComprobanteIngresoTemporal;
 use Illuminate\Http\Request;
 use App\Imports\EstadisticaPresupuestoImport;
 use App\ImportEstadisticaPresupuesto;
@@ -88,6 +89,27 @@ class ImportEstadisticaPresupuestoController extends Controller
             $new_person->banco_cuenta_bancaria = $item[1];
             $new_person->tipo_cuenta_bancaria = $item[2];
             $new_person->numero_cuenta_bancaria = $item[3];
+            $new_person->save();
+        endforeach;
+
+        return response()->json('listo');
+    }
+
+    public function create_comprobantes_old(){
+        return view('import.comprobantes_old');
+    }
+
+    public function import_comprobantes_old(Request $request)
+    {
+        foreach($request->data as $item):
+            $new_person = new ComprobanteIngresoTemporal;
+            $new_person->code = $item[0];
+            $new_person->fecha = $item[1];
+            $new_person->referencia = $item[2];
+            $new_person->cc = $item[3];
+            $new_person->tercero = $item[4];
+            $new_person->valor = $item[5];
+            $new_person->concepto = $item[6];
             $new_person->save();
         endforeach;
 
