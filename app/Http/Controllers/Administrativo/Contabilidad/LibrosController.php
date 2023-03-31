@@ -98,19 +98,21 @@ class LibrosController extends Controller
                         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
                         if (count($pagoBanks) > 0){
                             foreach ($pagoBanks as $pagoBank){
-                                if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
-                                    $total = $total + $pagoBank->valor;
-                                    $pago = Pagos::find($pagoBank->pagos_id);
-                                    if (isset($pago->orden_pago->registros->persona)){
-                                        $tercero = $pago->orden_pago->registros->persona->nombre;
-                                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
-                                    } else{
-                                        $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
-                                        $numIdent = 800197268;
+                                if ($pagoBank->pago->estado == 1){
+                                    if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
+                                        $total = $total + $pagoBank->valor;
+                                        $pago = Pagos::find($pagoBank->pagos_id);
+                                        if (isset($pago->orden_pago->registros->persona)){
+                                            $tercero = $pago->orden_pago->registros->persona->nombre;
+                                            $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                                        } else{
+                                            $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                                            $numIdent = 800197268;
+                                        }
+                                        $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
+                                            'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                            'total' => '$'.number_format($total,0)]);
                                     }
-                                    $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
-                                        'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                        'total' => '$'.number_format($total,0)]);
                                 }
                             }
                         }
