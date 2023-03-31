@@ -8,6 +8,7 @@ use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Http\Controllers\Controller;
+use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Persona;
 use Carbon\Carbon;
@@ -131,9 +132,14 @@ class LibrosController extends Controller
                             foreach ($compsCont as $compCont){
                                 if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
                                     $persona = Persona::find($compCont->comprobante->persona_id);
-                                    if (!isset($persona)) dd($compCont, $compCont->comprobante);
-                                    $tercero = $persona->nombre;
-                                    $numIdent = $persona->num_dc;
+                                    if (!isset($persona) and $compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
+                                        $user = User::find($compCont->comprobante->persona_id);
+                                        $tercero = $user->name;
+                                        $numIdent = $user->email;
+                                    } else{
+                                        $tercero = $persona->nombre;
+                                        $numIdent = $persona->num_dc;
+                                    }
                                     if ($compCont->cuenta_banco == $rubroPUC->id){
                                         $total = $total + $compCont->debito;
                                         $total = $total - $compCont->credito;
