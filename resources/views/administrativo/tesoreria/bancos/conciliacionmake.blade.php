@@ -25,6 +25,8 @@
                 <input type="hidden" name="cuenta" value="{{ $rubroPUC->id }}">
                 <input type="hidden" name="mes" value="{{ $mesFind }}">
                 <input type="hidden" name="año" value="{{ $añoActual }}">
+                <input type="hidden" name="subTotBancoInicial" id="subTotBancoInicial" value="{{ $totBank }}">
+                <input type="hidden" name="subTotBancoFinal" id="subTotBancoFinal" value="{{ $totBank }}">
                 <table class="table table-bordered table-hover" id="tabla">
                     <thead>
                     <tr>
@@ -196,36 +198,9 @@
                     </tr>
                     </tbody>
                 </table>
-                <table class="table table-bordered table-hover" id="tablePayPend">
-                    <hr>
-                    <thead>
-                    <tr>
-                        <th class="text-center" colspan="5">Relación de pagos pendientes</th>
-                    </tr>
-                    <tr>
-                        <th class="text-center">FECHA</th>
-                        <th class="text-center">CED/NIT</th>
-                        <th class="text-center">BENEFICIARIO</th>
-                        <th class="text-center">DEBITO</th>
-                        <th class="text-center">CREDITO</th>
-                    </tr>
-                    </thead>
-                    <tbody id="bodyTabla">
-                    @foreach($result as $data)
-                        @if($data['pago_estado'] != 1)
-                            <tr class="text-center">
-                                <td>{{ $data['fecha'] }}</td>
-                                <td>{{ $data['CC'] }}</td>
-                                <td>{{ $data['tercero'] }}</td>
-                                <td>$<?php echo number_format($data['debito'],0) ?></td>
-                                <td>$<?php echo number_format($data['credito'],0) ?></td>
-                            </tr>
-                        @endif
-                    @endforeach
-                    </tbody>
-                </table>
                 <div class="text-center">
                     <button type="submit" class="btn-sm btn-primary">ENVIAR CONCILIACIÓN</button>
+                    <button type="submit" class="btn-sm btn-primary">ENVIAR Y CIERRA LIBROS</button>
                 </div>
             </form>
         </div>
