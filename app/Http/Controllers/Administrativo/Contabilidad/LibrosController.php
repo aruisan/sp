@@ -131,12 +131,12 @@ class LibrosController extends Controller
                         if (count($compsCont) > 0){
                             foreach ($compsCont as $compCont){
                                 if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
-                                    $persona = Persona::find($compCont->comprobante->persona_id);
-                                    if (!isset($persona) and $compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
+                                    if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
                                         $user = User::find($compCont->comprobante->persona_id);
                                         $tercero = $user->name;
                                         $numIdent = $user->email;
                                     } else{
+                                        $persona = Persona::find($compCont->comprobante->persona_id);
                                         $tercero = $persona->nombre;
                                         $numIdent = $persona->num_dc;
                                     }
