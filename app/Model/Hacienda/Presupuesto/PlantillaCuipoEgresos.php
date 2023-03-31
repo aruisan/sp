@@ -20,7 +20,7 @@ class PlantillaCuipoEgresos extends Model
     public function rubros(){
         return $this->hasMany(Rubro::class, 'plantilla_cuipos_id');
     }
-
+/*
     public function getFormatHijosAttribute(){
         $item = "";
         //$last = PlantillaCuipoEgresos::latest('id')->first();
@@ -34,11 +34,22 @@ class PlantillaCuipoEgresos extends Model
                     $rubro->fontsRubro,
                     $rubro->name, 
                     $item->code);
+                foreach($rubro->fontsRubro as $r_f_r):
+                    $grupo_plantillas  .= $this->format_f_r(
+                        $rubro->fontsRubro,
+                        $rubro->name, 
+                        $item->code);
+                endforeach;
             endforeach;
             $grupo_plantillas .= $item->format_hijos;
         endforeach;
             
         return $grupo_plantillas;
+    }
+//cod_bpin | cod_actividad | nom_actividad | plantilla_code | rubro_nombre | p inicial | adicion 
+//| reduccion | credito | p definitivo | registros | saldo_disponible | saldo_cdp | ordenes_pago 
+    public function format_f_R($bpin, $rubro_name, $plantilla_code){
+        return "<tr><td></td><td></td><td>{$plantilla['code']}</td><td>{$plantilla['name']}</td></tr>";
     }
     
     public function format_plantilla($plantilla){
@@ -46,7 +57,5 @@ class PlantillaCuipoEgresos extends Model
         return "<tr class='{$bg}'><td></td><td></td><td>{$plantilla['code']}</td><td>{$plantilla['name']}</td></tr>";
     }
 
-    public function format_rubro($bpin, $rubro_name, $plantilla_code){
-        return "<tr><td>{$bpin}</td><td>{$bpin}</td><td>{$plantilla_code}</td><td>tt{$rubro_name}</td></tr>";
-    }
+    */
 }

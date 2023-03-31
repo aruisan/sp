@@ -66,19 +66,17 @@ class Rubro extends Model implements Auditable
         return $this->hasOne('App\BPin','id', 'rubro_id');
     }
 
-    /*
-    public function getFormatFontRubro(){
-        $grupo_f_r = "";
-        foreach($this->hijos as $item):
-            $grupo_plantillas .= $this->format_plantilla($item);
-            $grupo_plantillas .= $item->format_hijos;
-        endforeach;
-            
-        return $grupo_plantillas;
+    public function plantilla_cuipo(){
+        return $this->belongsTo(PlantillaCuipoEgresos::class, 'plantilla_cuipos_id');
     }
 
-    public function format_f_r($f_r){
-
+    public function getFormatAttribute(){
+        return "<tr>
+                    <td></td>
+                    <td></td>
+                    <td>{$plantilla_code}</td>
+                    <td>tt{$rubro_name}</td>
+                </tr>";
     }
-    */
+
 }

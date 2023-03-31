@@ -15,4 +15,9 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'import'] ,function(){
 
     Route::get('/bancos-saldos-iniciales', "ImportEstadisticaPresupuestoController@create_bancos_saldos_iniciales");
     Route::post('/bancos-saldos-iniciales', "ImportEstadisticaPresupuestoController@import_bancos_saldos_iniciales")->name('import.bancos_saldos_iniciales');
+
+
+    Route::get('/comprobante-ingreso-temporal', "ImportEstadisticaPresupuestoController@create_comprobantes_old");
+    Route::post('/comprobante-ingreso-temporal', "ImportEstadisticaPresupuestoController@import_comprobantes_old")->name('import.comprobantes_old');
+
 });
