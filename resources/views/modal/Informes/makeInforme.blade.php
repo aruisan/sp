@@ -12,7 +12,7 @@
                     <div class="text-center">
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralIngresosEXCEL"> Ingresos <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralIngresosPDF"> Ingresos <i class="fa fa-file-pdf-o "></i></a>
-                        <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralEgresosEXCEL"> Egresos <i class="fa fa-file-excel-o"></i></a>
+                      <!--  <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralEgresosEXCEL"> Egresos <i class="fa fa-file-excel-o"></i></a> -->
                     </div>
                 </div>
                 <div class="modal-footer">
