@@ -1,5 +1,6 @@
 <?php
 Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina'] ,function(){
+    Route::get('/lista/empleado', "Nomina\NominaController@index")->name('nomina.dashboard');
     Route::get('/lista/{tipo}', "Nomina\NominaController@index")->name('nomina.index');
     Route::get('/create/{tipo}', "Nomina\NominaController@create")->name('nomina.create');
     Route::post('/', "Nomina\NominaController@store")->name('nomina.store');

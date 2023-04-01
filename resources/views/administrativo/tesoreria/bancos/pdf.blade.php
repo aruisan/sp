@@ -93,49 +93,19 @@
 				<th class="text-center">Saldo Libros</th>
 				<th class="text-center">$<?php echo number_format($totalLastMonth,0) ?></th>
 				<th class="text-center">Saldo inicial bancos</th>
-				<th class="text-center">$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></th>
+				<th class="text-center">$<?php echo number_format($conciliacion->subTotBancoInicial,0) ?></th>
 			</tr>
 			</thead>
 			<tbody>
 			<tr class="text-center">
-				<td>Ingresos</td>
-				<td>$<?php echo number_format($totDeb,0) ?></td>
-				<td>Abonos</td>
-				<td>$<?php echo number_format($totDeb,0) ?></td>
-			</tr>
-			<tr class="text-center">
-				<td>Egresos</td>
-				<td>$<?php echo number_format($totCredAll,0) ?></td>
-				<td>Cargos</td>
-				<td>$<?php echo number_format($totCred,0) ?></td>
-			</tr>
-			<tr class="text-center">
-				<td>Comisiones</td>
-				<td></td>
-				<td>Total IVA:</td>
-				<td></td>
-			</tr>
-			<tr class="text-center">
-				<td>Impuestos</td>
-				<td></td>
-				<td>Total Retención:</td>
-				<td></td>
-			</tr>
-			<tr class="text-center">
-				<td>Chequeras</td>
-				<td></td>
-				<td>Total Intereses:</td>
-				<td></td>
-			</tr>
-			<tr class="text-center">
 				<td>Saldo siguiente</td>
-				<td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
+				<td>$<?php echo number_format(($rubroPUC->saldo_inicial + $totDeb  - $totCredAll)-$conciliacion->subTotBancoInicial,0) ?></td>
 				<td> Saldo final</td>
-				<td>$<?php echo number_format($totDeb  - $totCred,0) ?></td>
+				<td>$<?php echo number_format($conciliacion->subTotBancoFinal,0) ?></td>
 			</tr>
 			</tbody>
 		</table>
-	</div>
+		<br>
 	<div class="table-responsive br-black-1">
 		<table class="table table-condensed">
 			<thead>
@@ -164,95 +134,94 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="table-responsive br-black-1">
-		<table class="table table-bordered">
-			<thead>
-			<tr style="background-color: rgba(19,165,255,0.14)">
-				<th></th>
-				<th class="text-center">DEBITO</th>
-				<th class="text-center">CREDITO</th>
-				<th class="text-center">VALOR BANCO</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr class="text-center">
-				<td>SUBTOTAL</td>
-				<td>$<?php echo number_format($totDeb,0) ?></td>
-				<td>$<?php echo number_format($totCredAll,0) ?></td>
-				<td>$<?php echo number_format($conciliacion->subTotBancoFinal,0) ?></td>
-			</tr>
-			<tr class="text-center">
-				<td>Egresos</td>
-				<td>$<?php echo number_format($totCredAll,0) ?></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr class="text-center">
-				<td>Cobros pendientes</td>
-				<td></td>
-				<td></td>
-				<td>$<?php echo number_format($totCredAll - $totCred,0) ?></td>
-			</tr>
-			<tr class="text-center">
-				<td>Valor sin conciliar</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr class="text-center">
-				<td>Abonos en curso</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr class="text-center">
-				<td>Cargos en curso</td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr class="text-center">
-				<td>Saldo inicial</td>
-				<td>$<?php echo number_format($totalLastMonth,0) ?></td>
-				<td></td>
-				<td>$<?php echo number_format($rubroPUC->saldo_inicial,0) ?></td>
-			</tr>
-			<tr class="text-center">
-				<td>SUMAS IGUALES</td>
-				<td>$<?php echo number_format($totDeb - $totCredAll + $totalLastMonth,0) ?></td>
-				<td></td>
-				<td>$<?php echo number_format($totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial ,0) ?></td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="table-responsive br-black-1">
-		<table class="table table-bordered">
+	<div class="text-center">
+		<table class="table table-bordered table-hover" id="tablaBank">
 			<thead>
 			<tr>
-				<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">Relación de pagos pendientes</th>
+				<th class="text-center" colspan="6">CHEQUES COBRADOS</th>
 			</tr>
 			<tr>
 				<th class="text-center">FECHA</th>
 				<th class="text-center">REFERENCIA</th>
 				<th class="text-center">DEBITO</th>
 				<th class="text-center">CREDITO</th>
+				<th class="text-center">VALOR BANCO</th>
+				<th class="text-center">APROBADO</th>
 			</tr>
 			</thead>
 			<tbody id="bodyTabla">
-			@foreach($cuentas as $data)
-				@if($data->aprobado == "OFF")
-					<tr class="text-center">
-						<td>{{ $data->fecha }}</td>
-						<td>{{ $data->referencia }}</td>
-						<td>$<?php echo number_format($data->debito,0) ?></td>
-						<td>$<?php echo number_format($data->credito,0) ?></td>
-					</tr>
-				@endif
+			@foreach($conciliacion->cuentas_temporales as $index => $item)
+				<tr class="text-center">
+					<td>{{$item->fecha}}</td>
+					<td>{{$item->referencia}} - {{$item->cc}} - {{$item->tercero}}</td>
+					<td>$<?php echo number_format(0,0) ?></td>
+					<td>$<?php echo number_format(0,0) ?></td>
+					<td>$<?php echo number_format($item->valor,0) ?></td>
+					<td>Aprobado</td>
+				</tr>
 			@endforeach
 			</tbody>
 		</table>
 	</div>
+	<table class="table table-bordered table-hover">
+		<hr>
+		<thead>
+		<tr>
+			<th colspan="4" class="text-center">CUADRO RESUMEN</th>
+		</tr>
+		<tr>
+			<th></th>
+			<th class="text-center">VALOR LIBROS</th>
+			<th></th>
+			<th class="text-center">VALOR BANCO</th>
+		</tr>
+		</thead>
+		<tbody id="bodyTabla">
+		<tr class="text-center">
+			<td>Saldo siguiente</td>
+			<td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
+			<td> Saldo final</td>
+			<td id="td_saldo_final">{{number_format($conciliacion->subTotBancoFinal,0)}}</td>
+		</tr>
+		<tr class="text-center">
+			<td>cheques en mano</td>{{--los deschuleados de deivith--}}
+			<td id="td-restar-checke-mano">
+				{{number_format($cuentas->filter(function($c){ return $c->aprobado == "OFF";})->sum('debito'), 0)}}
+			</td>{{--aqui--}}
+			<td></td>
+			<td></td>
+		</tr>
+		<tr class="text-center">
+			<td>cheques cobrados</td>{{--los chuleados de oscar y de otros meses--}}
+			<td></td>
+			<td></td>
+			<td id="td-total-checke-cobrados">
+				{{number_format($conciliacion->cuentas_temporales->sum('valor'), 0)}}
+			</td>{{--aqui--}}
+		</tr>
+		<tr class="text-center">
+			<td>partidas sin conciliar</td>{{--input manual que digita el usuario--}}
+			<td>
+				{{number_format($conciliacion->partida_sin_conciliacion_libros, 0)}}
+			</td>
+			<td></td>
+			<td>
+				{{number_format($conciliacion->partida_sin_conciliacion_bancos, 0)}}
+			</td>
+		</tr>
+		<tr class="text-center">
+			<td>SUMAS IGUALES</td>
+			<td id="td-dumas-iguales-libros">
+				{{number_format($conciliacion->partida_sin_conciliacion_libros+$cuentas->filter(function($c){ return $c->aprobado == "OFF";})->sum('debito')+($rubroPUC->saldo_inicial + $totDeb  - $totCredAll), 0)}}
+			</td>{{-- se suma saldo siguiente ms cheques en mano mas el primer input--}}
+			<td></td>
+			<td id="td-dumas-iguales-bancos">
+				{{number_format($conciliacion->partida_sin_conciliacion_bancos+$conciliacion->cuentas_temporales->sum('valor')+$conciliacion->subTotBancoFinal,0)}}
+			</td>{{-- se suma saldo final mas cheques cobrados mas el segundo input--}}
+		</tr>
+		</tbody>
+	</table>
+
 	<br><br><br>
 	<div style="margin-top: 10px; font-size: 17px;">
 		<center>

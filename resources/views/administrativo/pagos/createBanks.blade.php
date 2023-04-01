@@ -33,7 +33,7 @@
             </div>
             <br>
             <div class="form-validation">
-                <form class="form-valide" action="{{url('/administrativo/pagos/banks/store')}}" method="POST" enctype="multipart/form-data">
+                <form class="form-valide" action="{{url('/administrativo/pagos/banks/store')}}" method="POST" enctype="multipart/form-data" id="form-pago">
                     <hr>
                     {!! method_field('PUT') !!}
                     {{ csrf_field() }}
@@ -103,7 +103,7 @@
                     <div class="col-md-4 align-self-center">
                         <div class="form-group">
                             <select class="form-control" id="form_pay" name="type_pay" onchange="var date= document.getElementById('fecha'); var cheque = document.getElementById('cheque'); var tarjeta = document.getElementById('tarjeta'); var bank = document.getElementById('table_bank'); if(this.value=='1'){ fecha.style.display='inline'; cheque.style.display='inline'; bank.style.display='inline'; tarjeta.style.display='none';}else if(this.value=='2'){ fecha.style.display='inline'; cheque.style.display='none'; bank.style.display='inline'; tarjeta.style.display='inline';}else{fecha.style.display='none'; bank.style.display='none'; cheque.style.display='none'; tarjeta.style.display='none'; }">
-                                <option>Selecciona Forma de Pago</option>
+                                <option value="0">Selecciona Forma de Pago</option>
                                 <option value="1">Cheque</option>
                                 <option value="2">Transferencia</option>
                             </select>
@@ -121,15 +121,15 @@
                         <div class="form-group">
                             <label class="control-label text-right col-md-4" for="formadepago">Número de Cheque:</label>
                             <div class="col-lg-6">
-                                <input type="number" class="form-control" name="num_cheque" style="text-align:center">
+                                <input type="number" class="form-control" name="num_cheque" style="text-align:center" id="num_cheque">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4 align-self-center" id="tarjeta" style="display: none">
                         <div class="form-group">
-                            <label class="control-label text-right col-md-4" for="formadepago">Número de Cuenta:</label>
+                            <label class="control-label text-right col-md-4" for="formadepago">Referencia de Transacción:</label>
                             <div class="col-lg-6">
-                                <input type="number" class="form-control" name="num_cuenta" style="text-align:center">
+                                <input type="number" class="form-control" name="num_cuenta" style="text-align:center"  id="num_cuenta">
                             </div>
                         </div>
                     </div>
@@ -162,11 +162,11 @@
                             </tr>
                         </table>
                         <br>
-                        <input type="text" class="form-control" name="referenciaPago" id="referenciaPago" placeholder="REFERENCIA DEL PAGO">
+                        <input type="hidden" class="form-control" name="referenciaPago" id="referenciaPago" placeholder="REFERENCIA DEL PAGO">
                         <br><br>
                         <center>
                             <button type="button" v-on:click.prevent="nuevoBanco" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Agregar Otro Banco</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-usd"></i><i class="fa fa-arrow-right"></i>&nbsp; &nbsp; Pagar</button>
+                            <button type="button" class="btn btn-primary" onclick="guardar()"><i class="fa fa-usd"></i><i class="fa fa-arrow-right"></i>&nbsp; &nbsp; Pagar</button>
                         </center>
                         <br>
                     </div>
@@ -177,6 +177,21 @@
 @stop
 @section('js')
     <script type="text/javascript">
+
+        const guardar = () => {
+            let select = $('#form_pay').val();
+            //alert(select)
+            if(!select){
+                alert('Debe seleccionar una forma de pago');
+            }
+            let validador = parseInt($(`#${select == 1 ? 'num_cheque' : 'num_cuenta'}`).val());
+            if(isNaN(validador)){
+                let nombre = select == 1 ? 'cheque' : 'Referencia';
+                alert(`el Número de ${nombre} es obligatorio`);
+            }else{
+                $('#form-pago').submit();
+            }
+        }
 
         $('.select-tercero').select2();
 
