@@ -27,17 +27,21 @@
                 <input type="hidden" name="año" value="{{ $añoActual }}">
                 <input type="hidden" name="subTotBancoInicial" id="subTotBancoInicial" value="{{ $totBank }}">
                 <input type="hidden" name="subTotBancoFinal" id="subTotBancoFinal" value="{{ $totBank }}">
+                <input type="hidden" name="finalizar" id="finalizar" value="0">
                 <table class="table table-bordered table-hover" id="tabla">
                     <thead>
                     <tr>
                         <th class="text-center" colspan="4">RESUMEN DE LA INFORMACION</th>
                     </tr>
                     <tr>
+                        <th class="text-center" colspan="4">Cuenta Bancaria {{$rubroPUC->concepto}}</th>
+                    </tr>
+                    <tr>
                         <th class="text-center">Saldo Libros</th>
                         <th class="text-center">$<?php echo number_format($totalLastMonth,0) ?></th>
                         <th class="text-center">Saldo inicial bancos</th>
                         <th class="text-center">
-                            <input type="text" class="form-control" value="{{$rubroPUC->saldo_inicial}}">
+                            <input type="number" min="0" class="form-control" required value="{{$rubroPUC->saldo_inicial}}" name="saldo_inicial" id="valor_inicial">
                         </th>
                     </tr>
                     </thead>
@@ -78,7 +82,7 @@
                         <td>Saldo siguiente</td>
                         <td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
                         <td> Saldo final</td>
-                        <td><input type="text" class="form-control" value="{{$totDeb  - $totCred}}" id="valor_final" onkeyup="diferencia_siguiente_final()"></td>
+                        <td><input type="number" min="0" class="form-control" required value="{{$totDeb  - $totCred}}" id="valor_final" name="saldo_final" onkeyup="diferencia_siguiente_final()"></td>
                     </tr>
                     <tr class="text-center">
                         <td colspan="2">Diferencia a Conciliar</td>
@@ -100,15 +104,17 @@
                         </tr>
                         </thead>
                         <tbody id="bodyTabla">
+                            @php $cheques_mano = 0 ; @endphp
                         @foreach($result as $index => $data)
                             <tr class="text-center">
                                 <td>{{$data['fecha']}}</td>
-                                <td>{{$data['referencia']}} - {{$data['CC']}} - {{$data['tercero']}}</td>
+                                <td>{{$data['referencia']}} - {{$data['CC']}} - {{$data['tercero']}} -- {{$data['numero']}}</td>
                                 <td>$<?php echo number_format($data['debito'],0) ?></td>
                                 <td>$<?php echo number_format($data['credito'],0) ?></td>
-                                <td>$<?php echo number_format($data['debito'] - $data['credito'],0) ?></td>
-                                <td><input type="checkbox" name="check[]" value="{{ $index }}" checked></td>
+                                <td>$<?php echo number_format($data['debito'] == 0 ? $data['credito'] : $data['debito'],0) ?></td>
+                                <td><input type="checkbox" name="check[]" value="{{ $index }}" checked onchange="checked_checke_mano(this, {{$data['debito'] - $data['credito']}})"></td>
                             </tr>
+                            @php $cheques_mano = $cheques_mano + ($data['debito'] == 0 ? $data['credito'] : $data['debito']) @endphp
                         @endforeach
                         </tbody>
                     </table>
@@ -139,8 +145,8 @@
                                 <td>{{$item->referencia}} - {{$item->cc}} - {{$item->tercero}}</td>
                                 <td>$<?php echo number_format(0,0) ?></td>
                                 <td>$<?php echo number_format(0,0) ?></td>
-                                <td>$<?php echo number_format(0 - $item->valor,0) ?></td>
-                                <td><input type="checkbox" name="check_old[]" value="{{$item->id}}" checked></td>
+                                <td>$<?php echo number_format($item->valor,0) ?></td>
+                                <td><input type="checkbox" name="check_old[]" value="{{$item->id}}" checked onchange="checked_checke_cobrados(this, {{$item->valor}})"></td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -171,36 +177,35 @@
                     </tr>
                     <tr class="text-center">
                         <td>cheques en mano</td>{{--los deschuleados de deivith--}}
-                        <td></td>{{--aqui--}}
+                        <td id="td-restar-checke-mano"></td>{{--aqui--}}
                         <td></td>
                         <td></td>
                     </tr>
                     <tr class="text-center">
                         <td>cheques cobrados</td>{{--los chuleados de oscar y de otros meses--}}
                         <td></td>
-                        <td></td>{{--aqui--}}
                         <td></td>
+                        <td id="td-total-checke-cobrados"></td>{{--aqui--}}
                     </tr>
                     <tr class="text-center">
                         <td>partidas sin conciliar</td>{{--input manual que digita el usuario--}}
-                        <td><input type="text" class="form-control"></td>
+                        <td><input type="number" min="0" required name="partida_sin_conciliar_libros" class="form-control" id="input-iguales-libros" value="0" onkeyup="suma_iguales_libros()"></td>
                         <td></td>
-                        <td><input type="text" class="form-control"></td>
+                        <td><input type="number" min="0" required name="partida_sin_conciliar_bancos" class="form-control" id="input-iguales-bancos" value="0" onkeyup="suma_iguales_bancos()"></td>
                     </tr>
                     <tr class="text-center">
                         <td>SUMAS IGUALES</td>
-                        <td>$<?php echo number_format($totDeb - $totCredAll + $totalLastMonth,0) ?></td>{{-- se suma saldo siguiente ms cheques en mano mas el primer input--}}
+                        <td id="td-dumas-iguales-libros"></td>{{-- se suma saldo siguiente ms cheques en mano mas el primer input--}}
                         <td></td>
-                        <td>
-                            <span id="sumaIgualBankSpan">$<?php echo number_format($totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial ,0) ?></span>
-                            <input type="hidden" name="sumaIgualBank" id="sumaIgualBank" value="{{ $totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial }}">
+                        <td id="td-dumas-iguales-bancos">
                         </td>{{-- se suma saldo final mas cheques cobrados mas el segundo input--}}
+                        <input type="hidden" name="sumaIgualBank" id="sumaIgualBank" value="{{ $totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial }}">
                     </tr>
                     </tbody>
                 </table>
                 <div class="text-center">
-                    <button type="submit" class="btn-sm btn-primary">ENVIAR CONCILIACIÓN</button>
-                    <button type="submit" class="btn-sm btn-primary">ENVIAR Y CIERRA LIBROS</button>
+                    <button type="button" class="btn-sm btn-primary" onclick="guardar(0)">ENVIAR CONCILIACIÓN</button>
+                    <button type="button" class="btn-sm btn-primary" onclick="guardar(1)">ENVIAR Y CIERRA LIBROS</button>
                 </div>
             </form>
         </div>
@@ -208,11 +213,49 @@
 @stop
 @section('js')
     <script>
+        {{--
+            --}}
+        const data_mano = @json($result);
+        const data_cobrados = @json($comprobantes_old);
+        const cheques_mano = {{$cheques_mano}};
         const saldo_siguiente = {{$rubroPUC->saldo_inicial + $totDeb- $totCredAll}};
+        const cheques_cobrados = {{$comprobantes_old->sum('valor')}};
+        let restar_cheques_mano = 0;
+        let restar_cheques_cobrados = 0;
         
         $(document).ready(function(){
             diferencia_siguiente_final();
+            suma_iguales_bancos();
+            suma_iguales_libros();
+            $('#td-restar-checke-mano').html(0)
+            $('#td-total-checke-cobrados').html(cheques_cobrados);
+            {{----}}
+            console.log('cheques_mano',cheques_mano);
+            console.log('data_mano',data_mano);
+            console.log('cheques_cobrados',cheques_cobrados);
+            console.log('data_cobrados',data_cobrados);
         });
+
+        const guardar = finalizar =>{
+            let final = parseInt($('#valor_final').val());
+            let libros = parseInt($('#input-iguales-libros').val());
+            let bancos = parseInt($('#input-iguales-bancos').val());
+            let inicio = parseInt($('#valor_inicial').val());
+            //alert(final)
+
+            if(isNaN(final)){
+                alert("Input Saldo Final debe ser numerico y obligatorio");
+            }else if(isNaN(inicio)){
+                alert("Input Saldo Inicial debe ser numerico y obligatorio");
+            }else if(isNaN(libros)){
+                alert("Input de partida sin conciliar libros debe ser numerico y obligatorio");
+            }else if(isNaN(bancos)){
+                alert("Input de partida sin conciliar bancos debe ser numerico y obligatorio");
+            }else{
+                $('#finalizar').val(finalizar); 
+                $('#prog').submit();
+            }
+        }
 
         $('#valor_final').on('change', function(){
             diferencia_siguiente_final();
@@ -220,8 +263,45 @@
 
         const diferencia_siguiente_final = () => {
             let final = parseInt($('#valor_final').val());
-            $('#td_saldo_final').html(final);
-            $('#td-diferencia').html(parseInt(saldo_siguiente)- final);
+            let valor = !isNaN(final) ? final : 0 ;
+            $('#td_saldo_final').html(valor);
+            $('#td-diferencia').html(parseInt(saldo_siguiente)- valor);
+            suma_iguales_bancos();
+        }
+
+        const checked_checke_mano = (item, value) => {
+            if(item.checked){
+                restar_cheques_mano = restar_cheques_mano - value;
+            }else{
+                restar_cheques_mano = restar_cheques_mano + value;
+            }
+            $('#td-restar-checke-mano').html(0-restar_cheques_mano);
+            suma_iguales_libros();
+        }
+
+        const checked_checke_cobrados = (item, value) => {
+            if(item.checked){
+                restar_cheques_cobrados = restar_cheques_cobrados - value;
+            }else{
+                restar_cheques_cobrados = restar_cheques_cobrados + value;
+            }
+            $('#td-total-checke-cobrados').html(cheques_cobrados - restar_cheques_cobrados);
+            suma_iguales_bancos();
+        }
+
+
+        const suma_iguales_libros = () => {
+            let input_value = parseInt($('#input-iguales-libros').val());
+            let total = !isNaN(input_value) ? input_value : 0;
+            console.log('rrr', [saldo_siguiente+restar_cheques_mano+total, saldo_siguiente,restar_cheques_mano,total]);
+            $('#td-dumas-iguales-libros').html(saldo_siguiente+(0-restar_cheques_mano)+total);
+        }
+
+        const suma_iguales_bancos = () => {
+            let final = parseInt($('#valor_final').val());
+            let input_value = parseInt($('#input-iguales-bancos').val());
+            let total = !isNaN(input_value) ? input_value : 0;
+            $('#td-dumas-iguales-bancos').html((cheques_cobrados - restar_cheques_cobrados)+final+total);
         }
 
         $('#tablaBank').DataTable( {
@@ -275,6 +355,8 @@
             document.getElementById('sumaIgualBankSpan').innerHTML = formatter.format(parseInt(subTotBancoInicial) + parseInt(total));
             document.getElementById('subTotBancoSpan').innerHTML = formatter.format(parseInt(subTotBancoInicial) + parseInt(total));
         }
+
+        
 
 
         let app = new Vue({
