@@ -154,6 +154,7 @@ class OrdenPagosController extends Controller
             $ordenPago->estado = $request->estado;
             $ordenPago->registros_id = $request->IdR;
             $ordenPago->user_id = auth()->user()->id;
+            $ordenPago->created_at = '2023-03-31 12:00:00';
             $ordenPago->save();
 
             Session::flash('success','La orden de pago se ha creado exitosamente');
@@ -583,7 +584,7 @@ class OrdenPagosController extends Controller
 
             if (!isset($infoRubro)) $infoRubro = [];
 
-            $fecha = Carbon::createFromTimeString($OrdenPago->pago->created_at);
+            $fecha = Carbon::createFromTimeString($Pago->created_at);
             $fechaO = Carbon::createFromTimeString($OrdenPago->created_at);
             $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
             $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -606,7 +607,7 @@ class OrdenPagosController extends Controller
                 'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador','banks','Pago'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
             return $pdf->stream();
         } else{
-            $fecha = Carbon::createFromTimeString($OrdenPago->pago->created_at);
+            $fecha = Carbon::createFromTimeString($Pago->created_at);
             $fechaO = Carbon::createFromTimeString($OrdenPago->created_at);
             $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
             $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");

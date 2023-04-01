@@ -239,26 +239,28 @@ class BancosController extends Controller
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
-                $total = $total - $pagoBank->valor;
-                $pago = Pagos::find($pagoBank->pagos_id);
-                if (isset($pago->orden_pago->registros->persona)){
-                    $tercero = $pago->orden_pago->registros->persona->nombre;
-                    $numIdent = $pago->orden_pago->registros->persona->num_dc;
-                } else{
-                    $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
-                    $numIdent = 800197268;
-                }
+                if ($pagoBank->pago->estado == 1){
+                    $total = $total - $pagoBank->valor;
+                    $pago = Pagos::find($pagoBank->pagos_id);
+                    if (isset($pago->orden_pago->registros->persona)){
+                        $tercero = $pago->orden_pago->registros->persona->nombre;
+                        $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                    } else{
+                        $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                        $numIdent = 800197268;
+                    }
 
-                $totDeb = $totDeb + 0;
-                $totCred = $totCred + $pagoBank->valor;
-                if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
-                else $referencia = "Pago #".$pago->code;
-                $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
-                    'modulo' => $referencia, 'debito' => '$'.number_format(0,0),
-                    'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
-                    'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                    'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
-                    'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                    $totDeb = $totDeb + 0;
+                    $totCred = $totCred + $pagoBank->valor;
+                    if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
+                    else $referencia = "Pago #".$pago->code;
+                    $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
+                        'modulo' => $referencia, 'debito' => '$'.number_format(0,0),
+                        'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
+                        'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                        'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
+                        'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
+                }
             }
         }
 
@@ -331,27 +333,29 @@ class BancosController extends Controller
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
-                if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
-                    if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
-                        $total = $total - $pagoBank->valor;
-                        $pago = Pagos::find($pagoBank->pagos_id);
-                        if (isset($pago->orden_pago->registros->persona)){
-                            $tercero = $pago->orden_pago->registros->persona->nombre;
-                            $numIdent = $pago->orden_pago->registros->persona->num_dc;
-                        } else{
-                            $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
-                            $numIdent = 800197268;
+                if ($pagoBank->pago->estado == 1){
+                    if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
+                        if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
+                            $total = $total - $pagoBank->valor;
+                            $pago = Pagos::find($pagoBank->pagos_id);
+                            if (isset($pago->orden_pago->registros->persona)){
+                                $tercero = $pago->orden_pago->registros->persona->nombre;
+                                $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                            } else{
+                                $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                                $numIdent = 800197268;
+                            }
+                            $totDeb = $totDeb + 0;
+                            $totCred = $totCred + $pagoBank->valor;
+                            if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
+                            else $referencia = "Pago #".$pago->code;
+                            $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
+                                'modulo' => $referencia, 'debito' => '$'.number_format(0,0),
+                                'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
+                                'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
+                                'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
                         }
-                        $totDeb = $totDeb + 0;
-                        $totCred = $totCred + $pagoBank->valor;
-                        if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
-                        else $referencia = "Pago #".$pago->code;
-                        $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
-                            'modulo' => $referencia, 'debito' => '$'.number_format(0,0),
-                            'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
-                            'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                            'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
-                            'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
                     }
                 }
             }
@@ -417,22 +421,31 @@ class BancosController extends Controller
         
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
-                if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
-                    if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
-                        $total = $total - $pagoBank->valor;
-                        $pago = Pagos::find($pagoBank->pagos_id);
-                        if (isset($pago->orden_pago->registros->persona)){
-                            $tercero = $pago->orden_pago->registros->persona->nombre;
-                            $numIdent = $pago->orden_pago->registros->persona->num_dc;
-                        } else{
-                            $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
-                            $numIdent = 800197268;
-                        }
-                        $totDeb = $totDeb + 0;
-                        $totCredAll = $totCredAll + $pagoBank->valor;
-                        if ($pago->estado == 1) {
-                            $totCred = $totCred + $pagoBank->valor;
-                            $totBank = $totBank - $pagoBank->valor;
+                if ($pagoBank->pago->estado == 1){
+                    if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
+                        if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
+                            $total = $total - $pagoBank->valor;
+                            $pago = Pagos::find($pagoBank->pagos_id);
+                            if (isset($pago->orden_pago->registros->persona)){
+                                $tercero = $pago->orden_pago->registros->persona->nombre;
+                                $numIdent = $pago->orden_pago->registros->persona->num_dc;
+                            } else{
+                                $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                                $numIdent = 800197268;
+                            }
+                            $totDeb = $totDeb + 0;
+                            $totCredAll = $totCredAll + $pagoBank->valor;
+                            if ($pago->estado == 1) {
+                                $totCred = $totCred + $pagoBank->valor;
+                                $totBank = $totBank - $pagoBank->valor;
+                            }
+                            if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
+                            else $referencia = "Pago #".$pago->code;
+                            $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
+                                'modulo' => $referencia, 'debito' => 0, 'credito' => $pagoBank->valor, 'tercero' => $tercero,
+                                'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
+                                'referencia' => $referencia, 'pago_estado' => $pago->estado]);
                         }
                         $tipo_pago = $pago->type_pay == "CHEQUE" ? 'cheque' : 'referencia';
                         $result[] = collect(["numero" => "#{$tipo_pago} {$pago->num}", 'fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
@@ -670,15 +683,17 @@ class BancosController extends Controller
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
-                if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
-                    if (Carbon::parse($pagoBank->created_at)->format('m') == $mesFind){
-                        $total = $total - $pagoBank->valor;
-                        $pago = Pagos::find($pagoBank->pagos_id);
-                        $totDeb = $totDeb + 0;
-                        $totCredAll = $totCredAll + $pagoBank->valor;
-                        if ($pago->estado == 1) {
-                            $totCred = $totCred + $pagoBank->valor;
-                            $totBank = $totBank - $pagoBank->valor;
+                if ($pagoBank->pago->estado == 1){
+                    if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
+                        if (Carbon::parse($pagoBank->created_at)->format('m') == $mesFind){
+                            $total = $total - $pagoBank->valor;
+                            $pago = Pagos::find($pagoBank->pagos_id);
+                            $totDeb = $totDeb + 0;
+                            $totCredAll = $totCredAll + $pagoBank->valor;
+                            if ($pago->estado == 1) {
+                                $totCred = $totCred + $pagoBank->valor;
+                                $totBank = $totBank - $pagoBank->valor;
+                            }
                         }
                     }
                 }
@@ -734,9 +749,11 @@ class BancosController extends Controller
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
-                $total = $total - $pagoBank->valor;
-                $totDeb = $totDeb + 0;
-                $totCred = $totCred + $pagoBank->valor;
+                if ($pagoBank->pago->estado == 1){
+                    $total = $total - $pagoBank->valor;
+                    $totDeb = $totDeb + 0;
+                    $totCred = $totCred + $pagoBank->valor;
+                }
             }
         }
 
