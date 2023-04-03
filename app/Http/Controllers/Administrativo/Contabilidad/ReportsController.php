@@ -7,9 +7,11 @@ use App\Model\Administrativo\Contabilidad\Puc;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReporteBalanceInicialExcExport;
 use foo\bar;
 use Illuminate\Http\Request;
-use Session;
+use Session,Carbon\Carbon;
 
 class ReportsController extends Controller
 {
@@ -28,6 +30,10 @@ class ReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
+
     public function lvl($level)
     {
         $PUC = Puc::find('1');

@@ -13,9 +13,11 @@ class AddFieldTableComprobanteIngresoTemporal extends Migration
      */
     public function up()
     {
+        /*
         Schema::table('comprobante_ingreso_temporales', function (Blueprint $table) {
             $table->integer('conciliacion_id')->nullable()->after('concepto');
         });
+        */
     }
 
     /**
