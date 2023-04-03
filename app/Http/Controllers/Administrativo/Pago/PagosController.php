@@ -429,4 +429,19 @@ class PagosController extends Controller
         $pago->save();
         return $pago;
     }
+
+    public function delete($id, $vigencia){
+
+        $banks = PagoBanks::where('pagos_id', $id)->get();
+        foreach ($banks as $bank) $bank->delete();
+
+        $rubros = PagoRubros::where('pago_id', $id)->get();
+        foreach ($rubros as $rubro) $rubro->delete();
+
+        $pago = Pagos::find($id);
+        $pago->delete();
+
+        Session::flash('error','Pago borrado correctamente');
+        return redirect('../administrativo/pagos/'.$vigencia);
+    }
 }

@@ -226,7 +226,7 @@
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Balances </a>
                <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="#">Balance Inicial</a></li>
+                  <li><a class="item-menu" href="{{route('balance.inicial')}}">Balance Inicial</a></li>
                   <li><a class="item-menu" href="#">Comparativo</a></li>
                   <li><a class="item-menu" href="#">Por Niveles</a></li>
                   <li><a class="item-menu" href="#">Prueba</a></li>

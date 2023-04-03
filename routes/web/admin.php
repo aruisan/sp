@@ -310,6 +310,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //PAGOS
 
         Route::post('changeCheque/pago/{id}/', 'Administrativo\Pago\PagosController@changeCheque');
+        Route::delete('pagos/{id}/{vigencia}', 'Administrativo\Pago\PagosController@delete')->name('pago-delete');
         Route::get('pagos/{id}', 'Administrativo\Pago\PagosController@index');
         Route::get('pagos/create/{id}', 'Administrativo\Pago\PagosController@create');
         Route::get('pagos/show/{id}', 'Administrativo\Pago\PagosController@show');
@@ -380,6 +381,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
             //Informes
 
         Route::resource('contabilidad/informes','Administrativo\Contabilidad\ReportsController');
+        Route::get('contabilidad/blance-inicial','Administrativo\Contabilidad\Balances\InicialController@index')->name('balance.inicial');
         Route::get('contabilidad/informes/lvl/{id}','Administrativo\Contabilidad\ReportsController@lvl');
         Route::get('contabilidad/informes/rubros/{id}','Administrativo\Contabilidad\ReportsController@rubros');
 
@@ -496,6 +498,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 	Route::resource('presupuesto/font', 'Hacienda\Presupuesto\FontsController');
 	Route::get('presupuesto/rubro/create/{vigencia}', 'Hacienda\Presupuesto\RubrosController@create');
     Route::delete('presupuesto/rubro/{id}/{vigencia}', 'Hacienda\Presupuesto\RubrosController@deleteRubro');
+	Route::post('presupuesto/findFontDep', 'Hacienda\Presupuesto\RubrosController@findFont');
 	Route::resource('presupuesto/rubro', 'Hacienda\Presupuesto\RubrosController');
     Route::put('presupuesto/rubro/m/{m}/{id}', 'Hacienda\Presupuesto\RubrosMovController@movimiento');
 	Route::resource('presupuesto/FontRubro', 'Hacienda\Presupuesto\FontRubroController');

@@ -13,6 +13,7 @@ class CreateComprobanteIngresoTemporalsTable extends Migration
      */
     public function up()
     {
+        /*
         Schema::create('comprobante_ingreso_temporales', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code');
@@ -25,6 +26,7 @@ class CreateComprobanteIngresoTemporalsTable extends Migration
             $table->boolean('check')->default(0);
             $table->timestamps();
         });
+        */
     }
 
     /**

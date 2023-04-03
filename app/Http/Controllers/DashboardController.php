@@ -11,7 +11,10 @@ class DashboardController extends Controller
     public function  index()
     {
         if(!is_null(Auth::user()->route_autenticacion)){
-            dd(route(Auth::user()->route_autenticacion));
+            if(Auth::user()->route_autenticacion == 'nomina.index'){
+                dd(route('nomina.index', 'empleado'));
+               return redirect()->route('nomina.index', 'empleado');
+            }
             return redirect()->route(Auth::user()->route_autenticacion);
         }
 
