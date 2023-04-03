@@ -154,6 +154,15 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                                @if($pago->estado == 0)
+                                    {!! Form::open(['method' => 'DELETE','route' => ['pago-delete', $pago->id, $vigencia_id ],'style'=>'display:inline']) !!}
+                                    <center>
+                                        <button type="submit" class="btn btn-primary">
+                                            Borrar Pago
+                                        </button>
+                                    </center>
+                                    {!! Form::close() !!}
+                                @endif
                             </div>
                                 @include('modal.anularPago')
                                 @if($pago->estado == 1 and $rol == 3)
