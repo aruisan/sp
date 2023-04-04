@@ -350,6 +350,7 @@ class PagosController extends Controller
         $comprobante->persona_id = $pago->user_id;
         if ($pago->modulo == 'PREDIAL') $comprobante->concepto = "IMPUESTO PREDIAL ".$pago->fechaPago." #".$pago->id;
         elseif ($pago->modulo == 'ICA-Contribuyente') $comprobante->concepto = "IMPUESTO ICA CONTRIBUYENTE ".$pago->fechaPago." #".$pago->id;
+        elseif ($pago->modulo == 'ICA-AgenteRetenedor') $comprobante->concepto = "IMPUESTO ICA AGENTE RETENEDOR ".$pago->fechaPago." #".$pago->id;
         $comprobante->save();
 
         //BANCO DEL COMPROBANTE CONTABLE
