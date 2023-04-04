@@ -243,7 +243,6 @@
                     $("#tabla").hide();
                     table.destroy();
                     $("#cargando").hide();
-                    $("#buttonMake").hide();
                     toastr.warning('SE REALIZO LA BUSQUEDA EXITOSAMENTE PERO NO HAY MOVIMIENTOS EN ESE MES CONSULTADO DE ESA CUENTA.');
                 }
             }).fail(function() {
