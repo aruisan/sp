@@ -154,7 +154,7 @@ class PagosController extends Controller
             $Pago->valor = $request->Monto;
             $Pago->estado = "0";
             $Pago->responsable_id = auth()->user()->id;
-            $Pago->created_at = '2023-03-31 12:00:00';
+            $Pago->created_at = '2023-04-04 12:00:00';
             $Pago->save();
 
             //BUSQUEDA DEL ID DEL RUBRO
