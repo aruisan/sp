@@ -313,6 +313,7 @@ class BancosController extends Controller
 
     public function movAccount(Request $request){
 
+        $result = collect();
         $rubroPUC = PucAlcaldia::find($request->id);
         $total = $rubroPUC->saldo_inicial;
         $totDeb = 0;
@@ -400,7 +401,7 @@ class BancosController extends Controller
     }
 
     public function makeConciliacion(Request $request){
-
+        $result = collect();
         $rubroPUC = PucAlcaldia::find($request->cuentaPUC);
         $añoActual = Carbon::today()->format('Y');
         $mesFind = $request->mes;
@@ -521,7 +522,7 @@ class BancosController extends Controller
             ComprobanteIngresoTemporal::whereIn('id', $request->check_old)->update(['check' => TRUE, 'conciliacion_id' => $conciliacion->id]);
         }
         
-
+        $result = collect();
         $rubroPUC = PucAlcaldia::find($request->cuenta);
         $añoActual = $request->año;
         $total = $rubroPUC->saldo_inicial;

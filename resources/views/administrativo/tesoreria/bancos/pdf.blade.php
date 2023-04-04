@@ -99,7 +99,7 @@
 			<tbody>
 			<tr class="text-center">
 				<td>Saldo siguiente</td>
-				<td>$<?php echo number_format(($rubroPUC->saldo_inicial + $totDeb  - $totCredAll)-$conciliacion->subTotBancoInicial,0) ?></td>
+				<td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
 				<td> Saldo final</td>
 				<td>$<?php echo number_format($conciliacion->subTotBancoFinal,0) ?></td>
 			</tr>

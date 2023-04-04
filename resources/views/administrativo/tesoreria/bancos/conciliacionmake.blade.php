@@ -4,6 +4,7 @@
 @stop
 @section('sidebar')@stop
 @section('content')
+@php $cheques_mano = 0 ; @endphp
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Realizar Conciliación Bancaria {{ $mesFind }} - {{ $añoActual }}</b></h4>
@@ -27,6 +28,7 @@
                 <input type="hidden" name="año" value="{{ $añoActual }}">
                 <input type="hidden" name="subTotBancoInicial" id="subTotBancoInicial" value="{{ $totBank }}">
                 <input type="hidden" name="subTotBancoFinal" id="subTotBancoFinal" value="{{ $totBank }}">
+                <input type="hidden" id="valor_final" name="saldo_final" value="{{$cheques_mano}}">
                 <input type="hidden" name="finalizar" id="finalizar" value="0">
                 <table class="table table-bordered table-hover" id="tabla">
                     <thead>
@@ -38,51 +40,20 @@
                     </tr>
                     <tr>
                         <th class="text-center">Saldo Libros</th>
-                        <th class="text-center">$<?php echo number_format($totalLastMonth,0) ?></th>
+                        <th class="text-center" id="td-s-libros-i"></th>
                         <th class="text-center">Saldo inicial bancos</th>
                         <th class="text-center">
-                            <input type="number" min="0" class="form-control" required value="{{$rubroPUC->saldo_inicial}}" name="saldo_inicial" id="valor_inicial">
+                            <input type="number" min="0" class="form-control" required value="{{$rubroPUC->saldo_inicial}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
                         </th>
                     </tr>
                     </thead>
-                    <tbody id="bodyTabla">
-                        {{--
-                            <tr class="text-center">
-                                <td>Ingresos</td>
-                                <td>${{number_format($totDeb,0) }}</td>
-                                <td>Abonos</td>
-                                <td>${{number_format($totDeb,0)}}</td>
-                            </tr>
-                            <tr class="text-center">
-                                <td>Egresos</td>
-                                <td>${{number_format($totCredAll,0)}}</td>
-                                <td>Cargos</td>
-                                <td>${{number_format($totCred,0)}}</td>
-                            </tr>
-                            <tr class="text-center">
-                                <td>Comisiones</td>
-                                <td></td>
-                                <td>Total IVA:</td>
-                                <td></td>
-                            </tr>
-                            <tr class="text-center">
-                                <td>Impuestos</td>
-                                <td></td>
-                                <td>Total Retención:</td>
-                                <td></td>
-                            </tr>
-                            <tr class="text-center">
-                                <td>Chequeras</td>
-                                <td></td>
-                                <td>Total Intereses:</td>
-                                <td></td>
-                            </tr>
-                            --}}
-                            <tr class="text-center">
+                    <tbody id="bodyTabla">    
+                    <tr class="text-center">
                         <td>Saldo siguiente</td>
-                        <td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
+                        <td id="td-s-siguiente-i"></td>
                         <td> Saldo final</td>
-                        <td><input type="number" min="0" class="form-control" required value="{{$totDeb  - $totCred}}" id="valor_final" name="saldo_final" onkeyup="diferencia_siguiente_final()"></td>
+                        <td id="td-saldo-final">
+                        </td>
                     </tr>
                     <tr class="text-center">
                         <td colspan="2">Diferencia a Conciliar</td>
@@ -104,7 +75,6 @@
                         </tr>
                         </thead>
                         <tbody id="bodyTabla">
-                            @php $cheques_mano = 0 ; @endphp
                         @foreach($result as $index => $data)
                             <tr class="text-center">
                                 <td>{{$data['fecha']}}</td>
@@ -112,9 +82,9 @@
                                 <td>$<?php echo number_format($data['debito'],0) ?></td>
                                 <td>$<?php echo number_format($data['credito'],0) ?></td>
                                 <td>$<?php echo number_format($data['debito'] == 0 ? $data['credito'] : $data['debito'],0) ?></td>
-                                <td><input type="checkbox" name="check[]" value="{{ $index }}" checked onchange="checked_checke_mano(this, {{$data['debito'] - $data['credito']}})"></td>
+                                <td><input type="checkbox" name="check[]" value="{{ $index }}" checked onchange="checked_checke_mano(this, {{$data['debito'] == 0 ? $data['credito'] : 0 - $data['debito']}})"></td>
                             </tr>
-                            @php $cheques_mano = $cheques_mano + ($data['debito'] == 0 ? $data['credito'] : $data['debito']) @endphp
+                            @php $cheques_mano = $cheques_mano + ($data['debito'] == 0 ? 0 - $data['credito'] : $data['debito']) @endphp
                         @endforeach
                         </tbody>
                     </table>
@@ -122,7 +92,7 @@
                         <button id="buttonMake" type="button" @click.prevent="nuevaFilaBanks" class="btn-sm btn-primary">AGREGAR CAMPO</button>
                         --}}
                 </div>
-                
+
                 <div class="text-center">
                     <table class="table table-bordered table-hover" id="tablaBank">
                         <thead>
@@ -171,27 +141,27 @@
                     <tbody id="bodyTabla">
                     <tr class="text-center">
                         <td>Saldo siguiente</td>
-                        <td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
-                        <td> Saldo final</td>
-                        <td id="td_saldo_final"></td>
+                        <td id="td-s-siguiente-f"></td>
+                        <td> Saldo Inicial</td>
+                        <td id="td-s-inicial-f"></td>
                     </tr>
                     <tr class="text-center">
                         <td>cheques en mano</td>{{--los deschuleados de deivith--}}
                         <td id="td-restar-checke-mano"></td>{{--aqui--}}
                         <td></td>
-                        <td></td>
+                        <td id="td-checke-mano"></td>
                     </tr>
                     <tr class="text-center">
                         <td>cheques cobrados</td>{{--los chuleados de oscar y de otros meses--}}
+                        <td id="td-restar-checke-cobrados"></td>
                         <td></td>
-                        <td></td>
-                        <td id="td-total-checke-cobrados"></td>{{--aqui--}}
+                        <td id="td-cheques-cobrados"></td>{{--aqui--}}
                     </tr>
                     <tr class="text-center">
                         <td>partidas sin conciliar</td>{{--input manual que digita el usuario--}}
-                        <td><input type="number" min="0" required name="partida_sin_conciliar_libros" class="form-control" id="input-iguales-libros" value="0" onkeyup="suma_iguales_libros()"></td>
+                        <td><input type="number" min="0" required name="partida_sin_conciliar_libros" class="form-control" id="input-iguales-libros" value="0" onkeyup="diferencia_siguiente_final()"></td>
                         <td></td>
-                        <td><input type="number" min="0" required name="partida_sin_conciliar_bancos" class="form-control" id="input-iguales-bancos" value="0" onkeyup="suma_iguales_bancos()"></td>
+                        <td><input type="number" min="0" required name="partida_sin_conciliar_bancos" class="form-control" id="input-iguales-bancos" value="0" onkeyup="diferencia_siguiente_final()"></td>
                     </tr>
                     <tr class="text-center">
                         <td>SUMAS IGUALES</td>
@@ -213,39 +183,27 @@
 @stop
 @section('js')
     <script>
-        {{--
-            --}}
-        const data_mano = @json($result);
-        const data_cobrados = @json($comprobantes_old);
-        const cheques_mano = {{$cheques_mano}};
-        const saldo_siguiente = {{$rubroPUC->saldo_inicial + $totDeb- $totCredAll}};
-        const cheques_cobrados = {{$comprobantes_old->sum('valor')}};
+        let saldos_libros_i = {{$totalLastMonth}};
+        let cheques_mano = {{$cheques_mano}};
+        let saldo_siguiente_i = {{$rubroPUC->saldo_inicial + $totDeb- $totCredAll}};
+        let cheques_cobrados = {{$comprobantes_old->sum('valor')}};
+        let cheques_mano_libro = 0;
         let restar_cheques_mano = 0;
         let restar_cheques_cobrados = 0;
+        let total_diferencia_siguiente_final = 0;
         
         $(document).ready(function(){
             diferencia_siguiente_final();
-            suma_iguales_bancos();
-            suma_iguales_libros();
-            $('#td-restar-checke-mano').html(0)
-            $('#td-total-checke-cobrados').html(cheques_cobrados);
-            {{----}}
-            console.log('cheques_mano',cheques_mano);
-            console.log('data_mano',data_mano);
-            console.log('cheques_cobrados',cheques_cobrados);
-            console.log('data_cobrados',data_cobrados);
         });
 
         const guardar = finalizar =>{
-            let final = parseInt($('#valor_final').val());
+            //primero se mandan los valores a los td
             let libros = parseInt($('#input-iguales-libros').val());
             let bancos = parseInt($('#input-iguales-bancos').val());
             let inicio = parseInt($('#valor_inicial').val());
             //alert(final)
 
-            if(isNaN(final)){
-                alert("Input Saldo Final debe ser numerico y obligatorio");
-            }else if(isNaN(inicio)){
+            if(isNaN(inicio)){
                 alert("Input Saldo Inicial debe ser numerico y obligatorio");
             }else if(isNaN(libros)){
                 alert("Input de partida sin conciliar libros debe ser numerico y obligatorio");
@@ -257,26 +215,52 @@
             }
         }
 
-        $('#valor_final').on('change', function(){
-            diferencia_siguiente_final();
-        })
-
         const diferencia_siguiente_final = () => {
-            let final = parseInt($('#valor_final').val());
-            let valor = !isNaN(final) ? final : 0 ;
-            $('#td_saldo_final').html(valor);
-            $('#td-diferencia').html(parseInt(saldo_siguiente)- valor);
-            suma_iguales_bancos();
+            //recoleccion de datos
+           let v_inicial = parseInt($('#valor_inicial').val());
+           let v_suma_iguales_libros = parseInt($('#input-iguales-libros').val());
+           let v_suma_iguales_bancos = parseInt($('#input-iguales-bancos').val());
+           //procesos
+           let final_bancos = v_inicial + (cheques_mano - restar_cheques_mano) - (cheques_cobrados-restar_cheques_cobrados);
+           console.log('rr', [v_inicial + (cheques_mano - restar_cheques_mano) - cheques_cobrados, v_inicial , (cheques_mano - restar_cheques_mano) , cheques_cobrados]);
+           let total_cheques_cobrados = cheques_cobrados - restar_cheques_cobrados;
+           let total_diferencia_siguiente_final = saldo_siguiente_i - final_bancos;
+           let total_suma_iguales_libros = saldo_siguiente_i-restar_cheques_mano+v_suma_iguales_libros+restar_cheques_cobrados;
+           let total_suma_iguales_bancos = final_bancos+v_suma_iguales_bancos;//cheques_cobrados-final_bancos+v_suma_iguales_bancos+cheques_mano;
+
+           //salidas input
+           $('#valor_final').val(final_bancos);
+
+
+           //salidas arriba
+            $('#td-s-libros-i').html(saldos_libros_i);
+            $('#td-s-siguiente-i').html(saldo_siguiente_i);
+            $('#td-saldo-final').html(final_bancos);
+            $('#td-diferencia').html(total_diferencia_siguiente_final);
+            
+            //salidas abajo libros
+            $('#td-s-siguiente-f').html(saldo_siguiente_i);
+            $('#td-restar-checke-mano').html(0 - restar_cheques_mano);
+            $('#td-restar-checke-cobrados').html(restar_cheques_cobrados);
+            $('#td-dumas-iguales-libros').html(total_suma_iguales_libros);
+            
+            //salidas abajo bancos
+            $('#td-s-inicial-f').html(v_inicial);
+            $('#td-checke-mano').html(cheques_mano-restar_cheques_mano);
+            $('#td-cheques-cobrados').html(restar_cheques_cobrados - cheques_cobrados);
+            $('#td-dumas-iguales-bancos').html(total_suma_iguales_bancos);
+            
+            
+            //console.log('rr', [ (cheques_cobrados - restar_cheques_cobrados)-final_bancos+total_b+(cheques_mano-restar_cheques_mano),  (cheques_cobrados - restar_cheques_cobrados),final_bancos,total_b,(cheques_mano-restar_cheques_mano)]);
         }
 
         const checked_checke_mano = (item, value) => {
             if(item.checked){
-                restar_cheques_mano = restar_cheques_mano - value;
-            }else{
                 restar_cheques_mano = restar_cheques_mano + value;
+            }else{
+                restar_cheques_mano = restar_cheques_mano - value;
             }
-            $('#td-restar-checke-mano').html(0-restar_cheques_mano);
-            suma_iguales_libros();
+            diferencia_siguiente_final();
         }
 
         const checked_checke_cobrados = (item, value) => {
@@ -285,23 +269,7 @@
             }else{
                 restar_cheques_cobrados = restar_cheques_cobrados + value;
             }
-            $('#td-total-checke-cobrados').html(cheques_cobrados - restar_cheques_cobrados);
-            suma_iguales_bancos();
-        }
-
-
-        const suma_iguales_libros = () => {
-            let input_value = parseInt($('#input-iguales-libros').val());
-            let total = !isNaN(input_value) ? input_value : 0;
-            console.log('rrr', [saldo_siguiente+restar_cheques_mano+total, saldo_siguiente,restar_cheques_mano,total]);
-            $('#td-dumas-iguales-libros').html(saldo_siguiente+(0-restar_cheques_mano)+total);
-        }
-
-        const suma_iguales_bancos = () => {
-            let final = parseInt($('#valor_final').val());
-            let input_value = parseInt($('#input-iguales-bancos').val());
-            let total = !isNaN(input_value) ? input_value : 0;
-            $('#td-dumas-iguales-bancos').html((cheques_cobrados - restar_cheques_cobrados)+final+total);
+            diferencia_siguiente_final();
         }
 
         $('#tablaBank').DataTable( {
