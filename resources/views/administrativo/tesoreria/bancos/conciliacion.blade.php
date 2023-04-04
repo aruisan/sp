@@ -244,7 +244,7 @@
                     table.destroy();
                     $("#cargando").hide();
                     $("#buttonMake").show();
-                    toastr.warning('SE REALIZO LA BUSQUEDA EXITOSAMENTE PERO NO HAY MOVIMIENTOS EN ESE MES CONSULTADO DE ESA CUENTA.');
+                    toastr.warning('SE REALIZO LA BUSQUEDA EXITOSAMENTE PERO NO HAY MOVIMIENTOS EN ESE MES.');
                 }
             }).fail(function() {
                 $("#tabla").hide();
