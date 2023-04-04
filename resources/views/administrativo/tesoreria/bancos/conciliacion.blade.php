@@ -166,9 +166,9 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
+                $("#buttonMake").show();
                 document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
                 $("#tabla").show();
-                $("#buttonMake").show();
                 table.destroy();
                 $("#cargando").hide();
                 table = $('#tabla').DataTable( {
