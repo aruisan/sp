@@ -12,6 +12,7 @@ use App\Model\Administrativo\Tesoreria\bancos;
 use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
 use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancariaCuentas;
 use App\Model\Persona;
+use App\Model\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -269,9 +270,15 @@ class BancosController extends Controller
         if (count($compsCont) > 0){
             foreach ($compsCont as $compCont){
                 if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
-                    $persona = Persona::find($compCont->comprobante->persona_id);
-                    $tercero = $persona->nombre;
-                    $numIdent = $persona->num_dc;
+                    if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
+                        $user = User::find($compCont->comprobante->persona_id);
+                        $tercero = $user->name;
+                        $numIdent = $user->email;
+                    } else{
+                        $persona = Persona::find($compCont->comprobante->persona_id);
+                        $tercero = $persona->nombre;
+                        $numIdent = $persona->num_dc;
+                    }
                     if ($compCont->cuenta_banco == $rubroPUC->id){
                         $total = $total + $compCont->debito;
                         $total = $total - $compCont->credito;
@@ -370,9 +377,15 @@ class BancosController extends Controller
             foreach ($compsCont as $compCont){
                 if (Carbon::parse($compCont->fechaComp)->format('Y') == Carbon::today()->format('Y')) {
                     if (Carbon::parse($compCont->fechaComp)->format('m') == $request->mes) {
-                        $persona = Persona::find($compCont->comprobante->persona_id);
-                        $tercero = $persona->nombre;
-                        $numIdent = $persona->num_dc;
+                        if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
+                            $user = User::find($compCont->comprobante->persona_id);
+                            $tercero = $user->name;
+                            $numIdent = $user->email;
+                        } else{
+                            $persona = Persona::find($compCont->comprobante->persona_id);
+                            $tercero = $persona->nombre;
+                            $numIdent = $persona->num_dc;
+                        }
                         if ($compCont->cuenta_banco == $rubroPUC->id){
                             $total = $total + $compCont->debito;
                             $total = $total - $compCont->credito;
@@ -460,9 +473,15 @@ class BancosController extends Controller
             foreach ($compsCont as $compCont){
                 if (Carbon::parse($compCont->fechaComp)->format('Y') == $añoActual) {
                     if (Carbon::parse($compCont->fechaComp)->format('m') == $request->mes) {
-                        $persona = Persona::find($compCont->comprobante->persona_id);
-                        $tercero = $persona->nombre;
-                        $numIdent = $persona->num_dc;
+                        if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
+                            $user = User::find($compCont->comprobante->persona_id);
+                            $tercero = $user->name;
+                            $numIdent = $user->email;
+                        } else{
+                            $persona = Persona::find($compCont->comprobante->persona_id);
+                            $tercero = $persona->nombre;
+                            $numIdent = $persona->num_dc;
+                        }
                         if ($compCont->cuenta_banco == $rubroPUC->id){
                             $total = $total + $compCont->debito;
                             $total = $total - $compCont->credito;
@@ -578,9 +597,15 @@ class BancosController extends Controller
                 
                 if (Carbon::parse($compCont->fechaComp)->format('Y') == $añoActual) {
                     if (Carbon::parse($compCont->fechaComp)->format('m') == $request->mes) {
-                        $persona = Persona::find($compCont->comprobante->persona_id);
-                        $tercero = $persona->nombre;
-                        $numIdent = $persona->num_dc;
+                        if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
+                            $user = User::find($compCont->comprobante->persona_id);
+                            $tercero = $user->name;
+                            $numIdent = $user->email;
+                        } else{
+                            $persona = Persona::find($compCont->comprobante->persona_id);
+                            $tercero = $persona->nombre;
+                            $numIdent = $persona->num_dc;
+                        }
                         if ($compCont->cuenta_banco == $rubroPUC->id){
                             $total = $total + $compCont->debito;
                             $total = $total - $compCont->credito;
