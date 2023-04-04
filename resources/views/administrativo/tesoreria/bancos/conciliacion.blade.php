@@ -40,7 +40,7 @@
                             <option value="12">DICIEMBRE</option>
                         </select>
                         <br>
-                        <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
+                        <select class="select-bank" style="width: 100%" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
                             <option value="0">Seleccione la cuenta para obtener la conciliación Bancaria</option>
                             @foreach($result as $cuenta)
                                 <option @if($cuenta['hijo'] == 0) disabled @endif value="{{$cuenta['id']}}">{{$cuenta['code']}} -
@@ -124,6 +124,8 @@
 
 @section('js')
     <script>
+
+        $('.select-bank').select2();
 
         const formatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
