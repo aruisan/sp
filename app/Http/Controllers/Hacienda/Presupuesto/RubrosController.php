@@ -298,4 +298,12 @@ class RubrosController extends Controller
         return redirect('/presupuesto/rubro/'.$id);
     }
 
+    public function findFont(Request $request){
+        if ($request->tipo == "0"){
+            $rubrosMov = RubrosMov::where('dep_rubro_font_id', $request->id)->where('movimiento', $request->mov)->first();
+            if ($rubrosMov) return $rubrosMov;
+            else return ["valor"=> 0];
+        } else dd($request->tipo);
+    }
+
 }

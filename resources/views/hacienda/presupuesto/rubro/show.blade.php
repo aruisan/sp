@@ -95,7 +95,7 @@
             @include('modal.asignarDineroDep')
         @endif
     </ul>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="col-lg-12 " style="background-color:white;">
         <div class="tab-content">
             <div id="datos" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tab-pane fade in active">
@@ -506,6 +506,32 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="{{ asset('/js/datatableRubro.js') }}"></script>
     <script>
+
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
+
+        function findFontAdd(id, mov){
+            document.getElementById("DepFontID").value = id;
+            $.ajax({
+                method: "POST",
+                url: "/presupuesto/findFontDep/",
+                data: { "id": id, "mov": mov, "tipo": <?php echo $vigens->tipo; ?>, "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(datos) {
+                console.log(datos["valor"], datos);
+                document.getElementById("valueFont").innerHTML = formatter.format(datos["valor"]);
+                if(datos["valor"] != 0) document.getElementById("movRubroID").value = datos["id"];
+                else document.getElementById("movRubroID").value = 0;
+                $("#divValues").show();
+                $("#buttonEnviarAdd").show();
+            }).fail(function() {
+                $("#divValues").hide();
+                $("#buttonEnviarAdd").hide();
+                toastr.warning('OCURRIO UN ERROR AL REALIZAR LA BUSQUEDA DE LA FUENTE, INTENTE NUEVAMENTE POR FAVOR.');
+            });
+        }
 
         $('#tabla_rubrosAdd').DataTable( {
             responsive: true,
