@@ -307,7 +307,7 @@ class BancosController extends Controller
     }
 
     public function conciliacion(){
-        $conciliacion_id = NULL
+        $conciliacion_id = NULL;
         $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
         foreach ($lv1 as $dato){
             $result[] = $dato;
