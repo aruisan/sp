@@ -181,7 +181,7 @@ class CdpController extends Controller
         if ($countCdps == null) $count = 0;
         else $count = $countCdps->code;
 
-        $request->fecha = '2023-04-02';
+        $request->fecha = '2023-04-03';
 
         $cdp = new Cdp();
         $cdp->name = $request->name;
@@ -373,7 +373,7 @@ class CdpController extends Controller
     {
         $update = Cdp::findOrFail($id);
 
-        $fecha = '2023-04-02';
+        $fecha = '2023-04-03';
         if ($rol == 2){
 
             //SE VALIDA QUE SE TENGA DINERO EN LA FUENTE PARA EL ENVIO DEL CDP
@@ -506,7 +506,7 @@ class CdpController extends Controller
 
     public function rechazar(Request $request, $id, $vigen)
     {
-        $request->fecha = '2023-04-02';
+        $request->fecha = '2023-04-03';
         if ($request->rol == "3"){
             $update = Cdp::findOrFail($id);
             $update->jefe_e = "1";
