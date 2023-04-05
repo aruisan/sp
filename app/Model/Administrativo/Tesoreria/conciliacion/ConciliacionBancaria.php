@@ -5,6 +5,7 @@ namespace App\Model\Administrativo\Tesoreria\conciliacion;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\ComprobanteIngresoTemporal;
+use App\ComprobanteIngresoTemporalConciliacion;
 
 class ConciliacionBancaria extends Model implements Auditable
 {
@@ -26,6 +27,6 @@ class ConciliacionBancaria extends Model implements Auditable
     }
 
     public function cuentas_temporales() {
-        return $this->hasMany(ComprobanteIngresoTemporal::class, 'conciliacion_id');
+        return $this->hasMany(ComprobanteIngresoTemporalConciliacion::class, 'conciliacion_id');
     }
 }

@@ -32,7 +32,7 @@
     var hot = new Handsontable(container, {
         data: Handsontable.helper.createSpreadsheetData(2,7),
         rowHeaders: true,
-        colHeaders: true,
+        colHeaders: ['code', 'fecha', 'referencia', 'cc', 'tercero', 'valor', 'concepto'],
         filters: true,
         dropdownMenu: true,
         contextMenu:true,

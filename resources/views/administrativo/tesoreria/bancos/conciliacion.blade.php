@@ -289,5 +289,9 @@
                 },
             ]
         } );
+
+        @if(!is_null($conciliacion_id))
+            window.open("{{route('conciliacion.pdf', $conciliacion_id)}}", '_blank')
+        @endif
     </script>
 @stop
