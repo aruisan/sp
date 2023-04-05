@@ -105,6 +105,7 @@
 			</tr>
 			</tbody>
 		</table>
+	</div>
 		<br>
 	<div class="table-responsive br-black-1">
 		<table class="table table-condensed">
@@ -119,9 +120,8 @@
 			</tr>
 			</thead>
 			<tbody>
-			@foreach($cuentas as $data)
-				@if($data->aprobado == "ON")
-				<tr class="text-center">
+			@foreach($cuentas->filter(function($e){ return $e->aprobado == 'ON';}) as $data)
+				<tr class="text-center bg-success">
 					<td>{{ \Carbon\Carbon::parse($data->fecha)->format('d-m-Y') }}</td>
 					<td>{{$data->referencia}}</td>
 					<td>$<?php echo number_format($data->debito,0) ?></td>
@@ -129,7 +129,16 @@
 					<td>$<?php echo number_format($data->valor,0) ?></td>
 					<td>APROBADO</td>
 				</tr>
-				@endif
+			@endforeach
+			@foreach($cuentas->filter(function($e){ return $e->aprobado == 'OFF';}) as $data)
+				<tr class="text-center bg-primary">
+					<td>{{ \Carbon\Carbon::parse($data->fecha)->format('d-m-Y') }}</td>
+					<td>{{$data->referencia}}</td>
+					<td>$<?php echo number_format($data->debito,0) ?></td>
+					<td>$<?php echo number_format($data->credito,0) ?></td>
+					<td>$<?php echo number_format($data->valor,0) ?></td>
+					<td>No Aprobado</td>
+				</tr>
 			@endforeach
 			</tbody>
 		</table>
@@ -156,7 +165,7 @@
 					<td>{{$item->referencia}} - {{$item->cc}} - {{$item->tercero}}</td>
 					<td>$<?php echo number_format(0,0) ?></td>
 					<td>$<?php echo number_format(0,0) ?></td>
-					<td>$<?php echo number_format($item->valor,0) ?></td>
+					<td>$<?php echo number_format($item->valor,0)?></td>
 					<td>Aprobado</td>
 				</tr>
 			@endforeach
