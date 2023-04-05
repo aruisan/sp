@@ -120,8 +120,8 @@
 			</tr>
 			</thead>
 			<tbody>
-			@foreach($cuentas->filter(function($e){ return $e->aprobado == 'ON';}) as $data)
-				<tr class="text-center bg-success">
+			@foreach($cuentas->filter(function($e){ return $e->aprobado == 'ON'; }) as $data)
+				<tr class="text-center">
 					<td>{{ \Carbon\Carbon::parse($data->fecha)->format('d-m-Y') }}</td>
 					<td>{{$data->referencia}}</td>
 					<td>$<?php echo number_format($data->debito,0) ?></td>
@@ -131,13 +131,13 @@
 				</tr>
 			@endforeach
 			@foreach($cuentas->filter(function($e){ return $e->aprobado == 'OFF';}) as $data)
-				<tr class="text-center bg-primary">
+				<tr class="text-center">
 					<td>{{ \Carbon\Carbon::parse($data->fecha)->format('d-m-Y') }}</td>
 					<td>{{$data->referencia}}</td>
 					<td>$<?php echo number_format($data->debito,0) ?></td>
 					<td>$<?php echo number_format($data->credito,0) ?></td>
 					<td>$<?php echo number_format($data->valor,0) ?></td>
-					<td>No Aprobado</td>
+					<td class="text-danger">NO APROBADO</td>
 				</tr>
 			@endforeach
 			</tbody>
@@ -159,14 +159,24 @@
 			</tr>
 			</thead>
 			<tbody id="bodyTabla">
-			@foreach($conciliacion->cuentas_temporales as $index => $item)
+			@foreach($conciliacion->cuentas_temporales->filter(function($e){ return $e->check;}) as $index => $item)
 				<tr class="text-center">
-					<td>{{$item->fecha}}</td>
-					<td>{{$item->referencia}} - {{$item->cc}} - {{$item->tercero}}</td>
+					<td>{{$item->comprobante_ingreso_temporal->fecha}}</td>
+					<td>{{$item->comprobante_ingreso_temporal->referencia}} - {{$item->comprobante_ingreso_temporal->cc}} - {{$item->comprobante_ingreso_temporal->tercero}}</td>
 					<td>$<?php echo number_format(0,0) ?></td>
 					<td>$<?php echo number_format(0,0) ?></td>
-					<td>$<?php echo number_format($item->valor,0)?></td>
+					<td>$<?php echo number_format($item->comprobante_ingreso_temporal->valor,0)?></td>
 					<td>Aprobado</td>
+				</tr>
+			@endforeach
+			@foreach($conciliacion->cuentas_temporales->filter(function($e){ return !$e->check;}) as $index => $item)
+				<tr class="text-center">
+					<td>{{$item->comprobante_ingreso_temporal->fecha}}</td>
+					<td>{{$item->comprobante_ingreso_temporal->referencia}} - {{$item->comprobante_ingreso_temporal->cc}} - {{$item->comprobante_ingreso_temporal->tercero}}</td>
+					<td>$<?php echo number_format(0,0) ?></td>
+					<td>$<?php echo number_format(0,0) ?></td>
+					<td>$<?php echo number_format($item->comprobante_ingreso_temporal->valor,0)?></td>
+					<td class="text-danger">NO APROBADO</td>
 				</tr>
 			@endforeach
 			</tbody>
