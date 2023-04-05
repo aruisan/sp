@@ -304,17 +304,12 @@
                </li>
                <!--  <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li> -->
                <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
-               <!-- SE OCULTAN LOS COMPROBANTES DE EGRESO, EL DOC DICE QUE LUEGO SE VUELVEN A MOSTRAR
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Comprobante de Egresos </a>
                   <ul class="dropdown-menu">
-                     <li><a class="item-menu" href="{{ url('/administrativo/pagos/3') }}">2020</a></li>
-                     <li><a class="item-menu" href="{{ url('/administrativo/pagos/5') }}">2021</a></li>
-                     <li><a class="item-menu" href="{{ url('/administrativo/pagos/7') }}">2022</a></li>
                      <li><a class="item-menu" href="{{ url('/administrativo/pagos/11') }}">2023</a></li>
                   </ul>
                </li>
-               -->
             @else
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Impuestos</a>

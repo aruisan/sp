@@ -171,7 +171,9 @@ class RubrosController extends Controller
         }
         $RubrosM = RubrosMov::where([['rubro_id','=',$rubro->id],['valor','>','0']])->get();
         foreach ($RubrosM as $data){
-            $files[] = collect(['idResource' => $data->resource_id , 'ruta' => $data->Resource->ruta, 'mov' => $data->movimiento]);
+            if ($data->resource_id == 0){
+                foreach ($data->ResourcesMov as $resource) $files[] = collect(['idResource' => $resource->id , 'ruta' => $resource->ruta, 'mov' => $data->movimiento]);
+            } else $files[] = collect(['idResource' => $data->resource_id , 'ruta' => $data->Resource->ruta, 'mov' => $data->movimiento]);
         }
         if (!isset($files)){
             foreach ($rubro->fontsRubro as $fr){
@@ -303,7 +305,11 @@ class RubrosController extends Controller
             $rubrosMov = RubrosMov::where('dep_rubro_font_id', $request->id)->where('movimiento', $request->mov)->first();
             if ($rubrosMov) return $rubrosMov;
             else return ["valor"=> 0];
-        } else dd($request->tipo);
+        } else {
+            $rubrosMov = RubrosMov::where('fonts_rubro_id', $request->id)->where('movimiento', $request->mov)->first();
+            if ($rubrosMov) return $rubrosMov;
+            else return ["valor"=> 0];
+        }
     }
 
 }

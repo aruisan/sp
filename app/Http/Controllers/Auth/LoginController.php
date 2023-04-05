@@ -39,7 +39,7 @@ class LoginController extends Controller
 
     public function redirectPath()
     {
-        if (auth()->user()->id == 3) {
+        if (auth()->user()->id == 3 or auth()->user()->id == 605) {
             //VALIDACION PARA REDIRIGIR EL USUARIO A LOS CDPs DE LA VIGENCIA ACTUAL
             $añoActual = Carbon::now()->year;
             $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();

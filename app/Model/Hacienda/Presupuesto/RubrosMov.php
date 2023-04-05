@@ -15,4 +15,8 @@ class RubrosMov extends Model implements Auditable
         return $this->belongsTo('App\Resource','resource_id');
     }
 
+    public function ResourcesMov(){
+        return $this->hasMany('App\Model\Hacienda\Presupuesto\ResourcesMov','mov_id','id');
+    }
+
 }

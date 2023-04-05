@@ -401,23 +401,22 @@
                                             <td>{{ $depFont->dependencias->name }}</td>
                                             <td class="text-center">$ <?php echo number_format($depFont->value,0);?>.00</td>
                                             <td class="text-center">
-                                                @foreach($valores as $valAdd)
-                                                    @if($fuentes->id == $valAdd['id'])
-                                                        $ <?php echo number_format($valAdd['adicion'],0);?>.00
-                                                    @endif
+                                                @foreach($depFont->movs as $mov)
+                                                    @if($mov->movimiento == "2") @php($adicionesTot[] = $mov->valor) @endif
                                                 @endforeach
+                                                @if(isset($adicionesTot))
+                                                   $ <?php echo number_format(array_sum($adicionesTot),0);?>.00
+                                                   <?php unset($adicionesTot); ?>
+                                                @else $ 0.00 @endif
                                             </td>
                                             <td class="text-center">
-                                                @php($put = false)
-                                                @foreach($red as $reduccion)
-                                                    @if($reduccion->dep_rubro_font_id == $depFont->id)
-                                                        $ <?php echo number_format($reduccion->valor,0);?>.00
-                                                        @php($put = true)
-                                                    @endif
+                                                @foreach($depFont->movs as $mov)
+                                                    @if($mov->movimiento == "3") @php($reduccionesTot[] = $mov->valor) @endif
                                                 @endforeach
-                                                @if(!$put)
-                                                    $ 0.00
-                                                @endif
+                                                    @if(isset($reduccionesTot))
+                                                        $ <?php echo number_format(array_sum($reduccionesTot),0);?>.00
+                                                            <?php unset($reduccionesTot); ?>
+                                                    @else $ 0.00 @endif
                                             </td>
                                             @if($vigens->tipo != 1)
                                                 <td class="text-center">
@@ -514,13 +513,11 @@
         })
 
         function findFontAdd(id, mov){
-            document.getElementById("DepFontID").value = id;
             $.ajax({
                 method: "POST",
                 url: "/presupuesto/findFontDep/",
                 data: { "id": id, "mov": mov, "tipo": <?php echo $vigens->tipo; ?>, "_token": $("meta[name='csrf-token']").attr("content")}
             }).done(function(datos) {
-                console.log(datos["valor"], datos);
                 document.getElementById("valueFont").innerHTML = formatter.format(datos["valor"]);
                 if(datos["valor"] != 0) document.getElementById("movRubroID").value = datos["id"];
                 else document.getElementById("movRubroID").value = 0;
@@ -529,6 +526,25 @@
             }).fail(function() {
                 $("#divValues").hide();
                 $("#buttonEnviarAdd").hide();
+                toastr.warning('OCURRIO UN ERROR AL REALIZAR LA BUSQUEDA DE LA FUENTE, INTENTE NUEVAMENTE POR FAVOR.');
+            });
+        }
+
+        function findFontRed(id, mov){
+            $.ajax({
+                method: "POST",
+                url: "/presupuesto/findFontDep/",
+                data: { "id": id, "mov": mov, "tipo": <?php echo $vigens->tipo; ?>, "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(datos) {
+                console.log(datos["valor"], datos);
+                document.getElementById("valueFontRed").innerHTML = formatter.format(datos["valor"]);
+                if(datos["valor"] != 0) document.getElementById("movRubroIDRed").value = datos["id"];
+                else document.getElementById("movRubroIDRed").value = 0;
+                $("#divValuesRed").show();
+                $("#buttonEnviarRed").show();
+            }).fail(function() {
+                $("#divValuesRed").hide();
+                $("#buttonEnviarRed").hide();
                 toastr.warning('OCURRIO UN ERROR AL REALIZAR LA BUSQUEDA DE LA FUENTE, INTENTE NUEVAMENTE POR FAVOR.');
             });
         }
