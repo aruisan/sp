@@ -195,13 +195,15 @@ Route::group([ 'middleware' => 'auth'] ,function(){
             //Bancos
         Route::get('tesoreria/bancos/libros','Administrativo\Tesoreria\BancosController@libros');
         Route::get('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@conciliacion');
-        Route::get('tesoreria/bancos/conciliacion/{id}/pdf','Administrativo\Tesoreria\BancosController@pdf');
+        Route::get('tesoreria/bancos/conciliacion/{conciliacion_id}','Administrativo\Tesoreria\BancosController@conciliacion')->name('conciliacion.guardar.pdf');
+        Route::get('tesoreria/bancos/conciliacion/{id}/pdf','Administrativo\Tesoreria\BancosController@pdf')->name('conciliacion.pdf');
         Route::get('tesoreria/bancos/libros','Administrativo\Tesoreria\BancosController@libros');
         Route::post('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@saveConciliacion');
         Route::post('tesoreria/bancos/movAccount','Administrativo\Tesoreria\BancosController@movAccount');
         Route::post('tesoreria/bancos/movAccountLibros','Administrativo\Tesoreria\BancosController@movAccountLibros');
         Route::post('tesoreria/bancos/makeConciliacion','Administrativo\Tesoreria\BancosController@makeConciliacion');
         Route::resource('bancos','Administrativo\Tesoreria\BancosController');
+        Route::post('tesoreria/bancos/conciliacion/guardar-ver','Administrativo\Tesoreria\BancosController@saveAndSeePdf')->name('conciliacion.guardar-ver');
 
 
             //Pac
