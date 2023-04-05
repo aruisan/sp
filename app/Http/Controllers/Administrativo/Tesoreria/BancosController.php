@@ -306,7 +306,20 @@ class BancosController extends Controller
         return $result;
     }
 
-    public function conciliacion($conciliacion_id = NULL){
+    public function conciliacion(){
+        $conciliacion_id = NULL
+        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
+        foreach ($lv1 as $dato){
+            $result[] = $dato;
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) $result[] = $cuenta;
+        }
+        $conciliaciones = ConciliacionBancaria::where('año', Carbon::today()->format('Y') )->get();
+
+        return view('administrativo.tesoreria.bancos.conciliacion',compact('result','conciliaciones', 'conciliacion_id'));
+    }
+
+    public function conciliacion_pdf($conciliacion_id){
         $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
         foreach ($lv1 as $dato){
             $result[] = $dato;
