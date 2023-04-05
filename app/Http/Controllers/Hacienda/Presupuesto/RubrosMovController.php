@@ -243,6 +243,34 @@ class RubrosMovController extends Controller
 
         } elseif ($m == 2){
 
+            if (intval($request->valorAdd) <= 0){
+                Session::flash('warning','El valor de la adición no puede ser menor o igual a 0');
+                return redirect()->back();
+            }
+
+            if ($request->movRubroID != 0) {
+                //SIGNIFICA QUE ESA FUENTE YA HA RECIBIDO UNA ADICION
+                //SE DEBE AJUSTAR EL TEMA DE ALMACENAR EL ARCHIVO DE UNA ADICION QUE YA CUENTA CON UN ARCHIVO
+
+                $rubroMov = RubrosMov::find($request->movRubroID);
+                $rubroMov->valor = $rubroMov->valor + intval($request->valorAdd);
+                $rubroMov->save();
+
+                $depRubroFont = DependenciaRubroFont::find($rubroMov->dep_rubro_font_id);
+                $depRubroFont->saldo = $depRubroFont->saldo + intval($request->valorAdd);
+                $depRubroFont->save();
+
+                Session::flash('success', 'La adición se realizo correctamente');
+                return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
+
+            } else{
+                //SIGNIFICA QUE ESA FUENTE NO HA RECIBIDO UNA ADICION Y SE TIENE QUE CREAR EL MOVIMIENTO
+
+            }
+
+
+            dd($request);
+
             $fuenteR_id = $request->fontID;
             $valor = $request->valorAdd;
             $mov_id = $request->mov_id;

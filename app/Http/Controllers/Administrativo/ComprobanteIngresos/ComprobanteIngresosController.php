@@ -12,6 +12,7 @@ use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Http\Controllers\Controller;
 use App\Model\Persona;
+use App\Model\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Traits\FileTraits;
@@ -296,7 +297,12 @@ class ComprobanteIngresosController extends Controller
     public function pdf($id)
     {
         $comprobante = ComprobanteIngresos::findOrFail($id);
-        $persona = Persona::find($comprobante->persona_id);
+        if ($comprobante->tipoCI == "Comprobante de Ingresos"){
+            $user = User::find($comprobante->persona_id);
+            $persona = $user;
+            $persona->nombre = $user->name;
+            $persona->num_dc = $user->email;
+        } else $persona = Persona::find($comprobante->persona_id);
 
         $fecha = Carbon::createFromTimeString($comprobante->ff.' 00:00:00');
         $dias = array("Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado");

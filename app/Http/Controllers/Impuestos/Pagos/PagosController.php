@@ -328,8 +328,6 @@ class PagosController extends Controller
 
     public function makeCC($id){
         $pago = Pagos::find($id);
-        $pago->confirmed = "TRUE";
-        $pago->save();
 
         $añoActual = Carbon::now()->year;
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->where('estado', '0')->first();
@@ -352,6 +350,7 @@ class PagosController extends Controller
         $comprobante->persona_id = $pago->user_id;
         if ($pago->modulo == 'PREDIAL') $comprobante->concepto = "IMPUESTO PREDIAL ".$pago->fechaPago." #".$pago->id;
         elseif ($pago->modulo == 'ICA-Contribuyente') $comprobante->concepto = "IMPUESTO ICA CONTRIBUYENTE ".$pago->fechaPago." #".$pago->id;
+        elseif ($pago->modulo == 'ICA-AgenteRetenedor') $comprobante->concepto = "IMPUESTO ICA AGENTE RETENEDOR ".$pago->fechaPago." #".$pago->id;
         $comprobante->save();
 
         //BANCO DEL COMPROBANTE CONTABLE
@@ -444,8 +443,6 @@ class PagosController extends Controller
             $comprobanteMov->debito = $totDesc;
             $comprobanteMov->save();
 
-            return 'OK';
-
         } elseif ($pago->modulo == 'ICA-Contribuyente'){
             $ica = IcaContri::find($pago->entity_id);
 
@@ -518,8 +515,12 @@ class PagosController extends Controller
             $comprobanteMov->rubro_font_ingresos_id = 871;
             $comprobanteMov->debito = $ica->interesesMora;
             $comprobanteMov->save();
-
-            return 'OK';
         }
+
+        $pago->confirmed = "TRUE";
+        $pago->save();
+
+        return 'OK';
+
     }
 }

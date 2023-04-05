@@ -21,83 +21,32 @@
                             <input type="hidden" name="vigencia_id" id="vigencia_id" value="{{ $rubro->vigencia_id }}">
                         </div>
                         <br>
-                        <table id="tabla_rubrosAdd" class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th class="text-center">FUENTE</th>
-                                @if($vigens->tipo == 0)
-                                    <th class="text-center">DEPENDENCIA</th>
-                                @endif
-                                <th class="text-center">VALOR</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                        <h4 class="text-center"> SELECCIONE LA FUENTE A LA QUE SE DESTINARÁ LA ADICIÓN</h4>
+                        <select class="form-control" id="fuenteDep" name="fuenteDep" onchange="findFontAdd(this.value, 2)">
+                            <option value="0">Seleccione la fuente a realizar adición</option>
                             @foreach($rubro->fontsRubro as $data)
                                 @if($vigens->tipo == 0)
                                     @foreach($data->dependenciaFont as $depFont)
-                                        <tr>
-                                            <td class="text-center">{{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</td>
-                                            <td class="text-center">
-                                                {{$depFont->dependencias->name}}
-                                                <input type="hidden" name="depID[]" value="{{ $depFont->id }}">
-                                            </td>
-                                            <td>
-                                                <input type="hidden" name="fontID[]" value="{{$data->id}}">
-                                                @if(count($data->rubrosMov) > 0)
-                                                    @foreach($data->rubrosMov as $mov)
-                                                        @if($mov->movimiento == 2)
-                                                            @if($mov->dep_rubro_font_id == $depFont->id)
-                                                                @php($value = $mov->valor)
-                                                                @php($id = $mov->id)
-                                                            @else
-                                                                @php($value = 0)
-                                                                @php($id = '')
-                                                            @endif
-                                                        @else
-                                                            @php($value = 0)
-                                                            @php($id = '')
-                                                        @endif
-                                                    @endforeach
-                                                    <input type="text" required  name="valorAdd[]" value="{{ $value }}" style="text-align: center" class="form-control" min="0">
-                                                    <input type="hidden" id="mov_id[]" name="mov_id[]" value="{{ $id }}">
-                                                @else
-                                                    <input type="text" required  name="valorAdd[]" value="0" style="text-align: center" class="form-control" min="0">
-                                                    <input type="hidden" id="mov_id[]" name="mov_id[]">
-                                                @endif
-                                            </td>
-                                        </tr>
+                                        <option value="{{ $depFont->id }}"> {{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }} -
+                                        Dep: {{$depFont->dependencias->name}}</option>
                                     @endforeach
                                 @else
-                                <tr>
-                                    <td class="text-center">{{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</td>
-                                    <td>
-                                        <input type="hidden" name="fontID[]" value="{{$data->id}}">
-                                        @if(count($data->rubrosMov) > 0)
-                                            @foreach($data->rubrosMov as $mov)
-                                                @if($mov->movimiento == 2)
-                                                    @php($value = $mov->valor)
-                                                    @php($id = $mov->id)
-                                                @else
-                                                    @php($value = 0)
-                                                    @php($id = $mov->id)
-                                                @endif
-                                            @endforeach
-                                            <input type="text" required  name="valorAdd[]" value="{{ $value }}" style="text-align: center" class="form-control" min="0">
-                                            <input type="hidden" id="mov_id[]" name="mov_id[]" value="{{ $id }}">
-                                        @else
-                                            <input type="text" required  name="valorAdd[]" value="0" style="text-align: center" class="form-control" min="0">
-                                            <input type="hidden" id="mov_id[]" name="mov_id[]">
-                                        @endif
-                                    </td>
-                                </tr>
+                                    <option value="{{ $data->id }}"> {{ $data->sourceFunding->code }} - {{ $data->sourceFunding->description }}</option>
                                 @endif
                             @endforeach
-                            </tbody>
-                        </table>
+                        </select>
+                        <input type="hidden" name="DepFontID" id="DepFontID" value="0">
+                        <input type="hidden" name="movRubroID" id="movRubroID" value="0">
+                        <div class="text-center" style="display: none" id="divValues" name="divValues">
+                            <br>
+                            <h5 class="text-center"> VALOR ACTUAL DE ADICIÓN DE LA FUENTE: <span id="valueFont"></span> </h5>
+                            <h5 class="text-center"> VALOR A ADICIONAR, SI SE TIENE YA UNA ADICION SE DEBE SUMAR EL VALOR DE LA ADICION ACTUAL MAS EL NUEVO VALOR</h5>
+                            <input type="number" class="form-control" name="valorAdd" id="valorAdd" value="0" min="1">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <center><button type="submit" class="btn-sm btn-primary">Guardar Adición</button></center>
+                    <center><button type="submit" style="display: none" id="buttonEnviarAdd" class="btn-sm btn-primary">Guardar Adición</button></center>
                 </div>
             </div>
         </form>

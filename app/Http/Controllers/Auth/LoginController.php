@@ -39,8 +39,19 @@ class LoginController extends Controller
 
     public function redirectPath()
     {
-        //REDIRECCION DEL USUARIO DE IMPUESTOS
-        if (auth()->user()->roles[0]->id == 4) {
+        if (auth()->user()->id == 3) {
+            //VALIDACION PARA REDIRIGIR EL USUARIO A LOS CDPs DE LA VIGENCIA ACTUAL
+            $añoActual = Carbon::now()->year;
+            $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
+            if ($vigens->count() == 0){
+                $vigens = Vigencia::where('vigencia', $añoActual - 1)->where('tipo', 0)->where('estado', '0')->get();
+            }
+
+            $idVig = $vigens->first()->id;
+
+            return '/administrativo/cdp/'.$idVig;
+        } elseif (auth()->user()->roles[0]->id == 4) {
+            //REDIRECCION DEL USUARIO DE IMPUESTOS
             return '/impuestos';
         } elseif (auth()->user()->roles[0]->id == 6){
             return '/administrativo/impuestos/muellaje';
