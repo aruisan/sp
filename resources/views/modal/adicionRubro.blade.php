@@ -37,10 +37,12 @@
                         </select>
                         <input type="hidden" name="DepFontID" id="DepFontID" value="0">
                         <input type="hidden" name="movRubroID" id="movRubroID" value="0">
+                        <input type="hidden" name="tipoVigencia" id="tipoVigencia" value="{{ $vigens->tipo }}">
                         <div class="text-center" style="display: none" id="divValues" name="divValues">
                             <br>
                             <h5 class="text-center"> VALOR ACTUAL DE ADICIÓN DE LA FUENTE: <span id="valueFont"></span> </h5>
-                            <h5 class="text-center"> VALOR A ADICIONAR, SI SE TIENE YA UNA ADICION SE DEBE SUMAR EL VALOR DE LA ADICION ACTUAL MAS EL NUEVO VALOR</h5>
+                            <h5 class="text-center"> VALOR A ADICIONAR, SI SE TIENE YA UNA ADICIÓN SE DEBE COLOCAR EL NUEVO VALOR DE LA ADICIÓN,
+                            EL SISTEMA SUMARA EL VALOR DE LAS ANTERIORES ADICIONES CON EL DE LA NUEVA ADICIÓN</h5>
                             <input type="number" class="form-control" name="valorAdd" id="valorAdd" value="0" min="1">
                         </div>
                     </div>

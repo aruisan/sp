@@ -35,4 +35,8 @@ class DependenciaRubroFont extends Model implements Auditable
     public function credito(){
         return $this->hasMany('App\Model\Hacienda\Presupuesto\RubrosMov', 'dep_rubro_font_cred_id');
     }
+
+    public function movs(){
+        return $this->hasMany('App\Model\Hacienda\Presupuesto\RubrosMov', 'dep_rubro_font_id');
+    }
 }
