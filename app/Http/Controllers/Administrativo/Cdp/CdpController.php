@@ -199,7 +199,7 @@ class CdpController extends Controller
         //$cdp->ff_secretaria_e = '2023-03-16';
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
-        $cdp->created_at = '2023-04-02 12:00:00';
+        $cdp->created_at = '2023-04-03 12:00:00';
         $cdp->secretaria_user_id = auth()->user()->id;
         $cdp->save();
 
