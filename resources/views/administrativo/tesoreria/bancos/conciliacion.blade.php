@@ -41,11 +41,6 @@
                         </select>
                         <br>
                         <select class="select-bank" style="width: 100%" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
-                            <option value="0">Seleccione la cuenta para obtener la conciliación Bancaria</option>
-                            @foreach($result as $cuenta)
-                                <option @if($cuenta['hijo'] == 0) disabled @endif value="{{$cuenta['id']}}">{{$cuenta['code']}} -
-                                    {{$cuenta['concepto']}} - SALDO INICIAL: $<?php echo number_format($cuenta['saldo_inicial'],0) ?></option>
-                            @endforeach
                         </select>
                         <div class="table-responsive text-center">
                             <div class="text-center" id="cargando" style="display: none">
@@ -125,16 +120,40 @@
 @section('js')
     <script>
 
+        const conciliaciones = @json($conciliaciones);
+        const pucs = @json($result);
+
+        $('#mes').on('change', function(){
+            validar_conciliacion();
+        });
+
+        const validar_conciliacion = () => {
+            console.log('conciliaciones1', pucs.length);
+            let mes = $('#mes').val();
+            let conciliaciones_select_id = conciliaciones.filter(e => e.mes == mes).map(e => e.puc_id);
+            console.log('conciliaciones0', conciliaciones_select_id);
+            //let pucs_select = pucs.filter(e => ); 
+            $('#cuentaPUC').empty().append('<option value="0">Seleccione la cuenta para obtener la conciliación Bancaria</option>');
+            //console.log('conciliaciones1', pucs_select.length);
+            pucs.forEach(e => {
+                let item = `<option ${e.hijo == 0 || conciliaciones_select_id.includes(e.id) ? 'disabled' : ''} value="${conciliaciones_select_id.includes(e.id) ? '' : e.id}">${conciliaciones_select_id.includes(e.id) ? 'FINALIZADO -': ''} ${e.code} - ${e.concepto} - SALDO INICIAL:  $${cash.format(e.saldo_inicial)}</option>`;
+                $('#cuentaPUC').append(item);
+            });
+        }
+
+
         $('.select-bank').select2();
 
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 0
-        })
+        const cash = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 2,
+            roundingIncrement: 5,
+        });
 
 
         $(document).ready(function() {
+            validar_conciliacion();
             toastr.options = {
                 "closeButton": true,
                 "debug": false,

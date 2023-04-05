@@ -293,10 +293,10 @@
 
      <!-- DataTables JavaScript -->
     <script src="{{asset('/assets/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{ asset('js/lib/datatables/datatables.min.js') }}"></script> 
     <script src="{{asset('/assets/datatables-plugins/dataTables.bootstrap.min.js')}}"></script>
     
     <!--data tables-->
-   <script src="{{ asset('js/lib/datatables/datatables.min.js') }}"></script> 
     <script src="{{ asset('js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js') }}"></script>
     <script src="{{ asset('js/lib/datatables/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js') }}"></script>

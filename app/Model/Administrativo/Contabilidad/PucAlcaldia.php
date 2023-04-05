@@ -4,12 +4,17 @@ namespace App\Model\Administrativo\Contabilidad;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
 
 class PucAlcaldia extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
     protected $table = "puc_alcaldia";
+
+    public function conciliaciones() {
+        return $this->hasMany(ConciliacionBancaria::class, 'puc_id');
+    }
 
     public function hijos(){
         return $this->hasMany(PucAlcaldia::class, 'padre_id');

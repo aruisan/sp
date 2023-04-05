@@ -18,7 +18,7 @@
             <a class="nav-link" data-toggle="pill" href="#tabTareas">Realizar Conciliación Bancaria {{ $mesFind }} - {{ $añoActual }}</a>
         </li>
     </ul>
-    <div class="row" style="background-color: white" id="app">
+    <div class="row" style="background-color: white">
         <br>
         <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/conciliacion')}}" method="POST" enctype="multipart/form-data" id="prog">
             {{ csrf_field() }}
@@ -45,7 +45,12 @@
                     <th class="text-center" id="td-s-libros-i"></th>
                     <th class="text-center">Saldo inicial bancos</th>
                     <th class="text-center">
-                        <input type="number" min="0" class="form-control" required value="{{$rubroPUC->saldo_inicial}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
+                        @if(is_null($conciliacion_anterior))
+                            <input type="number" min="0" class="form-control" required value="{{$rubroPUC->saldo_inicial}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
+                        @else
+                            <input type="hidden" value="{{$conciliacion_anterior->subTotBancoFinal}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
+                            {{$conciliacion_anterior->subTotBancoFinal}}
+                        @endif
                     </th>
                 </tr>
                 </thead>
@@ -90,9 +95,6 @@
                     @endforeach
                     </tbody>
                 </table>
-                {{--
-                    <button id="buttonMake" type="button" @click.prevent="nuevaFilaBanks" class="btn-sm btn-primary">AGREGAR CAMPO</button>
-                    --}}
             </div>
 
             <div class="text-center">
@@ -123,9 +125,6 @@
                     @endforeach
                     </tbody>
                 </table>
-                {{--
-                    <button id="buttonMake" type="button" @click.prevent="nuevaFilaBanks" class="btn-sm btn-primary">AGREGAR CAMPO</button>
-                    --}}
             </div>
             <table class="table table-bordered table-hover">
                 <hr>
@@ -429,25 +428,5 @@
             document.getElementById('sumaIgualBankSpan').innerHTML = formatter.format(parseInt(subTotBancoInicial) + parseInt(total));
             document.getElementById('subTotBancoSpan').innerHTML = formatter.format(parseInt(subTotBancoInicial) + parseInt(total));
         }
-
-        
-
-
-        let app = new Vue({
-            el: '#app',
-            methods:{
-
-                nuevaFilaBanks(){
-                    $('#tablaBank tbody tr:last').after('<tr>\n' +
-                        '<td class="text-center" style="vertical-align: middle"><button type="button" class="btn-sm btn-primary borrar">&nbsp;-&nbsp; </button></td>\n'+
-                        '<td><input type="text" class="form-control" name="ref[]" required></td>\n'+
-                        '<td><input type="hidden" class="form-control" name="deb[]"></td>\n'+
-                        '<td><input type="hidden" class="form-control" name="cred[]" required></td>\n'+
-                        '<td><input onchange="valores()" type="number" value="0" class="form-control" name="banco[]" required></td>\n'+
-                        '<td></td>\n'+
-                        '</tr>\n');
-                },
-            }
-        });
     </script>
 @stop

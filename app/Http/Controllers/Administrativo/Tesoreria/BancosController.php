@@ -436,6 +436,11 @@ class BancosController extends Controller
         $totCred = 0;
         $totCredAll = 0;
         $totBank = 0;
+        $conciliacion_anterior = NULL;
+
+        if($rubroPUC->conciliaciones->count() > 0):
+            $conciliacion_anterior = $rubroPUC->conciliaciones->filter(function($c) use($mesFind){return $c->mes == $mesFind-1; })->last();
+        endif;
 
         if($request->mes >= 2) {
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
@@ -527,7 +532,7 @@ class BancosController extends Controller
         //dd($result);
         //dd($rubroPUC);
         $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get();
-        return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result', 'rubroPUC'
+        return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result', 'rubroPUC', 'conciliacion_anterior'
             ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth', 'comprobantes_old'));
     }
 
@@ -786,7 +791,7 @@ class BancosController extends Controller
         }
 
         Session::flash('success','Se ha realizado la conciliación bancaria exitosamente.');
-        return redirect()->route('conciliacion.guardar.pdf', $conciliacion_id);
+        return redirect()->route('conciliacion.guardar.pdf', $conciliacion->id);
     }
 
     public function pdf($id){
