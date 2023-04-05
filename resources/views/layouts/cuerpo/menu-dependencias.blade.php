@@ -303,7 +303,13 @@
                   </ul>
                </li>
                <!--  <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/bancos') }}">Bancos</a></li> -->
-               <li><a class="item-menu" tabindex="-1" href="{{ url('/administrativo/pac') }}">PAC</a></li>
+               <li class="dropdown-submenu">
+                  <a class="dropdown-item item-menu" >PAC </a>
+                  <ul class="dropdown-menu">
+                     <li><a class="item-menu" href="{{ url('/administrativo/pac') }}">Ingresos</a></li>
+                     <li><a class="item-menu" href="">Egresos</a></li>
+                  </ul>
+               </li>
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Comprobante de Egresos </a>
                   <ul class="dropdown-menu">
