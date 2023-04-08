@@ -130,7 +130,7 @@
         const validar_conciliacion = () => {
             console.log('conciliaciones1', pucs.length);
             let mes = $('#mes').val();
-            let conciliaciones_select_id = conciliaciones.filter(e => e.mes == mes).map(e => e.puc_id);
+            let conciliaciones_select_id = conciliaciones.filter(e => e.mes == mes && e.finalizar).map(e => e.puc_id);
             console.log('conciliaciones0', conciliaciones_select_id);
             //let pucs_select = pucs.filter(e => ); 
             $('#cuentaPUC').empty().append('<option value="0">Seleccione la cuenta para obtener la conciliación Bancaria</option>');
