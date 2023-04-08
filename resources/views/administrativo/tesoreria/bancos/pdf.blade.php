@@ -81,7 +81,7 @@
 		</div>
 	</div>
 	<br><center>
-		<h4>{{ $conciliacion->puc->code }} - {{ $conciliacion->puc->concepto }}</h4>
+		<h4>Periodo ({{$periodo_inicial}} - {{$periodo_final}}) -- {{ $conciliacion->puc->code }} - {{ $conciliacion->puc->concepto }}</h4>
 	</center><br>
 	<div class="table-responsive br-black-1">
 		<table class="table table-bordered">
@@ -243,11 +243,36 @@
 
 	<br><br><br>
 	<div style="margin-top: 10px; font-size: 17px;">
-		<center>
-			___________________________<br>
-			JUSTINO BRITTON HENRY 	<br>
-			TESORERO
-		</center>
+		<table>
+			<tr>
+				<td>
+					___________________________
+				</td>
+				<td>
+					___________________________
+				</td>
+			</tr>
+			<tr>
+				<td>
+					JUSTINO BRITTON HENRY
+				</td>
+				<td>
+					HELEN GARCIA ALEGRIA
+				</td>
+			</tr>
+			<tr>
+				<td>
+					TESORERO
+				</td>
+				<td>
+					Profesional Universitario
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div style="margin-top: 50px; font-size: 17px;">
+		Elaborado por: {{$conciliacion->responsable->name}}
 	</div>
 </div>
 

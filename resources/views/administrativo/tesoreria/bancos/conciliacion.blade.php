@@ -189,7 +189,8 @@
             }).done(function(datos) {
                 if(datos.length > 0){
                     $("#buttonMake").show();
-                    document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
+                    console.log('ddf', datos);
+                    document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ datos[0]['total'];
                     $("#tabla").show();
                     table.destroy();
                     $("#cargando").hide();

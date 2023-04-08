@@ -38,7 +38,7 @@
                     <th class="text-center" colspan="4">RESUMEN DE LA INFORMACION</th>
                 </tr>
                 <tr>
-                    <th class="text-center" colspan="4">{{$rubroPUC->code}} -- Cuenta Bancaria {{$rubroPUC->concepto}}</th>
+                    <th class="text-center" colspan="4">Periodo ({{$periodo_inicial}} - {{$periodo_final}}) {{$rubroPUC->code}} -- Cuenta Bancaria {{$rubroPUC->concepto}}</th>
                 </tr>
                 <tr>
                     <th class="text-center">Saldo Libros</th>

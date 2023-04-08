@@ -19,7 +19,7 @@ class ConciliacionBancaria extends Model implements Auditable
 
     public function responsable()
     {
-        return $this->hasOne('App\Model\Persona','id','persona_id');
+        return $this->belongsTo('App\User', 'responsable_id');
     }
 
     public function cuentas(){

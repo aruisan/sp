@@ -529,11 +529,16 @@ class BancosController extends Controller
                 }
             }
         }
+
+        $periodo = \Carbon\Carbon::parse("01-{$mesFind}-{$añoActual}");
+        $periodo_inicial = $periodo->format('d-m-Y');
+        $periodo_final = $periodo->addMonth(1)->subDay(1)->format('d-m-Y');
+
         //dd($result);
         //dd($rubroPUC);
         $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get();
         return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result', 'rubroPUC', 'conciliacion_anterior'
-            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth', 'comprobantes_old'));
+            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth', 'comprobantes_old','periodo_inicial','periodo_final'));
     }
 
     public function saveAndSeePdf(Request $request){
@@ -855,10 +860,14 @@ class BancosController extends Controller
         $fecha = Carbon::createFromTimeString($conciliacion->created_at);
         $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        
+        $periodo = \Carbon\Carbon::parse("01-{$mesFind}-{$añoActual}");
+        $periodo_inicial = $periodo->format('d-m-Y');
+        $periodo_final = $periodo->addMonth(1)->subDay(1)->format('d-m-Y');
 
         //dd($conciliacion->cuentas_temporales);
         $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha',
-        'cuentas','rubroPUC','totDeb','totCred','totCredAll','totBank','totalLastMonth'))
+        'cuentas','rubroPUC','totDeb','totCred','totCredAll','totBank','totalLastMonth', 'periodo_inicial', 'periodo_final'))
             ->setPaper('a3', 'landscape')
             ->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
