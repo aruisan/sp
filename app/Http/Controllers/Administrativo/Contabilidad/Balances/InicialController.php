@@ -11,7 +11,7 @@ use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 class InicialController extends Controller
 {
     public function index(){
-        $pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->get();
+        $pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
         //dd($pucs);
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
