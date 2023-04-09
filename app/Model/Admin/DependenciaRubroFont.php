@@ -16,6 +16,10 @@ class DependenciaRubroFont extends Model implements Auditable
         return $this->hasOne('App\Model\Admin\Dependencia','id','dependencia_id');
     }
 
+    public function dependencia(){
+        return $this->belongsTo('App\Model\Admin\Dependencia', 'dependencia_id');
+    }
+
     public function fontRubro(){
         return $this->hasOne('App\Model\Hacienda\Presupuesto\FontsRubro', 'id','rubro_font_id');
     }

@@ -20,7 +20,7 @@ class PlantillaCuipoEgresos extends Model
     public function rubros(){
         return $this->hasMany(Rubro::class, 'plantilla_cuipos_id');
     }
-/*
+
     public function getFormatHijosAttribute(){
         $item = "";
         //$last = PlantillaCuipoEgresos::latest('id')->first();
@@ -30,32 +30,27 @@ class PlantillaCuipoEgresos extends Model
         foreach($this->hijos as $item):
             $grupo_plantillas .= $this->format_plantilla($item);
             foreach($item->rubros as $rubro):
-                $grupo_plantillas .= $this->format_rubro(
-                    $rubro->fontsRubro,
-                    $rubro->name, 
-                    $item->code);
-                foreach($rubro->fontsRubro as $r_f_r):
-                    $grupo_plantillas  .= $this->format_f_r(
-                        $rubro->fontsRubro,
-                        $rubro->name, 
-                        $item->code);
-                endforeach;
+                $grupo_plantillas .= $rubro->format;
             endforeach;
             $grupo_plantillas .= $item->format_hijos;
         endforeach;
             
         return $grupo_plantillas;
     }
-//cod_bpin | cod_actividad | nom_actividad | plantilla_code | rubro_nombre | p inicial | adicion 
-//| reduccion | credito | p definitivo | registros | saldo_disponible | saldo_cdp | ordenes_pago 
-    public function format_f_R($bpin, $rubro_name, $plantilla_code){
-        return "<tr><td></td><td></td><td>{$plantilla['code']}</td><td>{$plantilla['name']}</td></tr>";
-    }
     
     public function format_plantilla($plantilla){
-        $bg = $plantilla['hijo'] ? '' : 'bg-success';
-        return "<tr class='{$bg}'><td></td><td></td><td>{$plantilla['code']}</td><td>{$plantilla['name']}</td></tr>";
+        $tr  = "<tr>
+                    <td>{$plantilla->code}</td>
+                    <td>{$plantilla->name}</td>
+                    <td></td>
+                    <td>{$plantilla->rubros->sum('rubro_fuente_p_inicial')}</td>
+                    <td>{$plantilla->rubros->sum('rubro_fuente_movimiento_adicion_suma')}</td>
+                    <td>{$plantilla->rubros->sum('rubro_fuente_movimiento_reduccion_suma')}</td>
+                    <td>{$plantilla->rubros->sum('rubro_fuente_movimiento_credito_suma')}</td>
+                    <td>{$plantilla->rubros->sum('rubro_fuente_movimiento_contra_credito_suma')}</td>
+                    <td>{$plantilla->rubros->sum('rubro_fuente_p_definitivo')}</td>
+                </tr>";
     }
 
-    */
+    
 }

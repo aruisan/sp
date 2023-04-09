@@ -50,6 +50,7 @@
 	</style>
 </head>
 <body>
+	
 
 <div class="container-fluid">
 	<div class="row">
@@ -83,25 +84,44 @@
 	<br><center>
 		<h4>Periodo ({{$periodo_inicial}} - {{$periodo_final}}) -- {{ $conciliacion->puc->code }} - {{ $conciliacion->puc->concepto }}</h4>
 	</center><br>
+		@php
+			$s_siguiente = $rubroPUC->saldo_inicial + $totDeb  - $totCredAll;
+			$s_libros = $totalLastMonth;
+			$s_inicial = $conciliacion->subTotBancoInicial;
+			$s_final = $conciliacion->subTotBancoFinal;
+			$cheque_mano_restar = $cuentas->filter(function($c){ return $c->aprobado == "OFF";})->sum('valor');
+			$cheque_mano = $cuentas->filter(function($c){ return $c->aprobado == "ON";})->sum('valor');
+			$cheque_cobrados_restar = $conciliacion->cuentas_temporales->filter(function($e){ return !$e->check;})->sum('comprobante_ingreso_temporal.valor');
+			$cheque_cobrados = $conciliacion->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor');
+            $final_bancos = $s_inicial + $cheque_mano - $cheque_cobrados;
+			$total_diferencia_siguiente_final = $s_siguiente - $final_bancos;
+			$suma_total_libros = $s_siguiente+$conciliacion->partida_sin_conciliacion_libros+$cheque_cobrados_restar-$cheque_mano_restar;
+			$suma_total_bancos = $final_bancos+$conciliacion->partida_sin_conciliacion_bancos;
+		@endphp
 	<div class="table-responsive br-black-1">
 		<table class="table table-bordered">
 			<thead>
+
 			<tr>
 				<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">RESUMEN DE LA INFORMACION</th>
 			</tr>
 			<tr>
 				<th class="text-center">Saldo Libros</th>
-				<th class="text-center">$<?php echo number_format($totalLastMonth,0) ?></th>
+				<th class="text-center">$<?php echo number_format($s_libros,0) ?></th>
 				<th class="text-center">Saldo inicial bancos</th>
-				<th class="text-center">$<?php echo number_format($conciliacion->subTotBancoInicial,0) ?></th>
+				<th class="text-center">$<?php echo number_format($s_inicial,0) ?></th>
 			</tr>
 			</thead>
 			<tbody>
 			<tr class="text-center">
 				<td>Saldo siguiente</td>
-				<td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
+				<td>$<?php echo number_format($s_siguiente,0) ?></td>
 				<td> Saldo final</td>
-				<td>$<?php echo number_format($conciliacion->subTotBancoFinal,0) ?></td>
+				<td>$<?php echo number_format($s_final,0) ?></td>
+			</tr>
+			<tr class="text-center">
+				<td colspan="2">Diferencia a conciliar</td>
+				<td colspan="2">$<?php echo number_format($total_diferencia_siguiente_final,0) ?></td>
 			</tr>
 			</tbody>
 		</table>
@@ -196,26 +216,30 @@
 		</tr>
 		</thead>
 		<tbody id="bodyTabla">
+		
+			
 		<tr class="text-center">
 			<td>Saldo siguiente</td>
-			<td>$<?php echo number_format($rubroPUC->saldo_inicial + $totDeb  - $totCredAll,0) ?></td>
+			<td>$<?php echo number_format($s_siguiente,0) ?></td>
 			<td> Saldo final</td>
-			<td id="td_saldo_final">{{number_format($conciliacion->subTotBancoFinal,0)}}</td>
+			<td id="td_saldo_final">{{number_format($s_final,0)}}</td>
 		</tr>
 		<tr class="text-center">
 			<td>cheques en mano</td>{{--los deschuleados de deivith--}}
 			<td id="td-restar-checke-mano">
-				{{number_format($cuentas->filter(function($c){ return $c->aprobado == "OFF";})->sum('debito'), 0)}}
+				{{number_format($cheque_mano_restar, 0)}}
 			</td>{{--aqui--}}
 			<td></td>
-			<td></td>
+			<td>{{number_format($cheque_mano, 0)}}</td>
 		</tr>
 		<tr class="text-center">
 			<td>cheques cobrados</td>{{--los chuleados de oscar y de otros meses--}}
-			<td></td>
+			<td>
+				{{number_format($cheque_cobrados_restar, 0)}}
+			</td>
 			<td></td>
 			<td id="td-total-checke-cobrados">
-				{{number_format($conciliacion->cuentas_temporales->sum('valor'), 0)}}
+				{{number_format($cheque_cobrados, 0)}}
 			</td>{{--aqui--}}
 		</tr>
 		<tr class="text-center">
@@ -229,13 +253,14 @@
 			</td>
 		</tr>
 		<tr class="text-center">
+			
 			<td>SUMAS IGUALES</td>
 			<td id="td-dumas-iguales-libros">
-				{{number_format($conciliacion->partida_sin_conciliacion_libros+$cuentas->filter(function($c){ return $c->aprobado == "OFF";})->sum('debito')+($rubroPUC->saldo_inicial + $totDeb  - $totCredAll), 0)}}
+				{{number_format($suma_total_libros, 0)}}
 			</td>{{-- se suma saldo siguiente ms cheques en mano mas el primer input--}}
 			<td></td>
 			<td id="td-dumas-iguales-bancos">
-				{{number_format($conciliacion->partida_sin_conciliacion_bancos+$conciliacion->cuentas_temporales->sum('valor')+$conciliacion->subTotBancoFinal,0)}}
+				{{number_format($suma_total_bancos,0)}}
 			</td>{{-- se suma saldo final mas cheques cobrados mas el segundo input--}}
 		</tr>
 		</tbody>

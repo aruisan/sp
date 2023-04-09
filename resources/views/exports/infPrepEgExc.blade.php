@@ -4,17 +4,24 @@
         <th colspan="16"><b>Presupuesto de Egresos {{ $año }}-{{ $mesActual }}-{{ $dia }}</b></th>
     </tr>
     <tr>
-        {{--
-        <th class="text-center">Codigo BPIN</th>
-        <th class="text-center">Codigo Actividad</th>
-        <th class="text-center">Nombre Actividad</th>
-        --}}
         <th class="text-center">Rubro</th>
         <th class="text-center">Nombre</th>
-        {{--
-        <th class="text-center">P. Inicial</th>
-        <th class="text-center">Adición</th>
-        <th class="text-center">Reducción</th>
+        <th class="text-center">Dependencia</th>
+        <th class="text-center">Valor Inicial</th>
+        <th class="text-center">Adicion</th>
+        <th class="text-center">Reduccion</th>
+        <th class="text-center">Credito</th>
+        <th class="text-center">Contra Credito</th>
+        <th class="text-center">P. Definitivo</th>
+            {{--
+            <th class="text-center">Codigo BPIN</th>
+            <th class="text-center">Codigo Actividad</th>
+            <th class="text-center">Nombre Actividad</th>
+            <th class="text-center">Rubro</th>
+            <th class="text-center">Nombre</th>
+            <th class="text-center">P. Inicial</th>
+            <th class="text-center">Adición</th>
+            <th class="text-center">Reducción</th>
         <th class="text-center">Credito</th>
         <th class="text-center">CCredito</th>
         <th class="text-center">P.Definitivo</th>
@@ -33,8 +40,20 @@
     </tr>
     </thead>
     <tbody>
-           <tr><td>{{$plantilla['code']}}</td><td>{{$plantilla['name']}}</td></tr>
-           {!!$plantilla['format_hijos']!!}
+        @foreach($plantillas as $plantilla)
+            <tr>
+                <td>{{$plantilla->code}}</td>
+                <td>{{$plantilla->name}}</td>
+                <td></td>
+                <td>{{$plantilla->rubros->sum('rubro_fuente_p_inicial')}}</td>
+                <td>{{$plantilla->rubros->sum('rubro_fuente_movimiento_adicion_suma')}}</td>
+                <td>{{$plantilla->rubros->sum('rubro_fuente_movimiento_reduccion_suma')}}</td>
+                <td>{{$plantilla->rubros->sum('rubro_fuente_movimiento_credito_suma')}}</td>
+                <td>{{$plantilla->rubros->sum('rubro_fuente_movimiento_contra_credito_suma')}}</td>
+                <td>{{$plantilla->rubros->sum('rubro_fuente_p_definitivo')}}</td>
+            </tr>
+            {!!$plantilla->format_hijos!!}
+        @endforeach
         {{--
     @foreach($presupuesto as $codigo)
         <tr>
