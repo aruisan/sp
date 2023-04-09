@@ -26,6 +26,10 @@ class ConciliacionBancaria extends Model implements Auditable
         return $this->belongsTo('App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancariaCuentas','id');
     }
 
+    public function cheques_mano(){
+        return $this->hasMany('App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancariaCuentas','conciliacion_id');
+    }
+
     public function cuentas_temporales() {
         return $this->hasMany(ComprobanteIngresoTemporalConciliacion::class, 'conciliacion_id');
     }
