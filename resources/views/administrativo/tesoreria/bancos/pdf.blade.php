@@ -85,7 +85,7 @@
 		<h4>Periodo ({{$periodo_inicial}} - {{$periodo_final}}) -- {{ $conciliacion->puc->code }} - {{ $conciliacion->puc->concepto }}</h4>
 	</center><br>
 		@php
-			$s_siguiente = $rubroPUC->saldo_inicial + $totDeb  - $totCredAll;
+			$s_siguiente = is_null($conciliacion_anterior) ? $rubroPUC->saldo_inicial + $totDeb  - $totCredAll : $rubroPUC->saldo_inicial + $totDeb  - $totCredAll + $total_cheque_mano - $chequetotal_cheque_cobrados;
 			$s_libros = $totalLastMonth;
 			$s_inicial = $conciliacion->subTotBancoInicial;
 			$s_final = $conciliacion->subTotBancoFinal;

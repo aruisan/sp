@@ -436,6 +436,21 @@ class BancosController extends Controller
         $totCred = 0;
         $totCredAll = 0;
         $totBank = 0;
+
+        $conciliaciones_anteriores = $rubroPUC->conciliaciones->filter(function($e) use($añoActual){ $e->año == $añoActual; });
+        $conciliacion_anterior = NULL;
+        $total_cheque_mano = 0;
+        $total_cheque_cobrados = 0;
+
+        if($conciliaciones_anteriores->count() > 0):
+            foreach($conciliaciones_anteriores as $anterior):
+                $total_cheque_mano += $anterior->cheques_mano->count() > 0 
+                                    ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
+                $total_cheque_cobrados += $anterior->cuentas_temporales->count() > 0 
+                                        ? $anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
+            endforeach;
+        endif;
+        /*
         $conciliacion_anterior = NULL;
         $total_cheque_mano = 0;
         $total_cheque_cobrados = 0;
@@ -448,6 +463,7 @@ class BancosController extends Controller
                 $total_cheque_cobrados = $conciliacion_anterior->cuentas_temporales->count() > 0 ? $conciliacion_anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
             endif;
         endif;
+    */
 
         if($request->mes >= 2) {
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
@@ -820,6 +836,20 @@ class BancosController extends Controller
         $totCredAll = 0;
         $totBank = 0;
 
+        $conciliaciones_anteriores = $rubroPUC->conciliaciones->filter(function($e) use($añoActual){ $e->año == $añoActual; });
+        $conciliacion_anterior = NULL;
+        $total_cheque_mano = 0;
+        $total_cheque_cobrados = 0;
+
+        if($conciliaciones_anteriores->count() > 0):
+            foreach($conciliaciones_anteriores as $anterior):
+                $total_cheque_mano += $anterior->cheques_mano->count() > 0 
+                                    ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
+                $total_cheque_cobrados += $anterior->cuentas_temporales->count() > 0 
+                                        ? $anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
+            endforeach;
+        endif;
+
         if($mesFind >= 2) {
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$mesFind."-01", $rubroPUC);
             $totalLastMonth = $newSaldo['total'];
@@ -873,7 +903,7 @@ class BancosController extends Controller
         $periodo_final = $periodo->addMonth(1)->subDay(1)->format('d-m-Y');
 
         //dd($conciliacion->cuentas_temporales);
-        $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha',
+        $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha','total_cheque_mano', 'total_cheque_cobrados',
         'cuentas','rubroPUC','totDeb','totCred','totCredAll','totBank','totalLastMonth', 'periodo_inicial', 'periodo_final'))
             ->setPaper('a3', 'landscape')
             ->setOptions(['images' => true,'isRemoteEnabled' => true]);
