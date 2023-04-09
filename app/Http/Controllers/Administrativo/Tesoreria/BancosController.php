@@ -837,8 +837,7 @@ class BancosController extends Controller
         $totCred = 0;
         $totCredAll = 0;
         $totBank = 0;
-
-        $conciliaciones_anteriores = $rubroPUC->conciliaciones->filter(function($e) use($añoActual){ $e->año == $añoActual; });
+        $conciliaciones_anteriores = ConciliacionBancaria::where('año', $añoActual)->where('puc_id', $conciliacion->puc_id)->get();
         $conciliacion_anterior = NULL;
         $total_cheque_mano = 0;
         $total_cheque_cobrados = 0;
@@ -853,6 +852,8 @@ class BancosController extends Controller
                                         ? $anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
             endforeach;
         endif;
+
+        //dd($total_cheque_mano);
 
         if($mesFind >= 2) {
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$mesFind."-01", $rubroPUC);

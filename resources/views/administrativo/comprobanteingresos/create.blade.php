@@ -19,7 +19,7 @@
                 </li>
             </ul>
 
-            <div class="tab-content" id="prog">
+            <div class="tab-content">
                 <div id="nuevo" class="tab-pane fade in active">
                     <div class="form-validation">
                         <br>
@@ -102,7 +102,7 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 col-form-label text-right" for="nombre">Tercero <span class="text-danger">*</span></label>
                                     <div class="col-lg-6">
-                                        <select class="form-control" name="persona_id">
+                                        <select class="form-control" name="persona_id" id="select_tercero">
                                             @foreach($personas as $persona)
                                                 <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
                                             @endforeach
@@ -120,7 +120,7 @@
                                     <th class="text-center" style="width: 200px">Crédito<span class="text-danger">*</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="prog">
                                     <tr>
                                         <td style="width: 3%"></td>
                                         <td>
@@ -191,6 +191,7 @@
 @section('js')
     <script>
         $('.select-tercero').select2();
+        $('#select_tercero').select2();
 
         function cambioTipo(value){
             if(value == "Otro"){

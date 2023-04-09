@@ -45,6 +45,7 @@
                     <th class="text-center" id="td-s-libros-i"></th>
                     <th class="text-center">Saldo inicial bancos</th>
                     <th class="text-center">
+                    
                         @if(is_null($conciliacion_anterior))
                             <input type="number" min="0" class="form-control" required value="{{$rubroPUC->saldo_inicial}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
                         @else
