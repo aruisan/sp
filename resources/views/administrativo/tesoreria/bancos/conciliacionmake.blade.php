@@ -193,7 +193,7 @@
         let data_cobro_no_select = [];
         let saldos_libros_i = {{$totalLastMonth}};
         let cheques_mano = {{$cheques_mano}};
-        let saldo_siguiente_i = {{is_null($conciliacion_anterior) ? $rubroPUC->saldo_inicial + $totDeb - $totCredAll : $rubroPUC->saldo_inicial + $totDeb - $totCredAll + $conciliacion_anterior->cuentas->filter(function($c){ return $c->aprobado == "ON";})->sum('total') - $conciliacion_anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor')}};
+        let saldo_siguiente_i = {{is_null($conciliacion_anterior) ? $rubroPUC->saldo_inicial + $totDeb - $totCredAll : $rubroPUC->saldo_inicial + $totDeb - $totCredAll + $total_cheque_mano - $total_cheque_cobrados}};
         let cheques_cobrados = {{$comprobantes_old->sum('valor')}};
         let cheques_mano_libro = 0;
         let restar_cheques_mano = 0;
