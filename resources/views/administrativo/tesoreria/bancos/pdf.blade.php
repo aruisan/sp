@@ -84,20 +84,21 @@
 	<br><center>
 		<h4>Periodo ({{$periodo_inicial}} - {{$periodo_final}}) -- {{ $conciliacion->puc->code }} - {{ $conciliacion->puc->concepto }}</h4>
 	</center><br>
-		@php
-			$s_siguiente = $rubroPUC->saldo_inicial + $totDeb  - $totCredAll;
-			$s_libros = $totalLastMonth;
-			$s_inicial = $conciliacion->subTotBancoInicial;
-			$s_final = $conciliacion->subTotBancoFinal;
-			$cheque_mano_restar = $cuentas->filter(function($c){ return $c->aprobado == "OFF";})->sum('valor');
-			$cheque_mano = $cuentas->filter(function($c){ return $c->aprobado == "ON";})->sum('valor');
-			$cheque_cobrados_restar = $conciliacion->cuentas_temporales->filter(function($e){ return !$e->check;})->sum('comprobante_ingreso_temporal.valor');
-			$cheque_cobrados = $conciliacion->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor');
-            $final_bancos = $s_inicial + $cheque_mano - $cheque_cobrados;
-			$total_diferencia_siguiente_final = $s_siguiente - $final_bancos;
-			$suma_total_libros = $s_siguiente+$conciliacion->partida_sin_conciliacion_libros+$cheque_cobrados_restar-$cheque_mano_restar;
-			$suma_total_bancos = $final_bancos+$conciliacion->partida_sin_conciliacion_bancos;
-		@endphp
+	@php
+		$s_siguiente = $rubroPUC->saldo_inicial + $totDeb  - $totCredAll;
+		$s_libros = $totalLastMonth;
+		$s_inicial = $conciliacion->subTotBancoInicial;
+		$s_final = $conciliacion->subTotBancoFinal;
+		$cheque_mano_restar = $cuentas->filter(function($c){ return $c->aprobado == "OFF";})->sum('total');
+		$cheque_mano = $cuentas->filter(function($c){ return $c->aprobado == "ON";})->sum('total');
+		$cheque_cobrados_restar = $conciliacion->cuentas_temporales->filter(function($e){ return !$e->check;})->sum('comprobante_ingreso_temporal.valor');
+		$cheque_cobrados = $conciliacion->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor');
+		$final_bancos = $s_inicial + $cheque_mano - $cheque_cobrados;
+		$total_diferencia_siguiente_final = $s_siguiente - $final_bancos;
+		$suma_total_libros = $s_siguiente+$conciliacion->partida_sin_conciliacion_libros+$cheque_cobrados_restar-$cheque_mano_restar;
+		$suma_total_bancos = $final_bancos+$conciliacion->partida_sin_conciliacion_bancos;
+		
+	@endphp
 	<div class="table-responsive br-black-1">
 		<table class="table table-bordered">
 			<thead>
@@ -221,7 +222,7 @@
 		<tr class="text-center">
 			<td>Saldo siguiente</td>
 			<td>$<?php echo number_format($s_siguiente,0) ?></td>
-			<td> Saldo final</td>
+			<td> Saldo Inicial</td>
 			<td id="td_saldo_final">{{number_format($s_final,0)}}</td>
 		</tr>
 		<tr class="text-center">

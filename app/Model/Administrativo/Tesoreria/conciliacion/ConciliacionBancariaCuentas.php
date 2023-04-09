@@ -15,4 +15,8 @@ class ConciliacionBancariaCuentas extends Model implements Auditable
     {
         return $this->hasMany('App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria','id','conciliacion_id');
     }
+
+    public function getTotalAttribute(){
+        return $this->debito > 0 ? $this->debito : 0 - $this->credito;
+    }
 }
