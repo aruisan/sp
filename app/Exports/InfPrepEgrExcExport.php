@@ -7,22 +7,22 @@ use Illuminate\Contracts\View\View;
 
 class InfPrepEgrExcExport implements FromView
 {
-    public function __construct(int $año, $plantilla, $mes, $dia){
+    public function __construct(int $año, $plantillas, $mes, $dia){
 
         $this->año = $año;
-        $this->plantilla = $plantilla;
+        $this->plantillas = $plantillas;
         $this->mesActual = $mes;
         $this->dia = $dia;
     }
 
     public function view(): View
     {
-        $plantilla = $this->plantilla;
+        $plantillas = $this->plantillas;
         $mesActual = $this->mesActual;
         $año = $this->año;
         $dia = $this->dia;
 
-        return view('exports.infPrepEgExc', compact('plantilla','mesActual','año','dia'));
+        return view('exports.infPrepEgExc', compact('plantillas','mesActual','año','dia'));
     }
 }
 

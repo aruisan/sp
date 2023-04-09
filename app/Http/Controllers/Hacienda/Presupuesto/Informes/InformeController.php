@@ -2273,7 +2273,7 @@ class InformeController extends Controller
 
         return $prepIng;
     }
-
+ 
     public function makeEgresosEXCEL(Request $request)
     {
         $añoActual = Carbon::now()->year;
@@ -2284,10 +2284,9 @@ class InformeController extends Controller
 
         $añoActual = Carbon::now()->year;
 
-        $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
-        $plantilla = PlantillaCuipoEgresos::get()->first();
+        $plantilla = PlantillaCuipoEgresos::where('hijo', '0')->where('padre_id', 0)->get();
 
-       // dd($plantilla->format_hijos);
+        //dd($plantilla);
 
         //$rubro = Rubro::where('vigencia_id', $vigencia->id)->whereIn('plantilla_cuipos_id', $plantillas_id)->get();
 
@@ -2295,7 +2294,29 @@ class InformeController extends Controller
             'Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
 
     }
+/*
+    public function makeEgresosEXCEL(Request $request)
+    {
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
 
+        //$presupuesto = $this->prepEgresos();
+
+        $añoActual = Carbon::now()->year;
+        $rubros = Rubro::get();
+
+       // dd($rubros);
+
+    // dd($plantilla->format_hijos);
+
+        //$rubro = Rubro::where('vigencia_id', $vigencia->id)->whereIn('plantilla_cuipos_id', $plantillas_id)->get();
+
+        return Excel::download(new InfPrepEgrExcExport($añoActual, $rubros, $mesActual, $diaActual),
+            'Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
+
+    }
+    */
     public function makeIngresosEXCEL()
     {
         $añoActual = Carbon::now()->year;

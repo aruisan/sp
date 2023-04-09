@@ -4,6 +4,7 @@ namespace App\Model\Hacienda\Presupuesto;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Model\Admin\DependenciaRubroFont;
 
 class RubrosMov extends Model implements Auditable
 {
@@ -18,5 +19,4 @@ class RubrosMov extends Model implements Auditable
     public function ResourcesMov(){
         return $this->hasMany('App\Model\Hacienda\Presupuesto\ResourcesMov','mov_id','id');
     }
-
 }

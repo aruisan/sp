@@ -70,13 +70,69 @@ class Rubro extends Model implements Auditable
         return $this->belongsTo(PlantillaCuipoEgresos::class, 'plantilla_cuipos_id');
     }
 
+    /////////////////////////////////////////////////////////////////
+
+    public function getRubroFuentePInicialAttribute(){
+        return $this->fontsRubro->sum('valor');    
+    }
+
+    public function getRubroFuenteMovimientoCreditoSumaAttribute(){
+        return $this->fontsRubro->sum('movimiento_credito_suma');
+    }
+
+    public function getRubroFuenteMovimientoContraCreditoSumaAttribute(){
+        return $this->fontsRubro->sum('movimiento_contra_credito_suma');
+    }
+
+    public function getRubroFuenteMovimientoAdicionSumaAttribute(){
+        return $this->fontsRubro->sum('movimiento_contra_credito_suma');
+    }
+
+    public function getRubroFuenteMovimientoReduccionSumaAttribute(){
+        return $this->fontsRubro->sum('movimiento_reduccion_suma');
+    }
+
+    public function getRubroFuentePDefinitivoAttribute(){
+        return $this->fontsRubro->sum('p_definitivo');
+    }
+
+    
+
     public function getFormatAttribute(){
-        return "<tr>
+        $tr  = "<tr>
+                    <td>{$this->plantilla_cuipo->code}-r{$this->id}</td>
+                    <td>{$this->name}</td>
                     <td></td>
-                    <td></td>
-                    <td>{$plantilla_code}</td>
-                    <td>tt{$rubro_name}</td>
+                    <td>{$this->rubro_fuente_p_inicial}</td>
+                    <td>{$this->rubro_fuente_movimiento_adicion_suma}</td>
+                    <td>{$this->rubro_fuente_movimiento_reduccion_suma}</td>
+                    <td>{$this->rubro_fuente_movimiento_credito_suma}</td>
+                    <td>{$this->rubro_fuente_movimiento_contra_credito_suma}</td>
+                    <td>{$this->rubro_fuente_p_definitivo}</td>
                 </tr>";
+
+
+              /*
+               $tr  = "<tr>
+                    <td>{$this->cod}</td>
+                    <td>{$this->name}</td>
+                    <td>{$this->fontsRubro->sum('valor')}</td>
+                    <td>cero</td>
+                    <td>cero</td>";
+                 // <td>{$this->fontsRubro->sum('movimiento_contra_credito_suma')}</td>
+                 //   <td>{$this->fontsRubro->sum('movimiento_credito_suma')}</td>
+        $tr .=   "<td>{$this->fontsRubro->sum('movimiento_adicion_suma')}</td>
+                    <td>{$this->fontsRubro->sum('movimiento_reduccion_suma')}</td>
+                    <td>{$this->fontsRubro->sum('movimiento_suma')}</td>
+                    <td>{$this->fontsRubro->sum('p_definitivo')}</td>
+                </tr>";
+              */  
+
+        foreach($this->fontsRubro as $fr ):
+            $tr .= $fr->format;
+        endforeach;
+
+        return $tr;            
     }
 
 }
