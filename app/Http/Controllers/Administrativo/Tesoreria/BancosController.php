@@ -443,7 +443,9 @@ class BancosController extends Controller
         $total_cheque_cobrados = 0;
 
         if($conciliaciones_anteriores->count() > 0):
+            
             foreach($conciliaciones_anteriores as $anterior):
+                $conciliacion_anterior = $anterior->mes == $mesFind-1 ? $anterior : $conciliacion_anterior; 
                 $total_cheque_mano += $anterior->cheques_mano->count() > 0 
                                     ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
                 $total_cheque_cobrados += $anterior->cuentas_temporales->count() > 0 
@@ -841,8 +843,10 @@ class BancosController extends Controller
         $total_cheque_mano = 0;
         $total_cheque_cobrados = 0;
 
+        
         if($conciliaciones_anteriores->count() > 0):
             foreach($conciliaciones_anteriores as $anterior):
+                $conciliacion_anterior = $anterior->mes == $mesFind-1 ? $anterior : $conciliacion_anterior; 
                 $total_cheque_mano += $anterior->cheques_mano->count() > 0 
                                     ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
                 $total_cheque_cobrados += $anterior->cuentas_temporales->count() > 0 
@@ -903,7 +907,7 @@ class BancosController extends Controller
         $periodo_final = $periodo->addMonth(1)->subDay(1)->format('d-m-Y');
 
         //dd($conciliacion->cuentas_temporales);
-        $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha','total_cheque_mano', 'total_cheque_cobrados',
+        $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha','conciliacion_anterior', 'total_cheque_mano', 'total_cheque_cobrados',
         'cuentas','rubroPUC','totDeb','totCred','totCredAll','totBank','totalLastMonth', 'periodo_inicial', 'periodo_final'))
             ->setPaper('a3', 'landscape')
             ->setOptions(['images' => true,'isRemoteEnabled' => true]);
