@@ -30,9 +30,9 @@
 <script>
     var container = document.getElementById('example');
     var hot = new Handsontable(container, {
-        data: Handsontable.helper.createSpreadsheetData(2,5),
+        data: Handsontable.helper.createSpreadsheetData(2,7),
         rowHeaders: true,
-        colHeaders: true,
+        colHeaders: ['code', 'concepto', 'hijo', 'padre', 'valor', 'naturaleza', 'categoria'],
         filters: true,
         dropdownMenu: true,
         contextMenu:true,
