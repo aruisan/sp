@@ -443,9 +443,9 @@ class BancosController extends Controller
         if($rubroPUC->conciliaciones->count() > 0):
             $conciliacion_anterior = $rubroPUC->conciliaciones->filter(function($c) use($mesFind){return $c->mes == $mesFind-1; })->last();
             if(!is_null($conciliacion_anterior)):
-                dd($conciliacion_anterior);
-                $total_cheque_mano = $conciliacion_anterior->cuentas->count() > 0 ? $conciliacion_anterior->cuentas->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
-               // $total_cheque_cobrados = $conciliacion_anterior->cuentas_temporales->count() > 0 ? $conciliacion_anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
+                //dd($conciliacion_anterior);
+                $total_cheque_mano = $conciliacion_anterior->cheques_mano->count() > 0 ? $conciliacion_anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
+                $total_cheque_cobrados = $conciliacion_anterior->cuentas_temporales->count() > 0 ? $conciliacion_anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
             endif;
         endif;
 
