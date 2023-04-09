@@ -85,7 +85,7 @@
 		<h4>Periodo ({{$periodo_inicial}} - {{$periodo_final}}) -- {{ $conciliacion->puc->code }} - {{ $conciliacion->puc->concepto }}</h4>
 	</center><br>
 		@php
-			$s_siguiente = $rubroPUC->saldo_inicial + $totDeb  - $totCredAll;
+			$s_siguiente = $rubroPUC->saldo_inicial + $totDeb  + $total_cheque_mano - $totCredAll - $total_cheque_cobrados;
 			$s_libros = $totalLastMonth;
 			$s_inicial = $conciliacion->subTotBancoInicial;
 			$s_final = $conciliacion->subTotBancoFinal;
@@ -229,7 +229,7 @@
 			<td id="td-restar-checke-mano">
 				{{number_format($cheque_mano_restar, 0)}}
 			</td>{{--aqui--}}
-			<td></td>
+			<td>Ingresos</td>
 			<td>{{number_format($cheque_mano, 0)}}</td>
 		</tr>
 		<tr class="text-center">
@@ -237,7 +237,7 @@
 			<td>
 				{{number_format($cheque_cobrados_restar, 0)}}
 			</td>
-			<td></td>
+			<td>Egresos</td>
 			<td id="td-total-checke-cobrados">
 				{{number_format(0 - $cheque_cobrados, 0)}}
 			</td>{{--aqui--}}

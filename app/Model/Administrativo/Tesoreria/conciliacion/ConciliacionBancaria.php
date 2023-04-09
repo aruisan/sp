@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\ComprobanteIngresoTemporal;
 use App\ComprobanteIngresoTemporalConciliacion;
+use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancariaCuentas;
 
 class ConciliacionBancaria extends Model implements Auditable
 {
@@ -27,7 +28,7 @@ class ConciliacionBancaria extends Model implements Auditable
     }
 
     public function cheques_mano(){
-        return $this->hasMany('App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancariaCuentas','conciliacion_id');
+        return $this->hasMany(ConciliacionBancariaCuentas::class,'conciliacion_id');
     }
 
     public function cuentas_temporales() {

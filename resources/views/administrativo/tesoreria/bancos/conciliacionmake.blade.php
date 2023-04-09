@@ -150,13 +150,13 @@
                 <tr class="text-center">
                     <td>cheques en mano</td>{{--los deschuleados de deivith--}}
                     <td id="td-restar-checke-mano"></td>{{--aqui--}}
-                    <td></td>
+                    <td>Ingresos</td>
                     <td id="td-checke-mano"></td>
                 </tr>
                 <tr class="text-center">
                     <td>cheques cobrados</td>{{--los chuleados de oscar y de otros meses--}}
                     <td id="td-restar-checke-cobrados"></td>
-                    <td></td>
+                    <td>Egresos</td>
                     <td id="td-cheques-cobrados"></td>{{--aqui--}}
                 </tr>
                 <tr class="text-center">
@@ -194,7 +194,7 @@
         let data_cobro_no_select = [];
         let saldos_libros_i = {{$totalLastMonth}};
         let cheques_mano = {{$cheques_mano}};
-        let saldo_siguiente_i = {{is_null($conciliacion_anterior) ? $rubroPUC->saldo_inicial + $totDeb - $totCredAll : $rubroPUC->saldo_inicial + $totDeb - $totCredAll + $total_cheque_mano - $total_cheque_cobrados}};
+        let saldo_siguiente_i = {{$rubroPUC->saldo_inicial + $total_cheque_mano + $totDeb - $totCredAll - $total_cheque_cobrados}};
         let cheques_cobrados = {{$comprobantes_old->sum('valor')}};
         let cheques_mano_libro = 0;
         let restar_cheques_mano = 0;

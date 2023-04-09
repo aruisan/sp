@@ -437,7 +437,7 @@ class BancosController extends Controller
         $totCredAll = 0;
         $totBank = 0;
 
-        $conciliaciones_anteriores = $rubroPUC->conciliaciones->filter(function($e) use($añoActual){ $e->año == $añoActual; });
+        $conciliaciones_anteriores = ConciliacionBancaria::where('año', $añoActual)->where('puc_id', $rubroPUC->id)->get();
         $conciliacion_anterior = NULL;
         $total_cheque_mano = 0;
         $total_cheque_cobrados = 0;
@@ -446,12 +446,16 @@ class BancosController extends Controller
             
             foreach($conciliaciones_anteriores as $anterior):
                 $conciliacion_anterior = $anterior->mes == $mesFind-1 ? $anterior : $conciliacion_anterior; 
-                $total_cheque_mano += $anterior->cheques_mano->count() > 0 
+                $total_cheque_mano += $anterior->mes < $mesFind && $anterior->cheques_mano->count() > 0 
                                     ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
-                $total_cheque_cobrados += $anterior->cuentas_temporales->count() > 0 
+                $total_cheque_cobrados += $anterior->mes < $mesFind && $anterior->cuentas_temporales->count() > 0 
                                         ? $anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
             endforeach;
         endif;
+
+        //dd([$conciliaciones_anteriores[0]->cheques_mano, $total_cheque_mano, $total_cheque_cobrados]);
+
+       // dd([$conciliaciones_anteriores[0]->mes, $request->mes]);
         /*
         $conciliacion_anterior = NULL;
         $total_cheque_mano = 0;
@@ -846,14 +850,12 @@ class BancosController extends Controller
         if($conciliaciones_anteriores->count() > 0):
             foreach($conciliaciones_anteriores as $anterior):
                 $conciliacion_anterior = $anterior->mes == $mesFind-1 ? $anterior : $conciliacion_anterior; 
-                $total_cheque_mano += $anterior->cheques_mano->count() > 0 
+                $total_cheque_mano += $anterior->mes < $mesFind && $anterior->cheques_mano->count() > 0 
                                     ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
-                $total_cheque_cobrados += $anterior->cuentas_temporales->count() > 0 
+                $total_cheque_cobrados += $anterior->mes < $mesFind && $anterior->cuentas_temporales->count() > 0 
                                         ? $anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
             endforeach;
         endif;
-
-        //dd($total_cheque_mano);
 
         if($mesFind >= 2) {
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$mesFind."-01", $rubroPUC);
