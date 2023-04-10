@@ -2282,7 +2282,7 @@ class InformeController extends Controller
         $presupuesto = $this->prepEgresos();
 
         return Excel::download(new InfPrepEgrExcExport($añoActual, $presupuesto, $mesActual, $diaActual),
-            'Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
+            'Informe Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
     }
 
     public function makeIngresosEXCEL()
