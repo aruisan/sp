@@ -167,6 +167,7 @@ class RetencionFuenteController extends Controller
             //CUENTA CORRESPONDIENTE AL DEBITO
             if ($cuenta->code == '243603') $idPadreDeb = 868;
             elseif ($cuenta->code == '243605') $idPadreDeb = 1029;
+            elseif ($cuenta->code == '243606') $idPadreDeb = 1046;
             else $idPadreDeb = 869;
             $padreDeb = PucAlcaldia::find($idPadreDeb);
             $hijosDeb = PucAlcaldia::where('padre_id', $idPadreDeb)->get();
