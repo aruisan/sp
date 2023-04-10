@@ -20,4 +20,6 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'import'] ,function(){
     Route::get('/comprobante-ingreso-temporal', "ImportEstadisticaPresupuestoController@create_comprobantes_old");
     Route::post('/comprobante-ingreso-temporal', "ImportEstadisticaPresupuestoController@import_comprobantes_old")->name('import.comprobantes_old');
 
+    Route::get('/pac', "ImportEstadisticaPresupuestoController@create_pac");
+    Route::post('/pac', "ImportEstadisticaPresupuestoController@import_pac")->name('import.pac');
 });

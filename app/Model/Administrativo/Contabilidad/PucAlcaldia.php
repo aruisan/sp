@@ -62,11 +62,11 @@ class PucAlcaldia extends Model implements Auditable
                     <td class='text-right'>$".number_format($credito)."</td>
                     <td class='text-right'>{$debito}</td>
                     <td class='text-right'>{$credito}</td>
-                </tr>";
+                    </tr>";
                     /*
+                    <td>{$padre}</td>
                     <td>{$puc['naturaleza']}</td>
                     <td>{$puc['saldo_inicial']}</td>
-                    <td>{$padre}</td>
                     <td>{$hijos}</td>
                     */
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria;
 
+use App\PacInformeIngresoEgreso;
 use App\Model\Hacienda\Presupuesto\FontsVigencia;
 use App\Model\Administrativo\Tesoreria\PacMeses;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
@@ -668,4 +669,11 @@ class PacController extends Controller
         Session::flash('error','El PAC se ha eliminado exitosamente');
         return redirect('/administrativo/pac');
     }
+
+
+    public function informe_temporal($tipo){
+        $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        $pacs = PacInformeIngresoEgreso::where('tipo', $tipo)->get();
+        return view('administrativo.pac.informe', compact('pacs', 'tipo', 'meses'));
+   }
 }

@@ -306,8 +306,8 @@
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >PAC </a>
                   <ul class="dropdown-menu">
-                     <li><a class="item-menu" href="{{ url('/administrativo/pac') }}">Ingresos</a></li>
-                     <li><a class="item-menu" href="">Egresos</a></li>
+                     <li><a class="item-menu" href="{{ route('pac.informe', 'ingresos') }}">Ingresos</a></li>
+                     <li><a class="item-menu" href="{{ route('pac.informe', 'egresos') }}">Egresos</a></li>
                   </ul>
                </li>
                <li class="dropdown-submenu">
