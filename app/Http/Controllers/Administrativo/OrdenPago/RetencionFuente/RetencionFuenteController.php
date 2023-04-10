@@ -198,7 +198,7 @@ class RetencionFuenteController extends Controller
                                                         'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $hDeb->code,
                                                         'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $valueOP,
                                                         'idTercero' => $ordenPago->registros->persona->id]);
-                                                    $valueCred[] = $puc->valor_debito;
+                                                    $valueCred[] = $valueOP;
                                                     $valueDeb[] = $descuento->valor;
                                                 }
                                             }
