@@ -191,11 +191,12 @@ class RetencionFuenteController extends Controller
                                             foreach ($hijosDeb as $hDeb){
                                                 if ($hDeb->id == $puc->rubros_puc_id ){
                                                     //dd($hDeb, $puc);
-                                                    if ($puc->valor_debito == 0) dd($puc, $descuento, $ordenPago);
+                                                    if ($puc->valor_debito == 0) $valueOP = $ordenPago->valor;
+                                                    else $valueOP =$puc->valor_debito;
                                                     $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
                                                         'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
                                                         'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $hDeb->code,
-                                                        'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $puc->valor_debito,
+                                                        'conceptoDeb' => $hDeb->concepto, 'valorDeb' => $valueOP,
                                                         'idTercero' => $ordenPago->registros->persona->id]);
                                                     $valueCred[] = $puc->valor_debito;
                                                     $valueDeb[] = $descuento->valor;
