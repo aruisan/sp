@@ -149,7 +149,12 @@ class ComprobanteIngresosController extends Controller
         $hijosDebito = PucAlcaldia::where('hijo', '1')->where('naturaleza','DEBITO')->orderBy('code','ASC')->get();
         $hijos = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
         $rubI = Rubro::where('vigencia_id', $vigencia->id)->orderBy('cod','ASC')->get();
-        $persona = Persona::find($comprobante->persona_id);
+        if ($comprobante->tipoCI == "Comprobante de Ingresos"){
+            $user = User::find($comprobante->persona_id);
+            $persona = $user;
+            $persona->nombre = $user->name;
+            $persona->num_dc = $user->email;
+        } else $persona = Persona::find($comprobante->persona_id);
 
         foreach ($rubI as $rub){
             foreach ($rub->fontsRubro as $fuente){
