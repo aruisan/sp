@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Model\Persona;
 use App\NominaEmpleado;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\PacInformeIngresoEgreso;
 
 class ImportEstadisticaPresupuestoController extends Controller
 {
@@ -147,6 +148,31 @@ class ImportEstadisticaPresupuestoController extends Controller
             $new_person->naturaleza = $naturaleza;
             $new_person->categoria = $categoria;
             $new_person->save();
+        endforeach;
+
+        return response()->json('ok');
+    }
+
+    public function create_pac(){
+        return view('import.pac');
+    }
+
+    public function import_pac(Request $request)
+    {
+        $encontrados = collect();
+        $nuevos = collect();
+        foreach($request->data as $item):
+            $codigo = $item[0];
+            $nombre = $item[1];
+            $inicial = $item[2];
+            $tipo = $item[3];
+            
+            $new = new PacInformeIngresoEgreso;
+            $new->codigo = $codigo;
+            $new->nombre = $nombre;
+            $new->inicial = $inicial;
+            $new->tipo = $tipo;
+            $new->save();
         endforeach;
 
         return response()->json('ok');
