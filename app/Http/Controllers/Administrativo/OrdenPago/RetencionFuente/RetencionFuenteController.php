@@ -319,28 +319,25 @@ class RetencionFuenteController extends Controller
         $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', 754)->first();
 
         if ($rubro) {
-            foreach ($rubro->fontsRubro as $fuente){
-                $saldo[] = $fuente->dependenciaFont->sum('saldo');
+            foreach ($rubro->fontsRubro as $fuente) $saldo[] = $fuente->dependenciaFont->sum('saldo');
+
+            if ($request->debMulta != 0 and $request->credMulta != 0) {
+                if ($request->debMulta == $request->credMulta) $multas = true;
+                else {
+                    Session::flash('error', 'El valor de debito y credito en las multas deben ser iguales.');
+                    return back();
+                }
+            } elseif ($request->debMulta == 0 and $request->credMulta == 0) $multas = false;
+            else {
+                Session::flash('error', 'Se tiene que enviar el valor de la multa de debito y credito con valores diferentes a cero pero iguales o valores en cero cuando no aplica multa.');
+                return back();
             }
 
-            if (isset($saldo)){
-                if (array_sum($saldo) >= intval($request->valorPago)){
+            $vigencia = Vigencia::find($vigencia_id);
 
-                    if ($request->debMulta != 0 and $request->credMulta != 0) {
-                        if ($request->debMulta == $request->credMulta) $multas = true;
-                        else {
-                            Session::flash('error', 'El valor de debito y credito en las multas deben ser iguales.');
-                            return back();
-                        }
-                    } elseif ($request->debMulta == 0 and $request->credMulta == 0) $multas = false;
-                    else {
-                        Session::flash('error', 'Se tiene que enviar el valor de la multa de debito y credito con valores diferentes a cero pero iguales o valores en cero cuando no aplica multa.');
-                        return back();
-                    }
-
-                    $vigencia = Vigencia::find($vigencia_id);
-
-                    if ($multas) {
+            if ($multas) {
+                if (isset($saldo)){
+                    if (array_sum($saldo) >= intval($request->valorPago)){
 
                         $depRubroFonts = DependenciaRubroFont::where('dependencia_id',15)->where('vigencia_id',$request->vigencia_id)
                             ->where('rubro_font_id', $rubro->fontsRubro->first()->id)->first();
@@ -350,152 +347,154 @@ class RetencionFuenteController extends Controller
 
                         //SE CREA EL REGISTRO YA FINALIZADO
                         $registro = $this->createRegistro($request, $cdp, $vigencia);
+
+                    } else {
+                        Session::flash('warning', 'El rubro de SANCIONES ADMINISTRATIVAS no tiene fondos para realizar el pago.');
+                        return back();
                     }
-
-                    //SE REALIZA LA BUSQUEDA DEL CODIGO CORRESPONDIENTE A LA NUEVA ORDEN DE PAGO
-                    $ordenPagoFind = OrdenPagos::orderBy('code','DESC')->first();
-                    $añoOPago = Carbon::parse($ordenPagoFind->created_at)->format('Y');
-                    if ($añoOPago == $vigencia->vigencia) $numOP = $ordenPagoFind->code + 1;
-                    else $numOP = 1;
-
-                    $ordenPago = new OrdenPagos();
-                    $ordenPago->code = $numOP;
-                    $ordenPago->nombre = $request->conceptoOP;
-                    $ordenPago->valor = intval($request->valorPago);
-                    $ordenPago->saldo = intval($request->valorPago);
-                    $ordenPago->iva = 0;
-                    $ordenPago->estado = '1';
-                    if ($multas) $ordenPago->registros_id = $registro['Registro']->id;
-                    $ordenPago->user_id = auth()->user()->id;
-                    $ordenPago->save();
-
-                    $ordenPagoRubros = new OrdenPagosRubros();
-                    $ordenPagoRubros->orden_pagos_id  = $ordenPago->id;
-                    $ordenPagoRubros->valor  = $ordenPago->valor;
-                    $ordenPagoRubros->saldo  = $ordenPago->saldo;
-                    $ordenPagoRubros->save();
-
-                    if ($multas){
-                        for ($i = 0; $i < sizeof($request->codeForm); $i++) {
-                            $puc = PucAlcaldia::where('code', $request->codeForm[$i])->first();
-
-                            $oPP = new OrdenPagosPuc();
-                            $oPP->rubros_puc_id = $puc->id;
-                            $oPP->orden_pago_id = $ordenPago->id;
-                            $oPP->valor_debito = $request->debitoForm[$i];
-                            $oPP->valor_credito = 0;
-                            $oPP->save();
-                        }
-
-                        $oPP = new OrdenPagosPuc();
-                        $oPP->rubros_puc_id = 1039;
-                        $oPP->orden_pago_id = $ordenPago->id;
-                        $oPP->valor_debito = $request->debMulta;
-                        $oPP->valor_credito = 0;
-                        $oPP->save();
-
-                        $oPP = new OrdenPagosPuc();
-                        $oPP->rubros_puc_id = 1040;
-                        $oPP->orden_pago_id = $ordenPago->id;
-                        $oPP->valor_debito = 0;
-                        $oPP->valor_credito = $request->credMulta;
-                        $oPP->save();
-                    }
-
-                    $pago = new TesoreriaRetefuentePago();
-                    $pago->vigencia_id = $vigencia_id;
-                    $pago->mes = $mes;
-                    $pago->valor = $request->valorPago;
-                    $pago->orden_pago_id = $ordenPago->id;
-                    $pago->save();
-
-                    //SAVE FORMS
-                    for ($i = 0; $i < sizeof($request->concepto); $i++) {
-                        $form = new TesoreriaRetefuenteForm();
-                        $form->retefuente_id = $pago->id;
-                        $form->concepto = $request->concepto[$i];
-                        $form->base = $request->base[$i];
-                        $form->retencion = $request->reten[$i];
-                        $form->save();
-                    }
-
-                    //SAVE CONTABILIZACION
-                    for ($i = 0; $i < sizeof($request->codeForm); $i++) {
-                        $puc = PucAlcaldia::where('code', $request->codeForm[$i])->first();
-
-                        $conta = new TesoreriaRetefuenteConta();
-                        $conta->retefuente_id = $pago->id;
-                        $conta->cuenta_puc_id = $puc->id;
-                        $conta->persona_id = $request->terceroForm[$i];
-                        $conta->concepto = $request->conceptoForm[$i];
-                        $conta->debito = $request->debitoForm[$i];
-                        $conta->credito = 0;
-                        $conta->save();
-                    }
-
-                    //SAVE CONTABILIZACION MULTAS
-                    if ($multas) {
-                        $conta = new TesoreriaRetefuenteConta();
-                        $conta->retefuente_id = $pago->id;
-                        $conta->cuenta_puc_id = 1040;
-                        $conta->concepto = 'Multas Y Sanciones';
-                        $conta->debito = $request->debMulta;
-                        $conta->credito = 0;
-                        $conta->save();
-
-                        $conta = new TesoreriaRetefuenteConta();
-                        $conta->retefuente_id = $pago->id;
-                        $conta->cuenta_puc_id = 1039;
-                        $conta->concepto = 'Multas Y Sanciones';
-                        $conta->debito = 0;
-                        $conta->credito = $request->credMulta;
-                        $conta->save();
-                    }
-
-
-                    //SE CREA EL COMPROBANTE CONTABLE
-                    $compContable = new CompCont();
-                    $compContable->fecha = Carbon::today();
-                    $compContable->code = 1;
-                    $compContable->descripcion = "DECLARACION DE RETENCION EN LA FUENTE MES " . $mes . " - " . $vigencia->vigencia;
-                    $compContable->tipo_comp_id = 1;
-                    $compContable->save();
-
-                    //VALORES DEBITO DEL COMPROBANTE CONTABLE
-                    for ($i = 0; $i < sizeof($request->codeForm); $i++) {
-                        $puc = PucAlcaldia::where('code', $request->codeForm[$i])->first();
-
-                        $compContableMov = new CompContMov();
-                        $compContableMov->debito = $request->debitoForm[$i];
-                        $compContableMov->credito = 0;
-                        $compContableMov->comp_cont_id = $compContable->id;
-                        $compContableMov->cuenta_puc_id = $puc->id;
-                        $compContableMov->persona_id = $request->terceroForm[$i];
-                        $compContableMov->save();
-                    }
-
-                    //VALORES CREDITO DEL COMPROBANTE CONTABLE
-                    $compContableMov = new CompContMov();
-                    $compContableMov->debito = 0;
-                    $compContableMov->credito = $request->valorPago;
-                    $compContableMov->comp_cont_id = $compContable->id;
-                    $compContableMov->persona_id = 75;
-                    $compContableMov->save();
-
-                    //SE RELACIONA EL COMPROBANTE CONTABLE A EL PAGO DE LA RETENCION
-                    $pago->comp_conta_id = $compContable->id;
-                    $pago->save();
-
-                    Session::flash('success', 'Pago de retención en la fuente generado en el sistema exitosamente.');
-                    return redirect('administrativo/tesoreria/retefuente/pago/' . $vigencia_id);
-                } else {
+                } else{
                     Session::flash('warning', 'El rubro de SANCIONES ADMINISTRATIVAS no tiene fondos para realizar el pago.');
                     return back();
                 }
-            } else{
-                Session::flash('warning', 'El rubro de SANCIONES ADMINISTRATIVAS no tiene fondos para realizar el pago.');
-                return back();
             }
+
+            //SE REALIZA LA BUSQUEDA DEL CODIGO CORRESPONDIENTE A LA NUEVA ORDEN DE PAGO
+            $ordenPagoFind = OrdenPagos::orderBy('code','DESC')->first();
+            $añoOPago = Carbon::parse($ordenPagoFind->created_at)->format('Y');
+            if ($añoOPago == $vigencia->vigencia) $numOP = $ordenPagoFind->code + 1;
+            else $numOP = 1;
+
+            $ordenPago = new OrdenPagos();
+            $ordenPago->code = $numOP;
+            $ordenPago->nombre = $request->conceptoOP;
+            $ordenPago->valor = intval($request->valorPago);
+            $ordenPago->saldo = intval($request->valorPago);
+            $ordenPago->iva = 0;
+            $ordenPago->estado = '1';
+            if ($multas) $ordenPago->registros_id = $registro['Registro']->id;
+            $ordenPago->user_id = auth()->user()->id;
+            $ordenPago->save();
+
+            $ordenPagoRubros = new OrdenPagosRubros();
+            $ordenPagoRubros->orden_pagos_id  = $ordenPago->id;
+            $ordenPagoRubros->valor  = $ordenPago->valor;
+            $ordenPagoRubros->saldo  = $ordenPago->saldo;
+            $ordenPagoRubros->save();
+
+            if ($multas){
+                for ($i = 0; $i < sizeof($request->codeForm); $i++) {
+                    $puc = PucAlcaldia::where('code', $request->codeForm[$i])->first();
+
+                    $oPP = new OrdenPagosPuc();
+                    $oPP->rubros_puc_id = $puc->id;
+                    $oPP->orden_pago_id = $ordenPago->id;
+                    $oPP->valor_debito = $request->debitoForm[$i];
+                    $oPP->valor_credito = 0;
+                    $oPP->save();
+                }
+
+                $oPP = new OrdenPagosPuc();
+                $oPP->rubros_puc_id = 1039;
+                $oPP->orden_pago_id = $ordenPago->id;
+                $oPP->valor_debito = $request->debMulta;
+                $oPP->valor_credito = 0;
+                $oPP->save();
+
+                $oPP = new OrdenPagosPuc();
+                $oPP->rubros_puc_id = 1040;
+                $oPP->orden_pago_id = $ordenPago->id;
+                $oPP->valor_debito = 0;
+                $oPP->valor_credito = $request->credMulta;
+                $oPP->save();
+            }
+
+            $pago = new TesoreriaRetefuentePago();
+            $pago->vigencia_id = $vigencia_id;
+            $pago->mes = $mes;
+            $pago->valor = $request->valorPago;
+            $pago->orden_pago_id = $ordenPago->id;
+            $pago->save();
+
+            //SAVE FORMS
+            for ($i = 0; $i < sizeof($request->concepto); $i++) {
+                $form = new TesoreriaRetefuenteForm();
+                $form->retefuente_id = $pago->id;
+                $form->concepto = $request->concepto[$i];
+                $form->base = $request->base[$i];
+                $form->retencion = $request->reten[$i];
+                $form->save();
+            }
+
+            //SAVE CONTABILIZACION
+            for ($i = 0; $i < sizeof($request->codeForm); $i++) {
+                $puc = PucAlcaldia::where('code', $request->codeForm[$i])->first();
+
+                $conta = new TesoreriaRetefuenteConta();
+                $conta->retefuente_id = $pago->id;
+                $conta->cuenta_puc_id = $puc->id;
+                $conta->persona_id = $request->terceroForm[$i];
+                $conta->concepto = $request->conceptoForm[$i];
+                $conta->debito = $request->debitoForm[$i];
+                $conta->credito = 0;
+                $conta->save();
+            }
+
+            //SAVE CONTABILIZACION MULTAS
+            if ($multas) {
+                $conta = new TesoreriaRetefuenteConta();
+                $conta->retefuente_id = $pago->id;
+                $conta->cuenta_puc_id = 1040;
+                $conta->concepto = 'Multas Y Sanciones';
+                $conta->debito = $request->debMulta;
+                $conta->credito = 0;
+                $conta->save();
+
+                $conta = new TesoreriaRetefuenteConta();
+                $conta->retefuente_id = $pago->id;
+                $conta->cuenta_puc_id = 1039;
+                $conta->concepto = 'Multas Y Sanciones';
+                $conta->debito = 0;
+                $conta->credito = $request->credMulta;
+                $conta->save();
+            }
+
+
+            //SE CREA EL COMPROBANTE CONTABLE
+            $compContable = new CompCont();
+            $compContable->fecha = Carbon::today();
+            $compContable->code = 1;
+            $compContable->descripcion = "DECLARACION DE RETENCION EN LA FUENTE MES " . $mes . " - " . $vigencia->vigencia;
+            $compContable->tipo_comp_id = 1;
+            $compContable->save();
+
+            //VALORES DEBITO DEL COMPROBANTE CONTABLE
+            for ($i = 0; $i < sizeof($request->codeForm); $i++) {
+                $puc = PucAlcaldia::where('code', $request->codeForm[$i])->first();
+
+                $compContableMov = new CompContMov();
+                $compContableMov->debito = $request->debitoForm[$i];
+                $compContableMov->credito = 0;
+                $compContableMov->comp_cont_id = $compContable->id;
+                $compContableMov->cuenta_puc_id = $puc->id;
+                $compContableMov->persona_id = $request->terceroForm[$i];
+                $compContableMov->save();
+            }
+
+            //VALORES CREDITO DEL COMPROBANTE CONTABLE
+            $compContableMov = new CompContMov();
+            $compContableMov->debito = 0;
+            $compContableMov->credito = $request->valorPago;
+            $compContableMov->comp_cont_id = $compContable->id;
+            $compContableMov->persona_id = 75;
+            $compContableMov->save();
+
+            //SE RELACIONA EL COMPROBANTE CONTABLE A EL PAGO DE LA RETENCION
+            $pago->comp_conta_id = $compContable->id;
+            $pago->save();
+
+            Session::flash('success', 'Pago de retención en la fuente generado en el sistema exitosamente.');
+            return redirect('administrativo/tesoreria/retefuente/pago/' . $vigencia_id);
+
         } else{
             Session::flash('warning', 'No se detecta el rubro de SANCIONES ADMINISTRATIVAS en el sistema.');
             return back();
