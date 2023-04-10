@@ -253,14 +253,7 @@
                   <li class="dropdown-submenu">
                      <a class="dropdown-item item-menu" >Pago </a>
                      <ul class="dropdown-menu">
-                        <li class="dropdown-submenu">
-                           <a class="dropdown-item item-menu" >2023 </a>
-                           <ul class="dropdown-menu">
-                              <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/pago/11/1') }}">Enero</a></li>
-                              <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/pago/11/2') }}">Febrero</a></li>
-                              <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/pago/11/3') }}">Marzo</a></li>
-                           </ul>
-                        </li>
+                        <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/retefuente/pago/11') }}">2023</a></li>
                      </ul>
                   </li>
                </ul>
