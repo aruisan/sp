@@ -32,8 +32,8 @@ class PucAlcaldia extends Model implements Auditable
     public function getVInicialAttribute(){
         $suma = $this->saldo_inicial;
         if($this->hijos->count() > 0):
-            $suma += $this->hijos->sum('valor_inicial');
-            $suma += $this->hijos->sum('v_inicial');
+           // $suma += $this->hijos->sum('valor_inicial');
+            $suma = $this->hijos->sum('v_inicial');
         endif;
             
         return $suma;
