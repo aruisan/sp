@@ -379,7 +379,6 @@ class PresupuestoController extends Controller
                                         else $reduccion = 0;
 
                                         $definitivo = $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor');
-
                                         if (count($rubro[0]->fontsRubro[0]->compIng) > 0) $compIngValue = $rubro[0]->fontsRubro[0]->compIng->sum('debito');
 
                                         $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
