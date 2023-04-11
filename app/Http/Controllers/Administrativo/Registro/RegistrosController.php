@@ -92,7 +92,8 @@ class RegistrosController extends Controller
         })->orderBy('id', 'DESC')->get();
         foreach ($regH as $data) {
             if ($data->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
-                $registrosHistorico[] = collect(['id' => $data->id, 'code' => $data->code, 'objeto' => $data->objeto, 'nombre' => $data->persona->nombre, 'valor' => $data->val_total, 'saldo' => $data->saldo, 'secretaria_e' => $data->secretaria_e,
+                $fecha = Carbon::parse($data->created_at)->format('d-m-Y');
+                $registrosHistorico[] = collect(['id' => $data->id, 'fecha' => $fecha,'code' => $data->code, 'objeto' => $data->objeto, 'nombre' => $data->persona->nombre, 'valor' => $data->val_total, 'saldo' => $data->saldo, 'secretaria_e' => $data->secretaria_e,
                     'ff_secretaria_e' => $data->ff_secretaria_e, 'jefe_e' => $data->jefe_e, 'ff_jefe_e' => $data->ff_jefe_e,
                     'num_doc' => $data->num_doc, 'cc' => $data->persona->num_dc]);
             }
