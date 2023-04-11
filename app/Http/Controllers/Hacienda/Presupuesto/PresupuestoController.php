@@ -380,14 +380,11 @@ class PresupuestoController extends Controller
 
                                         $definitivo = $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor');
 
-                                        if (count($font->compIng) > 0) $compIngValue = $font->compIng->sum('debito');
+                                        if (count($rubro[0]->fontsRubro[0]->compIng) > 0) $compIngValue = $rubro[0]->fontsRubro[0]->compIng->sum('debito');
 
                                         $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
                                             'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
-
-                                        if ($data->code == '1.1.01.02.200.01') dd($prepIng, $font->compIng, $rubro[0]->fontsRubro[0]->compIng);
-
                                     }
 
                                 }
