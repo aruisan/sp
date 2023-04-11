@@ -386,7 +386,7 @@ class PresupuestoController extends Controller
                                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
                                             'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
 
-                                        if ($data->code == '1.1.01.02.200.03') dd($prepIng, $font->compIng);
+                                        if ($data->code == '1.1.01.02.200.03') dd($prepIng, $font->compIng, $rubro[0]->fontsRubro);
 
                                     }
 
