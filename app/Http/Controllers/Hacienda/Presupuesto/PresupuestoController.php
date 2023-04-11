@@ -420,7 +420,7 @@ class PresupuestoController extends Controller
 
                                     $compIngValue = 0;
                                     if (isset($civHijo)) $compIngValue = array_sum($civHijo);
-                                    if (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
+                                    elseif (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                     $sum[] = $rb->fontsRubro->sum('valor');
                                     $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
                                     $prepIng[] = collect(['id' => $rb->id, 'code' => $data->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
