@@ -42,7 +42,7 @@ use PDF;
 
 class InformeController extends Controller
 {
-    public function prepEgresos(){
+    public function prepEgresos($inicio = null, $final = null){
         $añoActual = Carbon::now()->year;
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->get();
@@ -75,22 +75,34 @@ class InformeController extends Controller
                 if ($data->id == '318') {
 
                     //CDPS
-                    $cdpsFind = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
+                    if ($inicio != null) $cdpsFind = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')
+                        ->whereBetween('created_at',array($inicio, $final))->get();
+                    else $cdpsFind = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
+
                     if (count($cdpsFind) > 0) $valueCDPs[] = $cdpsFind->sum('valor');
                     else $valueCDPs[] = 0;
 
-                    //registros
-                    $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
+                    //REGISTROS
+                    if ($inicio != null) $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')
+                        ->whereBetween('created_at',array($inicio, $final))->get();
+                    else $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
+
                     if (count($registrosFind) > 0) $valueRegistros[] = $registrosFind->sum('valor');
                     else $valueRegistros[] = 0;
 
                     //orden pagos
-                    $ordenesPago = OrdenPagos::where('id','>=',708)->where('estado','1')->get();
+                    if ($inicio != null) $ordenesPago = OrdenPagos::where('id','>=',708)->where('estado','1')
+                        ->whereBetween('created_at',array($inicio, $final))->get();
+                    else $ordenesPago = OrdenPagos::where('id','>=',708)->where('estado','1')->get();
+
                     if (count($ordenesPago) > 0) $valueOrdenPago[] = $ordenesPago->sum('valor');
                     else $valueOrdenPago[] = 0;
 
                     //pagos
-                    $pagosDB = Pagos::where('id','>=',683)->where('estado','1')->get();
+                    if ($inicio != null) $pagosDB = Pagos::where('id','>=',683)->where('estado','1')
+                        ->whereBetween('created_at',array($inicio, $final))->get();
+                    else $pagosDB = Pagos::where('id','>=',683)->where('estado','1')->get();
+
                     if (count($pagosDB) > 0) $valuePagos[] = $pagosDB->sum('valor');
                     else $valuePagos[] = 0;
 
@@ -210,14 +222,28 @@ class InformeController extends Controller
                             if(count($rubroOtherFind->first()->rubrosMov) > 0){
                                 foreach ($rubroOtherFind->first()->rubrosMov as $mov){
                                     if ($mov->valor > 0 ){
-                                        if ($mov->movimiento == "1") {
-                                            $valueRubrosCred[] = $mov->valor;
-                                            $valueRubrosCCred[] = $mov->valor;
-                                            $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
-                                            $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
+                                        if ($inicio != null){
+                                            if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                if ($mov->movimiento == "1") {
+                                                    $valueRubrosCred[] = $mov->valor;
+                                                    $valueRubrosCCred[] = $mov->valor;
+                                                    $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
+                                                    $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
+                                                }
+                                                elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
+                                                elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
+
+                                            }
+                                        } else{
+                                            if ($mov->movimiento == "1") {
+                                                $valueRubrosCred[] = $mov->valor;
+                                                $valueRubrosCCred[] = $mov->valor;
+                                                $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
+                                                $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
+                                            }
+                                            elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
+                                            elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
                                         }
-                                        elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
-                                        elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
                                     }
                                 }
                             } else {
@@ -240,7 +266,12 @@ class InformeController extends Controller
                                 if(count($rubCdpValue) > 0){
                                     foreach ($rubCdpValue as $cdp) {
                                         if ($cdp->cdps->jefe_e == "3") {
-                                            $valueCDPs[] = $cdp->valor;
+                                            if ($inicio != null){
+                                                if (date('Y-m-d', strtotime($cdp->cdps->created_at)) <= $final and date('Y-m-d', strtotime($cdp->cdps->created_at) >= $inicio)){
+                                                    $valueCDPs[] = $cdp->valor;
+                                                }
+                                            } else $valueCDPs[] = $cdp->valor;
+
                                             if (count($cdp->cdps->cdpsRegistro) > 0) {
                                                 //CONSULTA PARA LOS REGISTROS
                                                 $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
@@ -248,15 +279,29 @@ class InformeController extends Controller
                                                     if ($cdpRValue->valor != 0) {
                                                         if ($cdpRValue->registro->jefe_e == 3) {
                                                             //VALOR REGISTROS
-                                                            $valueRegistros[] = $cdpRValue->valor;
+                                                            if ($inicio != null){
+                                                                if (date('Y-m-d', strtotime($cdpRValue->registro->created_at)) <= $final and date('Y-m-d', strtotime($cdpRValue->registro->created_at) >= $inicio)){
+                                                                    $valueRegistros[] = $cdpRValue->valor;
+                                                                }
+                                                            } else $valueRegistros[] = $cdpRValue->valor;
                                                             //VALOR ORDENES DE PAGO
                                                             $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $cdpRValue->id)->get();
                                                             if (count($ordenPagoRubros) > 0){
                                                                 $ordenPagoRubro = $ordenPagoRubros->first();
                                                                 if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $cdpRValue->registro_id){
-                                                                    $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                    if ($inicio != null){
+                                                                        if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at) >= $inicio)){
+                                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                        }
+                                                                    } else $valueOrdenPago[] = $ordenPagoRubro->valor;
                                                                     if ($ordenPagoRubro->orden_pago->pago){
-                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
+                                                                            if ($inicio != null){
+                                                                                if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at) >= $inicio)){
+                                                                                    $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                }
+                                                                            } else $valuePagos[] = $ordenPagoRubro->valor;
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -394,15 +439,25 @@ class InformeController extends Controller
                                         foreach ($rubroOtherFind->first()->rubrosMov as $mov){
                                             if ($mov->valor > 0 ){
                                                 if ($mov->movimiento == "2") {
-                                                    if ($mov->fonts_rubro_id == $fuenteRubro->id) $valueRubrosAdd[] = $mov->valor;
+                                                    if ($mov->fonts_rubro_id == $fuenteRubro->id) {
+                                                        if ($inicio != null){
+                                                            if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                                $valueRubrosAdd[] = $mov->valor;
+                                                            }
+                                                        } else $valueRubrosAdd[] = $mov->valor;
+                                                    }
                                                 }
                                                 elseif ($mov->movimiento == "3") {
-                                                    if ($mov->fonts_rubro_id == $fuenteRubro->id) $valueRubrosRed[] = $mov->valor;
+                                                    if ($mov->fonts_rubro_id == $fuenteRubro->id) {
+                                                        if ($inicio != null){
+                                                            if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                                $valueRubrosRed[] = $mov->valor;
+                                                            }
+                                                        } else $valueRubrosRed[] = $mov->valor;
+                                                    }
                                                 }
                                             }
                                         }
-
-
                                     }
                                 } else $valueRubros[] = 0; $valueRubrosDisp[] = 0;
 
@@ -411,10 +466,19 @@ class InformeController extends Controller
 
                                         if ($mov->valor > 0 ){
                                             if ($mov->movimiento == "1") {
-                                                $valueRubrosCred[] = $mov->valor;
-                                                $valueRubrosCCred[] = $mov->valor;
-                                                $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
-                                                $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
+                                                if ($inicio != null){
+                                                    if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                        $valueRubrosCred[] = $mov->valor;
+                                                        $valueRubrosCCred[] = $mov->valor;
+                                                        $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
+                                                        $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
+                                                    }
+                                                } else {
+                                                    $valueRubrosCred[] = $mov->valor;
+                                                    $valueRubrosCCred[] = $mov->valor;
+                                                    $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
+                                                    $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
+                                                }
                                             }
                                         }
                                     }
@@ -431,7 +495,11 @@ class InformeController extends Controller
                                     if(count($rubCdpValue) > 0){
                                         foreach ($rubCdpValue as $cdp) {
                                             if ($cdp->cdps->jefe_e == "3") {
-                                                $valueCDPs[] = $cdp->valor;
+                                                if ($inicio != null){
+                                                    if (date('Y-m-d', strtotime($cdp->cdps->created_at)) <= $final and date('Y-m-d', strtotime($cdp->cdps->created_at) >= $inicio)){
+                                                        $valueCDPs[] = $cdp->valor;
+                                                    }
+                                                } else $valueCDPs[] = $cdp->valor;
                                                 if (count($cdp->cdps->cdpsRegistro) > 0){
                                                     //CONSULTA PARA LOS REGISTROS
                                                     $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
@@ -439,7 +507,11 @@ class InformeController extends Controller
                                                         if ($valueCdpReg->valor != 0){
                                                             if ($valueCdpReg->registro->jefe_e == 3){
                                                                 //VALOR REGISTROS
-                                                                $valueRegistros[] = $valueCdpReg->valor;
+                                                                if ($inicio != null){
+                                                                    if (date('Y-m-d', strtotime($cdpRValue->registro->created_at)) <= $final and date('Y-m-d', strtotime($cdpRValue->registro->created_at) >= $inicio)){
+                                                                        $valueRegistros[] = $cdpRValue->valor;
+                                                                    }
+                                                                } else $valueRegistros[] = $cdpRValue->valor;
                                                                 //ID REGISTROS
                                                                 $IDRegistros[] = $valueCdpReg->registro_id;
                                                                 //VALOR ORDENES DE PAGO
@@ -447,9 +519,19 @@ class InformeController extends Controller
                                                                 if (count($ordenPagoRubros) > 0){
                                                                     $ordenPagoRubro = $ordenPagoRubros->first();
                                                                     if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $valueCdpReg->registro_id){
-                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                        if ($inicio != null){
+                                                                            if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at) >= $inicio)){
+                                                                                $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                            }
+                                                                        } else $valueOrdenPago[] = $ordenPagoRubro->valor;
                                                                         if ($ordenPagoRubro->orden_pago->pago){
-                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
+                                                                                if ($inicio != null){
+                                                                                    if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at) >= $inicio)){
+                                                                                        $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                    }
+                                                                                } else $valuePagos[] = $ordenPagoRubro->valor;
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -575,10 +657,22 @@ class InformeController extends Controller
                             foreach ($itemFont->rubrosMov as $mov){
                                 if ($mov->valor > 0 ){
                                     if ($mov->movimiento == "2") {
-                                        if ($mov->fonts_rubro_id == $itemFont->id) $valueRubrosAdd[] = $mov->valor;
+                                        if ($mov->fonts_rubro_id == $itemFont->id) {
+                                            if ($inicio != null){
+                                                if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                    $valueRubrosAdd[] = $mov->valor;
+                                                }
+                                            } else $valueRubrosAdd[] = $mov->valor;
+                                        }
                                     }
                                     elseif ($mov->movimiento == "3") {
-                                        if ($mov->fonts_rubro_id == $itemFont->id) $valueRubrosRed[] = $mov->valor;
+                                        if ($mov->fonts_rubro_id == $itemFont->id) {
+                                            if ($inicio != null){
+                                                if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                    $valueRubrosRed[] = $mov->valor;
+                                                }
+                                            } else $valueRubrosRed[] = $mov->valor;
+                                        }
                                     }
                                 }
                             }
@@ -594,12 +688,18 @@ class InformeController extends Controller
                                 $valueRubrosDisp[] = $depFont->saldo;
 
                                 //VALORES DE CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
-                                $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
+                                if ($inicio != null) $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)
+                                    ->whereBetween('created_at',array($inicio, $final))->get();
+                                else $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
+
                                 if(count($rubrosCredMov) > 0) $valueRubrosCred[] = $rubrosCredMov->sum('valor');
                                 else $valueRubrosCred[] = 0;
 
                                 //VALORES DE CONTRA CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
-                                $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)->get();
+                                if ($inicio != null) $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)
+                                    ->whereBetween('created_at',array($inicio, $final))->get();
+                                else $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)->get();
+
                                 if(count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
                                 else $valueRubrosCCred[] = 0;
 
@@ -625,8 +725,20 @@ class InformeController extends Controller
                                             if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
                                                 //VALIDACION DE SI LA ACTIVIDAD CORRESPONDE A LA FUENTE DEL RUBRO DE LA DEP
                                                 if ($bpinCDP->dependencia_rubro_font_id != null){
-                                                    if ($bpinCDP->dependencia_rubro_font_id == $depFont->id) $valueCDPs[] = $bpinCDP->valor;
-                                                } else $valueCDPs[] = $bpinCDP->valor;
+                                                    if ($bpinCDP->dependencia_rubro_font_id == $depFont->id) {
+                                                        if ($inicio != null){
+                                                            if (date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) <= $final and date('Y-m-d', strtotime($bpinCDP->cdp->created_at) >= $inicio)){
+                                                                $valueCDPs[] = $bpinCDP->valor;
+                                                            }
+                                                        } else $valueCDPs[] = $bpinCDP->valor;
+                                                    }
+                                                } else {
+                                                    if ($inicio != null){
+                                                        if (date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) <= $final and date('Y-m-d', strtotime($bpinCDP->cdp->created_at) >= $inicio)){
+                                                            $valueCDPs[] = $bpinCDP->valor;
+                                                        }
+                                                    } else $valueCDPs[] = $bpinCDP->valor;
+                                                }
                                                 $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)
                                                     ->where('bpin_cdp_valor_id', $bpinCDP->id)->get();
                                                 if (count($cdpsRegValue) > 0){
@@ -639,7 +751,11 @@ class InformeController extends Controller
                                                                     if (isset($validateValuedepFont->dependencia_rubro_font_id)){
                                                                         if ($validateValuedepFont->dependencia_rubro_font_id == $depFont->id){
                                                                             //VALOR REGISTROS
-                                                                            $valueRegistros[] = $valueCdpReg->valor;
+                                                                            if ($inicio != null){
+                                                                                if (date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) <= $final and date('Y-m-d', strtotime($valueCdpReg->registro->created_at) >= $inicio)){
+                                                                                    $valueRegistros[] = $valueCdpReg->valor;
+                                                                                }
+                                                                            } else $valueRegistros[] = $valueCdpReg->valor;
                                                                             //ID REGISTROS
                                                                             $IDRegistros[] = $valueCdpReg->registro_id;
                                                                             //VALOR ORDENES DE PAGO
@@ -647,16 +763,30 @@ class InformeController extends Controller
                                                                             if (count($ordenPagoRubros) > 0){
                                                                                 $ordenPagoRubro = $ordenPagoRubros->first();
                                                                                 if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $valueCdpReg->registro_id){
-                                                                                    $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                    if ($inicio != null){
+                                                                                        if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at) >= $inicio)){
+                                                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                        }
+                                                                                    } else $valueOrdenPago[] = $ordenPagoRubro->valor;
                                                                                     if ($ordenPagoRubro->orden_pago->pago){
-                                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
+                                                                                            if ($inicio != null){
+                                                                                                if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at) >= $inicio)){
+                                                                                                    $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                                }
+                                                                                            } else $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                        }
                                                                                     }
                                                                                 }
                                                                             }
                                                                         }
                                                                     } else{
                                                                         //VALOR REGISTROS
-                                                                        $valueRegistros[] = $valueCdpReg->valor;
+                                                                        if ($inicio != null){
+                                                                            if (date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) <= $final and date('Y-m-d', strtotime($valueCdpReg->registro->created_at) >= $inicio)){
+                                                                                $valueRegistros[] = $valueCdpReg->valor;
+                                                                            }
+                                                                        } else $valueRegistros[] = $valueCdpReg->valor;
                                                                         //ID REGISTROS
                                                                         $IDRegistros[] = $valueCdpReg->registro_id;
                                                                         //VALOR ORDENES DE PAGO
@@ -664,9 +794,19 @@ class InformeController extends Controller
                                                                         if (count($ordenPagoRubros) > 0){
                                                                             $ordenPagoRubro = $ordenPagoRubros->first();
                                                                             if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $valueCdpReg->registro_id){
-                                                                                $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                if ($inicio != null){
+                                                                                    if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at) >= $inicio)){
+                                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                    }
+                                                                                } else $valueOrdenPago[] = $ordenPagoRubro->valor;
                                                                                 if ($ordenPagoRubro->orden_pago->pago){
-                                                                                    if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                    if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
+                                                                                        if ($inicio != null){
+                                                                                            if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at) >= $inicio)){
+                                                                                                $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                            }
+                                                                                        } else $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }
@@ -696,7 +836,11 @@ class InformeController extends Controller
                                     if(count($rubCdpValue) > 0){
                                         foreach ($rubCdpValue as $cdp) {
                                             if ($cdp->cdps->jefe_e == "3") {
-                                                $valueCDPs[] = $cdp->valor;
+                                                if ($inicio != null){
+                                                    if (date('Y-m-d', strtotime($cdp->cdps->created_at)) <= $final and date('Y-m-d', strtotime($cdp->cdps->created_at) >= $inicio)){
+                                                        $valueCDPs[] = $cdp->valor;
+                                                    }
+                                                } else $valueCDPs[] = $cdp->valor;
                                                 if (count($cdp->cdps->cdpsRegistro) > 0){
                                                     //CONSULTA PARA LOS REGISTROS
                                                     $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
@@ -704,7 +848,11 @@ class InformeController extends Controller
                                                         if ($data->valor != 0){
                                                             if ($data->registro->jefe_e == 3){
                                                                 //VALOR REGISTROS
-                                                                $valueRegistros[] = $data->valor;
+                                                                if ($inicio != null){
+                                                                    if (date('Y-m-d', strtotime($data->registro->created_at)) <= $final and date('Y-m-d', strtotime($data->registro->created_at) >= $inicio)){
+                                                                        $valueRegistros[] = $data->valor;
+                                                                    }
+                                                                } else $valueRegistros[] = $data->valor;
                                                                 //ID REGISTROS
                                                                 $IDRegistros[] = $data->registro_id;
                                                                 //VALOR ORDENES DE PAGO
@@ -712,9 +860,19 @@ class InformeController extends Controller
                                                                 if (count($ordenPagoRubros) > 0){
                                                                     $ordenPagoRubro = $ordenPagoRubros->first();
                                                                     if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $data->registro_id){
-                                                                        $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                        if ($inicio != null){
+                                                                            if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at) >= $inicio)){
+                                                                                $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                            }
+                                                                        } else $valueOrdenPago[] = $ordenPagoRubro->valor;
                                                                         if ($ordenPagoRubro->orden_pago->pago){
-                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                            if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
+                                                                                if ($inicio != null){
+                                                                                    if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at) >= $inicio)){
+                                                                                        $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                    }
+                                                                                } else $valuePagos[] = $ordenPagoRubro->valor;
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -847,16 +1005,26 @@ class InformeController extends Controller
                             $found_key3 = array_search($plantillaCuipoFaltante2->padre_id, array_column($presupuesto, 'id'));
                             if ($found_key3 === false){
                                 $plantillaCuipoFaltante3 = PlantillaCuipoEgresos::find($plantillaCuipoFaltante2->padre_id);
-                                $prep = $this->llenarPresupuesto($plantillaCuipoFaltante3, $vigencia_id);
+                                //LLENADO DEL PRESUPUESTO CON VALORES DE FECHA EN CASO DE REPORTE DE EJECUCION
+                                if ($inicio != null) $prep = $this->llenarPresupuesto($plantillaCuipoFaltante3, $vigencia_id, $inicio, $final);
+                                else $prep = $this->llenarPresupuesto($plantillaCuipoFaltante3, $vigencia_id);
+
                                 $presupuesto[] = $prep;
                             }
-                            $prep = $this->llenarPresupuesto($plantillaCuipoFaltante2, $vigencia_id);
+
+                            if ($inicio != null) $prep = $this->llenarPresupuesto($plantillaCuipoFaltante2, $vigencia_id, $inicio, $final );
+                            else $prep = $this->llenarPresupuesto($plantillaCuipoFaltante2, $vigencia_id);
+
                             $presupuesto[] = $prep;
                         }
-                        $prep = $this->llenarPresupuesto($plantillaCuipoFaltante, $vigencia_id);
+                        if ($inicio != null) $prep = $this->llenarPresupuesto($plantillaCuipoFaltante, $vigencia_id, $inicio, $final );
+                        else $prep = $this->llenarPresupuesto($plantillaCuipoFaltante, $vigencia_id);
+
                         $presupuesto[] = $prep;
                     }
-                    $prep = $this->llenarPresupuesto($data, $vigencia_id);
+                    if ($inicio != null) $prep = $this->llenarPresupuesto($data, $vigencia_id, $inicio, $final );
+                    else $prep = $this->llenarPresupuesto($data, $vigencia_id);
+
                     $presupuesto[] = $prep;
                     //if ($data->id == 749) dd($data, end($presupuesto), $presupuesto, $found_key, $prep);
 
@@ -872,7 +1040,7 @@ class InformeController extends Controller
         return $presupuesto;
     }
 
-    public function llenarPresupuesto($data, $vigencia_id){
+    public function llenarPresupuesto($data, $vigencia_id, $inicio = null, $final = null){
         $otherRubs = DB::select("SELECT * from plantilla_cuipos_egresos where code REGEXP CONCAT('^','".$data->code.".')");
         if($otherRubs) {
             foreach ($otherRubs as $other) {
@@ -889,10 +1057,22 @@ class InformeController extends Controller
                             foreach ($rubroOtherFind->first()->rubrosMov as $mov){
                                 if ($mov->valor > 0 ){
                                     if ($mov->movimiento == "2") {
-                                        if ($mov->fonts_rubro_id == $fuenteRubro->id) $valueRubrosAdd[] = $mov->valor;
+                                        if ($mov->fonts_rubro_id == $fuenteRubro->id) {
+                                            if ($inicio != null){
+                                                if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                    $valueRubrosAdd[] = $mov->valor;
+                                                }
+                                            } else $valueRubrosAdd[] = $mov->valor;
+                                        }
                                     }
                                     elseif ($mov->movimiento == "3") {
-                                        if ($mov->fonts_rubro_id == $fuenteRubro->id) $valueRubrosRed[] = $mov->valor;
+                                        if ($mov->fonts_rubro_id == $fuenteRubro->id) {
+                                            if ($inicio != null){
+                                                if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at) >= $inicio)){
+                                                    $valueRubrosRed[] = $mov->valor;
+                                                }
+                                            } else $valueRubrosRed[] = $mov->valor;
+                                        }
                                     }
                                 }
                             }
@@ -904,12 +1084,18 @@ class InformeController extends Controller
                                     $valueRubrosDisp[] = $depFont->saldo;
 
                                     //VALORES DE CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
-                                    $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
+                                    if ($inicio != null) $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->get();
+                                    else $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)->get();
+
                                     if (count($rubrosCredMov) > 0) $valueRubrosCred[] = $rubrosCredMov->sum('valor');
                                     else $valueRubrosCred[] = 0;
 
                                     //VALORES DE CONTRA CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
-                                    $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)->get();
+                                    if ($inicio != null) $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->get();
+                                    else $rubrosCCMov = RubrosMov::where('dep_rubro_font_cc_id', $depFont->id)->get();
+
                                     if (count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
                                     else $valueRubrosCCred[] = 0;
                                 }
@@ -924,7 +1110,12 @@ class InformeController extends Controller
                         if(count($rubCdpValue) > 0){
                             foreach ($rubCdpValue as $cdp) {
                                 if ($cdp->cdps->jefe_e == "3") {
-                                    $valueCDPs[] = $cdp->valor;
+                                    if ($inicio != null){
+                                        if (date('Y-m-d', strtotime($cdp->cdps->created_at)) <= $final and date('Y-m-d', strtotime($cdp->cdps->created_at) >= $inicio)){
+                                            $valueCDPs[] = $cdp->valor;
+                                        }
+                                    } else $valueCDPs[] = $cdp->valor;
+
                                     if (count($cdp->cdps->cdpsRegistro) > 0){
                                         //CONSULTA PARA LOS REGISTROS
                                         $cdpsRegValue = CdpsRegistroValor::where('fontsRubro_id', $cdp->fontsRubro_id)->where('cdp_id', $cdp->cdp_id)->get();
@@ -932,7 +1123,11 @@ class InformeController extends Controller
                                             if ($valueCdpReg->valor != 0){
                                                 if ($valueCdpReg->registro->jefe_e == 3){
                                                     //VALOR REGISTROS
-                                                    $valueRegistros[] = $valueCdpReg->valor;
+                                                    if ($inicio != null){
+                                                        if (date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) <= $final and date('Y-m-d', strtotime($valueCdpReg->registro->created_at) >= $inicio)){
+                                                            $valueRegistros[] = $valueCdpReg->valor;
+                                                        }
+                                                    } else $valueRegistros[] = $valueCdpReg->valor;
                                                     //ID REGISTROS
                                                     $IDRegistros[] = $valueCdpReg->registro_id;
                                                     //VALOR ORDENES DE PAGO
@@ -940,9 +1135,19 @@ class InformeController extends Controller
                                                     if (count($ordenPagoRubros) > 0){
                                                         $ordenPagoRubro = $ordenPagoRubros->first();
                                                         if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $valueCdpReg->registro_id){
-                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                            if ($inicio != null){
+                                                                if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at) >= $inicio)){
+                                                                    $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                }
+                                                            } else $valueOrdenPago[] = $ordenPagoRubro->valor;
                                                             if ($ordenPagoRubro->orden_pago->pago){
-                                                                if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) $valuePagos[] = $ordenPagoRubro->valor;
+                                                                if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
+                                                                    if ($inicio != null){
+                                                                        if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at) >= $inicio)){
+                                                                            $valuePagos[] = $ordenPagoRubro->valor;
+                                                                        }
+                                                                    } else $valuePagos[] = $ordenPagoRubro->valor;
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -2289,6 +2494,14 @@ class InformeController extends Controller
 
         return Excel::download(new InfPrepEgrExcExport($añoActual, $presupuesto, $mesActual, $diaActual),
             'Informe Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
+    }
+
+    public function makeEgresosEjecucion(Request $request, $inicio, $final)
+    {
+        $presupuesto = $this->prepEgresos($inicio, $final);
+
+        return Excel::download(new InfPrepEgrExcExport($presupuesto),
+            'Ejecucion Presupuesto de Egresos '.$inicio.'-'.$final.'.xlsx');
     }
 
     public function makeIngresosEXCEL()
