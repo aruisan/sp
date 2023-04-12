@@ -472,7 +472,7 @@ class BancosController extends Controller
     */
 
         if($request->mes >= 2) {
-            $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
+            $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);//2023-2-1
             $totalLastMonth = $newSaldo['total'];
             $total = $newSaldo['total'];
         } else $totalLastMonth = $total;
@@ -918,16 +918,19 @@ class BancosController extends Controller
     }
 
     public function validateBeforeMonths($lastDate, $rubroPUC){
-        $lastDate = Carbon::parse($lastDate." 23:59:59");
-        $fechaFin = $lastDate->subDays(1);
-        $today = Carbon::today();
-        $fechaIni = Carbon::parse($today->year."-01-01");
+        $lastDate = Carbon::parse($lastDate." 23:59:59");//2023-2-1 23:59:59
+        $fechaFin = $lastDate->subDays(1);//2023-31-1 23:59:59
+        $today = Carbon::today();//2023-04-11
+        $fechaIni = Carbon::parse($today->year."-01-01");//2023-01-01
         $total = $rubroPUC->saldo_inicial;
         $totDeb = 0;
         $totCred = 0;
-        $mes = $fechaFin->month.'-'.$today->year;
+        $mes = $fechaFin->month.'-'.$today->year;//1-2023
 
         $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
+        //select * from pago_banks where rubros_puc_id == 28 and created_at >= 2023-01-01 and created_at <= 2023-31-1
+        //trae todos los pagos de bancos hechos entre una fecha inicial que seria el primero de enero del año actual a la fecha final
+        // que seria el dia que hagan el descargue de el informe
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
                 if ($pagoBank->pago->estado == 1){
@@ -940,6 +943,7 @@ class BancosController extends Controller
 
         //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
         $compsCont = ComprobanteIngresosMov::whereBetween('fechaComp',array($fechaIni, $fechaFin))->get();
+        //aca coge todos los movimientos de las cuenta de bancos poara generar los libros y al igual que pahgo de bancos tiene una fecha final y una fecha inicial
         if (count($compsCont) > 0){
             foreach ($compsCont as $compCont){
                 if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){

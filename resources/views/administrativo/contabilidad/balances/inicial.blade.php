@@ -25,6 +25,8 @@
                         <th class="text-center">Credito</th>
                         <th class="text-center">Debito</th>
                         <th class="text-center">Credito</th>
+                        <th class="text-center">Debitomov</th>
+                        <th class="text-center">Creditomov</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +38,8 @@
                         <td class="text-right" style="width=200px;">${{number_format($puc->naturaleza == "CREDITO" ? $puc->v_inicial : 0 ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->naturaleza == "DEBITO" ? $puc->v_inicial : 0}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->naturaleza != "DEBITO" ? $puc->v_inicial : 0}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->v_debito}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->v_credito}}</td>
                         {{--
                         <td>{{$puc->naturaleza}}</td>
                         <td>{{$puc->saldo_inicial}}</td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrativo\Contabilidad\Balances;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
@@ -168,5 +169,15 @@ class PruebaController extends Controller
             }
         }
         return view('administrativo.contabilidad.balances.prueba', compact('result'));
+    }
+
+    public function informe(){
+        $pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
+        //dd($pucs);
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+
+        return view('administrativo.contabilidad.balances.inicial',compact('añoActual', 'mesActual', 'diaActual', 'pucs'));
     }
 }
