@@ -477,7 +477,7 @@
             var tasBomb = document.getElementById("tarifaBomb").value;
 
             //SE APLICA EL DESCUENTO DE TASA BOMBERIL DE DEFECTO PARA TODOS LOS AÑOS ANTERIORES AL PAGO
-            if(year != año) var tasaBombTot = tot * parseFloat(1.5) / 100
+            if(year != año) var tasaBombTot = tot * parseFloat(15) / 100
             else var tasaBombTot = tot * parseFloat(tasBomb) / 100
 
             document.getElementById('tasaBomberilSpan'+año).innerHTML = formatter.format(tasaBombTot);
