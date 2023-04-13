@@ -2493,7 +2493,7 @@ class InformeController extends Controller
         $diaActual = Carbon::now()->day;
         $presupuesto = $this->prepEgresos();
 
-        return Excel::download(new InfPrepEgrExcExport($añoActual, $presupuesto, $mesActual, $diaActual),
+        return Excel::download(new InfPrepEgrExcExport($presupuesto),
             'Informe Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
     }
 
