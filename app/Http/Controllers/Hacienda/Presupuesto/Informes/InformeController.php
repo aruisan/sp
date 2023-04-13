@@ -284,6 +284,7 @@ class InformeController extends Controller
                                                                     $valueRegistros[] = $cdpRValue->valor;
                                                                 }
                                                             } else $valueRegistros[] = $cdpRValue->valor;
+                                                            dd($valueRegistros);
                                                             //VALOR ORDENES DE PAGO
                                                             $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $cdpRValue->id)->get();
                                                             if (count($ordenPagoRubros) > 0){
