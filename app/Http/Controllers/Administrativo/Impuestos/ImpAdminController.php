@@ -34,7 +34,7 @@ class ImpAdminController extends Controller
             //$result[] = $dato;
             $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
             foreach ($lv2 as $cuenta) {
-                if ($cuenta->code == '1110050122' or $cuenta->code == '1110050123') $result[] = $cuenta;
+                if ($cuenta->code == '1110900071' or $cuenta->code == '1110050123') $result[] = $cuenta;
             }
         }
 
