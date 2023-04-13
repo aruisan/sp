@@ -284,7 +284,6 @@ class InformeController extends Controller
                                                                     $valueRegistros[] = $cdpRValue->valor;
                                                                 }
                                                             } else $valueRegistros[] = $cdpRValue->valor;
-                                                            if (array_sum($valueRegistros) == 14982352) dd($valueRegistros, $presupuesto, $cdpsRegValue);
                                                             //VALOR ORDENES DE PAGO
                                                             $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $cdpRValue->id)->get();
                                                             if (count($ordenPagoRubros) > 0){
@@ -509,10 +508,11 @@ class InformeController extends Controller
                                                             if ($valueCdpReg->registro->jefe_e == 3){
                                                                 //VALOR REGISTROS
                                                                 if ($inicio != null){
-                                                                    if (date('Y-m-d', strtotime($cdpRValue->registro->created_at)) <= $final and date('Y-m-d', strtotime($cdpRValue->registro->created_at)) >= $inicio){
-                                                                        $valueRegistros[] = $cdpRValue->valor;
+                                                                    if (date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) <= $final and date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) >= $inicio){
+                                                                        $valueRegistros[] = $valueCdpReg->valor;
                                                                     }
-                                                                } else $valueRegistros[] = $cdpRValue->valor;
+                                                                } else $valueRegistros[] = $valueCdpReg->valor;
+                                                                
                                                                 //ID REGISTROS
                                                                 $IDRegistros[] = $valueCdpReg->registro_id;
                                                                 //VALOR ORDENES DE PAGO
