@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Hacienda\Presupuesto;
 
+use App\bpinVigencias;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
@@ -330,6 +331,13 @@ class RubrosMovController extends Controller
                     $depRubroFont = DependenciaRubroFont::find($rubroMov->dep_rubro_font_id);
                     $depRubroFont->saldo = $depRubroFont->saldo - intval($request->valorRed);
                     $depRubroFont->save();
+
+                    //SE DESCUENTA SI ESA FUENTE DE DEPENDENCIA ESTA ASIGNADA A UN BPIN
+                    $bpinsVig = bpinVigencias::where('dep_rubro_id', $rubroMov->dep_rubro_font_id)->get();
+                    foreach ($bpinsVig as $bpinV){
+                        $bpinV->saldo =  $bpinV->saldo - intval($request->valorRed);
+                        $bpinV->save();
+                    }
                 }
 
                 $file = new ResourceTraits;
@@ -358,6 +366,13 @@ class RubrosMovController extends Controller
                     $depRubroFont = DependenciaRubroFont::find($request->fuenteDep);
                     $depRubroFont->saldo = $depRubroFont->saldo - intval($request->valorRed);
                     $depRubroFont->save();
+
+                    //SE DESCUENTA SI ESA FUENTE DE DEPENDENCIA ESTA ASIGNADA A UN BPIN
+                    $bpinsVig = bpinVigencias::where('dep_rubro_id', $request->fuenteDep)->get();
+                    foreach ($bpinsVig as $bpinV){
+                        $bpinV->saldo =  $bpinV->saldo - intval($request->valorRed);
+                        $bpinV->save();
+                    }
 
                     $rubroMov = new RubrosMov();
                     $rubroMov->valor = intval($request->valorRed);
