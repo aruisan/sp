@@ -232,7 +232,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="col-md-8">
-                                    <a class="btn btn-impuesto" href="#"><i class="fa fa-usd"></i></a>
+                                    <a class="btn btn-impuesto" href="/impuestos/Pagos/PRED"><i class="fa fa-usd"></i></a>
                                 </div>
                                 <div class="col-md-4">
                                     <h4>Pagos</h4>
