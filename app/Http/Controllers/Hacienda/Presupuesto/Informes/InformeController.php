@@ -512,7 +512,7 @@ class InformeController extends Controller
                                                                         $valueRegistros[] = $valueCdpReg->valor;
                                                                     }
                                                                 } else $valueRegistros[] = $valueCdpReg->valor;
-                                                                
+
                                                                 //ID REGISTROS
                                                                 $IDRegistros[] = $valueCdpReg->registro_id;
                                                                 //VALOR ORDENES DE PAGO
