@@ -77,6 +77,7 @@
                     <tr><td><a href="impuestos/download/FORMULARIOUNICODECLARACIONPAGOINDUSTRIACOMERCIO.pdf"><i class="fa fa-file-pdf-o"></i> FORMULARIOUNICODECLARACIONPAGOINDUSTRIACOMERCIO</a></td></tr>
                     <tr><td><a href="impuestos/download/RUT_MUNICIPIO.pdf"><i class="fa fa-file-pdf-o"></i> RUT MUNICIPIO</a></td></tr>
                     <tr><td><a href="impuestos/download/ACUERDO 015 - ESTATUTO DE RENTAS[1] 2022 NUEVO.pdf"><i class="fa fa-file-pdf-o"></i> NUEVO ESTATUTO</a></td></tr>
+                    <tr><td><a href="impuestos/download/CERTIFICACION BANCARIA MUNICIPIO PROV CTA AGRARIO .pdf"><i class="fa fa-file-pdf-o"></i> Certificación Bancaria del Banco Agrario</a></td></tr>
                     </tbody>
                 </table>
                 <br>
