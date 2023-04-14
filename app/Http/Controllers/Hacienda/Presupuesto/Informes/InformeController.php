@@ -114,12 +114,21 @@ class InformeController extends Controller
                             if(count($rubroOtherFind->first()->rubrosMov) > 0){
                                 foreach ($rubroOtherFind->first()->rubrosMov as $mov){
                                     if ($mov->valor > 0 ){
-                                        if ($mov->movimiento == "1") {
-                                            $valueRubrosCred[] = $mov->valor;
-                                            $valueRubrosCCred[] = $mov->valor;
+                                        if ($inicio != null) {
+                                            if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at)) >= $inicio) {
+                                                if ($mov->movimiento == "1") {
+                                                    $valueRubrosCred[] = $mov->valor;
+                                                    $valueRubrosCCred[] = $mov->valor;
+                                                } elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
+                                                elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
+                                            }
+                                        }else{
+                                            if ($mov->movimiento == "1") {
+                                                $valueRubrosCred[] = $mov->valor;
+                                                $valueRubrosCCred[] = $mov->valor;
+                                            } elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
+                                            elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
                                         }
-                                        elseif ($mov->movimiento == "2") $valueRubrosAdd[] = $mov->valor;
-                                        elseif ($mov->movimiento == "3") $valueRubrosRed[] = $mov->valor;
                                     }
                                 }
                             } else {
@@ -2110,7 +2119,7 @@ class InformeController extends Controller
         if ($inicio != null) $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$vigencia_id)->where('estado','3')
             ->whereBetween('ff',array($inicio, $final))->get();
         else  $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$vigencia_id)->where('estado','3')->get();
-        dd($comprobanteIng);
+
         foreach ($comprobanteIng as $comp){
             foreach ($comp->movs as $mov){
                 if(isset($mov->rubro_font_ingresos_id)) $totComIng[] = $mov->debito;
@@ -2120,8 +2129,14 @@ class InformeController extends Controller
         $plantillaIng = PlantillaCuipoIngresos::all();
         foreach ($plantillaIng as $data){
             if ($data->id == 1){
-                $adiciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','2')->get();
-                $reducciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','3')->get();
+                if ($inicio != null) $adiciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','2')
+                    ->whereBetween('created_at',array($inicio, $final))->get();
+                else  $adiciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','2')->get();
+
+                if ($inicio != null) $reducciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','3')
+                    ->whereBetween('created_at',array($inicio, $final))->get();
+                else  $reducciones = RubrosMov::where('font_vigencia_id', $vigens[0]->id)->where('movimiento','3')->get();
+
                 $definitivo = $adiciones->sum('valor') - $reducciones->sum('valor') + $vigens[0]->presupuesto_inicial;
                 $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $vigens[0]->presupuesto_inicial, 'adicion' => $adiciones->sum('valor'), 'reduccion' => $reducciones->sum('valor'),
                     'anulados' => 0, 'recaudado' => array_sum($totComIng) , 'porRecaudar' => $definitivo - array_sum($totComIng), 'definitivo' => $definitivo,
@@ -2150,16 +2165,28 @@ class InformeController extends Controller
 
                                                         foreach ($rubro[0]->fontsRubro as $font) {
                                                             // VALIDACION PARA LAS ADICIONES
-                                                            $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                                            if ($add) $hijosAdicion[] = $add->valor;
+                                                            if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                                                ->whereBetween('created_at',array($inicio, $final))->get();
+                                                            else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                                            if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                                             else $hijosAdicion[] = 0;
 
                                                             // VALIDACION PARA LAS REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
-                                                            $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                                            if ($red) $hijosReduccion[] = $red->valor;
+                                                            if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                                                ->whereBetween('created_at',array($inicio, $final))->get();
+                                                            else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                                            if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                                             else $hijosReduccion[] = 0;
 
-                                                            if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('debito');
+                                                            if (count($font->compIng) > 0) {
+                                                                foreach ($font->compIng as $compI){
+                                                                    if ($inicio != null) {
+                                                                        if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                            $civ[] = $compI->debito;
+                                                                        }
+                                                                    }else $civ[] = $compI->debito;
+                                                                }
+                                                            }
                                                         }
 
                                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2176,15 +2203,27 @@ class InformeController extends Controller
 
                                                             // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                                             foreach ($rb->fontsRubro as $font) {
-                                                                $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                                                if ($add) $hijosAdicion[] = $add->valor;
+                                                                if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                                                    ->whereBetween('created_at',array($inicio, $final))->get();
+                                                                else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                                                if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                                                 else $hijosAdicion[] = 0;
 
-                                                                $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                                                if ($red) $hijosReduccion[] = $red->valor;
+                                                                if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                                                    ->whereBetween('created_at',array($inicio, $final))->get();
+                                                                else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                                                if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                                                 else $hijosReduccion[] = 0;
 
-                                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                                                if (count($font->compIng) > 0) {
+                                                                    foreach ($font->compIng as $compI){
+                                                                        if ($inicio != null) {
+                                                                            if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                                $civ[] = $compI->debito;
+                                                                            }
+                                                                        }else $civ[] = $compI->debito;
+                                                                    }
+                                                                }
                                                             }
 
                                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2207,15 +2246,27 @@ class InformeController extends Controller
 
                                                     // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                                     foreach ($rubro[0]->fontsRubro as $font) {
-                                                        $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                                        if ($add) $hijosAdicion[] = $add->valor;
+                                                        if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                                            ->whereBetween('created_at',array($inicio, $final))->get();
+                                                        else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                                        if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                                         else $hijosAdicion[] = 0;
 
-                                                        $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                                        if ($red) $hijosReduccion[] = $red->valor;
+                                                        if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                                            ->whereBetween('created_at',array($inicio, $final))->get();
+                                                        else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                                        if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                                         else $hijosReduccion[] = 0;
 
-                                                        if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                                        if (count($font->compIng) > 0) {
+                                                            foreach ($font->compIng as $compI){
+                                                                if ($inicio != null) {
+                                                                    if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                        $civ[] = $compI->debito;
+                                                                    }
+                                                                }else $civ[] = $compI->debito;
+                                                            }
+                                                        }
                                                     }
 
                                                     if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2231,15 +2282,27 @@ class InformeController extends Controller
 
                                                         // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                                         foreach ($rb->fontsRubro as $font) {
-                                                            $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                                            if ($add) $hijosAdicion[] = $add->valor;
+                                                            if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                                                ->whereBetween('created_at',array($inicio, $final))->get();
+                                                            else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                                            if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                                             else $hijosAdicion[] = 0;
 
-                                                            $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                                            if ($red) $hijosReduccion[] = $red->valor;
+                                                            if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                                                ->whereBetween('created_at',array($inicio, $final))->get();
+                                                            else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                                            if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                                             else $hijosReduccion[] = 0;
 
-                                                            if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                                            if (count($font->compIng) > 0) {
+                                                                foreach ($font->compIng as $compI){
+                                                                    if ($inicio != null) {
+                                                                        if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                            $civ[] = $compI->debito;
+                                                                        }
+                                                                    }else $civ[] = $compI->debito;
+                                                                }
+                                                            }
                                                         }
 
                                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2262,15 +2325,27 @@ class InformeController extends Controller
 
                                             // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                             foreach ($rubro[0]->fontsRubro as $font) {
-                                                $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                                if ($add) $hijosAdicion[] = $add->valor;
+                                                if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                                    ->whereBetween('created_at',array($inicio, $final))->get();
+                                                else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                                if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                                 else $hijosAdicion[] = 0;
 
-                                                $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                                if ($red) $hijosReduccion[] = $red->valor;
+                                                if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                                    ->whereBetween('created_at',array($inicio, $final))->get();
+                                                else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                                if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                                 else $hijosReduccion[] = 0;
 
-                                                if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                                if (count($font->compIng) > 0) {
+                                                    foreach ($font->compIng as $compI){
+                                                        if ($inicio != null) {
+                                                            if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                $civ[] = $compI->debito;
+                                                            }
+                                                        }else $civ[] = $compI->debito;
+                                                    }
+                                                }
                                             }
 
                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2285,15 +2360,27 @@ class InformeController extends Controller
 
                                                 // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                                 foreach ($rb->fontsRubro as $font) {
-                                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                                    if ($add) $hijosAdicion[] = $add->valor;
+                                                    if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                                        ->whereBetween('created_at',array($inicio, $final))->get();
+                                                    else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                                    if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                                     else $hijosAdicion[] = 0;
 
-                                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                                    if ($red) $hijosReduccion[] = $red->valor;
+                                                    if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                                        ->whereBetween('created_at',array($inicio, $final))->get();
+                                                    else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                                    if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                                     else $hijosReduccion[] = 0;
 
-                                                    if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                                    if (count($font->compIng) > 0) {
+                                                        foreach ($font->compIng as $compI){
+                                                            if ($inicio != null) {
+                                                                if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                    $civ[] = $compI->debito;
+                                                                }
+                                                            }else $civ[] = $compI->debito;
+                                                        }
+                                                    }
                                                 }
 
                                                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2315,15 +2402,27 @@ class InformeController extends Controller
 
                                     // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                     foreach ($rubro[0]->fontsRubro as $font) {
-                                        $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                        if ($add) $hijosAdicion[] = $add->valor;
+                                        if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                            ->whereBetween('created_at',array($inicio, $final))->get();
+                                        else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                        if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                         else $hijosAdicion[] = 0;
 
-                                        $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                        if ($red) $hijosReduccion[] = $red->valor;
+                                        if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                            ->whereBetween('created_at',array($inicio, $final))->get();
+                                        else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                        if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                         else $hijosReduccion[] = 0;
 
-                                        if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                        if (count($font->compIng) > 0) {
+                                            foreach ($font->compIng as $compI){
+                                                if ($inicio != null) {
+                                                    if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                        $civ[] = $compI->debito;
+                                                    }
+                                                }else $civ[] = $compI->debito;
+                                            }
+                                        }
                                     }
 
                                     if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2339,15 +2438,27 @@ class InformeController extends Controller
 
                                         // VALIDACION PARA LAS ADICIONES Y REDUCCIONES EN TOTAL PARA LOS RUBROS PADRE
                                         foreach ($rb->fontsRubro as $font) {
-                                            $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
-                                            if ($add) $hijosAdicion[] = $add->valor;
+                                            if ($inicio != null) $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                                ->whereBetween('created_at',array($inicio, $final))->get();
+                                            else  $adds = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->get();
+                                            if ($adds) foreach ($adds as $add) $hijosAdicion[] = $add->valor;
                                             else $hijosAdicion[] = 0;
 
-                                            $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
-                                            if ($red) $hijosReduccion[] = $red->valor;
+                                            if ($inicio != null) $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                                ->whereBetween('created_at',array($inicio, $final))->get();
+                                            else $reds = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->get();
+                                            if ($reds)  foreach ($reds as $red) $hijosReduccion[] = $red->valor;
                                             else $hijosReduccion[] = 0;
 
-                                            if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('debito');
+                                            if (count($font->compIng) > 0) {
+                                                foreach ($font->compIng as $compI){
+                                                    if ($inicio != null) {
+                                                        if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                            $civ[] = $compI->debito;
+                                                        }
+                                                    }else $civ[] = $compI->debito;
+                                                }
+                                            }
                                         }
 
                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -2388,11 +2499,15 @@ class InformeController extends Controller
                         if (count($rubro) == 1){
                             if (count($rubro[0]->fontsRubro) > 1){
                                 foreach ($rubro[0]->fontsRubro as $font){
-                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($inicio != null) $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->first();
+                                    else  $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
                                     if ($add) $adicion = $add->valor;
                                     else $adicion = 0;
 
-                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($inicio != null) $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->first();
+                                    else  $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                     if ($red) $reduccion = $red->valor;
                                     else $reduccion = 0;
 
@@ -2400,7 +2515,13 @@ class InformeController extends Controller
 
                                     if (count($font->compIng) > 0) {
                                         foreach ($font->compIng as $comprobante){
-                                            if ($comprobante->rubro_font_ingresos_id == $font->id) $compIngValueArray[] = $comprobante->debito;
+                                            if ($comprobante->rubro_font_ingresos_id == $font->id) {
+                                                if ($inicio != null) {
+                                                    if (date('Y-m-d', strtotime($comprobante->ff)) <= $final and date('Y-m-d', strtotime($comprobante->ff)) >= $inicio) {
+                                                        $compIngValueArray[] = $comprobante->debito;
+                                                    }
+                                                }else $compIngValueArray[] = $comprobante->debito;
+                                            }
                                         }
                                     }
 
@@ -2417,16 +2538,31 @@ class InformeController extends Controller
                             } else {
                                 $compIngValue = 0;
                                 if (count($rubro[0]->fontsRubro) > 0){
-                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
+                                    if ($inicio != null) $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->first();
+                                    else  $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
                                     if ($add) $adicion = $add->valor;
                                     else $adicion = 0;
 
-                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
+                                    if ($inicio != null) $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->first();
+                                    else  $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $rubro[0]->fontsRubro[0]->id)->first();
                                     if ($red) $reduccion = $red->valor;
                                     else $reduccion = 0;
 
                                     $definitivo = $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor');
-                                    if (count($rubro[0]->fontsRubro[0]->compIng) > 0) $compIngValue = $rubro[0]->fontsRubro[0]->compIng->sum('debito');
+                                    if (count($rubro[0]->fontsRubro[0]->compIng) > 0) {
+
+                                        if ($inicio != null) {
+                                            foreach ($rubro[0]->fontsRubro[0]->compIng as $comprobante) {
+                                                if (date('Y-m-d', strtotime($comprobante->ff)) <= $final and date('Y-m-d', strtotime($comprobante->ff)) >= $inicio) {
+                                                    $compIngValueArray[] = $comprobante->debito;
+                                                }
+                                            }
+                                            if ($compIngValueArray) $compIngValue = array_sum($compIngValueArray);
+                                            else $compIngValue = 0;
+                                        } else $compIngValue = $rubro[0]->fontsRubro[0]->compIng->sum('debito');
+                                    }
 
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
@@ -2442,21 +2578,33 @@ class InformeController extends Controller
                                 if (isset($reduccionesH)) unset($reduccionesH);
 
                                 foreach ($rb->fontsRubro as $font) {
-                                    $add = RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($inicio != null) RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->first();
+                                    else  RubrosMov::where('movimiento', '2')->where('fonts_rubro_id', $font->id)->first();
                                     if ($add) {
                                         if ($add->fonts_rubro_id == $font->id) $hijosAdicion[] = $add->valor;
                                         else $hijosAdicion[] = 0;
                                     }
                                     else $hijosAdicion[] = 0;
 
-                                    $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
+                                    if ($inicio != null) $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)
+                                        ->whereBetween('created_at',array($inicio, $final))->first();
+                                    else  $red = RubrosMov::where('movimiento', '3')->where('fonts_rubro_id', $font->id)->first();
                                     if ($red) {
                                         if ($red->fonts_rubro_id == $font->id) $hijosReduccion[] = $red->valor;
                                         else $hijosReduccion[] = 0;
                                     }
                                     else $hijosReduccion[] = 0;
 
-                                    if (count($font->compIng) > 0) $civHijo[] = $font->compIng->sum('debito');
+                                    if (count($font->compIng) > 0) {
+                                        foreach ($font->compIng as $compI){
+                                            if ($inicio != null) {
+                                                if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                    $civHijo[] = $compI->debito;
+                                                }
+                                            }else $civHijo[] = $compI->debito;
+                                        }
+                                    }
                                 }
 
                                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
