@@ -2181,7 +2181,7 @@ class InformeController extends Controller
                                                             if (count($font->compIng) > 0) {
                                                                 foreach ($font->compIng as $compI){
                                                                     if ($inicio != null) {
-                                                                        if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                        if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                                             $civ[] = $compI->debito;
                                                                         }
                                                                     }else $civ[] = $compI->debito;
@@ -2218,7 +2218,7 @@ class InformeController extends Controller
                                                                 if (count($font->compIng) > 0) {
                                                                     foreach ($font->compIng as $compI){
                                                                         if ($inicio != null) {
-                                                                            if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                            if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                                                 $civ[] = $compI->debito;
                                                                             }
                                                                         }else $civ[] = $compI->debito;
@@ -2261,7 +2261,7 @@ class InformeController extends Controller
                                                         if (count($font->compIng) > 0) {
                                                             foreach ($font->compIng as $compI){
                                                                 if ($inicio != null) {
-                                                                    if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                    if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                                         $civ[] = $compI->debito;
                                                                     }
                                                                 }else $civ[] = $compI->debito;
@@ -2297,7 +2297,7 @@ class InformeController extends Controller
                                                             if (count($font->compIng) > 0) {
                                                                 foreach ($font->compIng as $compI){
                                                                     if ($inicio != null) {
-                                                                        if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                        if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                                             $civ[] = $compI->debito;
                                                                         }
                                                                     }else $civ[] = $compI->debito;
@@ -2340,7 +2340,7 @@ class InformeController extends Controller
                                                 if (count($font->compIng) > 0) {
                                                     foreach ($font->compIng as $compI){
                                                         if ($inicio != null) {
-                                                            if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                            if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                                 $civ[] = $compI->debito;
                                                             }
                                                         }else $civ[] = $compI->debito;
@@ -2375,7 +2375,7 @@ class InformeController extends Controller
                                                     if (count($font->compIng) > 0) {
                                                         foreach ($font->compIng as $compI){
                                                             if ($inicio != null) {
-                                                                if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                                if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                                     $civ[] = $compI->debito;
                                                                 }
                                                             }else $civ[] = $compI->debito;
@@ -2417,7 +2417,7 @@ class InformeController extends Controller
                                         if (count($font->compIng) > 0) {
                                             foreach ($font->compIng as $compI){
                                                 if ($inicio != null) {
-                                                    if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                    if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                         $civ[] = $compI->debito;
                                                     }
                                                 }else $civ[] = $compI->debito;
@@ -2453,7 +2453,7 @@ class InformeController extends Controller
                                             if (count($font->compIng) > 0) {
                                                 foreach ($font->compIng as $compI){
                                                     if ($inicio != null) {
-                                                        if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                        if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                             $civ[] = $compI->debito;
                                                         }
                                                     }else $civ[] = $compI->debito;
@@ -2599,7 +2599,7 @@ class InformeController extends Controller
                                     if (count($font->compIng) > 0) {
                                         foreach ($font->compIng as $compI){
                                             if ($inicio != null) {
-                                                if (date('Y-m-d', strtotime($compI->ff)) <= $final and date('Y-m-d', strtotime($compI->ff)) >= $inicio) {
+                                                if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                                     $civHijo[] = $compI->debito;
                                                 }
                                             }else $civHijo[] = $compI->debito;
