@@ -87,10 +87,25 @@ class CdpController extends Controller
         }
         if ($cdps == null){
             $cdps = [];
+        } else {
+            foreach ($cdps as $cdp){
+                if ($cdp->tipo == "Funcionamiento"){
+                    foreach($cdp->rubrosCdpValor as $rubroCdpValue){
+                        $rubros[] = $rubroCdpValue->fontsRubro->rubro->cod.'-'.$rubroCdpValue->fontsRubro->rubro->name;
+                        if(isset($rubroCdpValue->fontsRubro)){
+                            $fuentes[] = $rubroCdpValue->fontsRubro->sourceFunding->code.'-'.$rubroCdpValue->fontsRubro->sourceFunding->description;
+                        }
+                    }
+                    $cdp->rubro = $rubros;
+                    $cdp->fuentes = $fuentes;
+                }
+            }
         }
         if ($cdProcess == null){
             $cdProcess = [];
         }
+
+        dd($cdps);
         return view('administrativo.cdp.index', compact('cdps','rol', 'cdpTarea','vigencia_id','cdProcess'));
     }
 
