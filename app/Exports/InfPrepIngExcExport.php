@@ -7,23 +7,16 @@ use Illuminate\Contracts\View\View;
 
 class InfPrepIngExcExport implements FromView
 {
-    public function __construct(int $año, $presupuesto, $mes, $dia){
-
-        $this->año = $año;
+    public function __construct($presupuesto){
         $this->presupuesto = $presupuesto;
-        $this->mesActual = $mes;
-        $this->dia = $dia;
     }
 
     public function view(): View
     {
 
         $prepIng = $this->presupuesto;
-        $mesActual = $this->mesActual;
-        $año = $this->año;
-        $dia = $this->dia;
 
-        return view('exports.infPrepIngExc', compact('prepIng','mesActual','año','dia'));
+        return view('exports.infPrepIngExc', compact('prepIng'));
     }
 }
 

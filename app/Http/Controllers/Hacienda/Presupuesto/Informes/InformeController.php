@@ -2090,7 +2090,7 @@ class InformeController extends Controller
         return $presupuesto;
     }
 
-    public function prepIngresos(){
+    public function prepIngresos($inicio = null, $final = null ){
         $añoActual = Carbon::now()->year;
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->where('estado', '0')->get();
@@ -2107,7 +2107,10 @@ class InformeController extends Controller
 
         $V = $vigens[0]->id;
         $vigencia_id = $V;
-        $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$vigencia_id)->where('estado','3')->get();
+        if ($inicio != null) $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$vigencia_id)->where('estado','3')
+            ->whereBetween('ff',array($inicio, $final))->get();
+        else  $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$vigencia_id)->where('estado','3')->get();
+        dd($comprobanteIng);
         foreach ($comprobanteIng as $comp){
             foreach ($comp->movs as $mov){
                 if(isset($mov->rubro_font_ingresos_id)) $totComIng[] = $mov->debito;
@@ -2512,9 +2515,17 @@ class InformeController extends Controller
         $diaActual = Carbon::now()->day;
         $prepIng = $this->prepIngresos();
 
-        return Excel::download(new InfPrepIngExcExport($añoActual, $prepIng, $mesActual, $diaActual),
+        return Excel::download(new InfPrepIngExcExport($prepIng),
             'Presupuesto de Ingresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
 
+    }
+
+    public function makeIngresosEjecucion(Request $request, $inicio, $final)
+    {
+        $presupuesto = $this->prepIngresos($inicio, $final);
+
+        return Excel::download(new InfPrepIngExcExport($presupuesto),
+            'Ejecucion Presupuesto de Ingresos '.$inicio.'-'.$final.'.xlsx');
     }
 
     public function makeEgresosPDF(){

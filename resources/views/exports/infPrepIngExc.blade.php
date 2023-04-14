@@ -1,8 +1,5 @@
 <table>
     <thead>
-    <tr class="text-center">
-        <th colspan="9"><b>Presupuesto de Ingresos {{ $dia }}-{{ $mesActual }}-{{ $año }}</b></th>
-    </tr>
     <tr>
         <th class="text-center">Rubro</th>
         <th class="text-center">Nombre</th>
