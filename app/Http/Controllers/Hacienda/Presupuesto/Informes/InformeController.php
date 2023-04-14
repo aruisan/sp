@@ -2122,7 +2122,13 @@ class InformeController extends Controller
 
         foreach ($comprobanteIng as $comp){
             foreach ($comp->movs as $mov){
-                if(isset($mov->rubro_font_ingresos_id)) $totComIng[] = $mov->debito;
+                if(isset($mov->rubro_font_ingresos_id)) {
+                    if ($inicio != null) {
+                        if (date('Y-m-d', strtotime($mov->fechaComp)) <= $final and date('Y-m-d', strtotime($mov->fechaComp)) >= $inicio) {
+                            $totComIng[] = $mov->debito;
+                        }
+                    }else $totComIng[] = $mov->debito;
+                }
             }
         }
         if (!isset($totComIng)) $totComIng[] = 0;
