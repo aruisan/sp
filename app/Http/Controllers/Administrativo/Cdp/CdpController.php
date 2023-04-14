@@ -89,14 +89,26 @@ class CdpController extends Controller
             $cdps = [];
         } else {
             foreach ($cdps as $cdp){
+                if (isset($rubros)) unset($rubros);
+                if (isset($fuentes)) unset($fuentes);
+
                 if ($cdp->tipo == "Funcionamiento"){
                     foreach($cdp->rubrosCdpValor as $rubroCdpValue){
-                        $rubros[] = $rubroCdpValue->fontsRubro->rubro->cod.'-'.$rubroCdpValue->fontsRubro->rubro->name;
+                        $rubros[] = $rubroCdpValue->fontsRubro->rubro->cod.' - '.$rubroCdpValue->fontsRubro->rubro->name;
                         if(isset($rubroCdpValue->fontsRubro)){
-                            $fuentes[] = $rubroCdpValue->fontsRubro->sourceFunding->code.'-'.$rubroCdpValue->fontsRubro->sourceFunding->description;
+                            $fuentes[] = $rubroCdpValue->fontsRubro->sourceFunding->code.' - '.$rubroCdpValue->fontsRubro->sourceFunding->description;
                         }
                     }
-                    $cdp->rubro = $rubros;
+                    $cdp->rubros = $rubros;
+                    $cdp->fuentes = $fuentes;
+                } else{
+                    foreach($cdp->bpinsCdpValor as $bpinsCDP){
+                        if(isset($bpinsCDP->depRubroFont->fontRubro)){
+                            $rubros[] = $bpinsCDP->depRubroFont->fontRubro->rubro->cod.' - '.$bpinsCDP->depRubroFont->fontRubro->rubro->name;
+                            $fuentes[] = $bpinsCDP->depRubroFont->fontRubro->sourceFunding->code.' - '.$bpinsCDP->depRubroFont->fontRubro->sourceFunding->description;
+                        }
+                    }
+                    $cdp->rubros = $rubros;
                     $cdp->fuentes = $fuentes;
                 }
             }
