@@ -2559,7 +2559,7 @@ class InformeController extends Controller
                                                     $compIngValueArray[] = $comprobante->debito;
                                                 }
                                             }
-                                            if ($compIngValueArray) $compIngValue = array_sum($compIngValueArray);
+                                            if (isset($compIngValueArray)) $compIngValue = array_sum($compIngValueArray);
                                             else $compIngValue = 0;
                                         } else $compIngValue = $rubro[0]->fontsRubro[0]->compIng->sum('debito');
                                     }
