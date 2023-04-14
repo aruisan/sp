@@ -383,7 +383,6 @@ Route::group([ 'middleware' => 'auth'] ,function(){
             //Informes
 
         Route::resource('contabilidad/informes','Administrativo\Contabilidad\ReportsController');
-        Route::get('contabilidad/blance-inicial','Administrativo\Contabilidad\Balances\InicialController@index')->name('balance.inicial');
         Route::get('contabilidad/informes/lvl/{id}','Administrativo\Contabilidad\ReportsController@lvl');
         Route::get('contabilidad/informes/rubros/{id}','Administrativo\Contabilidad\ReportsController@rubros');
 
