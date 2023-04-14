@@ -105,7 +105,7 @@ class CdpController extends Controller
             $cdProcess = [];
         }
 
-        dd($cdps);
+        dd($cdps[0]);
         return view('administrativo.cdp.index', compact('cdps','rol', 'cdpTarea','vigencia_id','cdProcess'));
     }
 
