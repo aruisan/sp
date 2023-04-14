@@ -172,8 +172,10 @@ class RubrosController extends Controller
         $RubrosM = RubrosMov::where([['rubro_id','=',$rubro->id],['valor','>','0']])->get();
         foreach ($RubrosM as $data){
             if ($data->resource_id == 0){
-                foreach ($data->ResourcesMov as $resource) $files[] = collect(['idResource' => $resource->id , 'ruta' => $resource->ruta, 'mov' => $data->movimiento]);
-            } else $files[] = collect(['idResource' => $data->resource_id , 'ruta' => $data->Resource->ruta, 'mov' => $data->movimiento]);
+                foreach ($data->ResourcesMov as $resource) $files[] = collect(['idResource' => $resource->id , 'ruta' => $resource->ruta, 'mov' => $data->movimiento,
+                    'fecha' => Carbon::parse($data->created_at)->format('d-m-Y')]);
+            } else $files[] = collect(['idResource' => $data->resource_id , 'ruta' => $data->Resource->ruta, 'mov' => $data->movimiento,
+                'fecha' => Carbon::parse($data->created_at)->format('d-m-Y')]);
         }
         if (!isset($files)){
             foreach ($rubro->fontsRubro as $fr){
