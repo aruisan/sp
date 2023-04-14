@@ -10,6 +10,7 @@ use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\CompContMov;
 use \Carbon\Carbon;
+use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 
 class PucAlcaldia extends Model implements Auditable
 {
@@ -27,6 +28,10 @@ class PucAlcaldia extends Model implements Auditable
 
     public function padre(){
         return $this->belongsTo(PucAlcaldia::class, 'padre_id');
+    }
+
+    public function orden_pagos() {
+        return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id');
     }
 
     public function pagos_bank(){
@@ -55,12 +60,12 @@ class PucAlcaldia extends Model implements Auditable
             $totDeb += $this->comprobantes->sum('debito');
             $totCred += $this->comprobantes->sum('credito');
         endif;
-/*
-        if($this->comprobantes_contables_movimientos->count() > 0):
-            $totDeb += $this->comprobantes_contables_movimientos->sum('debito');
-            $totCred += $this->comprobantes_contables_movimientos->sum('credito');
+
+        if($this->orden_pagos->count() > 0):
+            $totDeb += $this->orden_pagos->sum('valor_debito');
+            $totCred += $this->orden_pagos->sum('valor_credito');
         endif;
-        */
+        
         return ['debito' => $totDeb, 'credito' => $totCred];
     }
 

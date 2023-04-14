@@ -436,6 +436,12 @@ class BancosController extends Controller
         $totCred = 0;
         $totCredAll = 0;
         $totBank = 0;
+        $conciliacion_actual = ConciliacionBancaria::where('año', $añoActual)->where('mes', $mesFind)->where('puc_id', $rubroPUC->id)->first();
+        if(!is_null($conciliacion_actual)){
+            if($conciliacion_actual->cuentas_temporales->count() > 0){
+                $conciliacion_actual->cuentas_temporales()->delete();
+            }
+        }
 
         $conciliaciones_anteriores = ConciliacionBancaria::where('año', $añoActual)->where('puc_id', $rubroPUC->id)->get();
         $conciliacion_anterior = NULL;
@@ -565,7 +571,9 @@ class BancosController extends Controller
 
         //dd($result);
         //dd($rubroPUC);
-        $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get();
+        $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get()->filter(function($e){ return !$e->check;});
+        //dd($comprobantes_old);
+        //$comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get();
         return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result', 'rubroPUC', 'conciliacion_anterior', 'total_cheque_mano', 'total_cheque_cobrados'
             ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth', 'comprobantes_old','periodo_inicial','periodo_final'));
     }
