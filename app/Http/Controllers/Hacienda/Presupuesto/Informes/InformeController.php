@@ -78,6 +78,7 @@ class InformeController extends Controller
                     if ($inicio != null) $cdpsFind = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')
                         ->whereBetween('created_at',array($inicio, $final))->get();
                     else $cdpsFind = Cdp::where('vigencia_id', $vigencia_id)->where('jefe_e', '3')->get();
+                    dd($cdpsFind);
 
                     if (count($cdpsFind) > 0) $valueCDPs[] = $cdpsFind->sum('valor');
                     else $valueCDPs[] = 0;
