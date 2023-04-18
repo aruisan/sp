@@ -6,6 +6,7 @@ use App\Exports\InfPagosExcExport;
 use App\Exports\InfPrepIngExcExport;
 use App\Exports\InfPrepEgrExcExport;
 use App\Http\Controllers\Controller;
+use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -26,16 +27,15 @@ class InformeDocsController extends Controller
             if (isset($data->orden_pago->registros)){
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
                     if (!isset($data->banks->data_puc)) dd($data, $data->banks);
-
-                    $data->cuentaBanco = $data->banks->data_puc->code.' - '.$data->banks->data_puc->concepto;
+                    $banks = PagoBanks::where('pagos_id', $data->id)->first();
+                    $data->cuentaBanco = $banks->data_puc->code.' - '.$banks->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id){
-                    if (!isset($data->banks->data_puc)) dd($data, $data->banks);
-
-                    $data->cuentaBanco = $data->banks->data_puc->code.' - '.$data->banks->data_puc->concepto;
+                    $banks = PagoBanks::where('pagos_id', $data->id)->first();
+                    $data->cuentaBanco = $banks->data_puc->code.' - '.$banks->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
                 }
             }
