@@ -26,7 +26,6 @@ class InformeDocsController extends Controller
         foreach ($p as $data){
             if (isset($data->orden_pago->registros)){
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
-                    if (!isset($data->banks->data_puc)) dd($data, $data->banks);
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
