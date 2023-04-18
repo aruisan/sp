@@ -145,6 +145,14 @@ class OrdenPagosController extends Controller
                 $numOP = $last['info']->code + 1;
             }else $numOP = 0;
 
+            $findCodeOPs = OrdenPagos::where('code', $numOP)->get();
+            if (count($findCodeOPs) > 0 ){
+                $vigencia = Vigencia::find($request->vigencia);
+                foreach ($findCodeOPs as $find){
+                    if (Carbon::parse($find->created_at)->format('Y') == $vigencia->vigencia) $numOP = $numOP + 1 ;
+                }
+            }
+
             $ordenPago = new OrdenPagos();
             $ordenPago->code = $numOP;
             $ordenPago->nombre = $request->concepto;
