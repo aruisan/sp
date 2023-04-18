@@ -26,12 +26,14 @@ class InformeDocsController extends Controller
             if (isset($data->orden_pago->registros)){
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
                     $data->cuentaBanco = $data->banks->data_puc->code.' - '.$data->banks->data_puc->concepto;
+                    if (!isset($data->banks->data_puc)) dd($data);
                     $pagos[] = collect(['info' => $data]);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id){
                     $data->cuentaBanco = $data->banks->data_puc->code.' - '.$data->banks->data_puc->concepto;
+                    if (!isset($data->banks->data_puc)) dd($data);
                     $pagos[] = collect(['info' => $data]);
                 }
             }

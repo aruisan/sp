@@ -170,11 +170,11 @@ class PagosController extends Controller
             $pago->resource_id = $resource;
             $pago->user_pago_id = Auth::user()->id;
             $pago->puc_alcaldia_id = $request->cuenta;
-            $pago->confirmed = "TRUE";
+            $pago->confirmed = "FALSE";
             $pago->save();
 
-            //SE DEBE ELABORAR EL COMPROBANTE CONTABLE
-            $this->makeCC($pago->id);
+            //YA NO SE ELABORA EL COMPROBANTE CONTABLE AUTOMATICAMENTE
+            //$this->makeCC($pago->id);
 
             Session::flash('success', 'Pago aplicado exitosamente.');
             return redirect('/administrativo/impuestos/admin');
