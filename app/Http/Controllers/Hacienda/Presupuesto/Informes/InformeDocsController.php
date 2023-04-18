@@ -28,7 +28,7 @@ class InformeDocsController extends Controller
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
                     if (!isset($data->banks->data_puc)) dd($data, $data->banks);
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
-                    if (count($banks) == 0) dd($data, $banks);
+                    if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
                 }
@@ -36,7 +36,7 @@ class InformeDocsController extends Controller
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id){
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
-                    if (count($banks) == 0) dd($data, $banks);
+                    if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
                 }
