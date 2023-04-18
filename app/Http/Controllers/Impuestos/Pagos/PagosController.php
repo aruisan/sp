@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Impuestos\Pagos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Impuestos\IcaRetenedor;
 use App\Model\Impuestos\PazySalvo;
@@ -323,7 +324,23 @@ class PagosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function confirmPay(Request $request){
-        return $this->makeCC($request->payId);
+
+        $pago = Pagos::find($request->pago_id);
+        $fecha = Carbon::parse($request->fechaComp);
+        $conciliaciones = ConciliacionBancaria::where('año', $fecha->year)->where('mes', $fecha->month)
+            ->where('finalizar', 1)->where('puc_id', $pago->puc_alcaldia_id)->get();
+
+        if (count($conciliaciones) > 0){
+            Session::flash('warning', 'Se encuentra la cuenta bancaria ya cerrada para ese mes');
+            return redirect('/administrativo/impuestos/admin');
+        }
+
+        $pago->fechaPago = $request->fechaComp;
+        $pago->save();
+        $this->makeCC($request->payId);
+
+        Session::flash('success', 'El pago se ha confirmado exitosamente.');
+        return redirect('/administrativo/impuestos/admin');
     }
 
     public function makeCC($id){

@@ -5,6 +5,7 @@
     @include('modal.impuestos.pazysalvo')
     @include('modal.impuestos.sml')
     @include('modal.impuestos.uvt')
+    @include('modal.impuestos.confirmarpago')
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Administracion de Impuestos</b></h4>
@@ -137,7 +138,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if($pago->estado == "Pagado" and $pago->confirmed == "FALSE")
-                                        <button onclick="confirmarPago('{{$pago->id}}')" class="btn btn-sm btn-primary-impuestos">Confirmar Pago</button>
+                                        <button onclick="confirmarPago('{{$pago->id}}','{{ \Carbon\Carbon::parse($pago->fechaPago)->format('Y-m-d') }}')" class="btn btn-sm btn-primary-impuestos">Confirmar Pago</button>
                                     @elseif($pago->estado == "Pagado" and $pago->confirmed == "TRUE")
                                         CONFIRMADO
                                     @endif
@@ -282,28 +283,10 @@
 
         }
 
-        function confirmarPago(id){
-            var opcion = confirm("ESTA SEGUR@ DE CONFIRMAR EL PAGO? ESTA ACCIÓN NO SE PUEDE DESHACER");
-            if (opcion == true) {
-                $.ajax({
-                    method: "POST",
-                    url: "/impuestos/Pagos/confirmPay",
-                    data: { "payId": id,
-                        "_token": $("meta[name='csrf-token']").attr("content"),
-                    }
-                }).done(function(response) {
-                    if (response == "OK"){
-                        toastr.success('PAGO CONFIRMADO');
-                        location. reload();
-                    } else {
-                        toastr.warning('EL PAGO NO EXISTE. ACTUALICE LA PAGINA.');
-                    }
-
-                }).fail(function() {
-                    toastr.warning('OCURRIO UN ERROR AL CONFIRMAR EL PAGO.');
-                });
-            }
-
+        function confirmarPago(id, fecha){
+            $('#pago_id').val(id);
+            $('#fechaComp').val(fecha);
+            $('#formConfirmarPago').modal('show');
         }
 
         function getModalUVT(){

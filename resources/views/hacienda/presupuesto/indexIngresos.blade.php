@@ -15,7 +15,11 @@
                 <a class="nav-link "  href="{{ url('/presupuesto') }}">Presupuesto de Egresos {{ $añoActual }}</a>
             </li>
             @if($V != "Vacio")
-        {{-- <li class="nav-item pillPri"> <a class="nav-link "href="{{ url('/presupuesto/level/create/'.$V) }}" class="btn btn-success"><i class="fa fa-edit"></i><span class="hide-menu">&nbsp;Editar Presupuesto</span></a></li> --}}
+                @include('modal.Informes.makeInforme')
+                <li class="dropdown">
+                    <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeInforme()">Generar Informe de Presupuestos</a>
+                </li>
+                {{-- <li class="nav-item pillPri"> <a class="nav-link "href="{{ url('/presupuesto/level/create/'.$V) }}" class="btn btn-success"><i class="fa fa-edit"></i><span class="hide-menu">&nbsp;Editar Presupuesto</span></a></li> --}}
     @endif
     @if($V != "Vacio")
         {{--
@@ -275,6 +279,11 @@
 <!-- Datatables personalizadas buttons-->
 <script src="{{ asset('/js/datatableCustom.js') }}"></script>
 <script>
+
+    function getModalToMakeInforme(){
+        $('#modalMakeInforme').modal('show');
+    }
+
 $('#tabla_CIng').DataTable( {
     responsive: true,
     "searching": true,

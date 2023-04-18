@@ -6,6 +6,7 @@ use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\ComprobanteIngresos\CIRubros;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipoIngresos;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -80,6 +81,15 @@ class ComprobanteIngresosController extends Controller
      */
     public function store(Request $request)
     {
+        $fecha = Carbon::parse($request->fecha);
+        $conciliaciones = ConciliacionBancaria::where('año', $fecha->year)->where('mes', $fecha->month)
+            ->where('finalizar', 1)->where('puc_id', $request->cuentaDeb)->get();
+
+        if (count($conciliaciones) > 0){
+            Session::flash('warning', 'Se encuentra la cuenta bancaria ya cerrada para ese mes.');
+            return back();
+        }
+
         if($request->hasFile('file')) {
             $file = new FileTraits;
             $ruta = $file->File($request->file('file'), 'CertificadoIngresos');
