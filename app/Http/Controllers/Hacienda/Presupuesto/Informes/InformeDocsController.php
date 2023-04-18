@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Hacienda\Presupuesto\Informes;
 
+use App\Exports\InfOrdenPagosExcExport;
 use App\Exports\InfPagosExcExport;
 use App\Exports\InfPrepIngExcExport;
 use App\Exports\InfPrepEgrExcExport;
 use App\Http\Controllers\Controller;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
@@ -44,6 +46,29 @@ class InformeDocsController extends Controller
         return $pagos;
     }
 
+    public function generateOrdenPagos($año){
+        $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
+        $oPH = OrdenPagos::where('estado','!=', '0')->get();
+        foreach ($oPH as $data){
+            if (isset($data->registros->cdpsRegistro)){
+                if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
+                    $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre,
+                        'ccH' => $data->registros->persona->num_dc]);
+                }
+            } else{
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
+                if (isset($tesoreriaRetefuentePago)) {
+                    if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id) {
+                        $ordenPagos[] = collect(['info' => $data, 'tercero' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN',
+                            'ccH' => 800197268]);
+                    }
+                }
+            }
+
+        }
+        return $ordenPagos;
+    }
+
     public function makePagosEXCEL()
     {
         $añoActual = Carbon::now()->year;
@@ -53,6 +78,17 @@ class InformeDocsController extends Controller
 
         return Excel::download(new InfPagosExcExport($pagos),
             'Informe de Pagos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
+    }
+
+    public function makeOrdenPagosEXCEL()
+    {
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+        $ordenPagos = $this->generateOrdenPagos($añoActual);
+
+        return Excel::download(new InfOrdenPagosExcExport($ordenPagos),
+            'Informe de Ordenes de Pago '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
     }
 
     public function makeEgresosEjecucion(Request $request, $inicio, $final)
