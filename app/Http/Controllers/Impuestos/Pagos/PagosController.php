@@ -337,7 +337,7 @@ class PagosController extends Controller
 
         $pago->fechaPago = $request->fechaComp;
         $pago->save();
-        $this->makeCC($request->payId);
+        $this->makeCC($request->pago_id);
 
         Session::flash('success', 'El pago se ha confirmado exitosamente.');
         return redirect('/administrativo/impuestos/admin');
