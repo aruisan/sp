@@ -32,8 +32,21 @@ class ComprobanteIngresosController extends Controller
     {
         $vigencia = Vigencia::findOrFail($id);
         if ($vigencia->tipo == 1){
+
             $CIngresosT = ComprobanteIngresos::where('vigencia_id', $id)->where('estado','!=','3')->get();
             $CIngresos = ComprobanteIngresos::where('vigencia_id', $id)->where('estado','3')->get();
+            foreach ($CIngresos as $comprobante){
+                if ($comprobante->tipoCI == "Comprobante de Ingresos"){
+                    $user = User::find($comprobante->persona_id);
+                    $persona = $user;
+                    $persona->nombre = $user->name;
+                    $persona->num_dc = $user->email;
+                    $comprobante->persona = $persona;
+                } else {
+                    $persona = Persona::find($comprobante->persona_id);
+                    $comprobante->persona = $persona;
+                }
+            }
 
             return view('administrativo.comprobanteingresos.index', compact('vigencia', 'CIngresosT', 'CIngresos'));
         } else {

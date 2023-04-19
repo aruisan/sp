@@ -35,6 +35,8 @@
                             <th class="text-center">#</th>
                             <th class="text-center">Fecha</th>
                             <th class="text-center">Concepto</th>
+                            <th class="text-center">Tercero</th>
+                            <th class="text-center">Valor</th>
                             <th class="text-center">Ver</th>
                             <th class="text-center">PDF</th>
                             <th class="text-center"><i class="fa fa-trash"></i></th>
@@ -46,6 +48,8 @@
                                 <td class="text-center">{{ $historico->code }}</td>
                                 <td class="text-center">{{ $historico->ff }}</td>
                                 <td class="text-center">{{ $historico->concepto }}</td>
+                                <td class="text-center">{{ $historico->persona->num_dc }} - {{ $historico->persona->nombre }}</td>
+                                <td class="text-center">$ <?php echo number_format($historico->valor,0) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/CIngresos/'.$historico->id.'/edit') }}" title="Ver Comprobante de Contabilidad" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
