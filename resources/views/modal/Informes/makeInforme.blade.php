@@ -17,7 +17,7 @@
                         <a class="btn-sm btn-primary" target="_blank" href="#"> CDPs <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="#"> Registros <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="#"> Ordenes de Pago <i class="fa fa-file-excel-o"></i></a>
-                        <a class="btn-sm btn-primary" target="_blank" href="#"> Pagos <i class="fa fa-file-excel-o"></i></a>
+                        <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makePagosEXCEL"> Pagos <i class="fa fa-file-excel-o"></i></a>
                         <hr><h4>PRIMER TRIMESTRE</h4><hr>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeEgresosEjecucion/2023-01-01/2023-04-01">Egresos <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeIngresosEjecucion/2023-01-01/2023-04-01">Ingresos <i class="fa fa-file-excel-o"></i></a>
