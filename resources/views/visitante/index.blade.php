@@ -49,8 +49,8 @@
       <script>
         $(document).ready(function(){
           {{--
-            --}}
             $('#modal_celebracion').modal();
+            --}}
           setTimeout(function(){
             $('#modal_celebracion').modal('hide');
           }, 5000);

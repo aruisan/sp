@@ -237,7 +237,7 @@
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Informes Chip </a>
                <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="#">CHIP Contaduria</a></li>
+                  <li><a class="item-menu" href="{{route('chip.contable')}}">CHIP Contaduria</a></li>
                   <li><a class="item-menu" href="#">Deudores Morosos</a></li>
                   <li><a class="item-menu" href="#">Exogeno</a></li>
                   <li><a class="item-menu" href="#">Reciprocas</a></li>

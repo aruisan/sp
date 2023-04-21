@@ -8,48 +8,46 @@
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>Balance Inicial </b></h4>
+                <h4><b>Balance Prueba </b></h4>
             </strong>
         </div>
         <div class="table-responsive">
             <br>
             <table class="table" id="tabla">
-                <thead>
-                    <tr>
-                        <th colspan="4" class="text-center"><b>Balance Inicial {{ $añoActual }}-{{ $mesActual }}-{{ $diaActual }}</b></th>
-                    </tr>
-                    <tr>
-                        <th class="text-center">Codigo</th>
-                        <th class="text-center">Concepto</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        {{--
-                        <th class="text-center">Debitomov</th>
-                        <th class="text-center">Creditomov</th>
-                        --}}
-                    </tr>
-                </thead>
                 <tbody>
-                @foreach($pucs as $puc)
                     <tr>
-                        <td class="text-left">{{$puc->code}}</td>
-                        <td class="text-center">{{$puc->concepto}}</td>
-                        <td class="text-right" style="width=200px;">${{number_format($puc->naturaleza == "DEBITO" ? $puc->v_inicial : 0  ,0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">${{number_format($puc->naturaleza == "CREDITO" ? $puc->v_inicial : 0 ,0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">{{$puc->naturaleza == "DEBITO" ? $puc->v_inicial : 0}}</td>
-                        <td class="text-right" style="width=200px;">{{$puc->naturaleza != "DEBITO" ? $puc->v_inicial : 0}}</td>
-                        {{--
-                        <td class="text-right" style="width=200px;">{{$puc->v_debito}}</td>
-                        <td class="text-right" style="width=200px;">{{$puc->v_credito}}</td>
-                        <td>{{$puc->naturaleza}}</td>
-                        <td>{{$puc->saldo_inicial}}</td>
-                        <td>{{is_null($puc->padre) ? 'no tiene' : $puc->padre->code}}</td>
-                        <td>{{$puc->hijos->pluck('id')}}</td>
-                        --}}
+                        <td>S</td>
+                        <td>216488564</td>
+                        <td>10103</td>
+                        <td></td>
+                        <td>2023</td>
+                        <td>CGN2015_001_SALDOS_Y_MOVIMIENTOS_CONVERGENCIA</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
-                    {!!$puc['format_hijos_inicial']!!}
+                @foreach($pucs as $puc)
+                            @php 
+                                $m_debito = $puc->m_debito;
+                                $m_credito = $puc->m_credito;
+                                $s_final = $puc-> naturaleza == "DEBITO" ? $puc->v_inicial + $m_debito - $m_credito:$puc->v_inicial + $m_credito - $m_debito;
+                            @endphp
+                    <tr>
+                        <td class="text-left">D</td>
+                        <td class="text-center">{{$puc->codigo_punto}}</td>
+
+                        <td class="text-right" style="width=200px;">${{number_format($puc->v_inicial  ,0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->v_inicial}}</td>
+
+                        <td class="text-right" style="width=200px;">${{number_format($m_debito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($m_credito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$m_debito}}</td>
+                        <td class="text-right" style="width=200px;">{{$m_credito}}</td>
+
+                        <td class="text-right" style="width=200px;">${{number_format($s_final, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$s_final}}</td>
+                    </tr>
                 @endforeach
                 </tbody>
             </table>
@@ -78,7 +76,7 @@
                 },
                 "columnDefs": [
                     {
-                        "targets": [4,5],
+                        "targets": [3,6,7,9],
                         "visible": false,
                         "searchable": false
                     }
@@ -95,7 +93,7 @@
                         titleAttr: 'Balance Inicial {{$añoActual}} - {{$mesActual}} - {{$diaActual}}',
                         className: 'btn btn-primary',
                         exportOptions: {
-                            columns: [0, 1, 4,5]
+                            columns: [0,1,3,6,7,9]
                         }
                     },
                     {
@@ -103,11 +101,11 @@
                             text:      '<i class="fa fa-file-pdf-o"></i> ',
                             titleAttr: 'Balance Inicial {{$añoActual}} - {{$mesActual}} - {{$diaActual}}',
                             exportOptions: {
-                                columns: [0, 1, 2,3]
+                                columns: [0,1,3,6,7,9]
                             },
                             className: 'btn btn-primary',
                             customize : function(doc){ 
-                                doc.content[1].table.widths = [65,260,90,90,90,90]; //costringe le colonne ad occupare un dato spazio per gestire il baco del 100% width che non si concretizza mai
+                                doc.content[1].table.widths = [55,190,75,75,75,75,75,75]; //120 440 7 costringe le colonne ad occupare un dato spazio per gestire il baco del 100% width che non si concretizza mai
                             }
                         },
                 ]

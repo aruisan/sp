@@ -206,7 +206,6 @@ class BancosController extends Controller
 
 
     public function libros(){
-
         $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
         foreach ($lv1 as $dato){
             $result[] = $dato;
@@ -314,7 +313,7 @@ class BancosController extends Controller
             $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
             foreach ($lv2 as $cuenta) $result[] = $cuenta;
         }
-        $conciliaciones = ConciliacionBancaria::where('año', Carbon::today()->format('Y') )->get();
+        $conciliaciones = ConciliacionBancaria::where('año', Carbon::today()->format('Y') )->where('finalizar', 1)->get();
 
         return view('administrativo.tesoreria.bancos.conciliacion',compact('result','conciliaciones', 'conciliacion_id'));
     }
@@ -436,14 +435,30 @@ class BancosController extends Controller
         $totCred = 0;
         $totCredAll = 0;
         $totBank = 0;
-        $conciliacion_actual = ConciliacionBancaria::where('año', $añoActual)->where('mes', $mesFind)->where('puc_id', $rubroPUC->id)->first();
-        if(!is_null($conciliacion_actual)){
-            if($conciliacion_actual->cuentas_temporales->count() > 0){
-                $conciliacion_actual->cuentas_temporales()->delete();
+
+        $conciliacion = ConciliacionBancaria::where('año', $añoActual)->where('mes', $request->mes)->where('puc_id', $request->cuentaPUC)->first();
+        if(is_null($conciliacion)){
+            $conciliacion = new ConciliacionBancaria();
+            $conciliacion->año = $añoActual;
+            $conciliacion->mes = $request->mes;
+            $conciliacion->puc_id = $request->cuentaPUC;
+        }
+        $conciliacion->subTotBancoInicial = 0;
+        $conciliacion->subTotBancoFinal = 0;
+        $conciliacion->partida_sin_conciliacion_libros = 0;
+        $conciliacion->partida_sin_conciliacion_bancos = 0;
+        $conciliacion->finalizar = 0;
+        $conciliacion->sumaIgualBank = 0;
+        $conciliacion->responsable_id = auth()->user()->id;
+        $conciliacion->save();
+
+        if(!is_null($conciliacion)){
+            if($conciliacion->cuentas_temporales->count() > 0){
+                $conciliacion->cuentas_temporales()->delete();
             }
         }
 
-        $conciliaciones_anteriores = ConciliacionBancaria::where('año', $añoActual)->where('puc_id', $rubroPUC->id)->get();
+        $conciliaciones_anteriores = ConciliacionBancaria::where('puc_id', $rubroPUC->id)->get();
         $conciliacion_anterior = NULL;
         $total_cheque_mano = 0;
         $total_cheque_cobrados = 0;
@@ -571,10 +586,10 @@ class BancosController extends Controller
 
         //dd($result);
         //dd($rubroPUC);
-        $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get()->filter(function($e){ return !$e->check;});
+        $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get()->filter(function($e){ return !$e->check;})->values();
         //dd($comprobantes_old);
         //$comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get();
-        return view('administrativo.tesoreria.bancos.conciliacionmake',compact('result', 'rubroPUC', 'conciliacion_anterior', 'total_cheque_mano', 'total_cheque_cobrados'
+        return view('administrativo.tesoreria.bancos.conciliacionmake',compact('conciliacion', 'result', 'rubroPUC', 'conciliacion_anterior', 'total_cheque_mano', 'total_cheque_cobrados'
             ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth', 'comprobantes_old','periodo_inicial','periodo_final'));
     }
 
@@ -919,6 +934,7 @@ class BancosController extends Controller
 
         //dd($conciliacion->cuentas_temporales);
         $pdf = PDF::loadView('administrativo.tesoreria.bancos.pdf', compact('conciliacion',  'dias', 'meses', 'fecha','conciliacion_anterior', 'total_cheque_mano', 'total_cheque_cobrados',
+   
         'cuentas','rubroPUC','totDeb','totCred','totCredAll','totBank','totalLastMonth', 'periodo_inicial', 'periodo_final'))
             ->setPaper('a3', 'landscape')
             ->setOptions(['images' => true,'isRemoteEnabled' => true]);
@@ -926,10 +942,10 @@ class BancosController extends Controller
     }
 
     public function validateBeforeMonths($lastDate, $rubroPUC){
-        $lastDate = Carbon::parse($lastDate." 23:59:59");//2023-2-1 23:59:59
-        $fechaFin = $lastDate->subDays(1);//2023-31-1 23:59:59
         $today = Carbon::today();//2023-04-11
+        $lastDate = Carbon::parse($lastDate." 23:59:59");//2023-2-1 23:59:59
         $fechaIni = Carbon::parse($today->year."-01-01");//2023-01-01
+        $fechaFin = $lastDate->subDays(1);//2023-31-1 23:59:59
         $total = $rubroPUC->saldo_inicial;
         $totDeb = 0;
         $totCred = 0;
