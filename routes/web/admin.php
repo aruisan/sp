@@ -516,7 +516,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
     //INFORMES PRESUPUESTO EGRESOS
 
-    Route::get('presupuesto/CHIPEgresosExec','Hacienda\Presupuesto\Informes\InformesCHIPController@makeGastosExec');
+    Route::get('presupuesto/CHIPEgresosExec/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformesCHIPController@makeGastosExec');
     Route::get('presupuesto/informeGeneralEgresosEXCEL','Hacienda\Presupuesto\Informes\InformeController@makeEgresosEXCEL');
     Route::get('presupuesto/makeEgresosEjecucion/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformeController@makeEgresosEjecucion');
     Route::get('presupuesto/informeGeneralIngresosEXCEL','Hacienda\Presupuesto\Informes\InformeController@makeIngresosEXCEL');
