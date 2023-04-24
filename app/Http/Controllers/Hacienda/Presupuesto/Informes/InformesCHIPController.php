@@ -1262,7 +1262,7 @@ class InformesCHIPController extends Controller
         $presupuesto = $this->prepEgresos($inicio, $final);
 
         return Excel::download(new ChipEgrExcExport($presupuesto),
-            'CHIP Egresos Ejecucion'.$inicio.'-'.$final.'.xlsx');
+            'CHIP Egresos Ejecucion '.$inicio.'-'.$final.'.xlsx');
     }
 
     public function makeOrdenPagosEXCEL()

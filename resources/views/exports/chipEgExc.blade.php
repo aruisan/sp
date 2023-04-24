@@ -1,6 +1,13 @@
 <table>
     <thead>
     <tr>
+        <th class="text-center">S</th>
+        <th class="text-center">216488564</th>
+        <th class="text-center">11212</th>
+        <th class="text-center">{{ $año }}</th>
+        <th class="text-center" colspan="14">D_EJECUCION_DE_GASTOS</th>
+    </tr>
+    <tr>
         <th class="text-center">Detalle</th>
         <th class="text-center">Rubro</th>
         <th class="text-center">Nombre</th>
