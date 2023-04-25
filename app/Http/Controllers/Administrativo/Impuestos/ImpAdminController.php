@@ -29,14 +29,7 @@ class ImpAdminController extends Controller
         $pagos = Pagos::all();
         $rits = RIT::all();
         $comunicados = Comunicado::all();
-        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
-        foreach ($lv1 as $dato){
-            //$result[] = $dato;
-            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
-            foreach ($lv2 as $cuenta) {
-                if ($cuenta->code == '1110900071' or $cuenta->code == '1110050123') $result[] = $cuenta;
-            }
-        }
+        $result = PucAlcaldia::where('id', 82 )->orWhere('id', 84)->get();
 
         $año = Carbon::today()->year;
         $uvts = ImpUVT::all();
