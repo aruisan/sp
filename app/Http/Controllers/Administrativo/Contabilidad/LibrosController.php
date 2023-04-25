@@ -83,7 +83,7 @@ class LibrosController extends Controller
                         $ordenPagosPUC = OrdenPagosPuc::where('rubros_puc_id', $rubroPUC->id)->get();
                         if (count($ordenPagosPUC) > 0){
                             foreach ($ordenPagosPUC as $op_puc){
-                                if ($op_puc->ordenPago->estado == '1'){
+                                if ($op_puc->ordenPago->estado == "1"){
                                     if (Carbon::parse($op_puc->created_at)->format('Y') == Carbon::today()->format('Y')) {
                                         $total = $total + $op_puc->valor_debito;
                                         $total = $total - $op_puc->valor_credito;
