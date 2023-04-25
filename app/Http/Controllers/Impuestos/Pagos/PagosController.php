@@ -154,7 +154,6 @@ class PagosController extends Controller
             Session::flash('warning', 'Hay algun error en el archivo, intente de nuevo por favor.');
             return redirect('/administrativo/impuestos/admin');
         } else {
-            dd($request, $request->constanciaPago);
             $file = new ResourceTraits;
             $resource = $file->resource($request->constanciaPago, 'public/Impuestos/ConstanciaPagos');
 
