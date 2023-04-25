@@ -7,9 +7,7 @@ use App\Resource;
 Class ResourceTraits
 {
 	public function resource($documents, $carpeta){
-
 		 $ruta = $documents->store($carpeta);
-
      	 $file = new Resource; 
      	 $file->ruta = $ruta;
 	     $file->save();
