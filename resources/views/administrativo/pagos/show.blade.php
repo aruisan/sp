@@ -139,10 +139,10 @@
                                             <td>{{ $banks[$y]->data_puc->code }}</td>
                                             <td>{{ $banks[$y]->data_puc->concepto }}</td>
                                             @if($pago->type_pay == "ACCOUNT")
-                                                @php( $date = strftime("%d of %B %Y", strtotime($banks[$y]->created_at)))
+                                                @php( $date = strftime("%d of %B %Y", strtotime($pago->created_at)))
                                                 <td> Núm Cuenta: {{$pago->num}} - Fecha: {{$date}}</td>
                                             @elseif($pago->type_pay == "CHEQUE")
-                                                @php( $date = strftime("%d of %B %Y", strtotime($banks[$y]->created_at)))
+                                                @php( $date = strftime("%d of %B %Y", strtotime($pago->created_at)))
                                                 <td> Núm Cheque: {{$pago->num}} - Fecha: {{$date}}</td>
                                             @endif
                                             <td>$<?php echo number_format($banks[$y]->valor,0);?></td>

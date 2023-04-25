@@ -1,5 +1,5 @@
 
-<div id="credito" class="modal fade" role="dialog">
+<div id="creditoRubs" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
         <form class="form" action="{{url('/presupuesto/rubro/m/1/'.$rubro->id)}}" method="POST" id="cred" enctype="multipart/form-data">
             {!! method_field('PUT') !!}

@@ -516,7 +516,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
     //INFORMES PRESUPUESTO EGRESOS
 
-    Route::get('presupuesto/CHIPEgresosExec/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformesCHIPController@makeGastosExec');
+    Route::get('presupuesto/CHIPEgresosProg/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformesCHIPController@makeEgresosProg');
+    Route::get('presupuesto/CHIPEgresosExec/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformesCHIPController@makeEgresosExec');
+    Route::get('presupuesto/CHIPIngresosExec/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformesCHIPController@makeIngresosExec');
+    Route::get('presupuesto/CHIPIngresosProg/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformesCHIPController@makeIngresosProg');
     Route::get('presupuesto/informeGeneralEgresosEXCEL','Hacienda\Presupuesto\Informes\InformeController@makeEgresosEXCEL');
     Route::get('presupuesto/makeEgresosEjecucion/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformeController@makeEgresosEjecucion');
     Route::get('presupuesto/informeGeneralIngresosEXCEL','Hacienda\Presupuesto\Informes\InformeController@makeIngresosEXCEL');
