@@ -44,7 +44,7 @@ class PagosController extends Controller
     public function index($modulo)
     {
         $user = User::find(Auth::user()->id);
-        $result = PucAlcaldia::where('code', 1110900069 )->orWhere('code',1110900071)->get();
+        $result = PucAlcaldia::where('id', 82 )->orWhere('id', 84)->get();
 
         if ($modulo == "PRED"){
             $pagosPendientes = Pagos::where('user_id', $user->id)->where('estado','Generado')->where('modulo','PREDIAL')->get();
