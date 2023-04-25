@@ -150,7 +150,7 @@ class PagosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function ConstanciaAdmin(Request $request){
-        dd($request);
+        dd($request->hasFile('constanciaPago'));
         if (!$request->hasFile('constanciaPago')){
             Session::flash('warning', 'Hay algun error en el archivo, intente de nuevo por favor.');
             return redirect('/administrativo/impuestos/admin');
