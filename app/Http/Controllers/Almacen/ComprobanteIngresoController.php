@@ -6,13 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Persona;
 use App\AlmacenComprobanteIngreso;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 
 class ComprobanteIngresoController extends Controller
 {
     public function create(){
         $proovedores = Persona::all();
         $ingreso = AlmacenComprobanteIngreso::create(['owner_id' => auth()->id()]);
-        return view('almacen.ingresos', compact( 'ingreso', 'proovedores'));
+        $pucs = PucAlcaldia::where('hijo', '1')->where('padre_id', '<>', 0)->get();
+        return view('almacen.ingresos', compact( 'ingreso', 'proovedores', 'pucs'));
     }
 
 

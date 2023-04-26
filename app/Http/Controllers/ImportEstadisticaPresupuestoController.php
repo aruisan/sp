@@ -200,4 +200,26 @@ class ImportEstadisticaPresupuestoController extends Controller
         endforeach;
         return response()->json(['encontrados'=> $encontrados, 'nuevos' => $nuevos]);
     }
+
+
+    public function create_puc_corriente(){
+        return view('import.puc_corriente');
+    }
+
+    public function import_puc_corriente(Request $request)
+    {
+        $encontrados = collect();
+        $nuevos = collect();
+        foreach($request->data as $item):
+            $puc_alcaldia = PucAlcaldia::where('code', intval($item[0]))->first();
+            if(is_null($puc_alcaldia)){
+                $nuevos->push($item[0]);
+            }else{
+               $puc_alcaldia->estado_corriente = intval($item[1]);
+               $puc_alcaldia->save();
+               $encontrados->push($item[0]);
+            }
+        endforeach;
+        return response()->json(['encontrados'=> $encontrados, 'nuevos' => $nuevos]);
+    }
 }

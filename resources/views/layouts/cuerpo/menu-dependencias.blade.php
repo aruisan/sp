@@ -237,7 +237,13 @@
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Informes Chip </a>
                <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="{{route('chip.contable')}}">CHIP Contaduria</a></li>
+                  <li class="dropdown-submenu">
+                     <a class="dropdown-item item-menu" >CHIP Contaduria Primer Trimestre</a>
+                     <ul class="dropdown-menu">
+                        <li><a class="item-menu" href="{{route('chip.contable')}}">Reporte</a></li>
+                        <li><a class="item-menu" href="{{route('chip.contable.actualizacion')}}">Actualizacion Y reporte</a></li>
+                     </ul>
+                  </li>
                   <li><a class="item-menu" href="#">Deudores Morosos</a></li>
                   <li><a class="item-menu" href="#">Exogeno</a></li>
                   <li><a class="item-menu" href="#">Reciprocas</a></li>

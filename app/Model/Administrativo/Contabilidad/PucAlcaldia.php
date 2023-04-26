@@ -9,6 +9,7 @@ use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\CompContMov;
+use App\ChipContabilidadData;
 use \Carbon\Carbon;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 
@@ -17,6 +18,10 @@ class PucAlcaldia extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $table = "puc_alcaldia";
+
+    public function contabilidad_data(){
+        return $this->hasOne(ChipContabilidadData::class, 'puc_id');
+    }
 
     public function conciliaciones() {
         return $this->hasMany(ConciliacionBancaria::class, 'puc_id');
@@ -30,16 +35,24 @@ class PucAlcaldia extends Model implements Auditable
         return $this->belongsTo(PucAlcaldia::class, 'padre_id');
     }
 
+    //odenes de pago
     public function orden_pagos() {
         return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id');
     }
 
+    //pagos
     public function pagos_bank(){
         return $this->hasMany(PagoBanks::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'));
     }
 
+    //comprobantes de ingreso son los de banco
     public function getComprobantesAttribute(){
         return ComprobanteIngresosMov::where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
+    }
+
+    //retefuente
+    public function retefuente_movimientos(){
+        return $this->hasMany(CompContMov::class, 'cuenta_puc_id')->where('comp_cont_id', '>', 2);
     }
 
 /*
@@ -76,11 +89,68 @@ class PucAlcaldia extends Model implements Auditable
         return $numero;
     }
 
+    public function getDebCredTrimestreAttribute(){
+        $age =  Carbon::today()->format('Y');
+        $totCred = 0;
+        $totDeb = 0;
+        $inicio = "2023-01-01";
+        $final = "2023-03-31";
+        if($this->pagos_bank->count() > 0):
+            $totCred += $this->pagos_bank->count() > 0 ? $this->pagos_bank->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->filter(function($p){ return $p->pago->estado == 1;})->sum('valor') : 0;
+        endif;
+
+        if($this->comprobantes->count() > 0):
+            $totDeb += $this->comprobantes->count() > 0 ? $this->comprobantes->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('debito') : 0;
+            $totCred += $this->comprobantes->count() > 0 ? $this->comprobantes->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('credito') : 0;
+        endif;
+
+        if($this->orden_pagos->count() > 0):
+            $totDeb += $this->orden_pagos->count() > 0 ? $this->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_debito') : 0;
+            $totCred += $this->orden_pagos->count() > 0 ? $this->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_credito') : 0;
+        endif;
+
+        if($this->retefuente_movimientos->count() > 0):
+            $totDeb += $this->retefuente_movimientos->count() > 0 ? $this->retefuente_movimientos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('debito') : 0;
+            $totCred += $this->retefuente_movimientos->count() > 0 ? $this->retefuente_movimientos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('credito') : 0;
+        endif;
+        
+        return ['debito' => $totDeb, 'credito' => $totCred];
+    }
+
+    public function getDebitoTrimestreAttribute(){
+        return $this->deb_cred_trimestre['debito'];
+    }
+
+    public function getCreditoTrimestreAttribute(){
+        return $this->deb_cred_trimestre['credito'];
+    }
+
+    public function getMDebitoTrimestreAttribute(){
+        $suma = $this->debito_trimestre;
+        if($this->hijos->count() > 0):
+            $suma = $this->hijos->sum('m_debito_trimestre');
+        endif;
+            
+        return $suma;
+    }
+
+    public function getMCreditoTrimestreAttribute(){
+        $suma = $this->credito_trimestre;
+        if($this->hijos->count() > 0):
+            $suma = $this->hijos->sum('m_credito_trimestre');
+        endif;
+            
+        return $suma;
+    }
+
+///////////////////////////////////////////////////////////////////////////
     public function getDebCredAttribute(){
         $age =  Carbon::today()->format('Y');
         $totCredAll = 0;
         $totCred = 0;
         $totDeb = 0;
+        $inicio = "2023-01-01";
+        $final = "2023-03-31";
         if($this->pagos_bank->count() > 0):
             $totCredAll = $this->pagos_bank->sum('valor');
             $totCred += $this->pagos_bank->filter(function($p){ return $p->pago->estado == 1;})->sum('valor');
@@ -169,6 +239,44 @@ class PucAlcaldia extends Model implements Auditable
         return $grupo_puc;
     }
 
+    public function getFormatHijosContabilidadAttribute(){
+
+        $grupo_puc = "";
+        foreach($this->hijos as $item):
+            if($item->level <= 4):
+                $grupo_puc .= $this->format_puc_contabilidad($item);
+                $grupo_puc .= $item->format_hijos_contabilidad;
+            endif;
+        endforeach;
+            
+        return $grupo_puc;
+    }
+
+
+    public function format_puc_contabilidad($puc){
+        $m_debito = $puc['m_debito_trimestre'];
+        $m_credito = $puc['m_credito_trimestre'];
+        $s_final = $puc['naturaleza'] == "DEBITO" ? $puc['v_inicial'] + $m_debito - $m_credito : $puc['v_inicial'] + $m_credito - $m_debito;
+        $corriente = $puc['estado_corriente'] ? $s_final : 0;
+        $no_corriente = !$puc['estado_corriente'] ? $s_final : 0;
+        return "<tr>
+                    <td class='text-left'>D</td>
+                    <td class='text-center'>{$puc['codigo_punto']}</td>
+                    <td class='text-right' style='width=200px;'>$".number_format($puc['v_inicial'])."</td>
+                    <td class='text-right' style='width=200px;'>{$puc['v_inicial']}</td>
+                    <td class='text-right' style='width=200px;'>$".number_format($m_debito)."</td>
+                    <td class='text-right' style='width=200px;'>$".number_format($m_credito)."</td>
+                    <td class='text-right' style='width=200px;'>{$m_debito}</td>
+                    <td class='text-right' style='width=200px;'>{$m_credito}</td>
+                    <td class='text-right' style='width=200px;'>$".number_format($s_final)."</td>
+                    <td class='text-right' style='width=200px;'>{$s_final}</td>
+                    <td class='text-right' style='width=200px;'>$".number_format($corriente)."</td>
+                    <td class='text-right' style='width=200px;'>$".number_format($no_corriente)."</td>
+                    <td class='text-right' style='width=200px;'>{$corriente}</td>
+                    <td class='text-right' style='width=200px;'>{$no_corriente}</td>
+                    </tr>";
+    }
+
 
     public function format_puc($puc, $tipo){
         $debito = $puc['naturaleza'] == 'DEBITO' ? $puc['v_inicial']: 0;
@@ -220,8 +328,8 @@ class PucAlcaldia extends Model implements Auditable
         $today = Carbon::today();//2023-04-11
         $lastDate = Carbon::parse($age." 23:59:59");//2023-2-1 23:59:59
         $fechaIni = Carbon::parse($today->year."-01-01");//2023-01-01
-        $fechaFin = Carbon::parse($today->year."-3-31");
-        //$fechaFin = $lastDate->subDays(1);//2023-31-1 23:59:59
+        //$fechaFin = Carbon::parse($today->year."-3-31");
+        $fechaFin = $lastDate->subDays(1);//2023-31-1 23:59:59
         $total = $rubroPUC->saldo_inicial;
         $totDeb = 0;
         $totCred = 0;

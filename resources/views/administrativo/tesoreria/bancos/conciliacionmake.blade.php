@@ -170,7 +170,7 @@
 @section('js')
     <script>
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        let saldos_libros_i = {{is_null($conciliacion->conciliacion_anterior) ? $totalLastMonth:  $conciliacion->saldo_libros}};
+        let saldos_libros_i = {{$conciliacion->saldo_libros}};
         const data_cheque_mano = @json($result);
         const data_cheque_cobros = @json($comprobantes_old);
         let data_mano_select = @json($result);
@@ -280,6 +280,7 @@
                 data_mano_no_select.forEach(e => {
                     banco_diferencia += e.credito;
                     console.log('dfl', e)
+                    console.log('bd', banco_diferencia)
                 });
             }
 
@@ -300,6 +301,7 @@
             }
 
            let diferencia = banco_diferencia + banco_diferencia_anterior;
+           console.log('bd2', diferencia)
            console.log('ss', [saldos_libros_i, libro_debito, libro_credito]);
            let saldo_siguiente = saldos_libros_i + libro_debito - libro_credito;
            console.log('final', [saldo_inicial, banco_debito, banco_credito, banco_credito_anterior]);

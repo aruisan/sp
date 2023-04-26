@@ -8,43 +8,15 @@
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>Chip Contable</b></h4>
+                <h4><b id="title"></b></h4>
             </strong>
-        </div>
-        <div class="table-responsive">
-            <br>
-            <table class="table" id="tabla">
-                <tbody>
-                    <tr>
-                        <td>S</td>
-                        <td>216488564</td>
-                        <td>10103</td>
-                        <td>10103</td>
-                        <td>2023</td>
-                        <td>CGN2015_001_SALDOS_Y_MOVIMIENTOS_CONVERGENCIA</td>
-                        <td>2023</td>
-                        <td>CGN2015_001_SALDOS_Y_MOVIMIENTOS_CONVERGENCIA</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        @if(in_array('Administrador', auth()->user()->getRoleNames()->toArray()))
-                            <td>Ver</td>
-                        @endif  
-                    </tr>
-                @foreach($pucs as $puc)
-                    {!!$puc!!}
-                @endforeach
-                </tbody>
-            </table>
         </div>
     </div>
 @stop
 
 @section('js')
     <script>
+        const pucs = @json($pucs);
         $(document).ready(function() {
             let tbl =  $('#tabla').DataTable({
                 language: {
@@ -98,6 +70,32 @@
                         },
                 ]
             })
+
+            load_data(); 
         })
+
+        const load_data = () => {
+            let contador = 0;
+            $('#title').text(`El Puc ${pucs[0].code} - ${pucs[0].concepto} se esta actualizando con sus hijos`);
+            pucs.forEach( async (p,i) => {
+                console.log('ff', [p, i, `/administrativo/contabilidad/chip-contable/${p.id}`]);
+                contador +=1;
+                await fetch(`/administrativo/contabilidad/chip-contable/${p.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if(contador == i+1){
+                        window.location.href = "{{route('chip.contable')}}";
+                    }else{
+                        $('#title').text(`El Puc ${pucs[i+1].code} - ${pucs[i+1].concepto} se esta actualizando con sus hijos`);
+                    }
+                });
+
+               
+            });
+        }
+
+        const peticion_ajax = () => {
+            
+        }
     </script>
 @stop

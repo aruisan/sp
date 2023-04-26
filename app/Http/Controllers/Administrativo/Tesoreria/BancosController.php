@@ -463,6 +463,8 @@ class BancosController extends Controller
         $total_cheque_mano = 0;
         $total_cheque_cobrados = 0;
 
+        //dd([$conciliacion->conciliacion_anterior->saldo_libros, $conciliacion_anterior]);
+
         if($conciliaciones_anteriores->count() > 0):
             
             foreach($conciliaciones_anteriores as $anterior):
