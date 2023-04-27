@@ -31,10 +31,14 @@ class InformeDocsController extends Controller
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
                     foreach ($data->orden_pago->pucs as $puc){
                         if ($puc->valor_credito > 0){
-                            $data->cuentaOP = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
-                            $data->credOP = $puc->valor_credito;
+                            $codes[] = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
+                            $values[] = $puc->valor_credito;
                         }
                     }
+                    $data->cuentaOP = $codes;
+                    $data->credOP = $values;
+                    unset($codes); unset($values);
+                    dd($data);
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
@@ -45,10 +49,13 @@ class InformeDocsController extends Controller
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
                     foreach ($data->orden_pago->pucs as $puc){
                         if ($puc->valor_credito > 0){
-                            $data->cuentaOP = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
-                            $data->credOP = $puc->valor_credito;
+                            $codes[] = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
+                            $values[] = $puc->valor_credito;
                         }
                     }
+                    $data->cuentaOP = $codes;
+                    $data->credOP = $values;
+                    unset($codes); unset($values);
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
