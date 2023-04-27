@@ -37,7 +37,7 @@
                         <td>{{ $codigo['info']->nombre }}</td>
                         <td>{{ $codigo['pucs'][$z]->persona->num_dc }} - {{ $codigo['pucs'][$z]->persona->nombre }}</td>
                         <td>{{ $codigo['pucs'][$z]->puc->code}} - {{ $codigo['pucs'][$z]->puc->concepto}}</td>
-                        <td>$ <?php echo number_format($codigo['pucs'][$z]->debito,0);?></td>
+                        <td>{{$codigo['pucs'][$z]->debito}}</td>
                         <td>0</td>
                     </tr>
                 @else
@@ -47,8 +47,8 @@
                         <td>{{ $codigo['info']->nombre }}</td>
                         <td>{{ $codigo['ccH']}} - {{ $codigo['tercero'] }}</td>
                         <td>{{$codigo['pucs'][$z]->data_puc->code}} - {{$codigo['pucs'][$z]->data_puc->concepto}}</td>
-                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_debito,0);?></td>
-                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_credito,0);?></td>
+                        <td>{{$codigo['pucs'][$z]->valor_debito}}</td>
+                        <td>{{$codigo['pucs'][$z]->valor_credito}}</td>
                     </tr>
                 @endif
             @endfor
