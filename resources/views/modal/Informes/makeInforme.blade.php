@@ -14,8 +14,8 @@
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralIngresosPDF"> Ingresos <i class="fa fa-file-pdf-o "></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralEgresosEXCEL"> Egresos <i class="fa fa-file-excel-o"></i></a>
                         <hr><h4>DOCUMENTOS</h4><hr>
-                        <a class="btn-sm btn-primary" target="_blank" href="#"> Ordenes de Pago <i class="fa fa-file-excel-o"></i></a>
-                        <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makePagosEXCEL"> Pagos <i class="fa fa-file-excel-o"></i></a>
+                        <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makePagosEXCEL"> Ordenes de Pago <i class="fa fa-file-excel-o"></i></a>
+                        <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeOrdenPagosEXCEL"> Pagos <i class="fa fa-file-excel-o"></i></a>
                         <hr><h4>PRIMER TRIMESTRE</h4><hr>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeEgresosEjecucion/2023-01-01/2023-04-01">Egresos <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeIngresosEjecucion/2023-01-01/2023-04-01">Ingresos <i class="fa fa-file-excel-o"></i></a>
