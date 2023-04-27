@@ -29,6 +29,12 @@ class InformeDocsController extends Controller
             if (isset($data->orden_pago->registros)){
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
+                    foreach ($data->orden_pago->pucs as $puc){
+                        if ($puc->valor_credito > 0){
+                            $data->cuentaOP = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
+                            $data->credOP = $puc->valor_credito;
+                        }
+                    }
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
@@ -37,6 +43,12 @@ class InformeDocsController extends Controller
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id){
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
+                    foreach ($data->orden_pago->pucs as $puc){
+                        if ($puc->valor_credito > 0){
+                            $data->cuentaOP = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
+                            $data->credOP = $puc->valor_credito;
+                        }
+                    }
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);

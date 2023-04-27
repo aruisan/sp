@@ -1,28 +1,34 @@
 <table>
     <thead>
     <tr>
-        <th class="text-center">#</th>
         <th class="text-center">Fecha</th>
+        <th class="text-center">Documento</th>
         <th class="text-center">Concepto</th>
-        <th class="text-center">Num Identidad Tercero</th>
-        <th class="text-center">Nombre Tercero</th>
-        <th class="text-center">Nombre Tercero</th>
-        <th class="text-center">Valor</th>
-        <th class="text-center">Tipo de Pago</th>
-        <th class="text-center">Cuenta Bancaria</th>
+        <th class="text-center">Tercero</th>
+        <th class="text-center">Cuenta</th>
+        <th class="text-center">Debito</th>
+        <th class="text-center">Credito</th>
     </tr>
     </thead>
     <tbody>
         @foreach($pagos as $codigo)
             <tr>
-                <td>{{ $codigo['info']->code }}</td>
                 <td>{{ $codigo['info']->ff_fin }}</td>
+                <td>Pagos #{{ $codigo['info']->code }}</td>
                 <td>{{ $codigo['info']->concepto }}</td>
-                <td>{{ $codigo['info']->persona->num_dc }}</td>
-                <td>{{ $codigo['info']->persona->nombre }}</td>
+                <td>{{ $codigo['info']->persona->num_dc }} - {{ $codigo['info']->persona->nombre }}</td>
+                <td>{{ $codigo['info']->cuentaBanco }} </td>
                 <td>{{ $codigo['info']->valor }}</td>
-                <td>{{ $codigo['info']->type_pay }}</td>
-                <td>{{ $codigo['info']->cuentaBanco }}</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>{{ $codigo['info']->ff_fin }}</td>
+                <td>Pagos #{{ $codigo['info']->code }}</td>
+                <td>{{ $codigo['info']->concepto }}</td>
+                <td>{{ $codigo['info']->persona->num_dc }} - {{ $codigo['info']->persona->nombre }}</td>
+                <td>{{ $codigo['info']->cuentaOP }} </td>
+                <td>0</td>
+                <td>{{ $codigo['info']->credOP }}</td>
             </tr>
         @endforeach
     </tbody>
