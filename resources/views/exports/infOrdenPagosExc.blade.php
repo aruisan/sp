@@ -26,7 +26,7 @@
                         <td>{{ $descuentos->puc->code}} - {{ $descuentos->puc->concepto}}</td>
                     @endif
                     <td>0</td>
-                    <td>{{ $PagosDesc['valor'] }}</td>
+                    <td>{{ $descuentos['valor'] }}</td>
                 </tr>
             @endforeach
         @endforeach
