@@ -8,6 +8,7 @@ use App\Exports\InfPrepIngExcExport;
 use App\Exports\InfPrepEgrExcExport;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
@@ -74,21 +75,22 @@ class InformeDocsController extends Controller
         foreach ($oPH as $data){
             if (isset($data->registros->cdpsRegistro)){
                 if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
-                    dd($data);
+                    $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $data->id)->where('valor', '>', 0)->get();
                     $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre,
-                        'ccH' => $data->registros->persona->num_dc]);
+                        'ccH' => $data->registros->persona->num_dc, 'descuentos' => $OrdenPagoDescuentos, 'pucs' => $data->pucs]);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
                 if (isset($tesoreriaRetefuentePago)) {
                     if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id) {
                         $ordenPagos[] = collect(['info' => $data, 'tercero' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN',
-                            'ccH' => 800197268]);
+                            'ccH' => 800197268, 'descuentos' => [], 'pucs' => $tesoreriaRetefuentePago->contas]);
                     }
                 }
             }
 
         }
+
         return $ordenPagos;
     }
 
