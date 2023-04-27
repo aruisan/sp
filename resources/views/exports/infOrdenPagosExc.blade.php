@@ -30,17 +30,7 @@
                 </tr>
             @endforeach
             @for($z = 0; $z < count($codigo['pucs']); $z++)
-                @if(isset($codigo['pucs'][$z]->data_puc))
-                    <tr class="text-center">
-                        <td>{{ \Carbon\Carbon::parse($codigo['info']->created_at)->format('d-m-Y') }}</td>
-                        <td>Orden de pago #{{ $codigo['info']->code }}</td>
-                        <td>{{ $codigo['info']->nombre }}</td>
-                        <td>{{ $codigo['ccH']}} - {{ $codigo['tercero'] }}</td>
-                        <td>{{$codigo['pucs'][$z]->data_puc->code}} - {{$codigo['pucs'][$z]->data_puc->concepto}}</td>
-                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_debito,0);?></td>
-                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_credito,0);?></td>
-                    </tr>
-                @else
+                @if(!isset($codigo['pucs'][$z]->data_puc))
                     <tr class="text-center">
                         <td>{{ \Carbon\Carbon::parse($codigo['info']->created_at)->format('d-m-Y') }}</td>
                         <td>Orden de pago #{{ $codigo['info']->code }}</td>
@@ -49,6 +39,16 @@
                         <td>{{ $codigo['pucs'][$z]->puc->code}} - {{ $codigo['pucs'][$z]->puc->concepto}}</td>
                         <td>$ <?php echo number_format($codigo['pucs'][$z]->debito,0);?></td>
                         <td>0</td>
+                    </tr>
+                @else
+                    <tr class="text-center">
+                        <td>{{ \Carbon\Carbon::parse($codigo['info']->created_at)->format('d-m-Y') }}</td>
+                        <td>Orden de pago #{{ $codigo['info']->code }}</td>
+                        <td>{{ $codigo['info']->nombre }}</td>
+                        <td>{{ $codigo['ccH']}} - {{ $codigo['tercero'] }}</td>
+                        <td>{{$codigo['pucs'][$z]->data_puc->code}} - {{$codigo['pucs'][$z]->data_puc->concepto}}</td>
+                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_debito,0);?></td>
+                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_credito,0);?></td>
                     </tr>
                 @endif
             @endfor
