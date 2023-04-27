@@ -55,6 +55,7 @@ class InformeDocsController extends Controller
                             $values2[] = $puc->valor_credito;
                         }
                     }
+                    if (!isset($codes2)) dd($data, $data->orden_pago->pucs);
                     $data->cuentaOP = $codes2;
                     $data->credOP = $values2;
                     if (count($banks) == 0) dd($data, "FALLO");
