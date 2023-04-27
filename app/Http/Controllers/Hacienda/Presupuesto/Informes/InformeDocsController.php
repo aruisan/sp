@@ -38,7 +38,6 @@ class InformeDocsController extends Controller
                     $data->cuentaOP = $codes;
                     $data->credOP = $values;
                     unset($codes); unset($values);
-                    dd($data);
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
