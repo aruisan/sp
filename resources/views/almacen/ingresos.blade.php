@@ -84,7 +84,11 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Debito:<span class="text-danger">*</span></label>
                         <div class="col-lg-8">
-                            <input type="text" class="form-control" name="ccd" required>
+                            <select name="ccd" class="form-control">
+                                @foreach($pucs as $puc)
+                                    <option value="{{$puc->id}}">{{$puc->concepto}}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -94,7 +98,14 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Credito:<span class="text-danger">*</span></label>
                         <div class="col-lg-8">
+                        <select name="ccc" class="form-control">
+                                @foreach($pucs as $puc)
+                                    <option value="{{$puc->id}}">{{$puc->concepto}}</option>
+                                @endforeach
+                            </select>
+                        {{--
                             <input type="text" class="form-control" name="ccc" required>
+                        --}}
                         </div>
                     </div>
                 </div>

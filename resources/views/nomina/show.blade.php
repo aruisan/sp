@@ -114,6 +114,9 @@
                     e.descuentos[5],
                     e.descuentos[6],
                     e.descuentos[7],
+                    @if($nomina->id == 58)
+                    e.reintegro,
+                    @endif
                     e.total_descuentos,
                     e.total_deduccion,
                     e.neto,
@@ -224,6 +227,9 @@
                     { title: 'Juzgado' },
                     { title: 'Coocasa' },
                     { title: 'Sindicato' },
+                    @if($nomina->id == 58)
+                    { title: 'Reintegro' },
+                    @endif
                     { title: 'Descuentos' },
                     { title: 'Dedución' },
                     { title: 'Neto Pagar' },

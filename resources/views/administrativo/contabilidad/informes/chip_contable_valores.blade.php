@@ -16,7 +16,7 @@
             <table class="table" id="tabla">
                 <thead>
                     <tr>
-                        <th colspan="14" class="text-center"><b>Balance Prueba {{ $añoActual }}-{{ $mesActual }}-{{ $diaActual }}</b></th>
+                        <th colspan="14" class="text-center"><b>pucs con valores}</b></th>
                     </tr>
                         {{--
                     <tr>
@@ -27,29 +27,34 @@
                         <th colspan="2" class="text-center"><b>Balance Inicial</b></th>
                         <th colspan="2" class="text-center"><b>Balance Movimientos</b></th>
                         <th colspan="2" class="text-center"><b>Balance Saldos</b></th>
+                        <th class="text-center"><b>>Ver</b></th>
                     </tr>
                         --}}
                     <tr>
                         <th class="text-center">Codigo</th>
                         <th class="text-center">Concepto</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
-                        <th class="text-center">Debito</th>
-                        <th class="text-center">Credito</th>
                         {{--
+                        <th class="text-center">Debito</th>
+                        <th class="text-center">Credito</th>
+                        <th class="text-center">Debito</th>
+                        <th class="text-center">Credito</th>
+                        <th class="text-center">Debito</th>
+                        <th class="text-center">Credito</th>
+                        <th class="text-center">Debito</th>
+                        <th class="text-center">Credito</th>
+                        <th class="text-center">Debito</th>
+                        <th class="text-center">Credito</th>
+                        <th class="text-center">Debito</th>
+                        <th class="text-center">Credito</th>
                         --}}
+                        <th class="text-center">Codigo con puntos</th>
+                        <th class="text-center">Level</th>
+                        <th class="text-center">Ver</th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach($pucs as $puc)
+                            {{--
                             @php 
                                 $debito = $puc->naturaleza == "DEBITO" ? $puc->v_inicial : 0;
                                 $credito= $puc->naturaleza != "DEBITO" ? $puc->v_inicial : 0;
@@ -58,10 +63,11 @@
                                 $s_debito = $puc-> naturaleza == "DEBITO" ? $debito + $m_debito - $m_credito:0;
                                 $s_credito = $puc-> naturaleza == "CREDITO" ? $credito + $m_credito - $m_debito: 0;
                             @endphp
+                            --}}
                     <tr>
                         <td class="text-left">{{$puc->code}}</td>
                         <td class="text-center">{{$puc->concepto}}</td>
-
+                        {{--
                         <td class="text-right" style="width=200px;">${{number_format($debito  ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">${{number_format($credito ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">{{$debito}}</td>
@@ -76,14 +82,15 @@
                         <td class="text-right" style="width=200px;">${{number_format($s_credito, 0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">{{$s_debito}}</td>
                         <td class="text-right" style="width=200px;">{{$s_credito}}</td>
-                        {{--
-                        <td>{{$puc->naturaleza}}</td>
-                        <td>{{$puc->saldo_inicial}}</td>
-                        <td>{{is_null($puc->padre) ? 'no tiene' : $puc->padre->code}}</td>
-                        <td>{{$puc->hijos->pluck('id')}}</td>
                         --}}
+                        <td class="text-right" style="width=200px;">{{$puc->codigo_punto}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->level}}</td>
+                        <td class="text-right" style="width=200px;">
+                            @if($puc->level == 5)
+                            <a class="btn btn-primary" href='{{route("chip.contable.puc.ver", $puc->id)}}' target="_blank">Ver</a>
+                            @endif
+                        </td>
                     </tr>
-                    {!!$puc['format_hijos_prueba']!!}
                 @endforeach
                 </tbody>
             </table>
@@ -110,13 +117,6 @@
                     },
                     "sProcessing": "Procesando...",
                 },
-                "columnDefs": [
-                    {
-                        "targets": [4,5,8,9,12,13],
-                        "visible": false,
-                        "searchable": false
-                    }
-                ],
                 pageLength: 2000,
                 responsive: true,
                 "searching": true,
@@ -126,19 +126,13 @@
                     {
                         extend:    'excelHtml5',
                         text:      '<i class="fa fa-file-excel-o"></i> ',
-                        titleAttr: 'Balance Inicial {{$añoActual}} - {{$mesActual}} - {{$diaActual}}',
-                        className: 'btn btn-primary',
-                        exportOptions: {
-                            columns: [0,1,4,5,8,9,12,13]
-                        }
+                        titleAttr: 'pp',
+                        className: 'btn btn-primary'
                     },
                     {
                             extend:    'pdfHtml5',
                             text:      '<i class="fa fa-file-pdf-o"></i> ',
-                            titleAttr: 'Balance Inicial {{$añoActual}} - {{$mesActual}} - {{$diaActual}}',
-                            exportOptions: {
-                                columns: [0,1,4,5,8,9,12,13]
-                            },
+                            titleAttr: 'pp',
                             className: 'btn btn-primary',
                             customize : function(doc){ 
                                 doc.content[1].table.widths = [55,190,75,75,75,75,75,75]; //120 440 7 costringe le colonne ad occupare un dato spazio per gestire il baco del 100% width che non si concretizza mai

@@ -86,7 +86,7 @@ class NominaEmpleadoNomina extends Model
 
     public function getVIbcAttribute(){
         return $this->nomina->tipo == 'pensionado' ? $this->sueldo : $this->v_dias_laborados + $this->v_horas_extras + $this->v_horas_extras_festivos + $this->v_horas_extras_nocturnas 
-        + $this->v_recargos_nocturnos + $this->v_prima_antiguedad + $this->v_bonificacion_servicios + $this->v_retroactivo;
+        + $this->v_recargos_nocturnos + $this->v_bonificacion_servicios + $this->v_retroactivo + $this->v_prima_antiguedad;//810000
     }
 
 
@@ -173,7 +173,7 @@ class NominaEmpleadoNomina extends Model
 
     public function getTotalDeduccionAttribute() {
         $descuentos = $this->descuentos->count() > 0 ? array_sum($this->descuento_x_entidad) : 0;
-        return ceil( $descuentos+ $this->v_salud['empleado'] + $this->v_pension['empleado'] + $this->fsp + $this->retencion_fuente);
+        return ceil( $descuentos+ $this->v_salud['empleado'] + $this->v_pension['empleado'] + $this->fsp + $this->retencion_fuente  + $this->descuento_reintegro);
     }
 
     public function getNetoPagarAttribute() {
@@ -194,12 +194,12 @@ class NominaEmpleadoNomina extends Model
     }
 
     public function getPSAttribute(){
-        return $this->round_up($this->sueldo+($this->b_s/12), 100);
+        return $this->round_up(($this->sueldo + $this->v_prima_antiguedad + ($this->b_s/12))/2, 100);
     }
     
     //pv
     public function getVPrimaVacacionesAttribute(){
-        return $this->round_up(!is_null($this->ind_vac) ? ($this->sueldo+($this->b_s/12)+($this->p_s/12))/30*15 : 0, 100);
+        return $this->round_up(!is_null($this->ind_vac) ? ($this->sueldo + $this->v_prima_antiguedad + ($this->b_s/12)+($this->p_s/12))/30*15 : 0, 100);
     }
 
     //vac
@@ -209,13 +209,12 @@ class NominaEmpleadoNomina extends Model
 
     //ind
     public function getVIndAttribute(){
-        return $this->round_up(($this->sueldo+($this->p_s/12)+($this->b_s/12))/30*$this->dias_vacaciones_laborados, 100);
+        return $this->round_up(($this->sueldo + $this->v_prima_antiguedad + ($this->p_s/12)+($this->b_s/12))/30*$this->dias_vacaciones_laborados, 100);
     }
 
     public function getTotalVacacionesAttribute(){
-        return $this->round_up($this->ind_vac == 'vacaciones' ? $this->v_vacaciones+$this->v_prima_vacaciones : $this->v_prima_vacaciones+$this->v_ind, 100);
+        return $this->round_up($this->ind_vac == 'vacaciones' ? $this->v_vacaciones+$this->v_prima_vacaciones  : $this->v_prima_vacaciones+$this->v_ind , 100);
     }
-
 
     public function getDescuentoXEntidadAttribute(){
         $entidad_nombre = ['Popular', 'Bogota', 'Agrario', 'Coosepark', 'Davivienda', 'Judicial', 'Coocasa', 'Sindicato'];

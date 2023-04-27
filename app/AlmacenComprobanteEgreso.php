@@ -25,4 +25,12 @@ class AlmacenComprobanteEgreso extends Model
     public function salidas() {
         return $this->belongsToMany(AlmacenArticulo::class, 'almacen_articulo_salidas')->withPivot('cantidad');
     }
+
+    public function puc_ccd(){
+        return $this->belongsTo(PucAlcaldia::class, 'ccd');
+    }
+
+    public function puc_ccc(){
+        return $this->belongsTo(PucAlcaldia::class, 'ccc');
+    }
 }

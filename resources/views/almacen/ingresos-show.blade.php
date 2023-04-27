@@ -61,14 +61,14 @@
             <div class="row">
                 <div class="col-md-12 align-self-center">
                     <div class="form-group">
-                        <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Debito: {{$ingreso->ccd}}</label>
+                        <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Debito: {{is_null($ingreso->puc_ccd) ? "No tiene" : $ingreso->puc_ccd->concepto}}</label>
                     </div>
                 </div>
             </div><br>
             <div class="row">
                 <div class="col-md-12 align-self-center">
                     <div class="form-group">
-                        <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Credito: {{$ingreso->ccc}}</label>
+                        <label class="col-lg-4 col-form-label text-right" for="nombre">Cuenta Contable Credito: {{is_null($ingreso->puc_ccc) ? "No tiene" : $ingreso->pud_ccc->concepto}}</label>
                     </div>
                 </div>
             </div><br>

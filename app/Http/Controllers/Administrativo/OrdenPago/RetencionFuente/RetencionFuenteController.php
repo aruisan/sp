@@ -165,7 +165,7 @@ class RetencionFuenteController extends Controller
         foreach ($cuentaPUC as $cuenta){
 
             //CUENTA CORRESPONDIENTE AL DEBITO
-            if ($cuenta->code == '243603') $idPadreDeb = 868;
+            if ($cuenta->code == '243603') $idPadreDeb = 868; //honorarios ->  honorarios
             elseif ($cuenta->code == '243605') $idPadreDeb = 1029;
             elseif ($cuenta->code == '243606') $idPadreDeb = 1048;
             else $idPadreDeb = 869;
@@ -306,7 +306,17 @@ class RetencionFuenteController extends Controller
                     $mes = "Diciembre";
                     break;
             }
-
+/*
+            dd([
+                'total' => $total,
+                'tableRT' => $tableRT,
+                'bancos' => $bancos,
+                'form' => $form,
+                'multaC' => $multaC,
+                'multaD' => $multaD,
+                'mesID' => $mesID
+            ]);
+*/
             return view('administrativo.tesoreria.retefuente.pagos.pago', compact('tableRT','form',
                 'total','bancos', 'vigencia_id','mes','days','vigencia','multaC','multaD','mesID'));
         } else {

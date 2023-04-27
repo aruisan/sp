@@ -22,4 +22,10 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'import'] ,function(){
 
     Route::get('/pac', "ImportEstadisticaPresupuestoController@create_pac");
     Route::post('/pac', "ImportEstadisticaPresupuestoController@import_pac")->name('import.pac');
+
+    Route::get('/reintegro', "ImportEstadisticaPresupuestoController@create_reintegro");
+    Route::post('/reintegro', "ImportEstadisticaPresupuestoController@import_reintegro")->name('import.reintegro');
+
+    Route::get('/puc_corriente', "ImportEstadisticaPresupuestoController@create_puc_corriente");
+    Route::post('/puc_corriente', "ImportEstadisticaPresupuestoController@import_puc_corriente")->name('import.puc_corriente');
 });

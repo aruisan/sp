@@ -3,7 +3,7 @@
 @section('content')
     <div class="breadcrumb text-center">
         <strong>
-            <h4><b>Pagos de la Retención en la Fuente {{$vigencia->vigencia}}</b></h4>
+            <h4><b>Pagos de la Retención en la Fuente {{$vigencia->vigencia}} </b></h4>
         </strong>
     </div>
     <ul class="nav nav-pills">

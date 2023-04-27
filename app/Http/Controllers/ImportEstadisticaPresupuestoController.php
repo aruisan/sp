@@ -9,6 +9,7 @@ use App\ImportEstadisticaPresupuesto;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Model\Persona;
 use App\NominaEmpleado;
+use App\NominaEmpleadoNomina;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\PacInformeIngresoEgreso;
 
@@ -176,5 +177,49 @@ class ImportEstadisticaPresupuestoController extends Controller
         endforeach;
 
         return response()->json('ok');
+    }
+
+    public function create_reintegro(){
+        return view('import.descuento_reintegro');
+    }
+
+    public function import_reintegro(Request $request)
+    {
+        $encontrados = collect();
+        $nuevos = collect();
+        foreach($request->data as $item):
+            $empleado = NominaEmpleado::where('num_dc', intval($item[0]))->first();
+            if(is_null($empleado)){
+                $nuevos->push($item[0]);
+            }else{
+               $n_empleado =  NominaEmpleadoNomina::where('nomina_empleado_id', $empleado->id)->where('nomina_id', 58)->first();
+               $n_empleado->descuento_reintegro = intval($item[1]);
+               $n_empleado->save();
+               $encontrados->push($item[0]);
+            }
+        endforeach;
+        return response()->json(['encontrados'=> $encontrados, 'nuevos' => $nuevos]);
+    }
+
+
+    public function create_puc_corriente(){
+        return view('import.puc_corriente');
+    }
+
+    public function import_puc_corriente(Request $request)
+    {
+        $encontrados = collect();
+        $nuevos = collect();
+        foreach($request->data as $item):
+            $puc_alcaldia = PucAlcaldia::where('code', intval($item[0]))->first();
+            if(is_null($puc_alcaldia)){
+                $nuevos->push($item[0]);
+            }else{
+               $puc_alcaldia->estado_corriente = intval($item[1]);
+               $puc_alcaldia->save();
+               $encontrados->push($item[0]);
+            }
+        endforeach;
+        return response()->json(['encontrados'=> $encontrados, 'nuevos' => $nuevos]);
     }
 }

@@ -45,11 +45,12 @@
                     <th class="text-center" id="td-s-libros-i"></th>
                     <th class="text-center">Saldo inicial bancos</th>
                     <th class="text-center">
+                    
                         @if(is_null($conciliacion_anterior))
-                            <input type="number" min="0" class="form-control" required value="{{$conciliacion->saldo_inicial}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
+                            <input type="number" min="0" class="form-control" required value="{{$rubroPUC->saldo_inicial}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
                         @else
-                            <input type="hidden" value="{{$conciliacion->saldo_inicial}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
-                            {{$conciliacion->saldo_inicial}}
+                            <input type="hidden" value="{{$conciliacion_anterior->subTotBancoFinal}}" name="saldo_inicial" id="valor_inicial" onkeyup="diferencia_siguiente_final()">
+                            {{$conciliacion_anterior->subTotBancoFinal}}
                         @endif
                     </th>
                 </tr>
@@ -89,7 +90,7 @@
                             <td>$<?php echo number_format($data['debito'],0) ?></td>
                             <td>$<?php echo number_format($data['credito'],0) ?></td>
                             <td>$<?php echo number_format($data['debito'] == 0 ? $data['credito'] : $data['debito'],0) ?></td>
-                            <td><input type="checkbox" name="check[]" value="{{ $index }}" checked onchange="checked_checke_mano(this, {{$data['debito'] == 0 ? 0 - $data['credito'] : $data['debito']}}, {{$index}})"></td>
+                            <td><input type="checkbox" name="check[]" value="{{ $index }}" checked onchange="checked_checke_mano(this, {{$data['debito'] == 0 ? $data['credito'] : 0 - $data['debito']}}, {{$index}})"></td>
                         </tr>
                         @php $cheques_mano = $cheques_mano + ($data['debito'] == 0 ? 0 - $data['credito'] : $data['debito']) @endphp
                     @endforeach
@@ -132,61 +133,79 @@
                 <tr>
                     <th colspan="4" class="text-center">CUADRO RESUMEN</th>
                 </tr>
+                <tr>
+                    <th></th>
+                    <th class="text-center">VALOR LIBROS</th>
+                    <th></th>
+                    <th class="text-center">VALOR BANCO</th>
+                </tr>
                 </thead>
                 <tbody id="bodyTabla">
                 <tr class="text-center">
                     <td>Saldo siguiente</td>
                     <td id="td-s-siguiente-f"></td>
-                    <td> Saldo Final</td>
+                    <td> Saldo Inicial</td>
                     <td id="td-s-inicial-f"></td>
                 </tr>
                 <tr class="text-center">
-                    <td>Diferencia</td>
-                    <td id="td-s-diferencia"></td>
-                    <td></td>
-                    <td></td>
+                    <td>cheques en mano</td>{{--los deschuleados de deivith--}}
+                    <td id="td-restar-checke-mano"></td>{{--aqui--}}
+                    <td>Ingresos</td>
+                    <td id="td-checke-mano"></td>
                 </tr>
-               
+                <tr class="text-center">
+                    <td>cheques cobrados</td>{{--los chuleados de oscar y de otros meses--}}
+                    <td id="td-restar-checke-cobrados"></td>
+                    <td>Egresos</td>
+                    <td id="td-cheques-cobrados"></td>{{--aqui--}}
+                </tr>
+                <tr class="text-center">
+                    <td>partidas sin conciliar</td>{{--input manual que digita el usuario--}}
+                    <td><input type="number" min="0" required name="partida_sin_conciliar_libros" class="form-control" id="input-iguales-libros" value="0" onkeyup="diferencia_siguiente_final()"></td>
+                    <td></td>
+                    <td><input type="number" min="0" required name="partida_sin_conciliar_bancos" class="form-control" id="input-iguales-bancos" value="0" onkeyup="diferencia_siguiente_final()"></td>
+                </tr>
                 <tr class="text-center">
                     <td>SUMAS IGUALES</td>
-                    <td id="td-sumas-iguales-libros"></td>
+                    <td id="td-dumas-iguales-libros"></td>{{-- se suma saldo siguiente ms cheques en mano mas el primer input--}}
                     <td></td>
-                    <td id="td-sumas-iguales-bancos">
-                    </td>
+                    <td id="td-dumas-iguales-bancos">
+                    </td>{{-- se suma saldo final mas cheques cobrados mas el segundo input--}}
                     <input type="hidden" name="sumaIgualBank" id="sumaIgualBank" value="{{ $totDeb - $totCred + $totCredAll - $totCred + $rubroPUC->saldo_inicial }}">
                 </tr>
                 </tbody>
             </table>
             <div class="text-center">
-            {{--
                 <button type="button" class="btn-sm btn-primary" onclick="guardar_ver(0)">Ver Pdf</button>
-            --}}
                 <button type="button" class="btn-sm btn-primary" onclick="guardar(1)">Finalizar</button>
             </div>
         </form>
     </div>
-    {{$totalLastMonth}}
 @stop
 @section('js')
     <script>
+
+
+
+        
+
+
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        let saldos_libros_i = {{$conciliacion->saldo_libros}};
         const data_cheque_mano = @json($result);
         const data_cheque_cobros = @json($comprobantes_old);
-        let data_mano_select = @json($result);
-        let data_cobro_select = @json($comprobantes_old);
+        let data_mano_select = data_cheque_mano;
+        let data_cobro_select = data_cheque_cobros;
         data_mano_select.forEach((e,i) => { data_mano_select[i]['id'] = i});
         let data_mano_no_select = [];
         let data_cobro_no_select = [];
+        let saldos_libros_i = {{$totalLastMonth}};
         let cheques_mano = {{$cheques_mano}};
+        let saldo_siguiente_i = {{$rubroPUC->saldo_inicial + $total_cheque_mano + $totDeb - $totCredAll - $total_cheque_cobrados}};
         let cheques_cobrados = {{$comprobantes_old->sum('valor')}};
         let cheques_mano_libro = 0;
         let restar_cheques_mano = 0;
         let restar_cheques_cobrados = 0;
         let total_diferencia_siguiente_final = 0;
-        console.log('data0', data_cheque_mano);
-
-
         
         $(document).ready(function(){
             diferencia_siguiente_final();
@@ -194,11 +213,17 @@
 
         const guardar = finalizar =>{
             //primero se mandan los valores a los td
+            let libros = parseInt($('#input-iguales-libros').val());
+            let bancos = parseInt($('#input-iguales-bancos').val());
             let inicio = parseInt($('#valor_inicial').val());
             //alert(final)
 
             if(isNaN(inicio)){
                 alert("Input Saldo Inicial debe ser numerico y obligatorio");
+            }else if(isNaN(libros)){
+                alert("Input de partida sin conciliar libros debe ser numerico y obligatorio");
+            }else if(isNaN(bancos)){
+                alert("Input de partida sin conciliar bancos debe ser numerico y obligatorio");
             }else{
                 $('#input_data_cobro_select').val( JSON.stringify(data_cobro_select));
                 $('#input_data_cobro_no_select').val( JSON.stringify(data_cobro_no_select));
@@ -246,83 +271,39 @@
         }
 
         const diferencia_siguiente_final = () => {
-            //inicvializar variables
-           let libro_debito = 0;
-           let libro_credito = 0;
-           let banco_debito = 0;
-           let banco_credito = 0;
-           let banco_diferencia = 0;
-           let banco_credito_anterior = 0;
-           let banco_diferencia_anterior = 0
-
             //recoleccion de datos
-           let saldo_inicial = parseInt($('#valor_inicial').val());
-           /*
+           let v_inicial = parseInt($('#valor_inicial').val());
            let v_suma_iguales_libros = parseInt($('#input-iguales-libros').val());
            let v_suma_iguales_bancos = parseInt($('#input-iguales-bancos').val());
-           */
            //procesos
-           console.log('data', data_cheque_mano);
-            if(data_cheque_mano.length > 0){
-                data_cheque_mano.forEach(e => {
-                    libro_credito += e.credito;
-                    libro_debito += e.debito;
-                });
-            }
-        
-            if(data_mano_select.length > 0){
-                data_mano_select.forEach(e => {
-                    banco_debito += e.debito;
-                    banco_credito += e.credito;
-                });
-            }
-            if(data_mano_no_select.length > 0){
-                data_mano_no_select.forEach(e => {
-                    banco_diferencia += e.credito;
-                    console.log('dfl', e)
-                    console.log('bd', banco_diferencia)
-                });
-            }
-
-                console.log('data_cobro_select0', data_cobro_select);
-            if(data_cobro_select.length > 0){
-                data_cobro_select.forEach(e => {
-                    console.log('e.valor', e.valor);
-            console.log('data_cobro_select', banco_credito_anterior);
-                    banco_credito_anterior += e.valor;
-                })
-            }
-
-            if(data_cobro_no_select.length > 0){
-                data_cobro_no_select.forEach(e => {
-                    banco_diferencia_anterior += e.valor;
-                    console.log('df', e)
-                })
-            }
-
-           let diferencia = banco_diferencia + banco_diferencia_anterior;
-           console.log('bd2', diferencia)
-           console.log('ss', [saldos_libros_i, libro_debito, libro_credito]);
-           let saldo_siguiente = saldos_libros_i + libro_debito - libro_credito;
-           console.log('final', [saldo_inicial, banco_debito, banco_credito, banco_credito_anterior]);
-           let saldo_final = saldo_inicial + banco_debito - banco_credito - banco_credito_anterior;
-           let sumas_iguales_libros = saldo_siguiente + diferencia;
-           let sumas_iguales_bancos = saldo_final;
+           let final_bancos = v_inicial + (cheques_mano - restar_cheques_mano) - (cheques_cobrados-restar_cheques_cobrados);
+           console.log('rr', [v_inicial + (cheques_mano - restar_cheques_mano) - cheques_cobrados, v_inicial , (cheques_mano - restar_cheques_mano) , cheques_cobrados]);
+           let total_cheques_cobrados = cheques_cobrados - restar_cheques_cobrados;
+           let total_diferencia_siguiente_final = saldo_siguiente_i - final_bancos;
+           let total_suma_iguales_libros = saldo_siguiente_i-restar_cheques_mano+v_suma_iguales_libros+restar_cheques_cobrados;
+           let total_suma_iguales_bancos = final_bancos+v_suma_iguales_bancos;//cheques_cobrados-final_bancos+v_suma_iguales_bancos+cheques_mano;
 
            //salidas input
-           $('#valor_final').val(saldo_final);
+           $('#valor_final').val(final_bancos);
 
 
            //salidas arriba
             $('#td-s-libros-i').html(saldos_libros_i);
-            $('#td-s-siguiente-i').html(saldo_siguiente);
-            $('#td-saldo-final, #td-s-inicial-f').html(saldo_final);
-            $('#td-diferencia, #td-s-diferencia').html(diferencia);
-            $('#td-sumas-iguales-libros').html(sumas_iguales_libros);
-            $('#td-sumas-iguales-bancos').html(sumas_iguales_bancos);
+            $('#td-s-siguiente-i').html(saldo_siguiente_i);
+            $('#td-saldo-final').html(final_bancos);
+            $('#td-diferencia').html(total_diferencia_siguiente_final);
             
             //salidas abajo libros
-            $('#td-s-siguiente-f').html(saldo_siguiente);
+            $('#td-s-siguiente-f').html(saldo_siguiente_i);
+            $('#td-restar-checke-mano').html(0 - restar_cheques_mano);
+            $('#td-restar-checke-cobrados').html(restar_cheques_cobrados);
+            $('#td-dumas-iguales-libros').html(total_suma_iguales_libros);
+            
+            //salidas abajo bancos
+            $('#td-s-inicial-f').html(v_inicial);
+            $('#td-checke-mano').html(cheques_mano-restar_cheques_mano);
+            $('#td-cheques-cobrados').html(restar_cheques_cobrados - cheques_cobrados);
+            $('#td-dumas-iguales-bancos').html(total_suma_iguales_bancos);
             
             
             //console.log('rr', [ (cheques_cobrados - restar_cheques_cobrados)-final_bancos+total_b+(cheques_mano-restar_cheques_mano),  (cheques_cobrados - restar_cheques_cobrados),final_bancos,total_b,(cheques_mano-restar_cheques_mano)]);
@@ -331,15 +312,19 @@
         const checked_checke_mano = (item, value, index) => {
             if(item.checked){
                 restar_cheques_mano = restar_cheques_mano + value;
+
                 let index_select = data_mano_no_select.findIndex(e => e.id == index );
                 data_mano_no_select.splice(index_select, 1);
+
                 let cm_select = data_cheque_mano[index];
                 data_mano_select.push(cm_select)
             }else{
                 restar_cheques_mano = restar_cheques_mano - value;
+
                 let cm_select = data_cheque_mano[index];
                 cm_select['id'] = index;
                 data_mano_no_select.push(cm_select)
+
                 let index_select = data_mano_select.findIndex(e => e.id == index );
                 data_mano_select.splice(index_select, 1);
             }

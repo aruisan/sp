@@ -25,4 +25,8 @@ class Pagos extends Model implements Auditable
     public function rubros(){
         return $this->hasMany('App\Model\Administrativo\Pago\PagoRubros','pago_id');
     }
+
+    public function getStatusAttribute(){
+        return $this->estado ? $this->estado == 1 ? "Aceptado" : 'Rechazado' : 'Pendiente'; 
+    }
 }
