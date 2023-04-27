@@ -47,16 +47,16 @@ class InformeDocsController extends Controller
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id){
                     $banks = PagoBanks::where('pagos_id', $data->id)->get();
-                    if (isset($codes)) unset($codes);
-                    if (isset($values)) unset($values);
+                    if (isset($codes2)) unset($codes2);
+                    if (isset($values2)) unset($values2);
                     foreach ($data->orden_pago->pucs as $puc){
                         if ($puc->valor_credito > 0){
-                            $codes[] = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
-                            $values[] = $puc->valor_credito;
+                            $codes2[] = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
+                            $values2[] = $puc->valor_credito;
                         }
                     }
-                    $data->cuentaOP = $codes;
-                    $data->credOP = $values;
+                    $data->cuentaOP = $codes2;
+                    $data->credOP = $values2;
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
