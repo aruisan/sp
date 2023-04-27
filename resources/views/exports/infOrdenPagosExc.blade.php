@@ -16,7 +16,7 @@
                 <tr>
                     <td>{{ \Carbon\Carbon::parse($codigo['info']->created_at)->format('d-m-Y') }}</td>
                     <td>Orden de pago #{{ $codigo['info']->code }}</td>
-                    <td>{{ $codigo['info']->name }}</td>
+                    <td>{{ $codigo['info']->nombre }}</td>
                     <td>{{ $codigo['ccH']}} - {{ $codigo['tercero'] }}</td>
                     @if($descuentos->desc_municipal_id != null)
                         <td>{{ $descuentos->descuento_mun['codigo'] }} - {{ $descuentos->descuento_mun['concepto'] }}</td>
@@ -29,6 +29,25 @@
                     <td>{{ $descuentos['valor'] }}</td>
                 </tr>
             @endforeach
+            @for($z = 0; $z < count($codigo['pucs']); $z++)
+                @if(isset($codigo['pucs'][$z]->data_puc))
+                    <tr class="text-center">
+                        <td>{{$codigo['pucs'][$z]->data_puc->code}}</td>
+                        <td>{{$codigo['pucs'][$z]->data_puc->concepto}}</td>
+                        <td>{{ $codigo['ccH']}} - {{ $codigo['tercero'] }}</td>
+                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_debito,0);?></td>
+                        <td>$<?php echo number_format($codigo['pucs'][$z]->valor_credito,0);?></td>
+                    </tr>
+                @else
+                    <tr class="text-center">
+                        <td>{{ $codigo['pucs'][$z]->puc->code}}</td>
+                        <td>{{ $codigo['pucs'][$z]->puc->concepto}}</td>
+                        <td>$ <?php echo number_format($codigo['pucs'][$z]->debito,0);?></td>
+                        <td>{{ $codigo['pucs'][$z]->persona->num_dc }}</td>
+                        <td>{{ $codigo['pucs'][$z]->persona->nombre }}</td>
+                    </tr>
+                @endif
+            @endfor
         @endforeach
     </tbody>
 </table>
