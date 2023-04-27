@@ -74,6 +74,7 @@ class InformeDocsController extends Controller
         foreach ($oPH as $data){
             if (isset($data->registros->cdpsRegistro)){
                 if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
+                    dd($data);
                     $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre,
                         'ccH' => $data->registros->persona->num_dc]);
                 }
