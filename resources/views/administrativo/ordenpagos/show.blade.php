@@ -259,6 +259,7 @@
                                         <thead>
                                         <tr>
                                             <th class="text-center">Ver Pago</th>
+                                            <th class="text-center">#</th>
                                             <th class="text-center">Concepto</th>
                                             <th class="text-center">Valor</th>
                                             <th class="text-center">Estado</th>
@@ -270,6 +271,7 @@
                                         @foreach($pagos as $pago)
                                             <tr class="text-center">
                                                 <td><a href="{{ url('administrativo/pagos/show/'.$pago->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a></td>
+                                                <td>{{$pago->code}}</td>
                                                 <td>{{$pago->concepto}}</td>
                                                 <td>$<?php echo number_format($pago->valor,0) ?> </td>
                                                 <td>
