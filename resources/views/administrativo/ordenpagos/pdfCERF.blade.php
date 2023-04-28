@@ -62,6 +62,12 @@
 						</div>
 					</td>
 					<td>
+						<div class="col-md-12">
+							<div class="col-md-6">OTROS DESCUENTOS</div>
+							<div class="col-md-6">$<?php echo number_format($OrdenPagoDescuentos->sum('valor'),0) ?></div>
+						</div>
+					</td>
+					<td>
 						<?php
 						$pay= $OrdenPago->valor - $OrdenPagoDescuentos->sum('valor');
 						?>
