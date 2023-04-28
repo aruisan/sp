@@ -79,6 +79,7 @@ class InformeDocsController extends Controller
                     $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre,
                         'ccH' => $data->registros->persona->num_dc, 'descuentos' => $OrdenPagoDescuentos, 'pucs' => $data->pucs, 'pucV' => $data->pucs->sum('debito'),
                         'descV' => $OrdenPagoDescuentos->sum('valor')]);
+                    dd($ordenPagos, $OrdenPagoDescuentos, $data->pucs);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
