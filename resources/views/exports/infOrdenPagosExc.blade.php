@@ -19,7 +19,7 @@
                 <td>{{ $codigo['ccH']}} - {{ $codigo['tercero'] }}</td>
                 <td></td>
                 <td>{{ $codigo['pucV'] }}</td>
-                <td>{{ $codigo['descuentos']->sum('valor') }}</td>
+                <td>{{ $codigo['descV'] }}</td>
             </tr>
         @endforeach
     </tbody>

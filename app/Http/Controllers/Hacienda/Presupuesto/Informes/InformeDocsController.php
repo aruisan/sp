@@ -77,14 +77,16 @@ class InformeDocsController extends Controller
                 if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
                     $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $data->id)->where('valor', '>', 0)->get();
                     $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre,
-                        'ccH' => $data->registros->persona->num_dc, 'descuentos' => $OrdenPagoDescuentos, 'pucs' => $data->pucs, 'pucV' => $data->pucs->sum('debito')]);
+                        'ccH' => $data->registros->persona->num_dc, 'descuentos' => $OrdenPagoDescuentos, 'pucs' => $data->pucs, 'pucV' => $data->pucs->sum('debito'),
+                        'descV' => $OrdenPagoDescuentos->sum('valor')]);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->id)->first();
                 if (isset($tesoreriaRetefuentePago)) {
                     if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id) {
                         $ordenPagos[] = collect(['info' => $data, 'tercero' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN',
-                            'ccH' => 800197268, 'descuentos' => [], 'pucs' => $tesoreriaRetefuentePago->contas, 'pucV' => $tesoreriaRetefuentePago->contas->sum('debito')]);
+                            'ccH' => 800197268, 'descuentos' => [], 'pucs' => $tesoreriaRetefuentePago->contas, 'pucV' => $tesoreriaRetefuentePago->contas->sum('debito'),
+                            'descV' => 0]);
                     }
                 }
             }
