@@ -12,7 +12,7 @@
     </thead>
     <tbody>
         @foreach($pagos as $codigo)
-            
+
             <tr>
                 <td>{{ $codigo['info']->ff_fin }}</td>
                 <td>Pagos #{{ $codigo['info']->code }}</td>

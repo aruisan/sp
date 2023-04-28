@@ -42,6 +42,8 @@ class InformeDocsController extends Controller
                     if (isset($values)) {
                         $data->credOP = $values;
                         $data->totCredOP = array_sum($values);
+                    } else{
+                        $data->totCredOP = 0;
                     }
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
