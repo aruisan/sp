@@ -77,8 +77,8 @@ class InformeDocsController extends Controller
                 if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
                     $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $data->id)->where('valor', '>', 0)->get();
                     $ordenPagos[] = collect(['info' => $data, 'tercero' => $data->registros->persona->nombre,
-                        'ccH' => $data->registros->persona->num_dc, 'descuentos' => $OrdenPagoDescuentos, 'pucs' => $data->pucs, 'pucV' => $data->pucs->sum('debito'),
-                        'descV' => $OrdenPagoDescuentos->sum('valor')]);
+                        'ccH' => $data->registros->persona->num_dc, 'descuentos' => $OrdenPagoDescuentos, 'pucs' => $data->pucs, 'pucV' => $data->pucs->sum('valor_debito'),
+                        'descV' => $OrdenPagoDescuentos->sum('valor') + $data->pucs->sum('valor_credito')]);
                     dd($ordenPagos, $OrdenPagoDescuentos, $data->pucs);
                 }
             } else{
