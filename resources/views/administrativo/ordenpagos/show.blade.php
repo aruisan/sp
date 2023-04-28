@@ -245,17 +245,17 @@
                                 </table>
                             </div>
                             @include('modal.anularOP')
-                            @if($OrdenPago->saldo > 0 and $OrdenPago->estado == 1 and $rol == 3)
+                            @if($OrdenPago->saldo > 0 and $OrdenPago->estado == 1 and $rol == 3 )
                                 <center>
                                     <a data-toggle="modal" data-target="#anularOP" class="btn btn-success">
                                         Anular Orden de Pago
                                     </a>
                                 </center>
                             @endif
-                            @if(isset($OrdenPago->pago))
+                            @if(count($OrdenPago->pagos) > 0)
                                 <hr>
                                 <center>
-                                    <h3>Pago Asignado a la Orden de Pago</h3>
+                                    <h3>Pagos Asignados a la Orden de Pago</h3>
                                 </center>
                                 <hr>
                                 <br>
@@ -271,23 +271,25 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="text-center">
-                                            <td><a href="{{ url('administrativo/pagos/show/'.$OrdenPago->pago->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a></td>
-                                            <td>{{$OrdenPago->pago->concepto}}</td>
-                                            <td>$<?php echo number_format($OrdenPago->pago->valor,0) ?> </td>
-                                            <td>
+                                        @foreach($OrdenPago->pagos as $pago)
+                                            <tr class="text-center">
+                                                <td><a href="{{ url('administrativo/pagos/show/'.$pago->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a></td>
+                                                <td>{{$pago->concepto}}</td>
+                                                <td>$<?php echo number_format($pago->valor,0) ?> </td>
+                                                <td>
                                                 <span class="badge badge-pill badge-danger">
-                                                    @if($OrdenPago->pago->estado == "0")
+                                                    @if($pago->estado == "0")
                                                         Pendiente
-                                                    @elseif($OrdenPago->pago->estado == "1")
+                                                    @elseif($pago->estado == "1")
                                                         Finalizado
                                                     @else
                                                         Anulado
                                                     @endif
                                                 </span>
-                                            </td>
-                                            <td>{{$OrdenPago->pago->ff_fin}}</td>
-                                        </tr>
+                                                </td>
+                                                <td>{{$pago->ff_fin}}</td>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
