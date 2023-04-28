@@ -268,6 +268,7 @@
                                             <th class="text-center">Valor</th>
                                             <th class="text-center">Estado</th>
                                             <th class="text-center">Fecha de Finalización</th>
+                                            <th class="text-center">Comprobante Egreso</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -288,6 +289,7 @@
                                                 </span>
                                                 </td>
                                                 <td>{{$pago->ff_fin}}</td>
+                                                <td><a href="{{ url('administrativo/egresos/pdf/'.$pago->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a></td>
                                             </tr>
                                         @endforeach
                                         </tbody>
