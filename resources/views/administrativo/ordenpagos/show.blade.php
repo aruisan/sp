@@ -289,7 +289,7 @@
                                                 </span>
                                                 </td>
                                                 <td>{{$pago->ff_fin}}</td>
-                                                <td><a href="{{ url('administrativo/egresos/pdf/'.$pago->id) }}" title="Ver Comprobante de Egreso" class="btn-sm btn-success"><i class="fa fa-file-pdf-o"></i></a></td>
+                                                <td><a target="_blank" href="{{ url('administrativo/egresos/pdf/'.$pago->id) }}" title="Ver Comprobante de Egreso" class="btn-sm btn-success"><i class="fa fa-file-pdf-o"></i></a></td>
                                             </tr>
                                         @endforeach
                                         </tbody>
