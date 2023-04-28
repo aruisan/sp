@@ -60,7 +60,8 @@
                                                 <option value="SGP Salud">SGP Salud</option>
                                                 <option value="SGP Educacion">SGP Educacion</option>
                                                 <option value="SGP Otros sectores">SGP Otros sectores</option>
-                                                <option value="SGP Otros sectores">Comprobante de Ingresos</option>
+                                                <option value="Comprobante de Ingresos">Comprobante de Ingresos</option>
+                                                <option value="Reintegro">Reintegro</option>
                                                 <option value="Otro">Otro</option>
                                             </select>
                                             <span style="display: none" id="otroTipo">
