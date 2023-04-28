@@ -24,7 +24,7 @@ class InformeDocsController extends Controller
 {
     public function generatePagos($año){
         $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
-        $p = Pagos::where('estado','!=', '0')->get();
+        $p = Pagos::where('estado', '1')->get();
 
         foreach ($p as $data){
             if (isset($data->orden_pago->registros)){
@@ -71,7 +71,7 @@ class InformeDocsController extends Controller
 
     public function generateOrdenPagos($año){
         $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
-        $oPH = OrdenPagos::where('estado','!=', '0')->get();
+        $oPH = OrdenPagos::where('estado', '1')->get();
         foreach ($oPH as $data){
             if (isset($data->registros->cdpsRegistro)){
                 if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
