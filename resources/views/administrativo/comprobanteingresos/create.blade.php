@@ -122,7 +122,7 @@
                                 </tr>
                                 </thead>
                                 <tbody id="prog">
-                                    <tr>
+                                    <tr id="cuentaBancariaSelect">
                                         <td style="width: 3%"></td>
                                         <td>
                                             <div class="form-group">
@@ -202,8 +202,13 @@
             } else {
                 if(value == "Transferencia"){
                     $("#rubIngSelect").hide();
+                    $("#cuentaBancariaSelect").show();
+                } else if(value == "Reintegro"){
+                    $("#rubIngSelect").hide();
+                    $("#cuentaBancariaSelect").hide();
                 } else {
                     $("#rubIngSelect").show();
+                    $("#cuentaBancariaSelect").show();
                 }
                 document.getElementById("otroTipo").style.display = "none";
                 document.getElementById("cualOtroTipo").value = null;

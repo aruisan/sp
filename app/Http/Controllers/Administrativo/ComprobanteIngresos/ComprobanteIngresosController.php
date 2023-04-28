@@ -129,14 +129,20 @@ class ComprobanteIngresosController extends Controller
         $comprobante->persona_id = $request->persona_id;
         $comprobante->save();
 
+        //VALIDACIÓN SI SE DEBE ALMACENAR EL RUBRO DE INGRESOS
+        $saveRubIng = true;
+        if ($request->tipoCI == "Reintegro" or $request->tipoCI == "Transferencia") $saveRubIng = false;
+
         //BANCO DEL COMPROBANTE CONTABLE
-        $comprobanteMov = new ComprobanteIngresosMov();
-        $comprobanteMov->comp_id = $comprobante->id;
-        $comprobanteMov->fechaComp = $request->fecha;
-        $comprobanteMov->cuenta_banco = $request->cuentaDeb;
-        $comprobanteMov->debito = $request->debitoBanco;
-        $comprobanteMov->credito = $request->creditoBanco;
-        $comprobanteMov->save();
+        if ( $request->tipoCI != "Reintegro") {
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $request->fecha;
+            $comprobanteMov->cuenta_banco = $request->cuentaDeb;
+            $comprobanteMov->debito = $request->debitoBanco;
+            $comprobanteMov->credito = $request->creditoBanco;
+            $comprobanteMov->save();
+        }
 
         //PUCs DEL COMPROBANTE CONTABLE
         for ($i = 0; $i < count($request->cuentaPUC); $i++){
@@ -150,7 +156,7 @@ class ComprobanteIngresosController extends Controller
         }
 
         //RUBROS DE INGRESOS DEL COMPROBANTE CONTABLE
-        if ( $request->tipoCI != "Transferencia"){
+        if ($saveRubIng){
             for ($i = 0; $i < count($request->rubroIngresos); $i++){
                 $comprobanteMov = new ComprobanteIngresosMov();
                 $comprobanteMov->comp_id = $comprobante->id;
