@@ -42,9 +42,7 @@ class InformeDocsController extends Controller
                     if (isset($values)) {
                         $data->credOP = $values;
                         $data->totCredOP = array_sum($values);
-                    } else{
-                        $data->totCredOP = 0;
-                    }
+                    } else $data->totCredOP = 0;
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
                     $pagos[] = collect(['info' => $data]);
@@ -62,7 +60,10 @@ class InformeDocsController extends Controller
                         $values[] = $contabilizacion->debito;
                     }
                     if (isset($codes)) $data->cuentaOP = $codes;
-                    if (isset($values)) $data->credOP = $values;
+                    if (isset($values)) {
+                        $data->credOP = $values;
+                        $data->totCredOP = array_sum($values);
+                    } else $data->totCredOP = 0;
                     if (isset($personas)) $data->perOP = $personas;
                     if (count($banks) == 0) dd($data, "FALLO");
                     $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
