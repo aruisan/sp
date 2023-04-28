@@ -252,7 +252,7 @@
                                     </a>
                                 </center>
                             @endif
-                            @if(count($OrdenPago->pagos) > 0)
+                            @if(count($pagos) > 0)
                                 <hr>
                                 <center>
                                     <h3>Pagos Asignados a la Orden de Pago</h3>
@@ -271,7 +271,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($OrdenPago->pagos as $pago)
+                                        @foreach($pagos as $pago)
                                             <tr class="text-center">
                                                 <td><a href="{{ url('administrativo/pagos/show/'.$pago->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a></td>
                                                 <td>{{$pago->concepto}}</td>

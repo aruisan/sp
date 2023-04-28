@@ -364,7 +364,9 @@ class OrdenPagosController extends Controller
 
         $rol = auth()->user()->roles->first()->id;
 
-        return view('administrativo.ordenpagos.show', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro','vigencia_id','rol'));
+        $pagos = Pagos::where('orden_pago_id', $id)->get();
+
+        return view('administrativo.ordenpagos.show', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro','vigencia_id','rol','pagos'));
     }
 
 
