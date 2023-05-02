@@ -58,33 +58,35 @@
 			</table>
 		</div>
 		<br>
-		<div class="table-responsive br-black-1">
-			<table class="table-bordered" id="tablaP" style="width: 100%">
-				<thead>
-				<tr>
-					<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO</th>
-				</tr>
-				<tr>
-					<th class="text-center">Código</th>
-					<th class="text-center">Descripción</th>
-					<th class="text-center">Fuente Financiación</th>
-					<th class="text-center">Valor</th>
-				</tr>
-				</thead>
-				<tbody>
-				@foreach($comprobante->movs as $mov)
-					@if(isset($mov->rubro_font_ingresos_id))
-						<tr class="text-center">
-							<td>{{ $mov->fontRubro->rubro->cod}}</td>
-							<td>{{ $mov->fontRubro->rubro->name}}</td>
-							<td>{{ $mov->fontRubro->sourceFunding->code}} - {{$mov->fontRubro->sourceFunding->description}}</td>
-							<td>$ <?php echo number_format($mov->debito,0);?></td>
-						</tr>
-					@endif
-				@endforeach
-				</tbody>
-			</table>
-		</div>
+		@if(count($comprobante->movs) > 0)
+			<div class="table-responsive br-black-1">
+				<table class="table-bordered" id="tablaP" style="width: 100%">
+					<thead>
+					<tr>
+						<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">PRESUPUESTO</th>
+					</tr>
+					<tr>
+						<th class="text-center">Código</th>
+						<th class="text-center">Descripción</th>
+						<th class="text-center">Fuente Financiación</th>
+						<th class="text-center">Valor</th>
+					</tr>
+					</thead>
+					<tbody>
+					@foreach($comprobante->movs as $mov)
+						@if(isset($mov->rubro_font_ingresos_id))
+							<tr class="text-center">
+								<td>{{ $mov->fontRubro->rubro->cod}}</td>
+								<td>{{ $mov->fontRubro->rubro->name}}</td>
+								<td>{{ $mov->fontRubro->sourceFunding->code}} - {{$mov->fontRubro->sourceFunding->description}}</td>
+								<td>$ <?php echo number_format($mov->debito,0);?></td>
+							</tr>
+						@endif
+					@endforeach
+					</tbody>
+				</table>
+			</div>
+		@endif
 	</div>
 	<div style="font-size: 10px;">
 		<div class="col-md-12 align-self-center">
