@@ -205,12 +205,12 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::resource('bancos','Administrativo\Tesoreria\BancosController');
         Route::post('tesoreria/bancos/conciliacion/guardar-ver','Administrativo\Tesoreria\BancosController@saveAndSeePdf')->name('conciliacion.guardar-ver');
 
+            //DESCUENTOS
+        Route::get('tesoreria/descuentos/{vigencia}','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@index');
+
 
             //Pac
         Route::resource('pac','Administrativo\Tesoreria\PacController');
-
-
-
 
 
         //ALMACEN

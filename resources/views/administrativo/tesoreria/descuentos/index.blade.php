@@ -1,20 +1,20 @@
 @extends('layouts.dashboard')
-@section('titulo') Pagos Retención Fuente @stop
+@section('titulo') Pagos Descuentos @stop
 @section('content')
     <div class="breadcrumb text-center">
         <strong>
-            <h4><b>Pagos de la Retención en la Fuente {{$vigencia->vigencia}} </b></h4>
+            <h4><b>Pagos de Decuentos {{$vigencia->vigencia}} </b></h4>
         </strong>
     </div>
     <ul class="nav nav-pills">
         <li class="nav-item active">
             <a class="nav-link"><i class="fa fa-home"></i></a>
         </li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/1') }}">Pago Enero</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/2') }}">Pago Febrero</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/3') }}">Pago Marzo</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/4') }}">Pago Abril</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/5') }}">Pago Mayo</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/1') }}"><i class="fa fa-usd"></i> Enero</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/2') }}"><i class="fa fa-usd"></i> Febrero</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/3') }}"><i class="fa fa-usd"></i> Marzo</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/4') }}"><i class="fa fa-usd"></i> Abril</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/5') }}"><i class="fa fa-usd"></i> Mayo</a></li>
     </ul>
 
     <div class="tab-content" >
@@ -40,8 +40,8 @@
                                 <td class="text-center">$ <?php echo number_format($pago->valor,0);?></td>
                                 <td class="text-center"> {{ \Carbon\Carbon::parse($pago->created_at)->format('d-m-Y H:i:s') }}</td>
                                 <td class="text-center">
-                                    <a href="{{ url('administrativo/tesoreria/retefuente/viewpago/'.$pago->id.'/view') }}" title="Ver Pago" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                    <a href="{{ url('administrativo/tesoreria/retefuente/PDFpago/'.$pago->id.'/PDF') }}" target="_blank" title="Comprobante Contable" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                    <a href="{{ url('administrativo/tesoreria/descuentos/viewpago/'.$pago->id.'/view') }}" title="Ver Pago" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ url('administrativo/tesoreria/descuentos/PDFpago/'.$pago->id.'/PDF') }}" target="_blank" title="Comprobante Contable" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                     <a href="{{ url('administrativo/ordenPagos/pdf/'.$pago->orden_pago_id) }}" title="Orden de Pago" class="btn-sm btn-primary" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
                                     @if($pago->egreso)
                                         @if($pago->egreso['estado'] == '1')
@@ -56,7 +56,7 @@
                 @else
                     <div class="alert alert-danger">
                         <center>
-                            No hay pagos de retención en la fuente registrados en el sistema.
+                            No hay pagos de descuentos registrados en el sistema.
                         </center>
                     </div>
                 @endif
