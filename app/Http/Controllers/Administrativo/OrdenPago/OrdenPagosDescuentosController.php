@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\OrdenPago;
 
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
@@ -38,17 +39,17 @@ class OrdenPagosDescuentosController extends Controller
         $vigencia = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
         $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
         $personas = Persona::all();
+        //VALIDACION PARA LOS REINTEGROS
+        $reintegros = ComprobanteIngresos::where('tipoCI', 'Reintegro')->where('persona_id',$ordenPago->registros->persona_id)
+            ->where('maked','0')->get();
         if ($ordenPago->rubros->count() == 0){
             Session::flash('warning',' Se debe realizar primero la asignación del monto antes de realizar los descuentos.');
             return redirect('administrativo/ordenPagos/monto/create/'.$ordenPago->id);
         } else {
-            if ($ordenPago->iva > 0){
-                $desMun = DescMunicipales::all();
-            } else {
-                $desMun = DescMunicipales::where('id','!=','4')->get();
-            }
+            if ($ordenPago->iva > 0) $desMun = DescMunicipales::all();
+            else $desMun = DescMunicipales::where('id','!=','4')->get();
             return view('administrativo.ordenpagos.createDescuentos', compact('ordenPago','retenF','desMun','vigencia','cuentas24',
-            'personas'));
+            'personas','reintegros'));
         }
     }
 
@@ -106,6 +107,15 @@ class OrdenPagosDescuentosController extends Controller
                 $descuento->cuenta_puc_id = $request->cuentaDesc[$x];
                 $descuento->persona_id = $request->tercero[$x];
                 $descuento->save();
+            }
+        }
+
+        //SE VALIDA SI SE TIENE UN REINTEGRO LA ORDEN DE PAGO
+        if (isset($request->idReintegros)){
+            foreach ($request->idReintegros as $id){
+                $compCont = ComprobanteIngresos::find($id);
+                $compCont->maked = '1';
+                $compCont->save();
             }
         }
 

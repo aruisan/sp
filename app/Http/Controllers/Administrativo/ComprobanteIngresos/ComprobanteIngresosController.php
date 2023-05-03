@@ -121,6 +121,7 @@ class ComprobanteIngresosController extends Controller
         $comprobante->estado = '3';
         $comprobante->ff = $request->fecha;
         $comprobante->tipoCI = $request->tipoCI;
+        if ($request->tipoCI == "Reintegro") $comprobante->maked = '0';
         $comprobante->cualOtroTipo = $request->cualOtroTipo;
         $comprobante->user_id = $request->user_id;
         $comprobante->vigencia_id = $request->vigencia_id;

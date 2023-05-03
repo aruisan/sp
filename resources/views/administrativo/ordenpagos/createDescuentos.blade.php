@@ -105,20 +105,67 @@
                     <br>
                     <center><h2>Descuentos Municipales</h2></center>
                     <hr><br>
+                    @if(count($reintegros) > 0)
+                        <br>
+                        <div class="alert alert-danger">
+                            <center>
+                                Se detectaron los siguientes reintegros pendientes por ejecución.
+                                <br>
+                                @foreach($reintegros as $reintegro)
+                                    <input type="hidden" name="idReintegros[]" value="{{ $reintegro->id }}">
+                                    {{ $reintegro->concepto }} - $<?php echo number_format($reintegro->val_total,0) ?> - {{ $reintegro->ff }}
+                                    <br>
+                                @endforeach
+                                Deben ser realizados estos descuentos.
+                            </center>
+                        </div>
+                        <br>
+                    @endif
                     <div class="table-responsive">
                         <table class="table table-bordered" id="tabla_desc_muni">
                             <thead>
-                            <th class="text-center">Id</th>
+                            <th class="text-center">#</th>
                             <th class="text-center">Concepto</th>
                             <th class="text-center">Tarifa</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center"><i class="fa fa-trash-o"></i></th>
                             </thead>
                             <tbody>
+                            @if(count($reintegros) > 0)
+                                @foreach($reintegros as $reintegro)
+                                    <tr style="background-color: #6c0e03; color: white">
+                                        <td class="text-center" style="vertical-align: middle">Descuento Pendiente</td>
+                                        <td class="text-center">
+                                            Seleccione la cuenta del PUC <br>
+                                            <select class="form-control" name="cuentaDesc[]">
+                                                @foreach($cuentas24 as $cuenta)
+                                                    @if($cuenta->padre_id == 653)
+                                                        <option value="{{$cuenta->id}}">{{$cuenta->code}} - {{$cuenta->concepto}}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            Tercero
+                                            <select class="form-control" name="tercero[]">
+                                                @foreach($personas as $persona)
+                                                    @if($ordenPago->registros->persona_id == $persona->id)
+                                                        <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            Valor a descontar<br>
+                                            <input type="number" class="form-control" name="valorDesc[]" max="{{$reintegro->val_total}}" min="{{$reintegro->val_total}}" value="{{$reintegro->val_total}}" required>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                @endforeach
+                            @endif
                             @foreach($ordenPago->descuentos as $desc)
                                 @if($desc->retencion_fuente_id == null)
                                     <tr>
-                                        <td class="text-center"><b>{{ $desc->desc_municipal_id }}</b></td>
                                         <td class="text-center"><b>{{ $desc->nombre }}</b></td>
                                         <td class="text-center"><b>{{ $desc->porcent }}</b></td>
                                         <td class="text-center"><b>$<?php echo number_format($desc->valor,0) ?></b></td>
