@@ -159,6 +159,17 @@ class RetencionFuenteController extends Controller
 
     public function pagoRetefuente($vigencia_id, $mes){
 
+        $pagosVigRealizados = TesoreriaRetefuentePago::where('vigencia_id', $vigencia_id)->get();
+        $canMake = true;
+        if (count($pagosVigRealizados) > 0){
+            foreach ($pagosVigRealizados as $pago){
+                if ($pago->mes == $mes){
+                    $canMake = false;
+                    break;
+                }
+            }
+        }
+
         $vigencia = Vigencia::find($vigencia_id);
 
         $cuentaPUC = PucAlcaldia::where('padre_id',660)->get();
@@ -318,7 +329,7 @@ class RetencionFuenteController extends Controller
             ]);
 */
             return view('administrativo.tesoreria.retefuente.pagos.pago', compact('tableRT','form',
-                'total','bancos', 'vigencia_id','mes','days','vigencia','multaC','multaD','mesID'));
+                'total','bancos', 'vigencia_id','mes','days','vigencia','multaC','multaD','mesID','canMake'));
         } else {
             Session::flash('error','Para el mes escogido no hay ordenes de pago finalizadas. Seleccione un mes distinto.');
             return back();

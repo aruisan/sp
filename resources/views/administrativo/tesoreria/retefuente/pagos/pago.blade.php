@@ -134,9 +134,11 @@
 						@endif
 					@endforeach
 					<div class="text-center">
-						<input type="hidden" class="form-control" required name="valorPago" id="valorPago" value="{{ $total }}">
-						<button type="submit" class="btn-sm btn-primary"> Enviar</button>
-						<a onclick="generateMulta()" class="btn-sm btn-primary"> Generar Multa</a>
+						@if($canMake)
+							<input type="hidden" class="form-control" required name="valorPago" id="valorPago" value="{{ $total }}">
+							<button type="submit" class="btn-sm btn-primary"> Enviar</button>
+							<a onclick="generateMulta()" class="btn-sm btn-primary"> Generar Multa</a>
+						@endif
 					</div>
 				</form>
 			</div>
