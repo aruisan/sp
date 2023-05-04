@@ -185,6 +185,9 @@ class RetencionFuenteController extends Controller
             $padreDeb = PucAlcaldia::find($idPadreDeb);
             $hijosDeb = PucAlcaldia::where('padre_id', $idPadreDeb)->get();
 
+            dd("ok");
+
+
             $hijos = PucAlcaldia::where('padre_id', $cuenta->id)->get();
             foreach ($hijos as $hijo){
                 $retefuenteCode = RetencionFuente::where('codigo', $hijo->code)->first();
@@ -271,9 +274,6 @@ class RetencionFuenteController extends Controller
                 $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'reten' => 0]);
             }
         }
-
-        dd("ok");
-
 
         if (isset($tableRT)){
             $total = array_sum($pago);
