@@ -185,9 +185,6 @@ class RetencionFuenteController extends Controller
             $padreDeb = PucAlcaldia::find($idPadreDeb);
             $hijosDeb = PucAlcaldia::where('padre_id', $idPadreDeb)->get();
 
-            dd("ok");
-
-
             $hijos = PucAlcaldia::where('padre_id', $cuenta->id)->get();
             foreach ($hijos as $hijo){
                 $retefuenteCode = RetencionFuente::where('codigo', $hijo->code)->first();
@@ -225,6 +222,8 @@ class RetencionFuenteController extends Controller
                         }
                     }
                 }
+                dd("ok");
+                
                 //VALIDACION CUANDO EN LA CONTABILIZACION ESTA EL PAGO DE LA DIAN
                 $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
                 if (count($contaOP) > 0){
