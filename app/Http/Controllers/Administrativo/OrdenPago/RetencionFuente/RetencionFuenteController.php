@@ -173,6 +173,9 @@ class RetencionFuenteController extends Controller
         $vigencia = Vigencia::find($vigencia_id);
 
         $cuentaPUC = PucAlcaldia::where('padre_id',660)->get();
+
+        dd("ok");
+
         foreach ($cuentaPUC as $cuenta){
 
             //CUENTA CORRESPONDIENTE AL DEBITO
@@ -329,7 +332,6 @@ class RetencionFuenteController extends Controller
             ]);
 */
 
-            dd("ok");
             return view('administrativo.tesoreria.retefuente.pagos.pago', compact('tableRT','form',
                 'total','bancos', 'vigencia_id','mes','days','vigencia','multaC','multaD','mesID','canMake'));
         } else {
