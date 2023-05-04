@@ -162,8 +162,8 @@ class RetencionFuenteController extends Controller
         $pagosVigRealizados = TesoreriaRetefuentePago::where('vigencia_id', $vigencia_id)->get();
         $canMake = true;
         if (count($pagosVigRealizados) > 0){
-            foreach ($pagosVigRealizados as $pago){
-                if ($pago->mes == $mes){
+            foreach ($pagosVigRealizados as $pagoArray){
+                if ($pagoArray->mes == $mes){
                     $canMake = false;
                     break;
                 }
@@ -261,7 +261,6 @@ class RetencionFuenteController extends Controller
 
                 $pago[] = array_sum($valueDeb);
                 dd("ok?", $valueDeb);
-                
 
 
                 //SE INGRESAN LOS HIJOS
