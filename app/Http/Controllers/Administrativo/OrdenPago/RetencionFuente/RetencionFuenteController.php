@@ -328,6 +328,8 @@ class RetencionFuenteController extends Controller
                 'mesID' => $mesID
             ]);
 */
+
+            dd("ok");
             return view('administrativo.tesoreria.retefuente.pagos.pago', compact('tableRT','form',
                 'total','bancos', 'vigencia_id','mes','days','vigencia','multaC','multaD','mesID','canMake'));
         } else {
