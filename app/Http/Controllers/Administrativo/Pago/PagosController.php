@@ -298,6 +298,7 @@ class PagosController extends Controller
             $pago->persona_id = $request->adultoMayor;
             $adultoMayor = Persona::find($request->adultoMayor);
             $pago->concepto = $pago->concepto." - ".$adultoMayor->num_dc." ".$adultoMayor->nombre;
+            $pago->adultoMayor = '1';
         }
 
         $valTotal = $pago->valor;
