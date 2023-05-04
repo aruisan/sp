@@ -222,8 +222,7 @@ class RetencionFuenteController extends Controller
                         }
                     }
                 }
-                dd("ok");
-                
+
                 //VALIDACION CUANDO EN LA CONTABILIZACION ESTA EL PAGO DE LA DIAN
                 $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
                 if (count($contaOP) > 0){
@@ -250,6 +249,9 @@ class RetencionFuenteController extends Controller
                     }
                 }
             }
+
+            dd("ok");
+
 
             //SE VALIDA SI HAY VALORES PARA AGREGARLE AL PADRE, SI NO HAY EL PADRE POR ENDE ESTA VACIO
             if (isset($tableValues)){
