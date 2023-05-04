@@ -35,7 +35,8 @@ class InformeDocsController extends Controller
                     foreach ($data->orden_pago->pucs as $puc){
                         if ($puc->valor_credito > 0){
                             $codes[] = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
-                            $values[] = $puc->valor_credito;
+                            if ($data->adultoMayor == '1')  $values[] = $data->valor;
+                            else $values[] = $puc->valor_credito;
                         }
                     }
                     if (isset($codes)) $data->cuentaOP = $codes;
