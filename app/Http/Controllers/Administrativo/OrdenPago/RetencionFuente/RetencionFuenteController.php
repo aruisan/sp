@@ -250,9 +250,6 @@ class RetencionFuenteController extends Controller
                 }
             }
 
-            dd("ok");
-
-
             //SE VALIDA SI HAY VALORES PARA AGREGARLE AL PADRE, SI NO HAY EL PADRE POR ENDE ESTA VACIO
             if (isset($tableValues)){
                 //SE INGRESA EL PADRE
@@ -266,6 +263,9 @@ class RetencionFuenteController extends Controller
 
                 //SE INGRESAN LOS HIJOS
                 foreach ($tableValues as $data) $tableRT[] = collect($data);
+
+                dd("ok");
+                
 
                 //SE LIMPIAN LOS ARRAY
                 if (isset($valueDeb))unset($valueDeb);
