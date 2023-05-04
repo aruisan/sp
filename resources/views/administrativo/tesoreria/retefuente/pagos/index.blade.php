@@ -15,6 +15,13 @@
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/3') }}">Pago Marzo</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/4') }}">Pago Abril</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/5') }}">Pago Mayo</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/6') }}">Pago Junio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/7') }}">Pago Julio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/8') }}">Pago Agosto</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/9') }}">Pago Septiembre</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/10') }}">Pago Octubre</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/11') }}">Pago Noviembre</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/retefuente/pago/'.$vigencia_id.'/12') }}">Pago Diciembre</a></li>
     </ul>
 
     <div class="tab-content" >
