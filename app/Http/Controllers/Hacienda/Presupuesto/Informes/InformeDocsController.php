@@ -34,6 +34,7 @@ class InformeDocsController extends Controller
                     if (isset($values)) unset($values);
                     foreach ($data->orden_pago->pucs as $puc){
                         if ($puc->valor_credito > 0){
+                            if (isset($puc->data_puc->code)) dd($puc, $data->orden_pago);
                             $codes[] = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
                             $values[] = $puc->valor_credito;
                         }

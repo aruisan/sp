@@ -15,6 +15,13 @@
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/3') }}"><i class="fa fa-usd"></i> Marzo</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/4') }}"><i class="fa fa-usd"></i> Abril</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/5') }}"><i class="fa fa-usd"></i> Mayo</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/6') }}"><i class="fa fa-usd"></i> Junio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/7') }}"><i class="fa fa-usd"></i> Julio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/8') }}"><i class="fa fa-usd"></i> Agosto</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/9') }}"><i class="fa fa-usd"></i> Septiembre</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/10') }}"><i class="fa fa-usd"></i> Octubre</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/11') }}"><i class="fa fa-usd"></i> Noviembre</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('/administrativo/tesoreria/descuentos/pago/'.$vigencia_id.'/12') }}"><i class="fa fa-usd"></i> Diciembre</a></li>
     </ul>
 
     <div class="tab-content" >
