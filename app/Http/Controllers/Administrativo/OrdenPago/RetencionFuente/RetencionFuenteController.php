@@ -174,7 +174,6 @@ class RetencionFuenteController extends Controller
 
         $cuentaPUC = PucAlcaldia::where('padre_id',660)->get();
 
-        dd("ok");
 
         foreach ($cuentaPUC as $cuenta){
 
@@ -272,6 +271,9 @@ class RetencionFuenteController extends Controller
                 $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'reten' => 0]);
             }
         }
+
+        dd("ok");
+
 
         if (isset($tableRT)){
             $total = array_sum($pago);
