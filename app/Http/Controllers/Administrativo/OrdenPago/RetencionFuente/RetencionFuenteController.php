@@ -260,8 +260,6 @@ class RetencionFuenteController extends Controller
                 $form[] = collect(['concepto' => $cuenta->concepto, 'base' => array_sum($valueCred), 'reten' => array_sum($valueDeb)]);
 
                 $pago[] = array_sum($valueDeb);
-                dd("ok?", $valueDeb);
-
 
                 //SE INGRESAN LOS HIJOS
                 foreach ($tableValues as $data) $tableRT[] = collect($data);
