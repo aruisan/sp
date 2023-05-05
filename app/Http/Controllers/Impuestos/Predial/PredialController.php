@@ -56,7 +56,7 @@ class PredialController extends Controller
                 foreach ($contribuyente as $contri){
                     $impHechos = Predial::where('imp_pred_contri_id', $contri->id)->get();
                     foreach ($impHechos as $impHecho){
-                        if (Carbon::parse($impHecho->fechaPago)->format('Y') == $añoActual) $hechos[] = $contri->id;
+                        //if (Carbon::parse($impHecho->fechaPago)->format('Y') == $añoActual) $hechos[] = $contri->id;
                     }
                 }
 
