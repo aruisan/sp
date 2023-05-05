@@ -463,7 +463,9 @@ class PagosController extends Controller
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->cuenta_puc_id = 1068;
             $comprobanteMov->debito = 0;
-            $comprobanteMov->credito = $ica->totImpIndyCom;
+                //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->credito = $ica->totImpIndyCom * 0.3;
+            else $comprobanteMov->credito = $ica->totImpIndyCom;
             $comprobanteMov->save();
 
                 //AVISOS Y TABLEROS
@@ -472,7 +474,9 @@ class PagosController extends Controller
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->cuenta_puc_id = 1069;
             $comprobanteMov->debito = 0;
-            $comprobanteMov->credito = $ica->impAviyTableros;
+            //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->credito = $ica->impAviyTableros * 0.3;
+            else $comprobanteMov->credito = $ica->impAviyTableros;
             $comprobanteMov->save();
 
                 //SOBRETASA BOMBERIL
@@ -481,7 +485,9 @@ class PagosController extends Controller
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->cuenta_puc_id = 1070;
             $comprobanteMov->debito = 0;
-            $comprobanteMov->credito = $ica->sobretasaBomberil;
+            //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->credito = $ica->sobretasaBomberil * 0.3;
+            else $comprobanteMov->credito = $ica->sobretasaBomberil;
             $comprobanteMov->save();
 
                 //INTERESES TRIBUTARIOS (INTERESES DE MORA)
@@ -490,7 +496,9 @@ class PagosController extends Controller
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->cuenta_puc_id = 1072;
             $comprobanteMov->debito = 0;
-            $comprobanteMov->credito = $ica->interesesMora;
+            //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->credito = $ica->interesesMora * 0.3;
+            else $comprobanteMov->credito = $ica->interesesMora;
             $comprobanteMov->save();
 
             //RUBROS DEL COMPROBANTE CONTABLE
@@ -499,7 +507,9 @@ class PagosController extends Controller
             $comprobanteMov->comp_id = $comprobante->id;
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->rubro_font_ingresos_id = 856;
-            $comprobanteMov->debito = $ica->totImpIndyCom;
+            //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->debito = $ica->totImpIndyCom * 0.3;
+            else $comprobanteMov->debito = $ica->totImpIndyCom;
             $comprobanteMov->save();
 
                 // 1.1.01.02.201 Impuesto complementario de avisos y tableros 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
@@ -507,7 +517,9 @@ class PagosController extends Controller
             $comprobanteMov->comp_id = $comprobante->id;
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->rubro_font_ingresos_id = 858;
-            $comprobanteMov->debito = $ica->impAviyTableros;
+            //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->debito = $ica->impAviyTableros * 0.3;
+            else $comprobanteMov->debito = $ica->impAviyTableros;
             $comprobanteMov->save();
 
                 // 1.1.01.02.212 Impuesto bomberil 1.2.3.1.15 Sobretasa bomberil
@@ -515,7 +527,9 @@ class PagosController extends Controller
             $comprobanteMov->comp_id = $comprobante->id;
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->rubro_font_ingresos_id = 861;
-            $comprobanteMov->debito = $ica->sobretasaBomberil;
+            //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->debito = $ica->sobretasaBomberil * 0.3;
+            else $comprobanteMov->debito = $ica->sobretasaBomberil;
             $comprobanteMov->save();
 
             // 1.1.02.03.002 Intereses de mora (Tributarios) 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
@@ -523,7 +537,9 @@ class PagosController extends Controller
             $comprobanteMov->comp_id = $comprobante->id;
             $comprobanteMov->fechaComp = $pago->fechaPago;
             $comprobanteMov->rubro_font_ingresos_id = 871;
-            $comprobanteMov->debito = $ica->interesesMora;
+            //DESCUENTO DEL 30% EN EL IMPUESTO, SE APLICA A LA CONTABILIZACIÓN
+            if ($ica->añoGravable >= 2022) $comprobanteMov->debito = $ica->interesesMora * 0.3;
+            else $comprobanteMov->debito = $ica->interesesMora;
             $comprobanteMov->save();
         }
 
