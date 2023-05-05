@@ -267,8 +267,13 @@ class PredialController extends Controller
         $pago = Pagos::where('modulo','PREDIAL')->where('entity_id',$id_predial)->get();
         $liquidacion = $predial->liquidacion;
         $predial->presentacion = Carbon::parse($pago[0]->fechaCreacion)->format('d-m-Y');
-        $contribuyente = PredialContribuyentes::where('numCatastral',$predial->numCatas )->get();
-        $contribuyente = $contribuyente[0];
+        $contribuyente = PredialContribuyentes::find($predial->imp_pred_contri_id);
+        $contribuyenteFind = PredialContribuyentes::where('numCatastral',$predial->numCatas )->get();
+        if (count($contribuyenteFind) > 1){
+            foreach ($contribuyenteFind as $propie) {
+                if ($propie->id != $contribuyente->id) $contribuyente->contribuyente = $contribuyente->contribuyente.' - '.$propie->contribuyente;
+            }
+        }
         $totImpPredial = 0;
         $totImpAdi = 0;
         $totIntPred = 0;
