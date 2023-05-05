@@ -12,7 +12,7 @@
     </thead>
     <tbody>
         @foreach($pagos as $codigo)
-            @if(isset($codigo['info']->cuentaOP))
+            @if(count($codigo['info']->cuentaOP) > 0)
                 @for($x = 0; $x < count($codigo['info']->cuentaOP); $x++)
                     <tr>
                         <td>{{ $codigo['info']->ff_fin }}</td>
