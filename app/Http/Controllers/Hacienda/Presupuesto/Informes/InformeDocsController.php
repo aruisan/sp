@@ -138,7 +138,7 @@ class InformeDocsController extends Controller
             }
             else $comprobante->totalCredito = 0;
         }
-        
+
         return $CIngresos;
     }
 

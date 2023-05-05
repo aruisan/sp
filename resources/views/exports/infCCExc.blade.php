@@ -25,7 +25,7 @@
                             @else
                                 <td>{{$mov->debito}}</td>
                             @endif
-                            <td>{{$mov->totalCredito}}</td>
+                            <td>{{$comprobante->totalCredito}}</td>
                         @endif
                     @endforeach
             </tr>
