@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Hacienda\Presupuesto\Informes;
 
+use App\Exports\InfCCExcExport;
 use App\Exports\InfOrdenPagosExcExport;
 use App\Exports\InfPagosExcExport;
 use App\Exports\InfPrepIngExcExport;
 use App\Exports\InfPrepEgrExcExport;
 use App\Http\Controllers\Controller;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
 use App\Model\Hacienda\Presupuesto\Vigencia;
+use App\Model\Persona;
+use App\Model\User;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use App\Exports\InformePresupuestosExport;
@@ -102,6 +106,25 @@ class InformeDocsController extends Controller
         return $ordenPagos;
     }
 
+    public function generateCompContables($año){
+        $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
+        $CIngresos = ComprobanteIngresos::where('vigencia_id', $vigencia->id)->where('estado','3')->get();
+        foreach ($CIngresos as $comprobante){
+            if ($comprobante->tipoCI == "Comprobante de Ingresos"){
+                $user = User::find($comprobante->persona_id);
+                $persona = $user;
+                $persona->nombre = $user->name;
+                $persona->num_dc = $user->email;
+                $comprobante->persona = $persona;
+            } else {
+                $persona = Persona::find($comprobante->persona_id);
+                $comprobante->persona = $persona;
+            }
+        }
+
+        return $CIngresos;
+    }
+
     public function makePagosEXCEL()
     {
         $añoActual = Carbon::now()->year;
@@ -122,6 +145,18 @@ class InformeDocsController extends Controller
 
         return Excel::download(new InfOrdenPagosExcExport($ordenPagos),
             'Informe de Ordenes de Pago '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
+    }
+
+    public function makeCompContEXCEL()
+    {
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+        $compContables = $this->generateCompContables($añoActual);
+        dd($compContables);
+
+        return Excel::download(new InfCCExcExport($compContables),
+            'Informe de Comprobantes de Contabilidad '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
     }
 
     public function makeEgresosEjecucion(Request $request, $inicio, $final)

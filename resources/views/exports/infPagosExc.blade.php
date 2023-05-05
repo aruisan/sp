@@ -26,7 +26,6 @@
                 @endfor
             @endif
             <tr>
-                <td>{{ $codigo['info']->id }}</td>
                 <td>{{ $codigo['info']->ff_fin }}</td>
                 <td>Pagos #{{ $codigo['info']->code }}</td>
                 <td>{{ $codigo['info']->concepto }}</td>
