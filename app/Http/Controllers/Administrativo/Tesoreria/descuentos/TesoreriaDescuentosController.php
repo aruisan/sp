@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Tesoreria\descuentos;
 
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentos;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use Carbon\Carbon;
@@ -21,8 +22,14 @@ class TesoreriaDescuentosController extends Controller
     {
         $vigencia = Vigencia::find($vigencia_id);
         $pagos = TesoreriaDescuentos::where('vigencia_id', $vigencia_id)->get();
+        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
+        foreach ($lv1 as $dato){
+            $cuentas[] = $dato;
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) $cuentas[] = $cuenta;
+        }
 
-        return view('administrativo.tesoreria.descuentos.index', compact('pagos','vigencia_id','vigencia'));
+        return view('administrativo.tesoreria.descuentos.index', compact('pagos','vigencia_id','vigencia', 'cuentas'));
     }
 
     /**
