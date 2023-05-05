@@ -25,7 +25,13 @@
                     <td>Matricula Inmobiliaria:<br><b>{{$predial->matricula}}</b></td>
                 </tr>
                 <tr>
-                    <td colspan="4">Propietario:<br><b>{{ $contribuyente->numIdent }} {{ $contribuyente->contribuyente }}</b></td>
+                    <td colspan="4">
+                        Propietario(s):<br>
+                        <b>{{ $contribuyente->numIdent }} {{ $contribuyente->contribuyente }}</b>
+                        @foreach($contribuyentes as $otherProp)
+                            <b>{{$otherProp}}</b><br>
+                        @endforeach
+                    </td>
                 </tr>
                 <tr>
                     <td>Area de Terreno:<br><b>{{$contribuyente->hect}} Hc - {{ $contribuyente->metros }} M2</b></td>

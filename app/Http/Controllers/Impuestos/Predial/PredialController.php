@@ -200,7 +200,7 @@ class PredialController extends Controller
 
         $añoPago = Carbon::parse($request->fechaPago)->format('Y');
 
-        for ($i = 0; $i < $añoPago - $predial->año +1; $i++) {
+        for ($i = 0; $i < 2021 - $predial->año +1; $i++) {
 
             //VALORES LIQUIDACION
 
@@ -271,9 +271,10 @@ class PredialController extends Controller
         $contribuyenteFind = PredialContribuyentes::where('numCatastral',$predial->numCatas )->get();
         if (count($contribuyenteFind) > 1){
             foreach ($contribuyenteFind as $propie) {
-                if ($propie->id != $contribuyente->id) $contribuyente->contribuyente = $contribuyente->contribuyente.'-'.$propie->contribuyente;
+                if ($propie->id != $contribuyente->id) $contribuyentes[] = $propie->numIdent.' - '.$propie->contribuyente;
             }
         }
+        else $contribuyentes[] = [];
         $totImpPredial = 0;
         $totImpAdi = 0;
         $totIntPred = 0;
@@ -297,7 +298,7 @@ class PredialController extends Controller
         } else $numFacturaCodebar = $pago[0]->id;
 
         $pdf = PDF::loadView('impuestos.predial.pdf', compact('contribuyente','predial','liquidacion','pago', 'totImpPredial',
-        'totImpAdi', 'totIntPred', 'newValue','numFacturaCodebar'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        'totImpAdi', 'totIntPred', 'newValue','numFacturaCodebar', 'contribuyentes'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
     }
 
