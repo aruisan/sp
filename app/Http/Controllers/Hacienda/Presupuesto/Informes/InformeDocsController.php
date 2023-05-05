@@ -120,6 +120,15 @@ class InformeDocsController extends Controller
                 $persona = Persona::find($comprobante->persona_id);
                 $comprobante->persona = $persona;
             }
+
+            foreach ($comprobante->movs as $movimiento){
+                if(isset($movimiento->cuenta_banco)){
+                    if (!isset($movimiento->banco->code)) dd($movimiento->banco, $comprobante->movs, $comprobante, 'BANK');
+                }
+                if(isset($movimiento->cuenta_puc_id)){
+                    if (!isset($movimiento->puc->code)) dd($movimiento->puc, $comprobante->movs, $comprobante, 'PUC');
+                }
+            }
         }
 
         return $CIngresos;
