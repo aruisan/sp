@@ -27,10 +27,12 @@
                 <tr>
                     <td colspan="4">
                         Propietario(s):<br>
-                        <b>{{ $contribuyente->numIdent }} {{ $contribuyente->contribuyente }}</b> <br>
-                        @foreach($contribuyentes as $otherProp)
-                            <b>{{$otherProp}}</b><br>
-                        @endforeach
+                        <b>{{ $contribuyente->numIdent }} {{ $contribuyente->contribuyente }}</b><br>
+                        @if(count($contribuyentes) > 0)
+                            @foreach($contribuyentes as $otherProp)
+                                <b>{{$otherProp}}</b><br>
+                            @endforeach
+                        @endif
                     </td>
                 </tr>
                 <tr>
