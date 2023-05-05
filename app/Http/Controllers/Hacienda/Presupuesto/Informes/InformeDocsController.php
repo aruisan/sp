@@ -139,7 +139,7 @@ class InformeDocsController extends Controller
             else $comprobante->totalCredito = 0;
         }
 
-        dd($CIngresos, $CIngresos->movs);
+        dd($CIngresos[0], $CIngresos[0]->movs);
 
         return $CIngresos;
     }
