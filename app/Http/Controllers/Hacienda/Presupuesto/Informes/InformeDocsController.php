@@ -44,6 +44,7 @@ class InformeDocsController extends Controller
                         }
                     }
                     if (isset($codes)) $data->cuentaOP = $codes;
+                    else $data->cuentaOP = [];
                     if (isset($values)) {
                         $data->credOP = $values;
                         $data->totCredOP = array_sum($values);
@@ -65,6 +66,7 @@ class InformeDocsController extends Controller
                         $values[] = $contabilizacion->debito;
                     }
                     if (isset($codes)) $data->cuentaOP = $codes;
+                    else $data->cuentaOP = [];
                     if (isset($values)) {
                         $data->credOP = $values;
                         $data->totCredOP = array_sum($values);
