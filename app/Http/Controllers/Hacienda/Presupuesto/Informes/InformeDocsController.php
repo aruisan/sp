@@ -107,7 +107,7 @@ class InformeDocsController extends Controller
     }
 
     public function generateCompContables($año){
-        $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
+        $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 1)->where('estado', '0')->first();
         $CIngresos = ComprobanteIngresos::where('vigencia_id', $vigencia->id)->where('estado','3')->get();
         foreach ($CIngresos as $comprobante){
             if ($comprobante->tipoCI == "Comprobante de Ingresos"){
