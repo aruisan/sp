@@ -274,7 +274,6 @@ class PredialController extends Controller
                 if ($propie->id != $contribuyente->id) $contribuyentes[] = $propie->numIdent.' - '.$propie->contribuyente;
             }
         }
-        else $contribuyentes[] = [];
         $totImpPredial = 0;
         $totImpAdi = 0;
         $totIntPred = 0;
@@ -296,6 +295,11 @@ class PredialController extends Controller
                 $numFacturaCodebar =  '0'.$numFacturaCodebar;
             }
         } else $numFacturaCodebar = $pago[0]->id;
+
+        if (!isset($contribuyentes)) {
+            $contribuyentes[] = null;
+            unset($contribuyentes[0]);
+        }
 
         $pdf = PDF::loadView('impuestos.predial.pdf', compact('contribuyente','predial','liquidacion','pago', 'totImpPredial',
         'totImpAdi', 'totIntPred', 'newValue','numFacturaCodebar', 'contribuyentes'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
