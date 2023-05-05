@@ -20,7 +20,11 @@
                         <td>{{ $comprobante->concepto }}</td>
                         <td>{{ $comprobante->persona->num_dc }} - {{ $comprobante->persona->nombre }}</td>
                         <td>{{ $mov->banco->code}} - {{ $mov->banco->concepto}}</td>
-                        <td>{{$mov->debito}}</td>
+                        @if(!isset($mov->debito))
+                            <td>0</td>
+                        @else
+                            <td>{{$mov->debito}}</td>
+                        @endif
                         <td>{{$mov->credito}}</td>
                     </tr>
                 @endif
