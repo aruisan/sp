@@ -200,7 +200,7 @@ class PredialController extends Controller
 
         $añoPago = Carbon::parse($request->fechaPago)->format('Y');
 
-        for ($i = 0; $i < 2021 - $predial->año +1; $i++) {
+        for ($i = 0; $i < $añoPago - $predial->año +1; $i++) {
 
             //VALORES LIQUIDACION
 

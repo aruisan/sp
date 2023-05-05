@@ -542,7 +542,7 @@
         function totales(){
             var año = document.getElementById("año").value;
             const hoy = new Date();
-            const numRows = 2021 - parseInt(año) +1;
+            const numRows = hoy.getFullYear() - parseInt(año) +1;
 
             let totales = [0];
 
@@ -577,7 +577,7 @@
             $("#cuerpo tr").remove();
             const hoy = new Date();
             //CAMBIO AÑO
-            const numRows = 2021 - parseInt(año) +1;
+            const numRows = hoy.getFullYear() - parseInt(año) +1;
 
             for (var i = 0; i < numRows; i++) {
                 const year = parseInt(año) + i ;
