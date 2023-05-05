@@ -271,7 +271,7 @@ class PredialController extends Controller
         $contribuyenteFind = PredialContribuyentes::where('numCatastral',$predial->numCatas )->get();
         if (count($contribuyenteFind) > 1){
             foreach ($contribuyenteFind as $propie) {
-                if ($propie->id != $contribuyente->id) $contribuyente->contribuyente = $contribuyente->contribuyente.' - '.$propie->contribuyente;
+                if ($propie->id != $contribuyente->id) $contribuyente->contribuyente = $contribuyente->contribuyente.'<br>'.$propie->contribuyente;
             }
         }
         $totImpPredial = 0;
