@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body text-center" id="prog">
                     <h4>Seleccione el usuario del que desea descargar el paz y salvo</h4>
-                    <select name="paySelected" id="paySelected" class="form-control" required>
+                    <select name="paySelected" id="paySelected" class="findUserPred" required>
                         @foreach($pagosFinalizados as $pago)
                             <option value="{{ $pago->id }}">{{ $pago->modulo }} - {{$pago->contribuyente->numCatastral}} - {{ $pago->user->name }}
                                 - {{ $pago->user->email }}</option>

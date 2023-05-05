@@ -254,6 +254,8 @@
 @section('js')
     <script>
 
+        $('.findUserPred').select2();
+
         //VALIDACION DE LOS DINEROS A TOMAR NO SEAN SUPERIORES DE LOS PERMITIDOS POR LA FUENTE
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("pazysalvoform").addEventListener('submit', descargarPazySalvo);
