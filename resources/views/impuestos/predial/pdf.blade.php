@@ -27,7 +27,7 @@
                 <tr>
                     <td colspan="4">
                         Propietario(s):<br>
-                        <b>{{ $contribuyente->numIdent }} {{ $contribuyente->contribuyente }}</b>
+                        <b>{{ $contribuyente->numIdent }} {{ $contribuyente->contribuyente }}</b> <br>
                         @foreach($contribuyentes as $otherProp)
                             <b>{{$otherProp}}</b><br>
                         @endforeach
