@@ -153,7 +153,6 @@ class InformeDocsController extends Controller
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
         $compContables = $this->generateCompContables($añoActual);
-        dd($compContables[0]);
 
         return Excel::download(new InfCCExcExport($compContables),
             'Informe de Comprobantes de Contabilidad '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
