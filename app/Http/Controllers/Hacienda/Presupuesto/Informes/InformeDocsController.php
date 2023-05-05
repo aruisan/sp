@@ -143,6 +143,8 @@ class InformeDocsController extends Controller
         $diaActual = Carbon::now()->day;
         $pagos = $this->generatePagos($añoActual);
 
+        dd($pagos[0]);
+
         return Excel::download(new InfPagosExcExport($pagos),
             'Informe de Pagos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
     }
