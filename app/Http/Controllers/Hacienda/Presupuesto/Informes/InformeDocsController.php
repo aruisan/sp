@@ -128,10 +128,18 @@ class InformeDocsController extends Controller
                     if (!isset($movimiento->banco->code)) dd('ERROR EN BANCO', $movimiento, $movimiento->banco, $comprobante->movs, $comprobante);
                 }
                 if(isset($movimiento->cuenta_puc_id)){
+                    $credito[] = $movimiento->credito;
                     if (!isset($movimiento->puc->code)) dd('ERROR EN PUC', $movimiento, $movimiento->puc, $comprobante->movs, $comprobante);
                 }
             }
+            if (isset($credito)) {
+                $comprobante->totalCredito = array_sum($credito);
+                unset($credito);
+            }
+            else $comprobante->totalCredito = 0;
         }
+
+        dd($CIngresos, $CIngresos->movs);
 
         return $CIngresos;
     }
