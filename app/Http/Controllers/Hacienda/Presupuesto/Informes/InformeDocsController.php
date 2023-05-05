@@ -123,10 +123,10 @@ class InformeDocsController extends Controller
 
             foreach ($comprobante->movs as $movimiento){
                 if(isset($movimiento->cuenta_banco)){
-                    if (!isset($movimiento->banco->code)) dd($movimiento, $movimiento->banco, $comprobante->movs, $comprobante, 'BANK');
+                    if (!isset($movimiento->banco->code)) dd('ERROR EN BANCO', $movimiento, $movimiento->banco, $comprobante->movs, $comprobante);
                 }
                 if(isset($movimiento->cuenta_puc_id)){
-                    if (!isset($movimiento->puc->code)) dd($movimiento, $movimiento->puc, $comprobante->movs, $comprobante, 'PUC');
+                    if (!isset($movimiento->puc->code)) dd('ERROR EN PUC', $movimiento, $movimiento->puc, $comprobante->movs, $comprobante);
                 }
             }
         }

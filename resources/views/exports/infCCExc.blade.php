@@ -20,8 +20,8 @@
                         <td>{{ $comprobante->concepto }}</td>
                         <td>{{ $comprobante->persona->num_dc }} - {{ $comprobante->persona->nombre }}</td>
                         <td>{{ $mov->banco->code}} - {{ $mov->banco->concepto}}</td>
-                        <td>$ <?php echo number_format($mov->debito,0);?></td>
-                        <td>$ <?php echo number_format($mov->credito,0);?></td>
+                        <td>{{$mov->debito}}</td>
+                        <td>{{$mov->credito}}</td>
                     </tr>
                 @endif
                 @if(isset($mov->cuenta_puc_id))
@@ -31,8 +31,8 @@
                         <td>{{ $comprobante->concepto }}</td>
                         <td>{{ $comprobante->persona->num_dc }} - {{ $comprobante->persona->nombre }}</td>
                         <td>{{ $mov->puc->code}} - {{ $mov->puc->concepto}}</td>
-                        <td>$ <?php echo number_format($mov->debito,0);?></td>
-                        <td>$ <?php echo number_format($mov->credito,0);?></td>
+                        <td>{{$mov->debito}}</td>
+                        <td>{{$mov->credito}}</td>
                     </tr>
                 @endif
             @endforeach
