@@ -387,6 +387,8 @@ class PagosController extends Controller
                 elseif($item->año == 2019)  $totDesc = $totDesc + intval($item->int_mora) * 0.03;
                 else $totDesc = $totDesc + intval($item->int_mora);
 
+                $totDesc = $totDesc + $item->tasa_ambiental;
+
                 if($item->año == 2023) {
                     //DESCUENTO DEL 50% PARA EL 2023
                     $desc = $item->imp_predial / 2;
