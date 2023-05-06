@@ -145,9 +145,9 @@ class InformeDocsController extends Controller
             }
             else $comprobante->totalDebito = 0;
 
-
             ///CORREGIR
-            dd($comprobante);
+            $operation = $comprobante->totalDebito - $comprobante->totalCredito;
+            if ($operation != 0 ) dd($comprobante);
         }
 
         return $CIngresos;
