@@ -125,6 +125,7 @@ class InformeDocsController extends Controller
 
             foreach ($comprobante->movs as $movimiento){
                 if(isset($movimiento->cuenta_banco)){
+                    $debito[] = $movimiento->debito;
                     if (!isset($movimiento->banco->code)) dd('ERROR EN BANCO', $movimiento, $movimiento->banco, $comprobante->movs, $comprobante);
                 }
                 if(isset($movimiento->cuenta_puc_id)){
@@ -137,6 +138,16 @@ class InformeDocsController extends Controller
                 unset($credito);
             }
             else $comprobante->totalCredito = 0;
+
+            if (isset($debito)) {
+                $comprobante->totalDebito= array_sum($debito);
+                unset($debito);
+            }
+            else $comprobante->totalDebito = 0;
+
+
+            ///CORREGIR
+            dd($comprobante);
         }
 
         return $CIngresos;
