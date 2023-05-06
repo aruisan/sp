@@ -231,7 +231,9 @@ class PredialController extends Controller
             $tasaBomberilReq = "tasaBomberil".$añoCiclo;
             $liquidacion->tasa_bomberil = $request->$tasaBomberilReq;
 
-            $liquidacion->tasa_ambiental = 0;
+            $tasaAmbientalReq = "tasaAmbiental".$añoCiclo;
+            $liquidacion->tasa_ambiental = $request->$tasaAmbientalReq;
+
             $liquidacion->int_ambiental = 0;
             $liquidacion->imp_predial_id  = $predial->id;
 
