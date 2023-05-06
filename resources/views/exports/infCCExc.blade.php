@@ -12,23 +12,30 @@
     </thead>
     <tbody>
         @foreach($compContables as $comprobante)
-            <tr>
-                <td>{{ \Carbon\Carbon::parse($comprobante->ff)->format('d-m-Y') }}</td>
-                <td>Comprobante de Contabilidad #{{ $comprobante->code }}</td>
-                <td>{{ $comprobante->concepto }}</td>
-                <td>{{ $comprobante->persona->num_dc }} - {{ $comprobante->persona->nombre }}</td>
-                    @foreach($comprobante->movs as $mov)
-                        @if(isset($mov->cuenta_banco))
-                            <td>{{ $mov->banco->code}} - {{ $mov->banco->concepto}}</td>
-                            @if(!isset($mov->debito))
-                                <td>0</td>
-                            @else
-                                <td>{{$mov->debito}}</td>
-                            @endif
-                            <td>{{$comprobante->totalCredito}}</td>
-                        @endif
-                    @endforeach
-            </tr>
+            @foreach($comprobante->movs as $mov)
+                @if(isset($mov->cuenta_banco))
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($comprobante->ff)->format('d-m-Y') }}</td>
+                        <td>Comprobante de Contabilidad #{{ $comprobante->code }}</td>
+                        <td>{{ $comprobante->concepto }}</td>
+                        <td>{{ $comprobante->persona->num_dc }} - {{ $comprobante->persona->nombre }}</td>
+                        <td>{{ $mov->banco->code}} - {{ $mov->banco->concepto}}</td>
+                        <td>$ <?php echo number_format($mov->debito,0);?></td>
+                        <td>$ <?php echo number_format($mov->credito,0);?></td>
+                    </tr>
+                @endif
+                @if(isset($mov->cuenta_puc_id))
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($comprobante->ff)->format('d-m-Y') }}</td>
+                        <td>Comprobante de Contabilidad #{{ $comprobante->code }}</td>
+                        <td>{{ $comprobante->concepto }}</td>
+                        <td>{{ $comprobante->persona->num_dc }} - {{ $comprobante->persona->nombre }}</td>
+                        <td>{{ $mov->puc->code}} - {{ $mov->puc->concepto}}</td>
+                        <td>$ <?php echo number_format($mov->debito,0);?></td>
+                        <td>$ <?php echo number_format($mov->credito,0);?></td>
+                    </tr>
+                @endif
+            @endforeach
         @endforeach
     </tbody>
 </table>
