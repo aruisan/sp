@@ -207,6 +207,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
             //DESCUENTOS
         Route::get('tesoreria/descuentos/{vigencia}','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@index');
+        Route::post('tesoreria/descuentos/movimientos/pagos','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@movAccount');
 
 
             //Pac

@@ -124,7 +124,7 @@
                                                 <td>{{ $PagosDesc->descuento_mun['concepto'] }}</td>
                                                 <td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
                                                 @if($PagosDesc->descuento_mun['id'] == 5)
-                                                    <td>7 X 1000</td>
+                                                    <td>10 X 1000</td>
                                                 @else
                                                     <td>{{ $PagosDesc->descuento_mun['tarifa'] }}</td>
                                                 @endif

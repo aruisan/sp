@@ -159,11 +159,12 @@
 
             $.ajax({
                 method: "POST",
-                url: "/administrativo/tesoreria/bancos/movAccount",
+                url: "/administrativo/tesoreria/descuentos/movimientos/pagos",
                 data: { "id": option.value, "mes": mes,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
+                console.log(datos);
                 if(datos.length > 0){
                     $("#buttonMake").show();
                     console.log('ddf', datos);
