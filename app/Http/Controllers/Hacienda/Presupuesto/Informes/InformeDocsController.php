@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Hacienda\Presupuesto\Informes;
 
 use App\Exports\InfCCExcExport;
 use App\Exports\InfCDPsExcExport;
+use App\Exports\InfRPsExcExport;
 use App\Exports\InfOrdenPagosExcExport;
 use App\Exports\InfPagosExcExport;
 use App\Exports\InfPrepIngExcExport;
@@ -15,6 +16,7 @@ use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
+use App\Model\Administrativo\Registro\Registro;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Persona;
@@ -86,6 +88,46 @@ class InformeDocsController extends Controller
         }
 
         return $cdps;
+    }
+
+    public function generateRPs($año){
+        $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
+
+        $regH = Registro::where(function ($query) {$query->where('jefe_e','3');})->get();
+        foreach ($regH as $data) {
+            if ($data->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id) {
+                $fecha = Carbon::parse($data->created_at)->format('d-m-Y');
+
+                $find = strpos($data->objeto, '&');
+                if ($find) $data->objeto = str_replace('&', "and", $data->objeto);
+
+                $find2 = strpos($data->objeto, '-');
+                if ($find2) $data->objeto = str_replace('-', " ", $data->objeto);
+
+                $find3 = strpos($data->objeto, '"');
+                if ($find3) $data->objeto = str_replace('"', "'", $data->objeto);
+
+                $find4 = strpos($data->objeto, '+');
+                if ($find4) $data->objeto = str_replace('+', " ", $data->objeto);
+
+                $find5 = strpos($data->objeto, '/');
+                if ($find5)$data->objeto = str_replace('/', " ", $data->objeto);
+
+                $find6 = strpos($data->objeto, ':');
+                if ($find6) $data->objeto = str_replace(':', " ", $data->objeto);
+
+                $data->objeto = preg_replace('([^A-Za-z0-9 ])', '', $data->objeto);
+
+                $data->objeto = str_ireplace(array('&lt;b&gt;', '&lt;/b&gt;', '&lt;h2&gt;', '&lt;/h2&gt;'), '',
+                    htmlspecialchars($data->objeto));
+
+                $registrosHistorico[] = collect(['id' => $data->id, 'fecha' => $fecha,'code' => $data->code, 'objeto' => $data->objeto, 'nombre' => $data->persona->nombre, 'valor' => $data->val_total, 'saldo' => $data->saldo, 'secretaria_e' => $data->secretaria_e,
+                    'ff_secretaria_e' => $data->ff_secretaria_e, 'jefe_e' => $data->jefe_e, 'ff_jefe_e' => $data->ff_jefe_e,
+                    'num_doc' => $data->num_doc, 'cc' => $data->persona->num_dc, 'data' => $data]);
+            }
+        }
+
+        return $registrosHistorico;
     }
 
     public function generatePagos($año){
@@ -220,6 +262,17 @@ class InformeDocsController extends Controller
 
         return Excel::download(new InfCDPsExcExport($cdps),
             'Informe de CDPs '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
+    }
+
+    public function makeRPsEXCEL()
+    {
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+        $rps = $this->generateRPs($añoActual);
+
+        return Excel::download(new InfRPsExcExport($rps),
+            'Informe de RPs '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
     }
 
     public function makePagosEXCEL()

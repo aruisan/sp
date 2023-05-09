@@ -529,6 +529,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     Route::get('presupuesto/informeGeneralIngresosPDF','Hacienda\Presupuesto\Informes\InformeController@makeIngresosPDF');
     Route::get('presupuesto/makeIngresosEjecucion/{inicio}/{final}','Hacienda\Presupuesto\Informes\InformeController@makeIngresosEjecucion');
     Route::get('presupuesto/makeCDPsEXCEL','Hacienda\Presupuesto\Informes\InformeDocsController@makeCDPsEXCEL');
+    Route::get('presupuesto/makeRPsEXCEL','Hacienda\Presupuesto\Informes\InformeDocsController@makeRPsEXCEL');
     Route::get('presupuesto/makePagosEXCEL','Hacienda\Presupuesto\Informes\InformeDocsController@makePagosEXCEL');
     Route::get('presupuesto/makeOrdenPagosEXCEL','Hacienda\Presupuesto\Informes\InformeDocsController@makeOrdenPagosEXCEL');
     Route::get('presupuesto/makeCCEXCEL','Hacienda\Presupuesto\Informes\InformeDocsController@makeCompContEXCEL');
