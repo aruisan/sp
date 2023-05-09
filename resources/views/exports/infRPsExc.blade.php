@@ -13,8 +13,7 @@
         @foreach($rps as $rp)
             <tr>
                 <td>{{ \Carbon\Carbon::parse($rp['fecha'])->format('d-m-Y') }}</td>
-                <td>{{ $rp['id'] }}</td>
-                <td>{{ $rp['code'] }}</td>
+                <td>RP #{{ $rp['code'] }}</td>
                 <td>{{ $rp['objeto'] }}</td>
                 <td>{{ $rp['num_doc'] }}</td>
                 <td>{{ $rp['valor'] }}</td>
