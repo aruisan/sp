@@ -32,10 +32,34 @@ class InformeDocsController extends Controller
     public function generateCDPs($año){
         $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
         $cdps = Cdp::where('vigencia_id', $vigencia->id)->where(function ($query) {
-            $query->where('jefe_e','3')->orWhere('jefe_e','2');})->get();
+            $query->where('jefe_e','3');})->get();
         if (count($cdps) == 0) $cdps = [];
         else {
             foreach ($cdps as $cdp){
+                $cdp->name = strval($cdp->name);
+                $find = strpos($cdp->name, '&');
+                if ($find) $cdp->name = str_replace('&', "and", $cdp->name);
+
+                $find2 = strpos($cdp->name, '-');
+                if ($find2) $cdp->name = str_replace('-', " ", $cdp->name);
+
+                $find3 = strpos($cdp->name, '"');
+                if ($find3) $cdp->name = str_replace('"', "'", $cdp->name);
+
+                $find4 = strpos($cdp->name, '+');
+                if ($find4) $cdp->name = str_replace('+', " ", $cdp->name);
+
+                $find5 = strpos($cdp->name, '/');
+                if ($find5) $cdp->name = str_replace('/', " ", $cdp->name);
+
+                $find6 = strpos($cdp->name, ':');
+                if ($find6) $cdp->name = str_replace(':', " ", $cdp->name);
+
+                $cdp->name = preg_replace('([^A-Za-z0-9 ])', '', $cdp->name);
+
+                $cdp->name = str_ireplace(array('&lt;b&gt;', '&lt;/b&gt;', '&lt;h2&gt;', '&lt;/h2&gt;'), '',
+                    htmlspecialchars($cdp->name));
+
                 if (isset($rubros)) unset($rubros);
                 if (isset($fuentes)) unset($fuentes);
 
