@@ -67,7 +67,7 @@
                                 </thead>
                                 <tbody id="bodyTabla"></tbody>
                             </table>
-                            <button style="display: none" id="buttonMake" class="btn-sm btn-primary">ELABORAR CONCILIACIÓN</button>
+                            <button style="display: none" id="buttonMake" class="btn-sm btn-primary">ELABORAR PAGO</button>
                         </div>
                     </div>
                 </form>

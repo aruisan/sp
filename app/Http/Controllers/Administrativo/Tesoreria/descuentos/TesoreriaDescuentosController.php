@@ -75,15 +75,22 @@ class TesoreriaDescuentosController extends Controller
                                 $mesOP = Carbon::parse($ordenPago->created_at)->month;
                                 //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
                                 if ($mesOP == $request->mes){
-                                    $valueOP = $ordenPago->valor;
-                                    $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
-                                        'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
-                                        'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
-                                        'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
-                                    $valueCred[] = $valueOP;
-                                    $valueDeb[] = $descuento->valor;
+                                    $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
+                                    foreach ($pagos as $pago){
+                                        //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
+                                        if ($pago->banks->rubros_puc_id == $rubroPUC->id){
+                                            $valueOP = $ordenPago->valor;
+                                            $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
+                                                'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                                'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
+                                                'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                            $valueCred[] = $valueOP;
+                                            $valueDeb[] = $descuento->valor;
+                                        }
+                                    }
                                 }
                             }
+
                         }
                     }
                 }
@@ -98,38 +105,18 @@ class TesoreriaDescuentosController extends Controller
                                 $mesOP = Carbon::parse($ordenPago->created_at)->month;
                                 //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
                                 if ($mesOP == $request->mes){
-                                    $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
-                                        'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
-                                        'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $ordenPago->valor,
-                                        'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
-                                    $valueCred[] = $ordenPago->valor;
-                                    $valueDeb[] = $descuento->valor;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //VALIDACION CUANDO EN LA CONTABILIZACION ESTA EL PAGO DE LA DIAN
-                $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
-                if (count($contaOP) > 0){
-                    foreach ($contaOP as $contabilizacion){
-                        $ordenPago = OrdenPagos::where('id', $contabilizacion->orden_pago_id)->where('estado', '1')->first();
-                        if ($ordenPago){
-                            if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $request->vigencia_id){
-                                $mesOP = Carbon::parse($ordenPago->created_at)->month;
-                                //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
-                                if ($mesOP == $request->mes){
-                                    $debito = OrdenPagosPuc::where('orden_pago_id', $contabilizacion->orden_pago_id)->where('valor_credito',0)->first();
-                                    $cuentaDeb = PucAlcaldia::find($debito->rubros_puc_id);
-
-                                    $tableValues[] = collect(['code' => $hijo->code, 'concepto' => $hijo->concepto,
-                                        'valorDesc' => $contabilizacion->valor_credito, 'cc' => $ordenPago->registros->persona->num_dc,
-                                        'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $cuentaDeb->code,
-                                        'conceptoDeb' => $cuentaDeb->concepto, 'valorDeb' => $debito->valor_debito,
-                                        'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
-                                    $valueCred[] = $debito->valor_debito;
-                                    $valueDeb[] = $contabilizacion->valor_credito;
+                                    $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
+                                    foreach ($pagos as $pago) {
+                                        //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
+                                        if ($pago->banks->rubros_puc_id == $rubroPUC->id) {
+                                            $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
+                                                'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                                'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $ordenPago->valor,
+                                                'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                            $valueCred[] = $ordenPago->valor;
+                                            $valueDeb[] = $descuento->valor;
+                                        }
+                                    }
                                 }
                             }
                         }
