@@ -50,7 +50,6 @@ class TesoreriaDescuentosController extends Controller
      */
     public function movAccount(Request $request){
 
-        $result = collect();
         $rubroPUC = PucAlcaldia::find($request->id);
         $cuentaPUC = PucAlcaldia::where('padre_id',660)->orWhere('padre_id',765)->get();
 
@@ -78,14 +77,18 @@ class TesoreriaDescuentosController extends Controller
                                     $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
                                     foreach ($pagos as $pago){
                                         //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                        if ($pago->banks->rubros_puc_id == $rubroPUC->id){
-                                            $valueOP = $ordenPago->valor;
-                                            $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
-                                                'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
-                                                'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
-                                                'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
-                                            $valueCred[] = $valueOP;
-                                            $valueDeb[] = $descuento->valor;
+                                        $bank = PagoBanks::where('pagos_id', $pago->id)->first();
+                                        if ($bank){
+                                            if ($bank->rubros_puc_id == $request->id){
+
+                                                $valueOP = $ordenPago->valor;
+                                                $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
+                                                    'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                                    'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
+                                                    'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                                $valueCred[] = $valueOP;
+                                                $valueDeb[] = $descuento->valor;
+                                            }
                                         }
                                     }
                                 }
@@ -108,13 +111,16 @@ class TesoreriaDescuentosController extends Controller
                                     $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
                                     foreach ($pagos as $pago) {
                                         //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                        if ($pago->banks->rubros_puc_id == $rubroPUC->id) {
-                                            $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
-                                                'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
-                                                'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $ordenPago->valor,
-                                                'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
-                                            $valueCred[] = $ordenPago->valor;
-                                            $valueDeb[] = $descuento->valor;
+                                        $bank = PagoBanks::where('pagos_id', $pago->id)->first();
+                                        if ($bank){
+                                            if ($bank->rubros_puc_id == $request->id){
+                                                $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
+                                                    'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                                    'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $ordenPago->valor,
+                                                    'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                                $valueCred[] = $ordenPago->valor;
+                                                $valueDeb[] = $descuento->valor;
+                                            }
                                         }
                                     }
                                 }
@@ -146,6 +152,9 @@ class TesoreriaDescuentosController extends Controller
                 $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'reten' => 0]);
             }
         }
+
+
+        dd($tableRT);
 
         return $tableRT;
 

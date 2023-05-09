@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Hacienda\Presupuesto\Informes;
 
 use App\Exports\InfCCExcExport;
+use App\Exports\InfCDPsExcExport;
 use App\Exports\InfOrdenPagosExcExport;
 use App\Exports\InfPagosExcExport;
 use App\Exports\InfPrepIngExcExport;
 use App\Exports\InfPrepEgrExcExport;
 use App\Http\Controllers\Controller;
+use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
@@ -26,6 +28,42 @@ use PDF;
 
 class InformeDocsController extends Controller
 {
+
+    public function generateCDPs($año){
+        $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
+        $cdps = Cdp::where('vigencia_id', $vigencia->id)->where(function ($query) {
+            $query->where('jefe_e','3')->orWhere('jefe_e','2');})->get();
+        if (count($cdps) == 0) $cdps = [];
+        else {
+            foreach ($cdps as $cdp){
+                if (isset($rubros)) unset($rubros);
+                if (isset($fuentes)) unset($fuentes);
+
+                if ($cdp->tipo == "Funcionamiento"){
+                    foreach($cdp->rubrosCdpValor as $rubroCdpValue){
+                        $rubros[] = $rubroCdpValue->fontsRubro->rubro->cod.' - '.$rubroCdpValue->fontsRubro->rubro->name;
+                        if(isset($rubroCdpValue->fontsRubro)){
+                            $fuentes[] = $rubroCdpValue->fontsRubro->sourceFunding->code.' - '.$rubroCdpValue->fontsRubro->sourceFunding->description;
+                        }
+                    }
+                    $cdp->rubros = $rubros;
+                    $cdp->fuentes = $fuentes;
+                } else{
+                    foreach($cdp->bpinsCdpValor as $bpinsCDP){
+                        if(isset($bpinsCDP->depRubroFont->fontRubro)){
+                            $rubros[] = $bpinsCDP->depRubroFont->fontRubro->rubro->cod.' - '.$bpinsCDP->depRubroFont->fontRubro->rubro->name;
+                            $fuentes[] = $bpinsCDP->depRubroFont->fontRubro->sourceFunding->code.' - '.$bpinsCDP->depRubroFont->fontRubro->sourceFunding->description;
+                        }
+                    }
+                    $cdp->rubros = $rubros;
+                    $cdp->fuentes = $fuentes;
+                }
+            }
+        }
+
+        return $cdps;
+    }
+
     public function generatePagos($año){
         $vigencia = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
         $p = Pagos::where('estado', '1')->get();
@@ -147,6 +185,17 @@ class InformeDocsController extends Controller
         }
 
         return $CIngresos;
+    }
+
+    public function makeCDPsEXCEL()
+    {
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+        $cdps = $this->generateCDPs($añoActual);
+
+        return Excel::download(new InfCDPsExcExport($cdps),
+            'Informe de CDPs '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
     }
 
     public function makePagosEXCEL()
