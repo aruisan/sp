@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Administrativo\Tesoreria\descuentos;
 
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
+use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentos;
@@ -38,16 +43,6 @@ class TesoreriaDescuentosController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -57,6 +52,125 @@ class TesoreriaDescuentosController extends Controller
 
         $result = collect();
         $rubroPUC = PucAlcaldia::find($request->id);
+        $cuentaPUC = PucAlcaldia::where('padre_id',660)->orWhere('padre_id',765)->get();
+
+        foreach ($cuentaPUC as $cuenta){
+
+            //CUENTA CORRESPONDIENTE AL DEBITO
+            if ($cuenta->code == '243603') $idPadreDeb = 868; //honorarios ->  honorarios
+            elseif ($cuenta->code == '243605') $idPadreDeb = 1029;
+            elseif ($cuenta->code == '243606') $idPadreDeb = 1048;
+            else $idPadreDeb = 869;
+            $padreDeb = PucAlcaldia::find($idPadreDeb);
+
+            $hijos = PucAlcaldia::where('padre_id', $cuenta->id)->get();
+            foreach ($hijos as $hijo){
+                $retefuenteCode = RetencionFuente::where('codigo', $hijo->code)->first();
+                if ($retefuenteCode){
+                    $descuentosOP = OrdenPagosDescuentos::where('retencion_fuente_id', $retefuenteCode->id)->get();
+                    foreach ($descuentosOP as $descuento){
+                        $ordenPago = OrdenPagos::where('id', $descuento->orden_pagos_id)->where('estado', '1')->first();
+                        if ($ordenPago){
+                            if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $request->vigencia_id){
+                                $mesOP = Carbon::parse($ordenPago->created_at)->month;
+                                //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
+                                if ($mesOP == $request->mes){
+                                    //SE RECORRE EL PUC PARA OBTENER LOS VALORES DE LA OP
+                                    foreach ($ordenPago->pucs as $puc){
+                                        if ($puc->valor_debito == 0) $valueOP = $ordenPago->valor;
+                                        else $valueOP =$puc->valor_debito;
+                                        $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
+                                            'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                            'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
+                                            'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                        $valueCred[] = $valueOP;
+                                        $valueDeb[] = $descuento->valor;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $descMunicipal = DescMunicipales::where('codigo', $hijo->code)->first();
+                if ($descMunicipal){
+                    $descuentosOP = OrdenPagosDescuentos::where('desc_municipal_id', $descMunicipal->id)->get();
+                    foreach ($descuentosOP as $descuento){
+                        $ordenPago = OrdenPagos::where('id', $descuento->orden_pagos_id)->where('estado', '1')->first();
+                        if ($ordenPago){
+                            if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $request->vigencia_id){
+                                $mesOP = Carbon::parse($ordenPago->created_at)->month;
+                                //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
+                                if ($mesOP == $request->mes){
+                                    //SE RECORRE EL PUC PARA OBTENER LOS VALORES DE LA OP
+                                    foreach ($ordenPago->pucs as $puc){
+                                        if ($puc->valor_debito == 0) $valueOP = $ordenPago->valor;
+                                        else $valueOP =$puc->valor_debito;
+                                        $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
+                                            'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                            'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
+                                            'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                        $valueCred[] = $valueOP;
+                                        $valueDeb[] = $descuento->valor;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //VALIDACION CUANDO EN LA CONTABILIZACION ESTA EL PAGO DE LA DIAN
+                $contaOP = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
+                if (count($contaOP) > 0){
+                    foreach ($contaOP as $contabilizacion){
+                        $ordenPago = OrdenPagos::where('id', $contabilizacion->orden_pago_id)->where('estado', '1')->first();
+                        if ($ordenPago){
+                            if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $request->vigencia_id){
+                                $mesOP = Carbon::parse($ordenPago->created_at)->month;
+                                //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
+                                if ($mesOP == $request->mes){
+                                    $debito = OrdenPagosPuc::where('orden_pago_id', $contabilizacion->orden_pago_id)->where('valor_credito',0)->first();
+                                    $cuentaDeb = PucAlcaldia::find($debito->rubros_puc_id);
+
+                                    $tableValues[] = collect(['code' => $hijo->code, 'concepto' => $hijo->concepto,
+                                        'valorDesc' => $contabilizacion->valor_credito, 'cc' => $ordenPago->registros->persona->num_dc,
+                                        'nameTer' => $ordenPago->registros->persona->nombre, 'codeDeb' => $cuentaDeb->code,
+                                        'conceptoDeb' => $cuentaDeb->concepto, 'valorDeb' => $debito->valor_debito,
+                                        'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                    $valueCred[] = $debito->valor_debito;
+                                    $valueDeb[] = $contabilizacion->valor_credito;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            //SE VALIDA SI HAY VALORES PARA AGREGARLE AL PADRE, SI NO HAY EL PADRE POR ENDE ESTA VACIO
+            if (isset($tableValues)){
+                //SE INGRESA EL PADRE
+                $tableRT[] = collect(['code' => $cuenta->code, 'concepto' => $cuenta->concepto,
+                    'valorDesc' => array_sum($valueDeb), 'cc' => '', 'nameTer' => '',
+                    'codeDeb' => $padreDeb->code, 'conceptoDeb' => $padreDeb->concepto, 'valorDeb' => array_sum($valueCred)]);
+
+                $form[] = collect(['concepto' => $cuenta->concepto, 'base' => array_sum($valueCred), 'reten' => array_sum($valueDeb)]);
+
+                $pago[] = array_sum($valueDeb);
+
+                //SE INGRESAN LOS HIJOS
+                foreach ($tableValues as $data) $tableRT[] = collect($data);
+
+                //SE LIMPIAN LOS ARRAY
+                if (isset($valueDeb))unset($valueDeb);
+                if (isset($valueCred))unset($valueCred);
+                if (isset($tableValues))unset($tableValues);
+            } else {
+                $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'reten' => 0]);
+            }
+        }
+
+        return $tableRT;
+
         $total = $rubroPUC->saldo_inicial;
         $totDeb = 0;
         $totCred = 0;
@@ -92,7 +206,6 @@ class TesoreriaDescuentosController extends Controller
                 }
             }
         }
-
 
         return $result;
     }

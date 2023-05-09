@@ -21,6 +21,7 @@
                 <form class="form-valide" action="{{url('/administrativo/tesoreria/descuentos/makePago')}}" method="POST" enctype="multipart/form-data" id="prog">
                     {{ csrf_field() }}
                     <meta name="csrf-token" content="{{ csrf_token() }}">
+                    <input type="hidden" id="vigencia_id" value="{{$vigencia_id}}">
                     <div class="col-md-12 align-self-center">
                         <h5>Seleccione el mes.</h5>
                         <select class="form-control" id="mes" name="mes">
@@ -56,15 +57,12 @@
                                     <th colspan="9" class="text-center"> <span id="cuentaBanco"></span></th>
                                 </tr>
                                 <tr>
-                                    <th class="text-center">Fecha</th>
-                                    <th class="text-center">Cuenta</th>
-                                    <th class="text-center">Nombre Documento</th>
+                                    <th class="text-center">Codigo</th>
                                     <th class="text-center">Concepto</th>
-                                    <th class="text-center">Tercero</th>
+                                    <th class="text-center">Valor</th>
+                                    <th class="text-center">Orden Pago</th>
                                     <th class="text-center">NIT/CC</th>
-                                    <th class="text-center">Debito</th>
-                                    <th class="text-center">Credito</th>
-                                    <th class="text-center">Saldo</th>
+                                    <th class="text-center">Nombre</th>
                                 </tr>
                                 </thead>
                                 <tbody id="bodyTabla"></tbody>
@@ -155,20 +153,20 @@
             $("#cargando").show();
 
             const mes = document.getElementById("mes").value;
+            const vigencia_id = document.getElementById("vigencia_id").value;
             var table = $('#tabla').DataTable();
 
             $.ajax({
                 method: "POST",
                 url: "/administrativo/tesoreria/descuentos/movimientos/pagos",
-                data: { "id": option.value, "mes": mes,
+                data: { "id": option.value, "mes": mes, "vigencia_id": vigencia_id,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                console.log(datos);
                 if(datos.length > 0){
                     $("#buttonMake").show();
-                    console.log('ddf', datos);
-                    document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ datos[0]['total'];
+                    console.log(datos);
+                    document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' PERIODO A PAGAR:'+ mes;
                     $("#tabla").show();
                     table.destroy();
                     $("#cargando").hide();
@@ -226,15 +224,12 @@
                         ],
                         data: datos,
                         columns: [
-                            { title: "Fecha", data: "fecha"},
-                            { title: "Cuenta", data: "cuenta"},
-                            { title: "Nombre Documento", data: "modulo"},
+                            { title: "Codigo", data: "code"},
                             { title: "Concepto", data: "concepto"},
-                            { title: "Tercero", data: "tercero"},
-                            { title: "NIT/CC", data: "CC"},
-                            { title: "Debito", data: "debito"},
-                            { title: "Credito", data: "credito"},
-                            { title: "Saldo", data: "total"}
+                            { title: "Valor", data: "valorDesc"},
+                            { title: "Orden Pago", data: "ordenPago"},
+                            { title: "NIT/CC", data: "cc"},
+                            { title: "Nombre", data: "nameTer"},
                         ]
                     } );
                 } else{
