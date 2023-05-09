@@ -14,6 +14,7 @@
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralIngresosPDF"> Ingresos <i class="fa fa-file-pdf-o "></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/informeGeneralEgresosEXCEL"> Egresos <i class="fa fa-file-excel-o"></i></a>
                         <hr><h4>DOCUMENTOS</h4><hr>
+                        <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeCDPsEXCEL"> CDPs <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeOrdenPagosEXCEL"> Ordenes de Pago <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makePagosEXCEL"> Pagos <i class="fa fa-file-excel-o"></i></a>
                         <a class="btn-sm btn-primary" target="_blank" href="/presupuesto/makeCCEXCEL"> Comprobantes Contabilidad <i class="fa fa-file-excel-o"></i></a>
