@@ -21,7 +21,7 @@
                 <form class="form-valide" action="{{url('/administrativo/tesoreria/descuentos/makePago')}}" method="POST" enctype="multipart/form-data" id="prog">
                     {{ csrf_field() }}
                     <meta name="csrf-token" content="{{ csrf_token() }}">
-                    <input type="hidden" id="vigencia_id" value="{{$vigencia_id}}">
+                    <input type="hidden" id="vigencia_id" name="vigencia_id" value="{{$vigencia_id}}">
                     <div class="col-md-12 align-self-center">
                         <h5>Seleccione el mes.</h5>
                         <select class="form-control" id="mes" name="mes">
@@ -54,9 +54,6 @@
                                 <hr>
                                 <thead>
                                 <tr>
-                                    <th colspan="9" class="text-center"> <span id="cuentaBanco"></span></th>
-                                </tr>
-                                <tr>
                                     <th class="text-center">Codigo</th>
                                     <th class="text-center">Concepto</th>
                                     <th class="text-center">Valor</th>
@@ -67,6 +64,7 @@
                                 </thead>
                                 <tbody id="bodyTabla"></tbody>
                             </table>
+                            <br>
                             <button style="display: none" id="buttonMake" class="btn-sm btn-primary">ELABORAR PAGO</button>
                         </div>
                     </div>
@@ -166,7 +164,6 @@
                 if(datos.length > 0){
                     $("#buttonMake").show();
                     console.log(datos);
-                    document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' PERIODO A PAGAR:'+ mes;
                     $("#tabla").show();
                     table.destroy();
                     $("#cargando").hide();

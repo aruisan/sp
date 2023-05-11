@@ -11,7 +11,7 @@
                 <h4><b>Libros</b></h4>
             </strong>
         </div>
-        <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
+        <select style="width: 100%" class="select-cuenta" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
             <option value="0">Seleccione la cuenta para obtener el libro</option>
             @foreach($result as $cuenta)
                 <option value="{{$cuenta['id']}}">{{$cuenta['code']}} - {{$cuenta['concepto']}}</option>
@@ -43,6 +43,9 @@
 
 @section('js')
     <script>
+
+        $('.select-cuenta').select2();
+
         $(document).ready(function() {
             toastr.options = {
                 "closeButton": true,
@@ -98,7 +101,7 @@
                     "pageLength": 5,
                     responsive: true,
                     "searching": true,
-                    ordering: true,
+                    ordering: false,
                     "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
                     dom: 'Bfrtip',
                     buttons:[
