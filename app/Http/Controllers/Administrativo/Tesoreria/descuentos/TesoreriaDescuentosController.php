@@ -354,6 +354,13 @@ class TesoreriaDescuentosController extends Controller
 
     public function store(Request $request){
         dd($request);
+
+        if (array_sum($request->debCuenta) != $request->totPago ){
+            Session::flash('warning', 'El valor a pagar en debito no concuerda con el pago total de credito.');
+            return back();
+        }
+
+        //dd($request);
     }
 
     /**
