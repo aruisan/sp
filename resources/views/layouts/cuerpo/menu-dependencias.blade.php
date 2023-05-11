@@ -1,6 +1,14 @@
 @include('modal.updateSoftware')
 
+
 @can('listar-empleados')
+@if(auth()->id() == 1)
+<li >
+   <a class="btn btn-default btn-sm item-menu" href="{{ route('bbdd_backup') }}">
+      bbdd
+   </a>
+</li>
+@endif
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    NOMINA
@@ -169,10 +177,11 @@
          </a>
          <ul class="dropdown-menu">
             <li><a class="item-menu" tabindex="-1" href="{{route('almacen.inventario')}}">Inventorio</a></li>
-
-            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso')}}">Comprobante de Ingreso</a></li>
-
-            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso')}}">Comprobante de egresos</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso')}}">Comprobante de Entrada</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso')}}">Comprobante de Salida bienes de consumo</a></li>
+            <li><a class="item-menu" tabindex="-1" href="jj">Comprobante de Salida bienes devolutivos</a></li>
+            <li><a class="item-menu" tabindex="-1" href="rt">Comprobante de Traslados</a></li>
+            <li><a class="item-menu" tabindex="-1" href="er">Comprobante de Bajas</a></li>
          </ul>
       {{--
          <ul class="dropdown-menu">

@@ -19,17 +19,21 @@
                             <th class="text-center">#</th>
                             <th class="text-center">Nombre del Articulo</th>
                             <th class="text-center">Codigo</th>
+                            <th class="text-center">Marca</th>
+                            <th class="text-center">Presentación</th>
                             <th class="text-center">Referencia</th>
                             <th class="text-center">Cantidad</th>
                             <th class="text-center">Stock</th>
                             <th class="text-center">Valor Unitario</th>
                             <th class="text-center">Total</th>
+                            <th class="text-center">Vida Util</th>
+                            <th class="text-center">Depreciación</th>
                             <th class="text-center">No. Factura</th>
                             <th class="text-center">Proovedor</th>
                             <th class="text-center">ccd</th>
                             <th class="text-center">ccc</th>
-                            <th class="text-center">Comprobante de Ingreso</th>
-                            <th class="text-center">Comprobante de Egreso</th>
+                            <th class="text-center">Comprobante de Entrada</th>
+                            <th class="text-center">Comprobante de Salida</th>
                             <th class="text-center">Dependencia</th>
                             <th class="text-center">Responsable</th>
                             <th class="text-center">Estado</th>
@@ -42,15 +46,19 @@
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->nombre_articulo}}</td>
                                 <td>{{ $item->codigo }}</td>
+                                <td>{{ $item->marca }}</td>
+                                <td>{{ $item->presentacion }}</td>
                                 <td>{{ $item->referencia}}</td>
                                 <td>{{ $item->cantidad}}</td>
                                 <td>{{ $item->stock}}</td>
                                 <td>{{ $item->valor_unitario}}</td>
                                 <td>{{ $item->total}}</td>
+                                <td>{{ $item->vida_util}}</td>
+                                <td>{{ $item->depreciacion}}</td>
                                 <td>{{ $item->comprobante_ingreso->factura}}</td>
                                 <td>{{ $item->comprobante_ingreso->proovedor->nombre}}</td>
-                                <td>{{ $item->comprobante_ingreso->ccd}}</td>
-                                <td>{{ $item->comprobante_ingreso->ccc}}</td>
+                                <td>{{ $item->puc_ccd->code}}</td>
+                                <td>{{ $item->puc_ccd->almacen_puc_credito->code}}</td>
                                 <td><a href="{{ route('almacen.ingreso.show', $item->comprobante_ingreso->id)}}" target="_blank">{{ $item->comprobante_ingreso->id}}</a></td>
                                 <td>
                                     @foreach($item->comprobante_egresos as $egreso)

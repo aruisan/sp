@@ -12,15 +12,43 @@ use App\Model\Administrativo\Contabilidad\CompContMov;
 use App\ChipContabilidadData;
 use \Carbon\Carbon;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
+use App\AlmacenArticulo;
 
 class PucAlcaldia extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
     protected $table = "puc_alcaldia";
+    protected $appends = ['almacen_puc_credito'];
 
     public function contabilidad_data(){
         return $this->hasOne(ChipContabilidadData::class, 'puc_id');
+    }
+
+    public function almacen_items(){
+        return $this->hasMany(AlmacenArticulo::class, 'ccd');
+    }
+
+    public function almacen_pucs_creditos(){
+        return $this->belongsToMany(PucAlcaldia::class, 'almacen_puc_relaciones', 'puc_debito_id', 'puc_credito_id');
+    }
+
+    public function almacen_pucs_debitos(){
+        return $this->belongsToMany(PucAlcaldia::class, 'almacen_puc_relaciones', 'puc_credito_id', 'puc_debito_id');
+    }
+
+    public function getAlmacenPucCreditoAttribute(){
+        return $this->almacen_pucs_creditos->first();
+    }
+
+    public function getAlmacenItemsCreditosAttribute(){
+        $data = collect();
+        foreach($this->almacen_pucs_debitos->filter(function($debito){return $debito->almacen_items->count() > 0 ;}) as $puc_debito):
+            foreach($puc_debito->almacen_items as $item):
+                $data->push($item);
+            endforeach;
+        endforeach;
+        return $data;
     }
 
     public function conciliaciones() {
@@ -95,8 +123,17 @@ class PucAlcaldia extends Model implements Auditable
         $totDeb = 0;
         $inicio = "2023-01-01";
         $final = "2023-03-31";
+
+        if($this->almacen_items->count() > 0):
+            $totDeb += $this->almacen_items->sum('total');
+        endif;
+
+        if($this->almacen_items_creditos->count() > 0):
+            $totDeb += $this->almacen_items_creditos->sum('total');
+        endif;
+
         if($this->pagos_bank->count() > 0):
-            $totCred += $this->pagos_bank->count() > 0 ? $this->pagos_bank->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->filter(function($p){ return $p->pago->estado == 1;})->sum('valor') : 0;
+            $totCred += $this->pagos_bank->count() > 0 ? $this->pagos_bank->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->filter(function($p){ return $p->pago->estado == 1 && $p->pago->adultoMayor == 0;})->sum('valor') : 0;
         endif;
 
         if($this->comprobantes->count() > 0):
@@ -106,6 +143,8 @@ class PucAlcaldia extends Model implements Auditable
 
         if($this->orden_pagos->count() > 0):
             $totDeb += $this->orden_pagos->count() > 0 ? $this->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_debito') : 0;
+            $totDeb += $this->orden_pagos->count() > 0 ? $this->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_credito') : 0;
+            //$totDeb += $this->orden_pagos->count() > 0 ? $this->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('suma_pagos') : 0;
             $totCred += $this->orden_pagos->count() > 0 ? $this->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_credito') : 0;
         endif;
 

@@ -25,8 +25,8 @@
                 <thead>
                     <tr>
                         <th class="text-center">Valor Inicial</th>
-                        <th class="text-center">Movimiento Credito</th>
                         <th class="text-center">Movimiento Debito</th>
+                        <th class="text-center">Movimiento Credito</th>
                         <th class="text-center">Saldo Final</th>
                         <th class="text-center">Corriente</th>
                         <th class="text-center">No Corriente</th>
@@ -59,11 +59,11 @@
                         <th class="text-center info" colspan="3">Hasta el dia de hoy</th>
                     </tr>
                     <tr>
-                        <th class="text-center warning">Credito</th>
                         <th class="text-center warning">Debito</th>
+                        <th class="text-center warning">Credito</th>
                         <th class="text-center warning">Valor</th>
-                        <th class="text-center info">Credito</th>
                         <th class="text-center info">Debito</th>
+                        <th class="text-center info">Credito</th>
                         <th class="text-center info">Valor</th>
                     </tr>
                 </thead>
@@ -101,6 +101,18 @@
                         <td class='text-center info' style='width=200px;'>0</td>
                     </tr>
                     <tr>
+                        <td class='text-center' style='width=200px;'>Ordenes de Pago pagos</td>
+                        {{--
+                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->orden_pagos->count() > 0 ? $puc->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('suma_pagos') : 0)}}</td>
+                        --}}
+                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->orden_pagos->count() > 0 ? $puc->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_credito') : 0)}}</td>
+                        <td class='text-center warning' style='width=200px;'>0</td>
+                        <td class='text-center warning' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>${{number_format($puc->orden_pagos->count() > 0 ? $puc->orden_pagos->sum('suma_pagos') : 0)}}</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                    </tr>
+                    <tr>
                         <td class='text-center' style='width=200px;'>Movimientos Retefuente</td>
                         <td class='text-center warning' style='width=200px;'>${{number_format($puc->retefuente_movimientos->count() > 0 ? $puc->retefuente_movimientos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('debito') : 0)}}</td>
                         <td class='text-center warning' style='width=200px;'>${{number_format($puc->retefuente_movimientos->count() > 0 ? $puc->retefuente_movimientos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('credito') : 0)}}</td>
@@ -109,6 +121,25 @@
                         <td class='text-center info' style='width=200px;'>${{number_format($puc->retefuente_movimientos->count() > 0 ?$puc->retefuente_movimientos->sum('credito') : 0)}}</td>
                         <td class='text-center info' style='width=200px;'>0</td>
                     </tr>
+                    <tr>
+                        <td class='text-center' style='width=200px;'>Almacen debito</td>
+                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->almacen_items->sum('total'))}}</td>
+                        <td class='text-center warning' style='width=200px;'>0</td>
+                        <td class='text-center warning' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                    </tr>
+                    <tr>
+                        <td class='text-center' style='width=200px;'>Almacen Credito</td>
+                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->almacen_items_creditos->sum('total'))}}</td>
+                        <td class='text-center warning' style='width=200px;'>0</td>
+                        <td class='text-center warning' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                    </tr>
+
                 </tbody>
             </table>
         
@@ -118,11 +149,12 @@
             <li><a data-toggle="tab" href="#comprobantes">Comprobantes {{$puc->comprobantes->count()}}</a></li>
             <li><a data-toggle="tab" href="#o_pago">Ordenes de Pago {{$puc->orden_pagos->count()}}</a></li>
             <li><a data-toggle="tab" href="#retefuente">Retefuente Movimientos {{$puc->retefuente_movimientos->count()}}</a></li>
+            <li><a data-toggle="tab" href="#o_pago_pago">Pagos</a></li>
         </ul>
 
         <div class="tab-content">
             <div id="p_bank" class="tab-pane fade in active">
-                <h3>Pagos </h3>
+                <h3>Pagos Bancarios</h3>
                 {{--
                 <table class="table">
                     <tbody>
@@ -145,7 +177,7 @@
                     <tbody>
                         @foreach($puc->pagos_bank as $pago)
                         <tr class="{{$pago->created_at < $inicio || $pago->created_at > $final ? 'info' : 'warning'}}">
-                            <td>{{$pago->valor}}</td>
+                            <td>{{number_format($pago->valor)}}</td>
                             <td>{{$pago->pago->status}}</td>
                             <td>{{$pago->created_at}}</td>
                         </tr>
@@ -166,8 +198,8 @@
                     <tbody>
                         @foreach($puc->comprobantes as $comprobante)
                         <tr class="{{$comprobante->created_at < $inicio || $comprobante->created_at > $final ? 'info' : 'warning'}}">
-                            <td>{{$comprobante->debito}}</td>
-                            <td>{{$comprobante->credito}}</td>
+                            <td>{{number_format($comprobante->debito)}}</td>
+                            <td>{{number_format($comprobante->credito)}}</td>
                             <td>{{$comprobante->fechaComp}}</td>
                             <td>{{$comprobante->created_at}}</td>
                         </tr>
@@ -179,15 +211,21 @@
                 <h3>Ordenes Pago</h3>
                 <table class="table tabla">
                     <thead>
+                        <th>Codigo</th>
                         <th>Debito</th>
                         <th>Credito</th>
+                        <th>Resta</th>
+                        <th>Pagos</th>
                         <th>Fecha</th>
                     </thead>
                     <tbody>
                         @foreach($puc->orden_pagos as $orden_pago)
                         <tr class="{{$orden_pago->created_at < $inicio || $orden_pago->created_at > $final ? 'info' : 'warning'}}">
-                            <td>{{$orden_pago->valor_debito}}</td>
-                            <td>{{$orden_pago->valor_credito}}</td>
+                            <td>{{$orden_pago->ordenPago->code}}</td>
+                            <td>{{number_format($orden_pago->valor_debito)}}</td>
+                            <td>{{number_format($orden_pago->valor_credito)}}</td>
+                            <td>{{number_format($orden_pago->valor_credito - $orden_pago->ordenPago->suma_pagos_aceptados)}}</td>
+                            <td>{{number_format($orden_pago->ordenPago->suma_pagos_aceptados)}}</td>
                             <td>{{$orden_pago->created_at}}</td>
                         </tr>
                         @endforeach
@@ -205,11 +243,48 @@
                     <tbody>
                         @foreach($puc->retefuente_movimientos as $retefuente)
                         <tr class="{{$retefuente->created_at < $inicio || $retefuente->created_at > $final ? 'info' : 'warning'}}">
-                            <td>{{$retefuente->debito}}</td>
-                            <td>{{$retefuente->credito}}</td>
+                            <td>{{number_format($retefuente->debito)}}</td>
+                            <td>{{number_format($retefuente->credito)}}</td>
                             <td>{{$retefuente->created_at}}</td>
                         </tr>
                         @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div id="o_pago_pago" class="tab-pane fade">
+                <h3>Pagos</h3>
+                <table class="table tabla">
+                    <thead>
+                        <th>concepto</th>
+                        <th>code</th>
+                        <th>estado</th>
+                        <th>valor</th>
+                        <th>fecha</th>
+                    </thead>
+                    <tbody>
+                    @if($puc->orden_pagos->count() > 0 )
+                            @foreach($puc->orden_pagos as $orden_pago)
+                                @if(!is_null($orden_pago->ordenPago))
+                                    @foreach($orden_pago->ordenPago->pagos as $pago)
+                                        <tr class="{{$pago->created_at < $inicio || $pago->created_at > $final ? 'info' : 'warning'}}">
+                                            <td>{{$pago->concepto}}</td>
+                                            <td>{{$pago->code}}</td>
+                                            <td>{{$pago->estado}}</td>
+                                            <td>{{number_format($pago->valor)}}</td>
+                                            <td>{{$pago->created_at}}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                <tr class="danger">
+                                    <td colspan="5">No tiene</td>
+                                </tr>
+                                @endif
+                            @endforeach
+                        @else
+                        <tr class="danger">
+                            <td colspan="5">No tiene Ordenes de pagos</td>
+                        </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>

@@ -13,12 +13,8 @@ class AlmacenComprobanteIngreso extends Model
         'fecha_factura',
         'contrato',
         'fecha_contrato',
-        'ccd',
-        'ccc',
         'owner_id',
-        'proovedor_id',
-        'ccc',
-        'ccd'
+        'proovedor_id'
 
     ];
 

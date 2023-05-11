@@ -8,7 +8,7 @@ use App\Model\Admin\Dependencia;
 
 class AlmacenComprobanteEgreso extends Model
 {
-    protected $fillable = ['fecha', 'dependencia_id', 'responsable_id', 'owner_id'];
+    protected $fillable = ['fecha', 'dependencia_id', 'responsable_id', 'owner_id', 'ccc', 'ccd'];
 
     public function dependencia(){
         return $this->belongsTo(Dependencia::class, 'dependencia_id');
@@ -23,14 +23,16 @@ class AlmacenComprobanteEgreso extends Model
     }
 
     public function salidas() {
-        return $this->belongsToMany(AlmacenArticulo::class, 'almacen_articulo_salidas')->withPivot('cantidad');
+        return $this->belongsToMany(AlmacenArticulo::class, 'almacen_articulo_salidas')->withPivot('cantidad', 'id', 'status', 'Observacion');
     }
 
-    public function puc_ccd(){
-        return $this->belongsTo(PucAlcaldia::class, 'ccd');
+    public function setCccAttribute($value)
+    {
+        $this->attributes['ccc'] = json_encode($value);
     }
 
-    public function puc_ccc(){
-        return $this->belongsTo(PucAlcaldia::class, 'ccc');
+    public function setCcdAttribute($value)
+    {
+        $this->attributes['ccd'] = json_encode($value);
     }
 }

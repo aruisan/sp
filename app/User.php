@@ -94,4 +94,8 @@ class User extends Authenticatable implements JWTSubject
         //     return false;
         // }
     }    
+
+    public function validar_cargo($cargo){
+        return in_array($cargo, auth()->user()->getRoleNames()->toArray());
+    }
 }

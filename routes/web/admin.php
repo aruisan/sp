@@ -11,6 +11,7 @@ Auth::routes();
 //Route::get('/home', 'Cobro\HomeController@index')->name('home');
 
 Route::group([ 'middleware' => 'auth'] ,function(){
+    Route::get('bbdd_backup', 'Admin\ConfigGeneralController@bbdd_backup')->name('bbdd_backup');
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
 
 	Route::resource('predios', 'Cobro\PredioController');

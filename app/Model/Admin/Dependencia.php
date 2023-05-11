@@ -4,12 +4,13 @@ namespace App\Model\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\User;
 
 class Dependencia extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['num','name','sec'];
+    protected $fillable = ['num','name','sec', 'encargado_id'];
 
     public function subProyectos(){
 		return $this->hasMany('App\Model\Planeacion\Pdd\SubProyecto','dependencia_id');
@@ -29,6 +30,10 @@ class Dependencia extends Model implements Auditable
  
   public function types(){
     return $this->belongsToMany('App\Model\Cobro\Type','dependencia_ruta_type')->withPivot('ruta_id','dias');
+  }
+
+  public function encargado(){
+    return $this->belongsTo(User::class, 'encargado_id');
   }
 
 }
