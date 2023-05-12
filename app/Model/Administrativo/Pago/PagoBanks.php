@@ -17,4 +17,9 @@ class PagoBanks extends Model implements Auditable
         return $this->belongsTo('App\Model\Administrativo\Pago\Pagos', 'pagos_id');
     }
 
+    public function persona()
+    {
+        return $this->hasOne('App\Model\Persona','id','persona_id');
+    }
+
 }
