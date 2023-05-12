@@ -237,6 +237,7 @@
             methods:{
 
                 nuevoBanco: function(){
+
                     var nivel=parseInt($("#banks tr").length);
                     $('#banks tbody tr:last').after('<tr><td>\n' +
                         '                                <select class="form-control" name="banco[]" required>\n' +
@@ -248,8 +249,9 @@
                         '                            <td>\n' +
                         '                                <input type="number" required class="form-control" name="val[]" min="0" style="text-align:center">\n' +
                         '                            </td>\n' +
-                        '                            <td class="text-center"><select class="form-control" name="terceroRetefuente[]"><option value="0">NO APLICA</option> @foreach($personas as $persona) <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>@endforeach</select></td>\n' +
+                        '                            <td class="text-center"><select class="select-tercero" name="terceroRetefuente[]"><option value="0">NO APLICA</option> @foreach($personas as $persona) <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>@endforeach</select></td>\n' +
                         '                            <td class="text-center"><button type="button" class="btn-sm btn-danger borrar">&nbsp;-&nbsp; </button></td></tr>');
+                    $('.select-tercero').select2();
 
                 }
             }
