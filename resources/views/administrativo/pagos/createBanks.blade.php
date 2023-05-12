@@ -141,6 +141,7 @@
                             <tr>
                                 <th class="text-center">Banco</th>
                                 <th class="text-center">Valor</th>
+                                <th class="text-center">Tercero</th>
                                 <th class="text-center"><i class="fa fa-trash-o"></i></th>
                             </tr>
                             </thead>
@@ -157,6 +158,13 @@
                                 <td>
                                     <input type="number" required class="form-control" id="val[]" name="val[]" min="0" style="text-align:center"
                                     value="{{$pago->valor}}">
+                                </td>
+                                <td class="text-center">
+                                    @if(isset($pago->orden_pago->registros))
+                                        {{ $pago->orden_pago->registros->persona->nombre }}
+                                    @else
+                                        DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN
+                                    @endif
                                 </td>
                                 <td></td>
                             </tr>
@@ -240,6 +248,7 @@
                         '                            <td>\n' +
                         '                                <input type="number" required class="form-control" name="val[]" min="0" style="text-align:center">\n' +
                         '                            </td>\n' +
+                        '                            <td class="text-center"><select class="form-control" name="terceroRetefuente[]"><option value="0">NO APLICA</option> @foreach($personas as $persona) <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>@endforeach</select></td>\n' +
                         '                            <td class="text-center"><button type="button" class="btn-sm btn-danger borrar">&nbsp;-&nbsp; </button></td></tr>');
 
                 }

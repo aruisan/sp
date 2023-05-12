@@ -294,6 +294,19 @@ class PagosController extends Controller
 
         $valReceived =array_sum($request->val);
         $pago = Pagos::findOrFail($request->pago_id);
+
+        if ($request->terceroRetefuente){
+            $reteFValidate = false;
+            foreach ($request->terceroRetefuente as $reteFuente){
+                if ($reteFuente != 0){
+                    $reteFValidate = true;
+                    $tercero = Persona::find($reteFuente);
+                    $pago->concepto = $pago->concepto." - ".$tercero->num_dc." ".$tercero->nombre;
+                }
+            }
+            if ($reteFValidate) $pago->reteFuente = '1';
+        }
+
         if ($request->adultoMayor != 0){
             $pago->persona_id = $request->adultoMayor;
             $adultoMayor = Persona::find($request->adultoMayor);
@@ -348,6 +361,7 @@ class PagosController extends Controller
                     $bank->pagos_id = $request->pago_id;
                     $bank->rubros_puc_id = $request->banco[$i];
                     $bank->valor = $request->val[$i];
+                    if ($request->terceroRetefuente and $i > 0 and $reteFValidate) $bank->persona_id = $request->terceroRetefuente[$i-1];
                     $bank->save();
                 }
 

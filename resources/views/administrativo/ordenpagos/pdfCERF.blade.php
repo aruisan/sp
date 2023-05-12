@@ -86,7 +86,7 @@
 			</table>
 		</div>
 		<div class="table-responsive br-black-1">
-			<table class="table table-bordered" >
+			<table class="table-bordered" style="width: 100%">
 				<thead>
 				<tr>
 					<th class="text-center" colspan="4" style="background-color: rgba(19,165,255,0.14)">MOVIMIENTO BANCARIO</th>
@@ -169,7 +169,7 @@
 							@php( $date = strftime("%d of %B %Y", strtotime($OrdenPago->pago->created_at)))
 							<td> Núm Cheque: {{$OrdenPago->pago->num}} - Fecha: {{$date}}</td>
 						@endif
-						<td>{{ $banks[$y]->data_puc->concepto }}</td>
+						<td>{{ $banks[$y]->data_puc->concepto }} @if($banks[$y]->persona) - {{ $banks[$y]->persona->num_dc }} {{ $banks[$y]->persona->nombre }} @endif</td>
 						<td>0$</td>
 						<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
 					</tr>
