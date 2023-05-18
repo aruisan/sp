@@ -360,6 +360,8 @@ class TesoreriaDescuentosController extends Controller
             return back();
         }
 
+        $vigencia = Vigencia::find($request->vigencia_id);
+
         //dd($request);
     }
 

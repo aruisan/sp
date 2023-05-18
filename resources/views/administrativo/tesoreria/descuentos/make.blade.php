@@ -24,6 +24,7 @@
                     {{ csrf_field() }}
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                     <input type="hidden" id="vigencia_id" name="vigencia_id" value="{{$vigencia}}">
+                    <input type="hidden" id="mes" name="mes" value="{{$mes}}">
                     <div class="col-md-12 align-self-center">
                         Seleccione el tercero.
                         <select class="select-tercero" name="persona_id" style="width: 100%;">
