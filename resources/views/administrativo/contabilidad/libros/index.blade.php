@@ -98,7 +98,7 @@
                         },
                         "sProcessing":"Procesando...",
                     },
-                    "pageLength": 5,
+                    "pageLength": 15,
                     responsive: true,
                     "searching": true,
                     ordering: false,
