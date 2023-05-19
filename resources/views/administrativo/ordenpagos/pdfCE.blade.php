@@ -97,7 +97,11 @@
 				@for($y = 0; $y < count($banks); $y++)
 					<tr class="text-center">
 						<td>{{ $banks[$y]->data_puc->code }}</td>
-						<td>{{ $banks[$y]->data_puc->concepto }}</td>
+						@if($Pago->id == 7087)
+							<td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
+						@else
+							<td>{{ $banks[$y]->data_puc->concepto }}</td>
+						@endif
 						@if($Pago->type_pay == "ACCOUNT")
 							@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
 							<td> Núm Cuenta: {{$Pago->num}} - Fecha: {{$date}}</td>
@@ -199,7 +203,11 @@
 							@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
 							<td> Núm Cheque: {{$Pago->num}} - Fecha: {{$date}}</td>
 						@endif
-						<td>{{ $banks[$y]->data_puc->concepto }}</td>
+						@if($Pago->id == 7087)
+							<td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
+						@else
+							<td>{{ $banks[$y]->data_puc->concepto }}</td>
+						@endif
 						<td>0$</td>
 						<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
 					</tr>

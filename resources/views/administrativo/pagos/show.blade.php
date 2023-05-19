@@ -137,7 +137,11 @@
                                     @for($y = 0; $y < count($banks); $y++)
                                         <tr class="text-center">
                                             <td>{{ $banks[$y]->data_puc->code }}</td>
-                                            <td>{{ $banks[$y]->data_puc->concepto }}</td>
+                                            @if($pago->id == 7087)
+                                                <td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
+                                            @else
+                                                <td>{{ $banks[$y]->data_puc->concepto }}</td>
+                                            @endif
                                             @if($pago->type_pay == "ACCOUNT")
                                                 @php( $date = strftime("%d of %B %Y", strtotime($pago->created_at)))
                                                 <td> Núm Cuenta: {{$pago->num}} - Fecha: {{$date}}</td>
