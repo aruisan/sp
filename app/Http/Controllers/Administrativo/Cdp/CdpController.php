@@ -33,6 +33,14 @@ use Session;
 class CdpController extends Controller
 {
     use FirebaseNotificationTraits;
+
+    private $fechaFija;
+
+    public function __construct()
+    {
+        $this->fechaFija = '2023-05-15';
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -206,7 +214,7 @@ class CdpController extends Controller
         if ($countCdps == null) $count = 0;
         else $count = $countCdps->code;
 
-        $request->fecha = '2023-05-12';
+        $request->fecha = $this->fechaFija;
 
         $cdp = new Cdp();
         $cdp->name = $request->name;
@@ -224,7 +232,7 @@ class CdpController extends Controller
         //$cdp->ff_secretaria_e = '2023-03-16';
         $cdp->alcalde_e = '0';
         $cdp->vigencia_id = $request->vigencia_id;
-        $cdp->created_at = '2023-05-12 12:00:00';
+        $cdp->created_at = $this->fechaFija.' 12:00:00';
         $cdp->secretaria_user_id = auth()->user()->id;
         $cdp->save();
 
@@ -398,7 +406,7 @@ class CdpController extends Controller
     {
         $update = Cdp::findOrFail($id);
 
-        $fecha = '2023-05-12';
+        $fecha = $this->fechaFija;
         if ($rol == 2){
 
             //SE VALIDA QUE SE TENGA DINERO EN LA FUENTE PARA EL ENVIO DEL CDP
@@ -531,7 +539,7 @@ class CdpController extends Controller
 
     public function rechazar(Request $request, $id, $vigen)
     {
-        $request->fecha = '2023-05-12';
+        $request->fecha = $this->fechaFija;
         if ($request->rol == "3"){
             $update = Cdp::findOrFail($id);
             $update->jefe_e = "1";

@@ -83,7 +83,7 @@ class LibrosController extends Controller
                                                     $total = $total + $descuento->valor;
                                                     $tercero = $pagoF->orden_pago->registros->persona->nombre;
                                                     $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
-                                                    $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format(0,0),
+                                                    $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                                         'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                                         'total' => '$'.number_format($total,0)]);
                                                     //return $descuento->descuento_mun;
@@ -110,9 +110,22 @@ class LibrosController extends Controller
                                                 $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
                                                 $numIdent = 800197268;
                                             }
-                                            $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago', 'debito' => '$'.number_format($op_puc->valor_debito,0),
-                                                'credito' => '$'.number_format($op_puc->valor_credito,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                            $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
+                                                'debito' => '$'.number_format($op_puc->valor_debito,0),'credito' => '$'.number_format($op_puc->valor_credito,0),
+                                                'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                                 'total' => '$'.number_format($total,0)]);
+
+                                            //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
+                                            if ($op_puc->ordenPago->saldo == 0){
+                                                $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
+                                                foreach ($pagosOP as $pay){
+                                                    $total = $total + $op_puc->valor_credito;
+                                                    $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
+                                                        'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
+                                                        'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                                        'total' => '$'.number_format($total,0)]);
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -133,7 +146,8 @@ class LibrosController extends Controller
                                                 $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
                                                 $numIdent = 800197268;
                                             }
-                                            $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
+                                            $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code,
+                                                'debito' => '$'.number_format($pagoBank->valor,0),
                                                 'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                                 'total' => '$'.number_format($total,0)]);
                                         }
@@ -203,7 +217,7 @@ class LibrosController extends Controller
                                     $total = $total + $descuento->valor;
                                     $tercero = $pagoF->orden_pago->registros->persona->nombre;
                                     $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
-                                    $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format(0,0),
+                                    $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                         'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                         'total' => '$'.number_format($total,0)]);
                                     //return $descuento->descuento_mun;
@@ -230,9 +244,22 @@ class LibrosController extends Controller
                                 $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
                                 $numIdent = 800197268;
                             }
-                            $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago', 'debito' => '$'.number_format($op_puc->valor_debito,0),
-                                'credito' => '$'.number_format($op_puc->valor_credito,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $account->code.' - '.$account->concepto,
-                                'total' => '$'.number_format($total,0)]);
+                            $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
+                                'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
+                                'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
+                                'cuenta' => $account->code.' - '.$account->concepto, 'total' => '$'.number_format($total,0)]);
+
+                            //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
+                            if ($op_puc->ordenPago->saldo == 0){
+                                $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
+                                foreach ($pagosOP as $pay){
+                                    $total = $total + $op_puc->valor_credito;
+                                    $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
+                                        'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
+                                        'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
+                                        'total' => '$'.number_format($total,0)]);
+                                }
+                            }
                         }
                     }
                 }
@@ -253,7 +280,7 @@ class LibrosController extends Controller
                                 $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
                                 $numIdent = 800197268;
                             }
-                            $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
+                            $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code, 'debito' => '$'.number_format($pagoBank->valor,0),
                                 'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
                                 'total' => '$'.number_format($total,0)]);
                         }
@@ -323,7 +350,7 @@ class LibrosController extends Controller
                                             $total = $total + $descuento->valor;
                                             $tercero = $pagoF->orden_pago->registros->persona->nombre;
                                             $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
-                                            $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format(0,0),
+                                            $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                                 'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                                 'total' => '$'.number_format($total,0)]);
                                             //return $descuento->descuento_mun;
@@ -350,9 +377,22 @@ class LibrosController extends Controller
                                         $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
                                         $numIdent = 800197268;
                                     }
-                                    $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago', 'debito' => '$'.number_format($op_puc->valor_debito,0),
-                                        'credito' => '$'.number_format($op_puc->valor_credito,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                    $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
+                                        'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
+                                        'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                         'total' => '$'.number_format($total,0)]);
+
+                                    //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
+                                    if ($op_puc->ordenPago->saldo == 0){
+                                        $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
+                                        foreach ($pagosOP as $pay){
+                                            $total = $total + $op_puc->valor_credito;
+                                            $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
+                                                'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
+                                                'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
+                                                'total' => '$'.number_format($total,0)]);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -373,7 +413,7 @@ class LibrosController extends Controller
                                         $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
                                         $numIdent = 800197268;
                                     }
-                                    $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago', 'debito' => '$'.number_format($pagoBank->valor,0),
+                                    $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code, 'debito' => '$'.number_format($pagoBank->valor,0),
                                         'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                         'total' => '$'.number_format($total,0)]);
                                 }
