@@ -98,43 +98,70 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                @else
-                                    <br><div class="alert alert-danger"><center>La actividad no ha sido asignada a una dependencia</center></div><br>
-                                @endif
-                                @if($cdps->count() > 0)
-                                    <br>
-                                    <hr>
-                                    <center>
-                                        <h3>CDPs ASIGNADOS</h3>
-                                    </center>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="tablaRegistros">
-                                            <thead>
-                                            <tr>
-                                                <th class="text-center">Id</th>
-                                                <th class="text-center">Dependencia</th>
-                                                <th class="text-center">Fuente</th>
-                                                <th class="text-center">Rubro</th>
-                                                <th class="text-center">Valor Inicial</th>
-                                                <th class="text-center">Saldo</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            @foreach($cdps as $data)
+                                    @if($cdps->count() > 0)
+                                        <br>
+                                        <hr>
+                                        <center>
+                                            <h3>CDPs ASIGNADOS</h3>
+                                        </center>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="tablaCDPs">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th class="text-center">Objeto</th>
+                                                    <th class="text-center">Tipo</th>
+                                                    <th class="text-center">Estado</th>
+                                                    <th class="text-center">Valor</th>
+                                                    <th class="text-center">Saldo</th>
+                                                    <th class="text-center">Dependencia</th>
+                                                    <th class="text-center">Ver</th>
+                                                    <th class="text-center">PDF</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                @foreach($cdps as $data)
                                                     <tr class="text-center">
-                                                        <td>{{ $data }}</td>
-                                                        <td>{{ $data }}</td>
-                                                        <td>{{ $data }}</td>
-                                                        <td>{{ $data }}</td>
-                                                        <td>$ <?php echo number_format($data->valor,0);?>.00</td>
-                                                        <td>$ <?php echo number_format($data->valor,0);?>.00</td>
+                                                        <td>{{ $data->cdp->code }}</td>
+                                                        <td>{{ $data->cdp->name }}</td>
+                                                        <td>{{ $data->cdp->tipo }}</td>
+                                                        <td class="text-center">
+                                                            <span class="badge badge-pill badge-danger">
+                                                                @if($data->cdp->jefe_e == "0")
+                                                                    Pendiente
+                                                                @elseif($data->cdp->jefe_e == "1")
+                                                                    Rechazado
+                                                                @elseif($data->cdp->jefe_e == "2")
+                                                                    Anulado
+                                                                @elseif($data->cdp->jefe_e == "3")
+                                                                    Aprobado
+                                                                @else
+                                                                    En Espera
+                                                                @endif
+                                                            </span>
+                                                        </td>
+                                                        <td>$ <?php echo number_format($data->cdp->valor,0);?>.00</td>
+                                                        <td>$ <?php echo number_format($data->cdp->saldo,0);?>.00</td>
+                                                        <td>{{ $data->cdp->dependencia->name }}</td>
+                                                        <td class="text-center">
+                                                            <a href="{{ url('administrativo/cdp/'.$vigencia->id.'/'.$data->cdp->id) }}" title="Ver CDP" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if($data->cdp->jefe_e == "3")
+                                                                <a href="{{ url('administrativo/cdp/pdf/'.$data->cdp->id.'/'.$vigencia->id) }}" target="_blank" title="File" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                            @endif
+                                                        </td>
                                                     </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <br><div class="alert alert-danger"><center>La actividad no tiene CDPs asignados</center></div><br>
+                                    @endif
                                 @else
-                                    <br><div class="alert alert-danger"><center>La actividad no ha sido asignada a una dependencia</center></div><br>
+                                    <br><br>
+                                    <div class="alert alert-danger text-center">La actividad no ha sido asignada a una dependencia</div>
                                 @endif
                             </form>
                             <br>
@@ -176,12 +203,16 @@
                 responsive: true
             } );
 
+            $('#tablaCDPs').DataTable( {
+                responsive: true
+            } );
+
             $(document).on('click', '.borrar', function (event) {
                 event.preventDefault();
                 $(this).closest('tr').remove();
             });
 
-
+1163
         } );
     </script>
 @stop
