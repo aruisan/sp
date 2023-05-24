@@ -38,7 +38,7 @@ class CdpController extends Controller
 
     public function __construct()
     {
-        $this->fechaFija = '2023-05-16';
+        $this->fechaFija = '2023-05-17';
     }
 
     /**
@@ -461,22 +461,28 @@ class CdpController extends Controller
 
                     foreach ($update->rubrosCdpValor as $fuentes) {
                         if ($fuentes->fontsRubro->valor_disp >= $fuentes->valor) {
-                            $update->secretaria_e = $estado;
-                            if(auth()->user()->id == 39) {
-                                $update->alcalde_e = $estado;
-                                $update->ff_alcalde_e = $fecha;
+                            $depFont = DependenciaRubroFont::find($fuentes->fontsDep_id);
+                            if ($depFont->saldo >= $fuentes->valor){
+                                $update->secretaria_e = $estado;
+                                if(auth()->user()->id == 39) {
+                                    $update->alcalde_e = $estado;
+                                    $update->ff_alcalde_e = $fecha;
+                                }
+                                $update->jefe_e = $estado;
+                                $update->ff_jefe_e = $fecha;
+                                $update->valor = $valor;
+                                $update->saldo = $valor;
+
+                                $this->actualizarValorRubro($id);
+
+                                $update->save();
+
+                                Session::flash('success', 'El CDP ha sido finalizado con exito');
+                                return redirect('/administrativo/cdp/' . $update->vigencia_id);
+                            } else{
+                                Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la dependencia.');
+                                return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                             }
-                            $update->jefe_e = $estado;
-                            $update->ff_jefe_e = $fecha;
-                            $update->valor = $valor;
-                            $update->saldo = $valor;
-
-                            $this->actualizarValorRubro($id);
-
-                            $update->save();
-
-                            Session::flash('success', 'El CDP ha sido finalizado con exito');
-                            return redirect('/administrativo/cdp/' . $update->vigencia_id);
                         } else {
                             Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en el rubro');
                             return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
@@ -573,15 +579,13 @@ class CdpController extends Controller
     {
         $cdp = Cdp::findOrFail($id);
         foreach ($cdp->rubrosCdpValor as $fuentes){
-            $valor = $fuentes->valor;
-            $total = $fuentes->fontsRubro->valor_disp - $valor;
 
             $fontRubro = FontsRubro::findOrFail($fuentes->fontsRubro->id);
-            $fontRubro->valor_disp = $total;
+            $fontRubro->valor_disp = $fontRubro->valor_disp - $fuentes->valor;
             $fontRubro->save();
 
             $depFont = DependenciaRubroFont::find($fuentes->fontsDep_id);
-            $depFont->saldo = $depFont->saldo - $cdp->valor;
+            $depFont->saldo = $depFont->saldo - $fuentes->valor;
             $depFont->save();
         }
     }
@@ -747,13 +751,20 @@ class CdpController extends Controller
 
                         foreach ($update->rubrosCdpValor as $fuentes) {
                             if ($fuentes->fontsRubro->valor_disp >= $fuentes->valor) {
-                                $update->jefe_e = '3';
-                                $update->ff_jefe_e = Carbon::today();
-                                $update->saldo = $update->valor;
+                                $depFont = DependenciaRubroFont::find($fuentes->fontsDep_id);
+                                if ($depFont->saldo >= $fuentes->valor){
+                                    $update->jefe_e = '3';
+                                    $update->ff_jefe_e = Carbon::today();
+                                    $update->saldo = $update->valor;
 
-                                $this->actualizarValorRubro($request->$input);
+                                    $this->actualizarValorRubro($request->$input);
 
-                                $update->save();
+                                    $update->save();
+                                } else {
+                                    Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la dependencia');
+                                    return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $request->$input);
+                                }
+
                             } else {
                                 Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en el rubro');
                                 return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $request->$input);
