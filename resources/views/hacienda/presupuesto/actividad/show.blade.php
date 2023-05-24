@@ -5,7 +5,7 @@
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>Información de la Actividad</b></h4>
+                <h4><b>{{ $bpin->cod_actividad }} - {{ $bpin->actividad }}</b></h4>
             </strong>
         </div>
         <div class="col-lg-12">
@@ -13,7 +13,7 @@
                 <li class="nav-item regresar"><a class="nav-link" href="{{ url('/presupuesto/actividades/'.$vigencia->id) }}">Volver a Actividades</a></li>
                 <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Actividad {{ $bpin->cod_actividad }}</a></li>
                 @if(auth()->user()->roles->first()->id != 2)
-                    <li class="dropdown">
+                    <li class="hidden">
                         <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
@@ -35,7 +35,7 @@
                 <div id="info" class="tab-pane fade in active">
                     <div class="row ">
                         <br>
-                        <div class="col-sm-9"><h3>Nombre del Proyecto: {{ $bpin->nombre_proyecto }}</h3></div>
+                        <div class="col-sm-9"><h4><b>Proyecto: {{ $bpin->nombre_proyecto }}</b></h4></div>
                         <div class="col-sm-3"><h4><b>Codigo del Proyecto:</b>&nbsp;{{ $bpin->cod_proyecto }}</h4></div>
                         <br><br>
                         <div class="form-validation">
@@ -43,15 +43,11 @@
                                 <hr>
                                 {{ csrf_field() }}
                                 <div class="col-lg-6">
-                                    <table class="table-responsive" width="100%">
+                                    <table class="table-responsive" style="width: 100%">
                                         <tbody class="text-center">
                                         <tr>
-                                            <td><b>Codigo de Actividad:</b></td>
-                                            <td><textarea class="text-center" style="border: none; resize: none;" disabled>{{ $bpin->cod_actividad }}</textarea></td>
-                                        </tr>
-                                        <tr>
                                             <td><b>Actividad:</b></td>
-                                            <td><textarea class="text-center" style="border: none; resize: none;" disabled>{{ $bpin->actividad }}</textarea></td>
+                                            <td>{{ $bpin->actividad }}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -60,12 +56,86 @@
                                     <table class="table-responsive" style="width: 100%">
                                         <tbody class="text-center">
                                         <tr>
-                                            <td><b>Saldo:</b></td>
-                                            <td>$<?php echo number_format($bpin->saldo,0) ?></td>
+                                            @if($bpin->rubroFind->count() > 0)
+                                                <td><b>Saldo:</b></td>
+                                                <td>$<?php echo number_format($bpin->rubroFind->sum('saldo'),0) ?></td>
+                                            @endif
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
+                                @if($bpin->rubroFind->count() > 0)
+                                    <br>
+                                    <hr>
+                                    <center>
+                                        <h3>DEPENDENCIAS ASIGNADAS</h3>
+                                    </center>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="tablaRegistros">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">Id</th>
+                                                <th class="text-center">Dependencia</th>
+                                                <th class="text-center">Fuente</th>
+                                                <th class="text-center">Rubro</th>
+                                                <th class="text-center">Valor Inicial</th>
+                                                <th class="text-center">Saldo</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($bpin->rubroFind as $data)
+                                                @if($data->vigencia_id == $vigencia->id)
+                                                    <tr class="text-center">
+                                                        <td>{{ $data->id }}</td>
+                                                        <td>{{ $data->rubro->dependencias->name }}</td>
+                                                        <td>{{ $data->rubro->fontRubro->sourceFunding->code }} - {{ $data->rubro->fontRubro->sourceFunding->description }}</td>
+                                                        <td>{{ $data->rubro->fontRubro->rubro->cod }} - {{ $data->rubro->fontRubro->rubro->name }}</td>
+                                                        <td>$ <?php echo number_format($data->propios,0);?>.00</td>
+                                                        <td>$ <?php echo number_format($data->saldo,0);?>.00</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <br><div class="alert alert-danger"><center>La actividad no ha sido asignada a una dependencia</center></div><br>
+                                @endif
+                                @if($cdps->count() > 0)
+                                    <br>
+                                    <hr>
+                                    <center>
+                                        <h3>CDPs ASIGNADOS</h3>
+                                    </center>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="tablaRegistros">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">Id</th>
+                                                <th class="text-center">Dependencia</th>
+                                                <th class="text-center">Fuente</th>
+                                                <th class="text-center">Rubro</th>
+                                                <th class="text-center">Valor Inicial</th>
+                                                <th class="text-center">Saldo</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($cdps as $data)
+                                                    <tr class="text-center">
+                                                        <td>{{ $data }}</td>
+                                                        <td>{{ $data }}</td>
+                                                        <td>{{ $data }}</td>
+                                                        <td>{{ $data }}</td>
+                                                        <td>$ <?php echo number_format($data->valor,0);?>.00</td>
+                                                        <td>$ <?php echo number_format($data->valor,0);?>.00</td>
+                                                    </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <br><div class="alert alert-danger"><center>La actividad no ha sido asignada a una dependencia</center></div><br>
+                                @endif
                             </form>
                             <br>
                         </div>

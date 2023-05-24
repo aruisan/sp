@@ -6,6 +6,7 @@ use App\bpinVigencias;
 use App\Http\Controllers\Controller;
 use App\BPin;
 use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
@@ -40,8 +41,9 @@ class ActividadController extends Controller
 
         $bpin = BPin::find($id);
         $vigencia = Vigencia::find($vigencia_id);
+        $cdps = BpinCdpValor::where('cod_actividad', $bpin->cod_actividad)->get();
 
-        return view('hacienda.presupuesto.actividad.show', compact('bpin','vigencia'));
+        return view('hacienda.presupuesto.actividad.show', compact('bpin','vigencia','cdps'));
     }
 
     public function certProyecto($code){
