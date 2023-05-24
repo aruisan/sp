@@ -27,10 +27,20 @@
                     <table class="table table-bordered" id="tabla_CDP">
                         <thead>
                         <tr>
+                            <th class="text-center">Fecha Impuesto</th>
                             <th class="text-center">Registro de ingreso No.</th>
                             <th class="text-center">Nombre Embarcación</th>
+                            <th class="text-center">Propietario Embarcación</th>
+                            <th class="text-center">Bandera</th>
+                            <th class="text-center"># Tripulantes</th>
+                            <th class="text-center">Tipo de Carga</th>
+                            <th class="text-center">Eslora</th>
+                            <th class="text-center">Nombre Naviera</th>
+                            <th class="text-center">Rep Legal</th>
                             <th class="text-center">NIT/CC</th>
-                            <th class="text-center">Fecha Impuesto</th>
+                            <th class="text-center">Rep del Impuesto</th>
+                            <th class="text-center">Fecha Ingreso</th>
+                            <th class="text-center">Fecha Salida</th>
                             <th class="text-center">Valor Impuesto</th>
                             <th class="text-center">Ver Registro</th>
                             <th class="text-center">Cargar Constancia de Pago</th>
@@ -39,10 +49,20 @@
                         <tbody>
                         @foreach($atraquesPend as $index => $atraque)
                             <tr>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fecha)->format('d-m-Y') }}</td>
                                 <td class="text-center">{{ $atraque->numRegistroIngreso }}</td>
                                 <td class="text-center">{{ $atraque->name }}</td>
+                                <td class="text-center">{{ $atraque->nameCap }}</td>
+                                <td class="text-center">{{ $atraque->bandera }}</td>
+                                <td class="text-center">{{ $atraque->tripulantes }}</td>
+                                <td class="text-center">{{ $atraque->tipoCarga }}</td>
+                                <td class="text-center">{{ $atraque->piesEslora }}</td>
+                                <td class="text-center">{{ $atraque->nameNaviera }}</td>
+                                <td class="text-center">{{ $atraque->nameRep }}</td>
                                 <td class="text-center">{{ $atraque->numIdent }}</td>
-                                <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fecha)->format('d-m-Y') }}</td>
+                                <td class="text-center">{{ $atraque->nameRepPago }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fechaAtraque)->format('d-m-Y') }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fechaSalida)->format('d-m-Y') }}</td>
                                 <td class="text-center">$<?php echo number_format($atraque->valorPago,0) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id) }}" title="Ver registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
