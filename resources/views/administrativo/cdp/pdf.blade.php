@@ -108,7 +108,7 @@
 					</tr>
 					<tr style="font-size: 13px;">
 						<td style="width: 30px;">DEPENDENCIA: </td>
-						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->cdpsSecretaria->dependencia->name : ''}}</td>
+						<td> {{!is_null($cdp->cdpsSecretaria) ? $cdp->dependencia->name : ''}}</td>
 					</tr>
 				</tbody>
 			</table>
