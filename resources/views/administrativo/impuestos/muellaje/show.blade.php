@@ -73,18 +73,14 @@
                                 <td>@if($muellaje->sustanciasPeligrosas == 0) NO @else SI @endif</td>
                             </tr>
                             <tr>
-                                <td>Número de vehículos</td>
-                                <td>{{$muellaje->vehiculos}}</td>
-                                <td>Clase vehiculo</td>
-                                <td>{{$muellaje->claseVehiculo}}</td>
+                                <td>NIT/CC</td>
+                                <td colspan="3">{{$muellaje->numIdent}}</td>
                                 <td>Fecha permiso</td>
                                 <td>{{ \Carbon\Carbon::parse($muellaje->fechaPermiso)->format('d-m-Y') }}</td>
                             </tr>
                             <tr>
-                                <td>Titular del permiso</td>
-                                <td colspan="3">{{$muellaje->titularPermiso}}</td>
-                                <td>NIT/CC</td>
-                                <td>{{$muellaje->numIdent}}</td>
+                                <td colspan="2">Titular del permiso</td>
+                                <td colspan="4">{{$muellaje->titularPermiso}}</td>
                             </tr>
                             </tbody>
                         </table>

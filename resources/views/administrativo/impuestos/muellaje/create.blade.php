@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="form-validation">
-                        <form class="form-valide" action="{{url('/administrativo/impuestos/muellaje')}}" method="POST" enctype="multipart/form-data" id="formulario">
+                        <form class="form-valide" action="{{url('/administrativo/impuestos/muellaje')}}" method="POST" enctype="multipart/form-data" id="prog">
                             {{ csrf_field() }}
                             <table id="TABLA1" class="table text-center">
                                 <tbody>
@@ -109,7 +109,7 @@
                                     <td>Tipo de Carga</td>
                                     <td colspan="3"><input class="form-control" type="text" name="tipoCarga" id="tipoCarga" required></td>
                                     <td>Tonelaje Carga</td>
-                                    <td><input class="form-control" type="number" min="1" value="1" name="tonelajeCarga" id="tonelajeCarga" required></td>
+                                    <td><input class="form-control" type="number" min="0" value="0" name="tonelajeCarga" id="tonelajeCarga" required></td>
                                 </tr>
                                 <tr>
                                     <td>Número de Tripulantes</td>
@@ -124,18 +124,29 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Número de vehículos</td>
-                                    <td><input class="form-control" type="number" value="0" min="0" name="vehiculos" id="vehiculos" required></td>
-                                    <td>Clase vehiculo</td>
-                                    <td><input class="form-control" type="text" name="claseVehiculo" id="claseVehiculo" required></td>
+                                    <td>NIT/CC</td>
+                                    <td colspan="3"><input class="form-control" type="number" name="numIdent" id="numIdent" required></td>
                                     <td>Fecha permiso</td>
                                     <td><input type="date" class="form-control" name="fechaPermiso" id="fechaPermiso" required></td>
                                 </tr>
                                 <tr>
-                                    <td>Titular del permiso</td>
-                                    <td colspan="3"><input class="form-control" type="text" name="titularPermiso" id="titularPermiso" required></td>
-                                    <td>NIT/CC</td>
-                                    <td><input class="form-control" type="number" name="numIdent" id="numIdent" required></td>
+                                    <td colspan="2">Titular del permiso</td>
+                                    <td colspan="4"><input class="form-control" type="text" name="titularPermiso" id="titularPermiso" required></td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="table text-center" id="vehiculosTable">
+                                <tbody>
+                                <tr style="background-color: #0e7224; color: white">
+                                    <th scope="row" colspan="5">VEHÍCULOS</th>
+                                </tr>
+                                <tr>
+                                    <td><button type="button" @click.prevent="nuevaFila" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-plus"></i></button></td>
+                                    <td>Número de vehículos</td>
+                                    <td><input class="form-control" type="number" value="0" min="0" name="vehiculos[]" id="vehiculos"></td>
+                                    <td>Clase vehiculo</td>
+                                    <td><input class="form-control" type="text" name="claseVehiculo[]" id="claseVehiculo"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -165,10 +176,10 @@
                             <table class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="4">DESCRIPCIÓN NAVIERA</th>
+                                    <th scope="row" colspan="4">DESCRIPCIÓN AGENTE MARÍTIMO</th>
                                 </tr>
                                 <tr>
-                                    <td>Nombre Naviera</td>
+                                    <td>Nombre Agente Marítimo</td>
                                     <td><input class="form-control" type="text" name="nameNaviera" id="nameNaviera" required></td>
                                     <td>NIT</td>
                                     <td><input class="form-control" type="number" name="NITNaviera" id="NITNaviera" required></td>
@@ -462,5 +473,39 @@
             currency: 'USD',
             minimumFractionDigits: 0
         })
+
+
+        $(document).on('click', '.borrar', function (event) {
+            event.preventDefault();
+            $(this).closest('tr').remove();
+        });
+
+        new Vue({
+            el: '#prog',
+
+            methods:{
+
+                eliminarVehiculo: function(dato){
+                    var opcion = confirm("Esta seguro de eliminar el vehículo?");
+                    if (opcion == true) {
+                        var urlexogena = '/administrativo/impuestos/muellaje/vehiculo/delete/'+dato;
+                        axios.delete(urlexogena).then(response => {
+                            location.reload();
+                        });
+                    }
+                },
+
+                nuevaFila(){
+                    $('#vehiculosTable tbody tr:last').after('<tr>\n' +
+                        '<td style="vertical-align: middle"><button type="button" class="btn-primary-impuestos btn-sm borrar">&nbsp;-&nbsp; </button></td>\n'+
+                        '<td>Número de vehículos</td>\n'+
+                        '<td><input class="form-control" type="number" value="0" min="0" name="vehiculos[]" id="vehiculos" required></td>\n'+
+                        '<td>Clase vehiculo</td>\n'+
+                        '<td><input class="form-control" type="text" name="claseVehiculo[]" id="claseVehiculo" required></td>\n'+
+                        '</tr>\n');
+                },
+
+            }
+        });
     </script>
 @stop
