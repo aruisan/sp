@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\Impuestos;
 
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Impuestos\Muellaje;
+use App\Model\Administrativo\Impuestos\MuellajeVehiculos;
 use App\Model\Impuestos\Pagos;
 use App\Model\User;
 use App\Traits\ResourceTraits;
@@ -72,8 +73,6 @@ class MuellajeController extends Controller
         $muellaje->tripulantes = $request->tripulantes;
         $muellaje->pasajeros = $request->pasajeros;
         $muellaje->sustanciasPeligrosas = $request->sustanciasPeligrosas;
-        $muellaje->vehiculos = $request->vehiculos;
-        $muellaje->claseVehiculo = $request->claseVehiculo;
         $muellaje->fechaPermiso = $request->fechaPermiso;
         $muellaje->titularPermiso = $request->titularPermiso;
         $muellaje->numIdent = $request->numIdent;
@@ -101,6 +100,16 @@ class MuellajeController extends Controller
         $muellaje->observaciones = $request->observaciones;
         $muellaje->funcionario_id = Auth::user()->id;
         $muellaje->save();
+
+        for ($i = 0; $i < count($request->vehiculos); $i++) {
+            if ($request->vehiculos[$i]){
+                $newVehicle = new MuellajeVehiculos();
+                $newVehicle->imp_id = $muellaje->id;
+                $newVehicle->vehiculos = $request->vehiculos[$i];
+                $newVehicle->claseVehiculo = $request->claseVehiculo[$i];
+                $newVehicle->save();
+            }
+        }
 
         $muellajeNumRef = Muellaje::find($muellaje->id);
         if (strlen($muellajeNumRef->id) < 5){

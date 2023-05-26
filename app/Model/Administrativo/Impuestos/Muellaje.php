@@ -15,4 +15,8 @@ class Muellaje extends Model implements Auditable
     public function user(){
         return $this->belongsTo('App\User','id');
     }
+
+    public function vehiculosRelation(){
+        return $this->hasMany('App\Model\Administrativo\Impuestos\MuellajeVehiculos','imp_id');
+    }
 }
