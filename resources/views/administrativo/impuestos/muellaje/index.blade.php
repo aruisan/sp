@@ -19,7 +19,7 @@
         </li>
     </ul>
 
-    <div class="tab-content" >
+    <div class="tab-content" id="app">
         <div id="tabTareas" class="tab-pane fade in active"><br>
             <br>
             <div class="table-responsive">
@@ -66,6 +66,8 @@
                                 <td class="text-center">$<?php echo number_format($atraque->valorPago,0) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id) }}" title="Ver registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ url('administrativo/impuestos/muellaje/edit/'.$atraque->id) }}" title="Editar registro" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                    <a @click.prevent="eliminarRegistro({{ $atraque->id }})" class="btn btn-sm btn-primary"><i class="fa fa-trash"></i></a>
                                 </td>
                                 <td class="text-center">
                                     <button onclick="getModalPago({{$atraque->numRegistroIngreso}}, {{$atraque->id}})" class="btn btn-danger"><i class="fa fa-usd"></i></button>
@@ -245,5 +247,22 @@
             $('#regId').val(id);
             document.getElementById("regIngresoText").innerHTML = numRefPago;
         }
+
+        new Vue({
+            el: '#app',
+
+            methods:{
+
+                eliminarRegistro: function(dato){
+                    var opcion = confirm("Esta seguro de eliminar el registro?");
+                    if (opcion == true) {
+                        var urlexogena = '/administrativo/impuestos/muellaje/'+dato+'/delete';
+                        axios.delete(urlexogena).then(response => {
+                            location.reload();
+                        });
+                    }
+                }
+            }
+        });
     </script>
 @stop

@@ -399,8 +399,11 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
             //MUELLAJE
         Route::post('impuestos/muellaje/{id}/find','Administrativo\Impuestos\MuellajeController@findAtraque');
+        Route::get('impuestos/muellaje/edit/{id}','Administrativo\Impuestos\MuellajeController@edit');
         Route::resource('impuestos/muellaje','Administrativo\Impuestos\MuellajeController');
         Route::post('impuestos/muellaje/pay','Administrativo\Impuestos\MuellajeController@pay');
+        Route::delete('impuestos/muellaje/vehiculo/delete/{id}', 'Administrativo\Impuestos\MuellajeController@deleteVehiculo');
+        Route::delete('impuestos/muellaje/{id}/delete', 'Administrativo\Impuestos\MuellajeController@delete');
 
             //DELINEACION Y URBANISMO
         Route::resource('impuestos/delineacion','Administrativo\Impuestos\DelineacionController');
