@@ -117,12 +117,16 @@
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="pill" href="@can('pac-list') #tabPAC @endcan">PAC</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="@can('cdps-list') #tabCert @endcan">CDP's</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="@can('registros-list') #tabReg @endcan">Registros</a>
-                    </li>
+                    @if(count($cdps) >= 1)
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a>
+                        </li>
+                    @endif
+                    @if(count($registros) >= 1)
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="pill" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="pill" href=" @can('adiciones-list') #tabAddEgr @endcan">Adiciones</a>
                     </li>
@@ -135,12 +139,16 @@
                     <li class="nav-item">
                         <a class="nav-link disabled hidden" data-toggle="pill" href="#tabApl">Aplazamientos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#tabOP">Orden de Pago</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#tabP">Pagos</a>
-                    </li>
+                    @if(count($ordenPagos) >= 1)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('administrativo/ordenPagos/'.$V) }}">Orden de Pago</a>
+                        </li>
+                    @endif
+                    @if(count($pagos) >= 1)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('administrativo/pagos/'.$V) }}">Pagos</a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="pill" href="#tab_proyectos" onclick="show_bpins()">Proyectos</a>
                     </li>
@@ -321,182 +329,6 @@
                         </div>
                     </div>
 
-                    <!-- TABLA DE CDP's -->
-
-                    <div id="tabCert" class=" tab-pane fade"><br>
-                        <div class="table-responsive">
-                            @if(count($cdps) >= 1)
-                                <div class="row">
-                                    <div style="position:left;">
-                                        <a href="{{ url('administrativo/cdp/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a CDP's</a>
-                                        <br><br>
-                                    </div>
-                                </div>
-                                <table class="table table-bordered" id="tabla_CDP">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-center">#</th>
-                                        <th class="text-center">Objeto</th>
-                                        <th class="text-center">Valor</th>
-                                        <th class="text-center">Estado Secretaria</th>
-                                        <th class="text-center">Estado Alcalde</th>
-                                        <th class="text-center">Estado Jefe</th>
-                                        <th class="text-center">Ver</th>
-                                        <th class="text-center">Archivo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($cdps as $index => $cdp)
-                                        <tr>
-                                            <td class="text-center">{{ $cdp['code'] }}</td>
-                                            <td class="text-center">{{ $cdp['name'] }}</td>
-                                            <td class="text-center">$ <?php echo number_format($cdp['valor'],0);?>.00</td>
-                                            <td class="text-center">
-                                            <span class="badge badge-pill badge-danger">
-                                                @if($cdp['secretaria_e'] == "0")
-                                                    Pendiente
-                                                @elseif($cdp['secretaria_e'] == "1")
-                                                    Rechazado
-                                                @elseif($cdp['secretaria_e'] == "2")
-                                                    Anulado
-                                                @else
-                                                    Enviado
-                                                @endif
-                                            </span>
-                                            </td>
-                                            <td class="text-center">
-                                            <span class="badge badge-pill badge-danger">
-                                                @if($cdp['alcalde_e'] == "0")
-                                                    Pendiente
-                                                @elseif($cdp['alcalde_e'] == "1")
-                                                    Rechazado
-                                                @elseif($cdp['alcalde_e'] == "2")
-                                                    Anulado
-                                                @elseif($cdp['alcalde_e'] == "3")
-                                                    Aprobado
-                                                @else
-                                                    En Espera
-                                                @endif
-                                            </span>
-                                            </td>
-                                            <td class="text-center">
-                                            <span class="badge badge-pill badge-danger">
-                                                @if($cdp['jefe_e'] == "0")
-                                                    Pendiente
-                                                @elseif($cdp['jefe_e'] == "1")
-                                                    Rechazado
-                                                @elseif($cdp['jefe_e'] == "2")
-                                                    Anulado
-                                                @elseif($cdp['jefe_e'] == "3")
-                                                    Aprobado
-                                                @else
-                                                    En Espera
-                                                @endif
-                                            </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ url('administrativo/cdp/'.$V.'/'.$cdp['id']) }}" title="Ver" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                            </td>
-                                            <td class="text-center">
-                                                @if($cdp->secretaria_e == 3 and $cdp->jefe_e == 3)
-                                                    <a href="{{ url('administrativo/cdp/pdf/'.$cdp['id'].'/'.$V) }}" target="_blank" title="certificado" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
-                                                @elseif($cdp['jefe_e'] == "2")
-                                                    <span class="badge badge-pill badge-danger">Anulado</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <br>
-                                <div class="alert alert-danger">
-                                    <center>
-                                        No hay CDP's.<br><br>
-                                        <a href="{{ url('administrativo/cdp/create/'.$V) }}" class="btn btn-danger ">Crear CDP</a>
-                                    </center>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- TABLA DE REGISTROS -->
-
-                    <div id="tabReg" class=" tab-pane fade"><br>
-                        <div class="table-responsive">
-                            @if(count($registros) >= 1)
-                                <a href="{{ url('administrativo/registros/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a Registros</a>
-                                <br><br>
-                                <table class="table table-bordered" id="tabla_Registros">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-center">Id</th>
-                                        <th class="text-center">Nombre Registro</th>
-                                        <th class="text-center">Nombre Tercero</th>
-                                        <th class="text-center">Valor</th>
-                                        <th class="text-center">Estado Secretaria</th>
-                                        <th class="text-center">Estado Jefe</th>
-                                        <th class="text-center"><i class="fa fa-eye"></i></th>
-                                        <th class="text-center">Archivo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($registros as $key => $data)
-                                        <tr>
-                                            <td class="text-center">{{ $data['code'] }}</td>
-                                            <td class="text-center">{{ $data['objeto'] }}</td>
-                                            <td class="text-center">{{ $data['nombre'] }}</td>
-                                            <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
-                                            <td class="text-center">
-                                        <span class="badge badge-pill badge-danger">
-                                            @if($data['estadoSecretaria'] == "0")
-                                                Pendiente
-                                            @elseif($data['estadoSecretaria'] == "1")
-                                                Rechazado
-                                            @elseif($data['estadoSecretaria'] == "2")
-                                                Anulado
-                                            @else
-                                                Aprobado
-                                            @endif
-                                        </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-pill badge-danger">
-                                            @if($data['estadoJefe'] == "0")
-                                                        Pendiente
-                                                    @elseif($data['estadoJefe'] == "1")
-                                                        Rechazado
-                                                    @elseif($data['estadoJefe'] == "2")
-                                                        Anulado
-                                                    @else
-                                                        Aprobado
-                                                    @endif
-                                        </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ url('administrativo/registros/show',$data['id']) }}" title="Ver Registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                            </td>
-                                            <td class="text-center">
-                                                @if($data['estadoJefe'] == 3)
-                                                    <a href="{{ url('administrativo/registro/pdf/'.$data['id'].'/'.$V) }}" target="_blank" title="certificado-registro" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <br>
-                                <div class="alert alert-danger">
-                                    <center>
-                                        No hay Registros.<br><br>
-                                        <a href="{{ url('administrativo/registros/create/'.$V) }}" class="btn btn-danger " >Crear Registro</a>
-                                    </center>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
                     <!-- TABLAS DE ADICIONES -->
 
                     <br>
@@ -596,124 +428,6 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-
-                    <!-- TABLA DE ORDEN DE PAGOS  -->
-
-                    <div id="tabOP" class=" tab-pane fade">
-                        <div class="table-responsive">
-                            @if(count($ordenPagos) >= 1)
-                                <a href="{{ url('administrativo/ordenPagos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a Ordenes de Pago</a>
-                                <br><br>
-                                <table class="table table-bordered" id="tabla_OrdenPago">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-center">Id</th>
-                                        <th class="text-center">Concepto</th>
-                                        <th class="text-center">Valor</th>
-                                        <th class="text-center">Tercero</th>
-                                        <th class="text-center">Estado</th>
-                                        <th class="text-center"><i class="fa fa-eye"></i></th>
-                                        <th class="text-center">Archivo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($ordenPagos as $key => $data)
-                                        <tr>
-                                            <td class="text-center">{{ $data['code'] }}</td>
-                                            <td class="text-center">{{ $data['nombre'] }}</td>
-                                            <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
-                                            <td class="text-center">{{ $data['persona'] }}</td>
-                                            <td class="text-center">
-                                                <span class="badge badge-pill badge-danger">
-                                                    @if($data['estado'] == "0")
-                                                        Pendiente
-                                                    @elseif($data['estado'] == "1")
-                                                        Pagado
-                                                    @else
-                                                        Anulado
-                                                    @endif
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ url('administrativo/ordenPagos/show',$data['id']) }}" target="_blank" title="Ver Orden de Pago" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ url('administrativo/ordenPagos/pdf',$data['id']) }}" target="_blank" title="Orden de Pago" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <br>
-                                <div class="alert alert-danger">
-                                    <center>
-                                        No hay ordenes de pagos realizadas.<br><br>
-                                        <a href="{{ url('administrativo/ordenPagos/create/'.$V) }}" class="btn btn-danger ">Crear Orden de Pago</a>
-                                    </center>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- TABLA DE PAGOS  -->
-
-                    <div id="tabP" class=" tab-pane fade">
-                        <div class="table-responsive">
-                            @if(count($pagos) >= 1)
-                                <a href="{{ url('administrativo/pagos/'.$V) }}" class="btn btn-primary btn-block m-b-12">Ir a Pagos</a>
-                                <br><br>
-                                <table class="table table-bordered" id="tabla_Pagos">
-                                    <thead>
-                                    <tr>
-                                        <th class="text-center">Id</th>
-                                        <th class="text-center">Orden de Pago</th>
-                                        <th class="text-center">Valor</th>
-                                        <th class="text-center">Tercero</th>
-                                        <th class="text-center">Estado</th>
-                                        <th class="text-center"><i class="fa fa-eye"></i></th>
-                                        <th class="text-center">Archivo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($pagos as $key => $data)
-                                        <tr>
-                                            <td class="text-center">{{ $data['code'] }}</td>
-                                            <td class="text-center">{{ $data['nombre'] }}</td>
-                                            <td class="text-center">$<?php echo number_format($data['valor'],0) ?></td>
-                                            <td class="text-center">{{ $data['persona'] }}</td>
-                                            <td class="text-center">
-                                        <span class="badge badge-pill badge-danger">
-                                            @if($data['estado'] == "0")
-                                                Pendiente
-                                            @elseif($data['estado'] == "1")
-                                                Pagado
-                                            @else
-                                                Anulado
-                                            @endif
-                                        </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ url('administrativo/pagos/show',$data['id']) }}" target="_blank" title="Ver Pago" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ url('administrativo/egresos/pdf',$data['id']) }}" target="_blank" title="Comprobante de Egresos" class="btn-sm btn-danger"><i class="fa fa-file-pdf-o"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <br>
-                                <div class="alert alert-danger">
-                                    <center>
-                                        No hay pagos realizados.<br><br>
-                                        <a href="{{ url('administrativo/pagos/create/'.$V) }}" class="btn btn-danger ">Crear Pagos</a>
-                                    </center>
-                                </div>
-                            @endif
                         </div>
                     </div>
 
