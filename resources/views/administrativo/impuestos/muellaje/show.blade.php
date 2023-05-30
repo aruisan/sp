@@ -84,6 +84,23 @@
                             </tr>
                             </tbody>
                         </table>
+                        <table class="table text-center" id="vehiculosTable">
+                            <tbody>
+                            <tr style="background-color: #0e7224; color: white">
+                                <th scope="row" colspan="2">VEHÍCULOS</th>
+                            </tr>
+                            <tr style="background-color: #0e7224; color: white">
+                                <th scope="row">Número de Vehículos</th>
+                                <th scope="row">Clase de Vehículos</th>
+                            </tr>
+                            @foreach($muellaje->vehiculosRelation as $vehiculo)
+                                <tr>
+                                    <td>{{ $vehiculo->vehiculos }}</td>
+                                    <td>{{ $vehiculo->claseVehiculo }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                         <table class="table text-center">
                             <tbody>
                             <tr style="background-color: #0e7224; color: white">
