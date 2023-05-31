@@ -119,12 +119,12 @@
                     </li>
                     @if(count($cdps) >= 1)
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a>
+                            <a class="nav-link" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a>
                         </li>
                     @endif
                     @if(count($registros) >= 1)
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a>
+                            <a class="nav-link" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a>
                         </li>
                     @endif
                     <li class="nav-item">
