@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\feedPresupuesto'
     ];
 
     /**
@@ -24,8 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('feed:presupuesto')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));;
     }
 
     /**

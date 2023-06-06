@@ -411,6 +411,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::delete('impuestos/delineacion/vecino/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteVecino');
         Route::delete('impuestos/delineacion/titular/delete/{id}', 'Administrativo\Impuestos\DelineacionController@deleteTitular');
 
+        //OBTENER LOS USUARIOS QUE NO HAN PAGADO PREDIAL NI ICA
+        Route::get('impuestos/admin/noPayUsers','Administrativo\Impuestos\ImpAdminController@noPay');
+
         //ADMINISTRACION DE IMPUESTOS
         Route::resource('impuestos/admin','Administrativo\Impuestos\ImpAdminController');
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Impuestos;
 
+use App\Exports\UsersNOPagosImpuestosExport;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Impuestos\Comunicado;
 use App\Model\Impuestos\ImpSalarioMin;
@@ -10,10 +11,12 @@ use App\Model\Impuestos\Pagos;
 use App\Model\Impuestos\Predial;
 use App\Model\Impuestos\PredialContribuyentes;
 use App\Model\Impuestos\RIT;
+use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Session;
 
 class ImpAdminController extends Controller
@@ -128,14 +131,44 @@ class ImpAdminController extends Controller
         return redirect('/administrativo/impuestos/admin');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function noPay(){
+        $usersPredial = PredialContribuyentes::all();
+        foreach ($usersPredial as $user){
+            $impPred = Predial::where('imp_pred_contri_id', $user->id)->get();
+            if (count($impPred) == 0) $predialNoPay[] = $user;
+            else{
+                foreach ($impPred as $item) {
+                    $pago = Pagos::where('modulo', 'PREDIAL')->where('entity_id', $item->id)->first();
+                    if ($pago->estado != "Pagado"){
+                        $predialNoPay[] = $user;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $usersImp = User::all();
+        foreach ($usersImp as $user){
+            if ($user->type_id == null){
+                $pagoContri = Pagos::where('modulo', 'ICA-Contribuyente')->where('user_id', $user->id)->first();
+                if (!$pagoContri) $icaContriNoPay[] = $user;
+                else{
+                    if ($pagoContri->estado != "Pagado") $icaContriNoPay[] = $user;
+                }
+
+                $pagoReten = Pagos::where('modulo', 'ICA-AgenteRetenedor')->where('user_id', $user->id)->first();
+                if (!$pagoReten) $icaRetenNoPay[] = $user;
+                else{
+                    if ($pagoReten->estado != "Pagado") $icaRetenNoPay[] = $user;
+                }
+            }
+        }
+
+        $fecha = Carbon::today();
+        $fecha = $fecha->format('d-m-Y');
+
+        return Excel::download(new UsersNOPagosImpuestosExport($predialNoPay, $icaRetenNoPay, $icaContriNoPay),
+            'Informe Usuarios no Pago Impuestos '.$fecha.'.xlsx');
+
     }
 }
