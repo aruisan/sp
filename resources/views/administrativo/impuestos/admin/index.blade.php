@@ -436,6 +436,11 @@
                     titleAttr: 'Paz y Salvo',
                     className: 'btn btn-primary'
                 },
+                {
+                    text: '<i onclick="getUsersNoPay()">Usuarios No Pago</i>',
+                    titleAttr: 'Paz y Salvo',
+                    className: 'btn btn-primary'
+                },
             ]
 
         } );
@@ -558,6 +563,10 @@
 
         function getModalPazySalvo(){
             $('#formPazySalvo').modal('show');
+        }
+
+        function getUsersNoPay(){
+            window.location.href = "https://presupuesto.providenciaislas.com.co/administrativo/impuestos/admin/noPayUsers";
         }
     </script>
 @stop
