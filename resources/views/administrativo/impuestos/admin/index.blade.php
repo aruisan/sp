@@ -438,7 +438,7 @@
                 },
                 {
                     text: '<i onclick="getUsersNoPay()">Usuarios No Pago</i>',
-                    titleAttr: 'Paz y Salvo',
+                    titleAttr: 'Usuarios que no han pagado el impuesto PREDIAL o ICA',
                     className: 'btn btn-primary'
                 },
             ]
