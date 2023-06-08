@@ -19,10 +19,13 @@ use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
+use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
+use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\SourceFunding;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Session;
 
@@ -997,6 +1000,65 @@ class IndexController extends Controller
 
         Session::flash('success','Se ha asignado exitosamente la actividad al rubro.');
         return redirect('presupuesto/');
+
+    }
+
+    public function newPrepLoad(){
+        if (auth()->user()->roles->first()->id == 4) return redirect('/impuestos');
+
+        $today = Carbon::today();
+        $añoActual = $today->year;
+        $mesActual = $today->month;
+        $prepSaved = PresupuestoSnap::where('mes', $mesActual)->where('año', $añoActual)->first();
+        $lastDay = Carbon::now()->subDay()->toDateString();
+        $actuallyDay = Carbon::now()->toDateString();
+
+        if (!$prepSaved) {
+            Artisan::call("schedule:run");
+            $V = "Vacio";
+
+            return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
+                'añoActual', 'mesActual','V'));
+        } else{
+            $V = $prepSaved->vigencia_id;
+            $codeCon = CodeContractuales::all();
+            $bpins = BPin::all();
+            foreach ($bpins as $bpin){
+                $bpin['rubro'] = "No";
+                if (count($bpin->rubroFind) > 0) {
+                    foreach ($bpin->rubroFind as $rub){
+                        if ($rub->vigencia_id == $V){
+                            $bpin['rubro'] = $rub->dep_rubro_id;
+                        }
+                    }
+                }
+            }
+
+            return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
+                'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins'));
+        }
+    }
+
+    public function getPrepSaved(Request $request){
+
+        $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->get();
+        foreach ($prepSaved as $item){
+            $item->p_inicial = '$'.number_format($item->p_inicial, 0);
+            $item->adicion = '$'.number_format($item->adicion, 0);
+            $item->reduccion = '$'.number_format($item->reduccion, 0);
+            $item->credito = '$'.number_format($item->credito, 0);
+            $item->ccredito = '$'.number_format($item->ccredito, 0);
+            $item->p_def = '$'.number_format($item->p_def, 0);
+            $item->cdps = '$'.number_format($item->cdps, 0);
+            $item->rps = '$'.number_format($item->rps, 0);
+            $item->saldo_disp = '$'.number_format($item->saldo_disp, 0);
+            $item->saldo_cdps = '$'.number_format($item->saldo_cdps, 0);
+            $item->ops = '$'.number_format($item->ops, 0);
+            $item->pagos = '$'.number_format($item->pagos, 0);
+            $item->cuentas_pagar = '$'.number_format($item->cuentas_pagar, 0);
+            $item->reservas = '$'.number_format($item->reservas, 0);
+        }
+        return $prepSaved;
 
     }
 }

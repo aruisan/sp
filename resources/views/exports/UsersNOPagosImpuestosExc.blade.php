@@ -1,55 +1,24 @@
 <table>
     <thead>
     <tr>
-        <th colspan="3">NO PAGO PREDIAL</th>
-    </tr>
-    <tr>
-        <th>Num Catastral</th>
-        <th>Num Identidad</th>
-        <th>Contribuyente</th>
+        <th>NUMERO DE PAGO</th>
+        <th>FECHA CREACION</th>
+        <th>IMPUESTO</th>
+        <th>NOMBRE</th>
+        <th>CORREO</th>
+        <th>VALOR</th>
     </tr>
     </thead>
     <tbody>
-        @foreach($predial as $pred)
+        @foreach($noPagos as $item)
             <tr>
-                <td>{{ $pred['numCatastral']}}</td>
-                <td>{{ $pred['numIdent']}}</td>
-                <td>{{ $pred['contribuyente']}}</td>
+                <td>{{ $item->id}}</td>
+                <td>{{ $item->fechaCreacion}}</td>
+                <td>{{ $item->modulo}}</td>
+                <td>{{ $item->user->name}}</td>
+                <td>{{ $item->user->email}}</td>
+                <td>{{ $item->valor}}</td>
             </tr>
         @endforeach
-    </tbody>
-</table>
-<table>
-    <thead>
-    <tr><th colspan="2">NO PAGO ICA RETENEDOR</th></tr>
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach($icaReten as $iRet)
-        <tr>
-            <td>{{ $iRet['name']}}</td>
-            <td>{{ $iRet['email']}}</td>
-        </tr>
-    @endforeach
-    </tbody>
-</table>
-<table>
-    <thead>
-    <tr><th colspan="2">NO PAGO ICA CONTRIBUYENTE</th></tr>
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach($icaContri as $iCon)
-        <tr>
-            <td>{{ $iCon['name']}}</td>
-            <td>{{ $iCon['email']}}</td>
-        </tr>
-    @endforeach
     </tbody>
 </table>

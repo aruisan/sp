@@ -253,7 +253,7 @@
                         <li><a class="item-menu" href="{{route('chip.contable.actualizacion')}}">Actualizacion Y reporte</a></li>
                      </ul>
                   </li>
-                  <li><a class="item-menu" href="#">Deudores Morosos</a></li>
+                  <li><a class="item-menu" target="_blank" href="{{url('/administrativo/impuestos/admin/noPayUsers')}}">Deudores Morosos</a></li>
                   <li><a class="item-menu" href="#">Exogeno</a></li>
                   <li><a class="item-menu" href="#">Reciprocas</a></li>
                </ul>
