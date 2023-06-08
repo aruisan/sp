@@ -11,11 +11,11 @@
     <div class="row">
         <form action="{{route('almacen.ingreso.update', $ingreso->id)}}" method="post">
             {{ csrf_field() }}
-            {!! method_field('PUT') !!}
+            {!! method_field('PUT') !!} 
             <div class="row">
                 <div class="col-md-12 align-self-center">
                     <div class="form-group">
-                        <label class="col-lg-4 col-form-label text-right" for="nombre">Comprobante de Ingreso No. {{$ingreso->id}}<span class="text-danger">*</span></label>
+                        <label class="col-lg-4 col-form-label text-right" for="nombre">Comprobante de Ingreso No. {{$ingreso->index}}<span class="text-danger">*</span></label>
                     </div>
                 </div>
             </div><br>

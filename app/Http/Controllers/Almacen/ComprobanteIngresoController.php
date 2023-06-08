@@ -13,6 +13,12 @@ use PDF;
 
 class ComprobanteIngresoController extends Controller
 {
+    public function index(){
+        $entradas = AlmacenComprobanteIngreso::get()->filter(function($g){ return $g->articulos->count() > 0; });
+        return view('almacen.ingresos-index', compact('entradas'));
+    } 
+
+
     public function create(){
         $proovedores = Persona::all();
         $ingreso = AlmacenComprobanteIngreso::create(['owner_id' => auth()->id()]);
@@ -24,7 +30,7 @@ class ComprobanteIngresoController extends Controller
 
 
     public function update(Request $request, AlmacenComprobanteIngreso $ingreso){
-        ///dd($request->ccd[0]);
+        //dd($request->ccd[0]);
         
         $data_factura_update = $request->except(['nombre_articulo', 'codigo', 'referencia', 'cantidad', 'valor_unitario', 'estado','tipo','ccd']);
        
@@ -51,6 +57,7 @@ class ComprobanteIngresoController extends Controller
     public function show(AlmacenComprobanteIngreso $ingreso){
         return view('almacen.ingresos-show', compact('ingreso'));
     }
+    
 
     public function pdf(AlmacenComprobanteIngreso $ingreso){
         $pucs_id = $ingreso->articulos->pluck('ccd')->unique();

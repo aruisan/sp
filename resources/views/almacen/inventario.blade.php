@@ -22,8 +22,9 @@
                             <th class="text-center">Marca</th>
                             <th class="text-center">Presentación</th>
                             <th class="text-center">Referencia</th>
-                            <th class="text-center">Cantidad</th>
-                            <th class="text-center">Stock</th>
+                            <th class="text-center">Entrada</th>
+                            <th class="text-center">Salida</th>
+                            <th class="text-center">Saldo</th>
                             <th class="text-center">Valor Unitario</th>
                             <th class="text-center">Total</th>
                             <th class="text-center">Vida Util</th>
@@ -50,6 +51,7 @@
                                 <td>{{ $item->presentacion }}</td>
                                 <td>{{ $item->referencia}}</td>
                                 <td>{{ $item->cantidad}}</td>
+                                <td>{{ $item->articulos_salida->count() > 0 ? $item->articulos_salida->sum('cantidad') : 0}}</td>
                                 <td>{{ $item->stock}}</td>
                                 <td>{{ $item->valor_unitario}}</td>
                                 <td>{{ $item->total}}</td>
@@ -59,10 +61,10 @@
                                 <td>{{ $item->comprobante_ingreso->proovedor->nombre}}</td>
                                 <td>{{ $item->puc_ccd->code}}</td>
                                 <td>{{ $item->puc_ccd->almacen_puc_credito->code}}</td>
-                                <td><a href="{{ route('almacen.ingreso.show', $item->comprobante_ingreso->id)}}" target="_blank">{{ $item->comprobante_ingreso->id}}</a></td>
+                                <td><a href="{{ route('almacen.ingreso.show', $item->comprobante_ingreso->id)}}" target="_blank">{{ $item->comprobante_ingreso->nombre}}</a></td>
                                 <td>
                                     @foreach($item->comprobante_egresos as $egreso)
-                                        - <a href="{{ route('almacen.egreso.show', $egreso->id)}}" target="_blank">{{ $egreso->id}}</a> </br>
+                                        - <a href="{{ route('almacen.egreso.show', $egreso->id)}}" target="_blank">{{ $egreso->nombre}}</a> </br>
                                     @endforeach
                                 </td>
                                 <td>

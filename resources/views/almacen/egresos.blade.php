@@ -5,7 +5,7 @@
 @section('content')
     <div class="breadcrumb text-center">
         <strong>
-            <h4><b>Comprobante de Egreso No. {{$egreso->id}} </b></h4>
+            <h4><b>Comprobante de Egreso No. {{$egreso->index + 1}} </b></h4>
         </strong>
     </div>
     <div class="row">

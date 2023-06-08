@@ -48,14 +48,16 @@
 	</div>
 	<div class="container-fluid">
         <div class="col-md-12">
+            <div class="btn-group row" id="btn_anterior_siguiente">
+            </div>
+            <br><br>
             <form id="formulario" class="form-horizontal" method="post" action="{{route('nomina.update', $nomina->id)}}">
                 {{ csrf_field() }}
                 <input name="mes" id="input_mes" type="hidden">
                 <input name="accion" id="input_accion" type="hidden">
                 <input name="tipo" value="{{$nomina->tipo}}" type="hidden">
+                <input name="count" value="{{$nomina->empleados_nominas->count()}}" type="hidden">
             </form>
-            <div class="btn-group row" id="btn_anterior_siguiente">
-            </div>
         </div>
         <div class="col-md-3" style="display:none">
             <embed src="{{asset('file_public/AYUDAS DE NOMINA.pdf')}}" type="application/pdf" width="100%" height="600px" />
@@ -86,6 +88,7 @@
 
 
         const pintar_empleados = () =>{
+            console.log('empleados', empleados)
             empleados.forEach((e,index) => {
                 sumatorias.push([
                     e.movimiento.v_dias_laborados,
@@ -97,7 +100,8 @@
                     e.movimiento.v_bonificacion_servicios,
                     e.movimiento.v_bonificacion_recreacion,
                     e.movimiento.v_prima_antiguedad,
-                    e.total_descuentos
+                    e.total_descuentos,
+                    e.movimiento.retroactivo
                 ]);
 
                 console.log('ll', sumatorias[index]);
@@ -105,7 +109,7 @@
                 let descuentos = e.descuentos.map(d => `
                     <tr>
                         <td>
-                            <select name="descuento_tercero_${index}[]" class="form_control">
+                            <select name="descuento_tercero_${index}[]" class="form_control descuento_tercero_${index}">
                                 ${terceros.map(t => `<option value="${t.id}" ${t.id == d.tercero_id ? 'selected' : ''}>${t.nombre}</option>`)}
                             </select>
                         </td>
@@ -123,13 +127,16 @@
 
                 console.log('descuentos', e.descuentos);
                 let form = `
+                {{--
+                <div class="empleados" id="empleado_${index}">
+                --}}
                 <div class="empleados ${index > 0 ? 'ocultar' : ''} " id="empleado_${index}">
                         <div class="col-md-12">
-                            <label>ID: ${parseInt(index)+1}</label>
+                            <label>ID: ${parseInt(index)+1} -- ${e.id}</label>
                         </div>
                         <div class="col-md-12">
                             <label>CC: ${e.datos.num_dc}</label>
-                            <input name="empleado_id[]" type="hidden" value="${e.datos.id}">
+                            <input name="empleado_${index}[id]" class="empleado_${index}" type="hidden" value="${e.datos.id}">
                         </div>
                         <div class="col-md-12">
                             <label>Nombre: ${e.datos.nombre}</label>
@@ -139,7 +146,7 @@
                         </div>
                         <div class="col-md-6">
                             <label>Sueldo: ${formatterPeso.format(e.salario)}</label>
-                            <input name="sueldo_${e.id}" type="hidden" value="${e.salario}" id="sueldo_${index}">
+                            <input name="empleado_${index}[sueldo]" class="empleado_${index}" type="hidden" value="${e.salario}" id="sueldo_${index}">
                         </div>
                          <div class="col-md-6">
                             <label id="v_total_${index}"></label>
@@ -150,7 +157,7 @@
                                 <label class="col-md-6">Dias laborados:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">#</div>
-                                    <input name="dias_laborados_${e.id}" class="form-control" type="integer" value="${e.movimiento.dias_laborados}" onchange="dias_change(this, ${index})">
+                                    <input name="empleado_${index}[dias_laborados]" class="form-control empleado_${index}" type="integer" value="${e.movimiento.dias_laborados}" onchange="dias_change(this, ${index})">
                                     <div class="input-group-addon" id="v_dias_laborados_${index}">${formatterPeso.format(e.movimiento.v_dias_laborados)}</div>
                                 </div>
                             </div>
@@ -160,7 +167,7 @@
                                 <label class="col-md-6">Horas Extras:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">#</div>
-                                    <input name="horas_extras_${e.id}" class="form-control" type="integer" value="${e.movimiento.horas_extras}" onchange="horas_extras_change(this, ${index})">
+                                    <input name="empleado_${index}[horas_extras]" class="form-control empleado_${index}" type="integer" value="${e.movimiento.horas_extras}" onchange="horas_extras_change(this, ${index})">
                                     <div class="input-group-addon" id="v_horas_extras_${index}">${formatterPeso.format(e.movimiento.v_horas_extras)}</div>
                                 </div>
                             </div>
@@ -170,7 +177,7 @@
                                 <label class="col-md-6">Horas Extras Festivos:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">#</div>
-                                    <input name="horas_extras_festivos_${e.id}" class="form-control" type="integer"  value="${e.movimiento.horas_extras_festivos}" onchange="horas_extras_festivos_change(this, ${index})">
+                                    <input name="empleado_${index}[goras_extras_festivos]" class="form-control empleado_${index}" type="integer"  value="${e.movimiento.horas_extras_festivos}" onchange="horas_extras_festivos_change(this, ${index})">
                                     <div class="input-group-addon" id="v_horas_extras_festivos_${index}">${formatterPeso.format(e.movimiento.v_horas_extras_festivos)}</div>
                                 </div>
                             </div>
@@ -180,8 +187,17 @@
                                 <label class="col-md-6">Horas Extras Nocturnas:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">#</div>
-                                    <input name="horas_extras_nocturnas_${e.id}" class="form-control" type="integer"  value="${e.movimiento.horas_extras_nocturnas}" onchange="horas_extras_nocturnas_change(this, ${index})">
+                                    <input name="empleado_${index}[horas_extras_nocturnas]" class="form-control empleado_${index}" type="integer"  value="${e.movimiento.horas_extras_nocturnas}" onchange="horas_extras_nocturnas_change(this, ${index})">
                                     <div class="input-group-addon" id="v_horas_extras_nocturnas_${index}">${formatterPeso.format(e.movimiento.v_horas_extras_nocturnas)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"> 
+                            <div class="form-group">
+                                <label class="col-md-6">Retroactivo:</label>
+                                <div class="input-group col-md-6">
+                                    <div class="input-group-addon">$</div>
+                                    <input name="empleado_${index}[retroactivo]" class="form-control empleado_${index}" type="integer"  value="${e.movimiento.retroactivo}" onchange="retroactivo_change(this, ${index})">
                                 </div>
                             </div>
                         </div>
@@ -190,7 +206,7 @@
                                 <label class="col-md-6">Recargos Nocturnos:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">#</div>
-                                    <input name="recargos_nocturnos_${e.id}" class="form-control" type="integer" value="${e.movimiento.recargos_nocturnos}" onchange="recargos_nocturnos_change(this, ${index})">
+                                    <input name="empleado_${index}[recargo_nocturnos]" class="form-control empleado_${index}" type="integer" value="${e.movimiento.recargos_nocturnos}" onchange="recargos_nocturnos_change(this, ${index})">
                                     <div class="input-group-addon" id="v_recargos_nocturnos_${index}">${formatterPeso.format(e.movimiento.v_recargos_nocturnos)}</div>
                                 </div>
                             </div>
@@ -200,7 +216,7 @@
                                 <label class="col-md-6">Bonificación Dirección:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">$</div>
-                                    <input name="bonificacion_direccion_${e.id}" class="form-control" type="integer" value="${e.movimiento.bonificacion_direccion}" onchange="bonificacion_direccion_change(this, ${index})">
+                                    <input name="empleado_${index}[bonificacion_direccion]" class="form-control empleado_${index}" type="integer" value="${e.movimiento.bonificacion_direccion}" onchange="bonificacion_direccion_change(this, ${index})">
                                     <div class="input-group-addon" id="v_bonificacion_direccion_${index}">${formatterPeso.format(e.movimiento.bonificacion_direccion)}</div>
                                 </div>
                             </div>
@@ -210,7 +226,7 @@
                                 <label class="col-md-6">Bonificación Servicios:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">%</div>
-                                    <input name="bonificacion_servicios_${e.id}" class="form-control" type="integer" value="${e.movimiento.bonificacion_servicios}" onchange="bonificacion_servicios_change(this, ${index})">
+                                    <input name="empleado_${index}[bonificacion_servicios]" class="form-control empleado_${index}" type="integer" value="${e.movimiento.bonificacion_servicios}" onchange="bonificacion_servicios_change(this, ${index})">
                                     <div class="input-group-addon" id="v_bonificacion_servicios_${index}">${formatterPeso.format(e.movimiento.v_bonificacion_servicios)}</div>
                                 </div>
                             </div>
@@ -220,7 +236,7 @@
                                 <label class="col-md-6">Bonificación Recreación:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">%</div>
-                                    <input name="bonificacion_recreacion_${e.id}" class="form-control" type="integer" value="${e.movimiento.bonificacion_recreacion}" onchange="bonificacion_recreacion_change(this, ${index})">
+                                    <input name="empleado_${index}[bonificacion_recreacion]" class="form-control empleado_${index}" type="integer" value="${e.movimiento.bonificacion_recreacion}" onchange="bonificacion_recreacion_change(this, ${index})">
                                     <div class="input-group-addon" id="v_bonificacion_recreacion_${index}">${formatterPeso.format(e.movimiento.v_bonificacion_recreacion)}</div>
                                 </div>
                             </div>
@@ -230,7 +246,7 @@
                                 <label class="col-md-6">Prima Antiguedad:</label>
                                 <div class="input-group col-md-6">
                                     <div class="input-group-addon">%</div>
-                                    <input name="prima_antiguedad_${e.id}" class="form-control" type="integer" value="${e.movimiento.prima_antiguedad}" onchange="prima_antiguedad_change(this, ${index})">
+                                    <input name="empleado_${index}[prima_antiguedad]" class="form-control empleado_${index}" type="integer" value="${e.movimiento.prima_antiguedad}" onchange="prima_antiguedad_change(this, ${index})">
                                     <div class="input-group-addon" id="v_prima_antiguedad_${index}">${formatterPeso.format(e.movimiento.v_prima_antiguedad)}</div>
                                 </div>
                             </div>
@@ -266,8 +282,15 @@
         }
 
         const botones_paginacion = () => {
+            console.log('empleados.length', empleados.length);
             $('#btn_anterior_siguiente').empty();
-             if(contador > 0){
+            if(contador > 1){
+                $('#btn_anterior_siguiente').append(
+                    `<button type="button" class="btn btn-primary" onclick="paginar(${0})">Primero</button>`
+                );
+            }
+
+            if(contador > 0){
                 $('#btn_anterior_siguiente').append(
                     `<button type="button" class="btn btn-primary" onclick="paginar(${parseInt(contador)-1})">Anterior</button>`
                 );
@@ -276,6 +299,12 @@
             if(contador+1 < empleados.length){
                 $('#btn_anterior_siguiente').append(
                     `<button type="button" class="btn btn-primary" onclick="paginar(${parseInt(contador)+1})">Siguiente</button>`
+                );
+            }
+
+            if(contador+2 < empleados.length){
+                $('#btn_anterior_siguiente').append(
+                    `<button type="button" class="btn btn-primary" onclick="paginar(${empleados.length-1})">Ultimo</button>`
                 );
             }
 
@@ -332,8 +361,44 @@
         const formulario_submit = action => {
             let incompletos = validar_descuentos();
             if(!incompletos){
-                $('#input_accion').val(action);
-                $('#formulario').submit();
+                let contador_final = 0;
+                empleados.forEach((e,index) => {
+                    let empleado = [];
+                    let descuentos_terceros = [];
+                    let descuentos = [];
+                    let descuentos_valor = [];
+
+                    $(`.empleado_${index}`).each(function(n){
+                        empleado.push($(this).val());
+                    });
+
+                    $(`.descuento_tercero_${index}`).each(function(i){
+                        descuentos_terceros.push($(this).val());
+                    });
+
+                    $(`.descuento_${index}`).each(function(k){
+                        descuentos.push($(this).val());
+                    });
+
+                    $(`.descuento_valor_${index}`).each(function(v){
+                        descuentos_valor.push($(this).val());
+                    });
+
+                    empleado.push(descuentos)
+                    empleado.push(descuentos_terceros)
+                    empleado.push(descuentos_valor)
+
+                    $.post("{{$nomina->tipo == 'empleado' ? route('nomina.update.empleado', $nomina->id) : route('nomina.update.pensionado', $nomina->id)}}", {_token: "{{ csrf_token() }}", data:empleado}, function(result){
+                       contador_final +=1;
+                        console.log(`empleado_${index}`, result);
+                       if(empleados.length == contador_final){
+                        $('#input_accion').val(action);
+                        $('#formulario').submit();
+                       }
+                    });
+                });
+
+                
             }
         }
 
@@ -399,6 +464,7 @@
             total(i);
         }
 
+
         const recargos_nocturnos_change = (e,i) =>{
             let valor_hora = parseInt(empleados[i].salario)/240;
             let pago = valor_hora * extras[4] * parseInt(e.value);
@@ -433,6 +499,12 @@
             let pago = parseInt(empleados[i].salario) * (parseInt(e.value)/100);
             sumatorias[i][8] = pago;
             $(`#v_prima_antiguedad_${i}`).html(formatterPeso.format(pago));
+            total(i);
+        }
+
+        const retroactivo_change = (e,i) =>{
+            let pago =  parseInt(e.value);
+            sumatorias[i][9] = pago;
             total(i);
         }
 

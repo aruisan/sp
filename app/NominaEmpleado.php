@@ -21,4 +21,8 @@ class NominaEmpleado extends Model
     public function getEdadAttribute(){
         return Carbon::parse($this->fecha_nacimiento)->age;
     }
+
+    public function movimientos(){
+        return $this->hasMany(NominaEmpleadoNomina::class, 'nomina_empleado_id');
+    }
 }

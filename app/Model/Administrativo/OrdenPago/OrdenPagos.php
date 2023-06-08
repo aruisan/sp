@@ -39,10 +39,14 @@ class OrdenPagos extends Model implements Auditable
         return $this->hasMany(Pagos::class,'orden_pago_id');
     }
 
+
     public function getSumaPagosAceptadosAttribute(){
-        $inicio = "2023-01-01";
+        /*$inicio = "2023-01-01";
         $final = "2023-03-31";
         return $this->pagos->count() > 0 ? $this->pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->filter(function($p){
+            return $p->estado == 1;
+        })->sum('valor') : 0;*/
+        return $this->pagos->count() > 0 ? $this->pagos->filter(function($p){
             return $p->estado == 1;
         })->sum('valor') : 0;
     }

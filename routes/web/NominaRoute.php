@@ -6,8 +6,11 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina'] ,function(){
     Route::post('/', "Nomina\NominaController@store")->name('nomina.store');
     Route::get('/edit/{nomina}', "Nomina\NominaController@edit")->name('nomina.edit');
     Route::post('/update/{nomina}', "Nomina\NominaController@update")->name('nomina.update');
+    Route::post('/update/empleado/{nomina}', "Nomina\NominaController@update_empleado")->name('nomina.update.empleado');
     Route::get('/show/{nomina}', "Nomina\NominaController@show")->name('nomina.show');
     Route::get('/empleados-cuentas/{nomina}', "Nomina\NominaController@cuentas_bancarias_usuarios")->name('nomina.empleados-cuentas');
+
+
 
     Route::get('/pdf/{nomina}', "Nomina\NominaController@pdf_nomina")->name('nomina.pdf');
     Route::get('/pdf-desprendibles/{nomina}', "Nomina\NominaController@pdf_desprendibles")->name('nomina.pdf-desprendibles');

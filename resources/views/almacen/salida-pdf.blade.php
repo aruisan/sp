@@ -2,7 +2,7 @@
 @extends('layouts.almacenPdf')
 @section('contenido')
 		<div class="row">
-			<center><h3>Comprobante de Entrada de Almacen No. {{$ingreso->index}}</h3></center>
+			<center><h3>Comprobante de Salida de Almacen No. {{$egreso->index}}</h3></center>
 		</div>
 		<div style="border:1px solid black;">
 			<div style="width: 70%;   display: inline-block; margin-left: 3%">
@@ -10,34 +10,18 @@
 			</div>
 			
 			<div style="width: 20%;  display: inline-block; border:1px solid black; margin: 6px 0px 0px 0px;" class="col-md-2">
-				<h4>Número {{ $ingreso->index }}</h4>
+				<h4>Número {{ $egreso->index }}</h4>
 			</div> 
 		</div>
 
         <div style="border:1px solid black;">
 			<div style="width: 45%;   display: inline-block; margin-left: 3%">
-				<h4>No. Factura: {{$ingreso->factura}}</h4>
+				<h4>Dependencia: {{$egreso->dependencia->name}}</h4>
 			</div>
 			
 			<div style="width: 45%;  display: inline-block; margin: 6px 0px 0px 0px;" class="col-md-2">
-				<h4>Fecha Factura: {{$ingreso->fecha_factura}}</h4>
+				<h4>Responsable: {{$egreso->responsable->nombre}}</h4>
 			</div> 
-		</div>
-
-        <div style="border:1px solid black;">
-			<div style="width: 45%;   display: inline-block; margin-left: 3%">
-				<h4>Contrato: {{$ingreso->contrato}}</h4>
-			</div>
-			
-			<div style="width: 45%;  display: inline-block; margin: 6px 0px 0px 0px;" class="col-md-2">
-				<h4>Fecha del Contrato: {{$ingreso->fecha_contrato}}</h4>
-			</div> 
-		</div>
-
-        <div style="border:1px solid black;">
-			<div style="width: 90%;   display: inline-block; margin-left: 3%">
-				<h4>Proovedor: {{$ingreso->proovedor->nombre}}</h4>
-			</div>
 		</div>
 				
 		<div class="br-black-1">
@@ -59,18 +43,31 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($ingreso->articulos as $key => $item)
+                        @php 
+                            foreach($pucs as $puc):
+                                $pucs_array_debito[$puc->code] = 0;
+                                $pucs_array_credito[$puc->almacen_puc_credito->code] = 0;
+                            endforeach;
+                        @endphp
+                        @foreach($egreso->salidas_pivot as $key => $item)
                             <tr class="text-center">
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $item->nombre_articulo}}</td>
-                                <td>{{ $item->marca }}</td>
-                                <td>{{ $item->presentacion }}</td>
+                                <td>{{ $item->articulo->nombre_articulo}}</td>
+                                <td>{{ $item->articulo->marca }}</td>
+                                <td>{{ $item->articulo->presentacion }}</td>
                                 <td>{{ $item->cantidad}}</td>
-                                <td>{{ $item->valor_unitario}}</td>
+                                <td>{{ $item->articulo->valor_unitario}}</td>
                                 <td>{{ $item->total}}</td>
-                                <td>{{ $item->puc_ccd->code}}</td>
-                                <td>{{ is_null($item->puc_ccd->almacen_puc_credito) ? "no tiene credito" : $item->puc_ccd->almacen_puc_credito->code}}</td>
+                                <td>{{ $item->articulo->puc_ccd->code}}</td>
+                                <td>{{ $egreso->puc_credito->code}}</td>
                             </tr>
+                            @php
+                                $pucs_array_debito[$item->articulo->puc_ccd->code] += $item->total;
+                                $pucs_array_credito[$item->articulo->puc_ccd->almacen_puc_credito->code] += $item->total;
+
+                                print_r($pucs_array_debito);
+                                print_r($pucs_array_credito);
+                            @endphp
                         @endforeach
                         </tbody>
                     </table>
@@ -85,39 +82,46 @@
                                 <th class="text-center">cuenta contable</th>
                                 <th class="text-center">Concepto</th>
                                 <th class="text-center">CC</th>
-                                <th class="text-center">Tercero</th>
+                                <th class="text-center">Responsable</th>
                                 <th class="text-center">Debito</th>
                                 <th class="text-center">Credito</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($pucs as $puc)
-                            <tr class="text-center">
+                            <tr>
                                 <td>{{$puc->code}}</td>
                                 <td>{{$puc->concepto}}</td>
-                                <td>{{$ingreso->proovedor->num_dc}}</td>
-                                <td>{{$ingreso->proovedor->nombre}}</td>
-                                <td>{{$puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total')}}</td>
+                                <td>{{$egreso->responsable->num_dc}}</td>
+                                <td>{{$egreso->responsable->nombre}}</td>
                                 <td></td>
-                            </tr>
-                            <tr>
-                                <td>{{$puc->almacen_puc_credito->code}}</td>
-                                <td>{{$puc->almacen_puc_credito->concepto}}</td>
-                                <td>{{$ingreso->proovedor->num_dc}}</td>
-                                <td>{{$ingreso->proovedor->nombre}}</td>
-                                <td></td>
-                                <td>{{$puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total')}}</td>
+                                <td>{{$pucs_array_debito[$puc->code]}}</td>
                             </tr>
                         @endforeach
+                        <tr>
+                            <td>{{$egreso->puc_credito->code}}</td>
+                            <td>{{$egreso->puc_credito->concepto}}</td>
+                            <td>{{$egreso->responsable->num_dc}}</td>
+                            <td>{{$egreso->responsable->nombre}}</td>
+                            <td>{{$egreso->salidas_pivot->sum('total')}}</td>
+                            <td></td>
+                        </tr>
                         </tbody>
                     </table>
 		</div>
 @stop
 
 @section('firma')
-                <center>
-                _________________________<br>
-				GUSTAVO FIGUEREDO<br>
-                ALMACENISTA GENERAL
-            </center>
+        <div style="width:45%; display:inline-block;">
+            _________________________<br>
+            {{$egreso->responsable->nombre}}<br>
+            CC: {{$egreso->responsable->num_dc}} <br>
+            responsable
+        </div>
+        <div style="width:45%; display:inline-block;">
+            _________________________<br>
+            GUSTAVO FIGUEREDO <br>
+            ALMACENISTA GENERAL <br>
+            .
+        </div>
 @endsection

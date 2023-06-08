@@ -89,12 +89,13 @@
                     e.v_horas_extras_festivos, 
                     e.v_horas_extras_nocturnas,
                     e.v_recargos_nocturnos,
-                    e.v_bonificacion_servicios, 
+                    e.v_bonificacion_servicios,
+                    e.prima, 
                     e.v_prima_antiguedad,
-                    e.retroactivo,
                     e.v_vacaciones,
                     e.v_prima_vacaciones,
                     e.v_ind,
+                    e.retroactivo,
                     e.total_devengado,
                     e.ibc,
                     e.eps,
@@ -156,7 +157,6 @@
 
         $(document).ready(function(){
             fecha_principal();
-            
         });
 
         const fecha_principal = () => {
@@ -203,11 +203,12 @@
                     { title: 'H. Extras Nocturnas' },
                     { title: 'H. Recargo Nocturno' },
                     { title: 'Bonificación Servicios' },
+                    { title: 'Prima' },
                     { title: 'Prima Antiguedad' },
-                    { title: 'Retroactivo' },
                     { title: 'Vacaciones' },
                     { title: 'Prima Vacaciones' },
                     { title: 'Indemnización' },
+                    { title: 'Retroactivo' },
                     { title: 'Devengado' },
                     { title: 'Ibc' },
                     { title: 'Entidad' },//salud

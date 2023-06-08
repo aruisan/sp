@@ -170,6 +170,14 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        Prima
+                                    </td>
+                                    <td>
+                                        {{number_format($movimiento->prima, 0, ',', '.')}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         Prima Antiguedad
                                     </td>
                                     <td>

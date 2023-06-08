@@ -105,7 +105,7 @@
                         {{--
                         <td class='text-center warning' style='width=200px;'>${{number_format($puc->orden_pagos->count() > 0 ? $puc->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('suma_pagos') : 0)}}</td>
                         --}}
-                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->orden_pagos->count() > 0 ? $puc->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_credito') : 0)}}</td>
+                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->orden_pagos->count() > 0 ? $puc->orden_pagos->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('suma_pagos') : 0)}}</td>
                         <td class='text-center warning' style='width=200px;'>0</td>
                         <td class='text-center warning' style='width=200px;'>0</td>
                         <td class='text-center info' style='width=200px;'>${{number_format($puc->orden_pagos->count() > 0 ? $puc->orden_pagos->sum('suma_pagos') : 0)}}</td>
@@ -139,6 +139,15 @@
                         <td class='text-center info' style='width=200px;'>0</td>
                         <td class='text-center info' style='width=200px;'>0</td>
                     </tr>
+                    <tr>
+                        <td class='text-center' style='width=200px;'>Otros Pucs</td>
+                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->otros_ordenes_pago_pucs->count() > 0 ? $puc->otros_ordenes_pago_pucs->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_debito') : 0)}}</td>
+                        <td class='text-center warning' style='width=200px;'>${{number_format($puc->otros_ordenes_pago_pucs->count() > 0 ? $puc->otros_ordenes_pago_pucs->where('created_at', '>=', $inicio)->where('created_at', '<=', $final)->sum('valor_credito') : 0)}}</td>
+                        <td class='text-center warning' style='width=200px;'>0</td>
+                        <td class='text-center info' style='width=200px;'>${{number_format($puc->otros_ordenes_pago_pucs->count() > 0 ?$puc->otros_ordenes_pago_pucs->sum('valor_debito') : 0)}}</td>
+                        <td class='text-center info' style='width=200px;'>${{number_format($puc->otros_ordenes_pago_pucs->count() > 0 ?$puc->otros_ordenes_pago_pucs->sum('valor_credito') : 0)}}</td>
+                        <td class='text-center info' style='width=200px;'>0</td>
+                    </tr>
 
                 </tbody>
             </table>
@@ -150,6 +159,7 @@
             <li><a data-toggle="tab" href="#o_pago">Ordenes de Pago {{$puc->orden_pagos->count()}}</a></li>
             <li><a data-toggle="tab" href="#retefuente">Retefuente Movimientos {{$puc->retefuente_movimientos->count()}}</a></li>
             <li><a data-toggle="tab" href="#o_pago_pago">Pagos</a></li>
+            <li><a data-toggle="tab" href="#otros_pucs">Otros Pucs</a></li>
         </ul>
 
         <div class="tab-content">
@@ -211,16 +221,20 @@
                 <h3>Ordenes Pago</h3>
                 <table class="table tabla">
                     <thead>
+                        <th>Id orden_pago puc</th>
+                        <th>Id orden_pago</th>
                         <th>Codigo</th>
                         <th>Debito</th>
                         <th>Credito</th>
                         <th>Resta</th>
-                        <th>Pagos</th>
+                        <th>pagos</th>
                         <th>Fecha</th>
                     </thead>
                     <tbody>
                         @foreach($puc->orden_pagos as $orden_pago)
                         <tr class="{{$orden_pago->created_at < $inicio || $orden_pago->created_at > $final ? 'info' : 'warning'}}">
+                        <td>{{$orden_pago->id}}</td>
+                            <td>{{$orden_pago->ordenPago->id}}</td>
                             <td>{{$orden_pago->ordenPago->code}}</td>
                             <td>{{number_format($orden_pago->valor_debito)}}</td>
                             <td>{{number_format($orden_pago->valor_credito)}}</td>
@@ -255,6 +269,7 @@
                 <h3>Pagos</h3>
                 <table class="table tabla">
                     <thead>
+                        <th>Id</th>
                         <th>concepto</th>
                         <th>code</th>
                         <th>estado</th>
@@ -267,6 +282,7 @@
                                 @if(!is_null($orden_pago->ordenPago))
                                     @foreach($orden_pago->ordenPago->pagos as $pago)
                                         <tr class="{{$pago->created_at < $inicio || $pago->created_at > $final ? 'info' : 'warning'}}">
+                                            <td>{{$pago->id}}</td>
                                             <td>{{$pago->concepto}}</td>
                                             <td>{{$pago->code}}</td>
                                             <td>{{$pago->estado}}</td>
@@ -285,6 +301,35 @@
                             <td colspan="5">No tiene Ordenes de pagos</td>
                         </tr>
                         @endif
+                    </tbody>
+                </table>
+            </div>
+            <div id="otros_pucs" class="tab-pane fade">
+                <h3>Ordenes Pago</h3>
+                <table class="table tabla">
+                    <thead>
+                        <th>Id orden_pago puc</th>
+                        <th>Id orden_pago</th>
+                        <th>Codigo</th>
+                        <th>Debito</th>
+                        <th>Credito</th>
+                        <th>Resta</th>
+                        <th>pagos</th>
+                        <th>Fecha</th>
+                    </thead>
+                    <tbody>
+                        @foreach($puc->otros_ordenes_pago_pucs as $orden_pago)
+                        <tr class="{{$orden_pago->created_at < $inicio || $orden_pago->created_at > $final ? 'info' : 'warning'}}">
+                        <td>{{$orden_pago->id}}</td>
+                            <td>{{$orden_pago->ordenPago->id}}</td>
+                            <td>{{$orden_pago->ordenPago->code}}</td>
+                            <td>{{number_format($orden_pago->valor_debito)}}</td>
+                            <td>{{number_format($orden_pago->valor_credito)}}</td>
+                            <td>{{number_format($orden_pago->valor_credito - $orden_pago->ordenPago->suma_pagos_aceptados)}}</td>
+                            <td>{{number_format($orden_pago->ordenPago->suma_pagos_aceptados)}}</td>
+                            <td>{{$orden_pago->created_at}}</td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

@@ -169,7 +169,7 @@
 </li> --}}
   
 
-   @if(auth()->user()->roles->first()->id == 1)
+   @if(auth()->user()->validar_cargo('almacenista') || auth()->user()->validar_cargo('administrador') || auth()->user()->validar_cargo('Secretaria'))
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
          ALMACEN
@@ -177,8 +177,8 @@
          </a>
          <ul class="dropdown-menu">
             <li><a class="item-menu" tabindex="-1" href="{{route('almacen.inventario')}}">Inventorio</a></li>
-            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso')}}">Comprobante de Entrada</a></li>
-            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso')}}">Comprobante de Salida bienes de consumo</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso.index')}}">Comprobante de Entrada</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso.index')}}">Comprobante de Salida bienes de consumo</a></li>
             <li><a class="item-menu" tabindex="-1" href="jj">Comprobante de Salida bienes devolutivos</a></li>
             <li><a class="item-menu" tabindex="-1" href="rt">Comprobante de Traslados</a></li>
             <li><a class="item-menu" tabindex="-1" href="er">Comprobante de Bajas</a></li>

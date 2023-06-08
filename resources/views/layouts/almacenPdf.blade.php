@@ -70,14 +70,7 @@
 
 		@yield('contenido')
 		<div style="margin-top: 100px; font-size: 17px;">
-			<center>
-				{{--
-                <img src="http://presupuesto.providenciaislas.com.co/img/firmas/JIM_ANDERSON_HENRY_BENT.png"  height="99"><br>
-                --}}
-                _________________________<br>
-				GUSTAVO FIGUEREDO<br>
-                ALMACENISTA GENERAL
-            </center>
+			@yield('firma')
 		</div>
 	</div>
 

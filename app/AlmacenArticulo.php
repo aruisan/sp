@@ -17,6 +17,10 @@ class AlmacenArticulo extends Model
         return $this->belongsToMany(AlmacenComprobanteEgreso::class, 'almacen_articulo_salidas')->withPivot('cantidad');
     }
 
+    public function articulos_salida(){
+        return $this->hasMany(AlmacenArticuloSalida::class, 'almacen_articulo_id');
+    }
+
     public function mantenimientos(){
         return $this->hasMany(AlmacenArticuloMantenimiento::class, 'almacen_articulo_id');
     }
@@ -50,7 +54,7 @@ class AlmacenArticulo extends Model
 
     public function getDepreciacionAttribute(){
         $result = 0;
-        if(!is_null($this->vida_util)):
+        if($this->vida_util > 0):
             $valor_unitario_depreciacion_x_dia = $this->valor_unitario/$this->fechas_depreciacion()['dias_vida_util_total'];
             $result = $valor_unitario_depreciacion_x_dia * $this->fechas_depreciacion()['dias_vida_util'];
         endif;

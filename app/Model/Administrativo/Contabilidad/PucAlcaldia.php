@@ -83,6 +83,19 @@ class PucAlcaldia extends Model implements Auditable
         return $this->hasMany(CompContMov::class, 'cuenta_puc_id')->where('comp_cont_id', '>', 2);
     }
 
+    //suma de otros pucs 
+    public function getOtrosOrdenesPagoPucsAttribute(){
+        $data = collect();
+        $op_pucs = $this->orden_pagos->count() == 0 ? [] : $this->orden_pagos->filter(function($op_p){ return $op_p->ordenPago->pucs->count() > 0;});
+        foreach($op_pucs as $op_puc):
+            foreach($op_puc->ordenPago->pucs as $orden_pago_puc):
+                $data->push($orden_pago_puc);
+            endforeach;
+        endforeach;
+        
+        return $data;
+    }
+
 /*
     public function comprobantes_contables_movimientos(){
         return $this->hasMany(CompContMov::class, 'cuenta_puc_id')->whereYear('created_at', Carbon::today()->format('Y'));
@@ -123,6 +136,12 @@ class PucAlcaldia extends Model implements Auditable
         $totDeb = 0;
         $inicio = "2023-01-01";
         $final = "2023-03-31";
+
+        if($this->otros_ordenes_pago_pucs->count() > 0):
+            $otros_pucs = $this->otros_ordenes_pago_pucs->where('created_at', '>=', $inicio)->where('created_at', '<=', $final);
+            $totDeb += $otros_pucs->count() == 0 ? 0 :  $otros_pucs->sum('valor_debito');
+            $totCred += $otros_pucs->count() == 0 ? 0 : $otros_pucs->sum('valor_credito');
+        endif;
 
         if($this->almacen_items->count() > 0):
             $totDeb += $this->almacen_items->sum('total');
@@ -190,6 +209,21 @@ class PucAlcaldia extends Model implements Auditable
         $totDeb = 0;
         $inicio = "2023-01-01";
         $final = "2023-03-31";
+
+        if($this->otros_ordenes_pago_pucs->count() > 0):
+            $otros_pucs = $this->otros_ordenes_pago_pucs;
+            $totDeb += $otros_pucs->sum('valor_debito');
+            $totCred += $otros_pucs->sum('valor_credito');
+        endif;
+
+        if($this->almacen_items->count() > 0):
+            $totDeb += $this->almacen_items->sum('total');
+        endif;
+
+        if($this->almacen_items_creditos->count() > 0):
+            $totDeb += $this->almacen_items_creditos->sum('total');
+        endif;
+        
         if($this->pagos_bank->count() > 0):
             $totCredAll = $this->pagos_bank->sum('valor');
             $totCred += $this->pagos_bank->filter(function($p){ return $p->pago->estado == 1;})->sum('valor');
@@ -290,7 +324,6 @@ class PucAlcaldia extends Model implements Auditable
             
         return $grupo_puc;
     }
-
 
     public function format_puc_contabilidad($puc){
         $m_debito = $puc['m_debito_trimestre'];
