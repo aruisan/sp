@@ -1,14 +1,12 @@
 <table>
     <thead>
     <tr>
-        <th colspan="3">NO PAGO</th>
-    </tr>
-    <tr>
-        <th># PAGO</th>
+        <th>NUMERO DE PAGO</th>
         <th>FECHA CREACION</th>
         <th>IMPUESTO</th>
         <th>NOMBRE</th>
         <th>CORREO</th>
+        <th>VALOR</th>
     </tr>
     </thead>
     <tbody>
@@ -19,6 +17,7 @@
                 <td>{{ $item->modulo}}</td>
                 <td>{{ $item->user->name}}</td>
                 <td>{{ $item->user->email}}</td>
+                <td>{{ $item->valor}}</td>
             </tr>
         @endforeach
     </tbody>
