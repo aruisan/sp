@@ -31,7 +31,6 @@
                         0
                     @endif
                 </td>
-                <td>{{ $item->user->email}}</td>
                 <td>{{ $item->valor}}</td>
             </tr>
         @endforeach
