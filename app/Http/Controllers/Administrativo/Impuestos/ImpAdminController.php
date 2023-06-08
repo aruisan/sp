@@ -135,8 +135,11 @@ class ImpAdminController extends Controller
 
         $noPagos = Pagos::where('estado','Generado')->get();
         foreach ($noPagos as $item){
-            $rit = RIT::where('user_id', $item->user->id)->first();
-            $item->rit = $rit;
+            $item->rit = RIT::where('user_id', $item->user->id)->first();
+            if ($item->modulo == 'PREDIAL'){
+                $pred = Predial::find($item->entity_id);
+                $item->contribuyente = PredialContribuyentes::find($pred->imp_pred_contri_id);
+            }
         }
         $fecha = Carbon::today();
         $fecha = $fecha->format('d-m-Y');
