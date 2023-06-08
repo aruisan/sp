@@ -7,18 +7,14 @@ use Illuminate\Contracts\View\View;
 
 class UsersNOPagosImpuestosExport implements FromView
 {
-    public function __construct($predial, $icaReten, $icaContri){
-        $this->predial = $predial;
-        $this->icaReten = $icaReten;
-        $this->icaContri = $icaContri;
+    public function __construct($noPagos){
+        $this->noPagos = $noPagos;
     }
 
     public function view(): View
     {
-        $predial = $this->predial;
-        $icaReten = $this->icaReten;
-        $icaContri = $this->icaContri;
-        return view('exports.UsersNOPagosImpuestosExc', compact('predial','icaReten','icaContri'));
+        $noPagos = $this->noPagos;
+        return view('exports.UsersNOPagosImpuestosExc', compact('noPagos'));
     }
 }
 

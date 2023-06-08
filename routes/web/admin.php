@@ -498,6 +498,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     //// HISTORICO
     Route::get('presupuesto/historico/{id}', 'Hacienda\Presupuesto\VigenciaController@historico');
     Route::get('presupuesto', 'Hacienda\Presupuesto\Egresos\IndexController@index')->name('presupuesto.index');
+    Route::get('presupuesto/newLoad', 'Hacienda\Presupuesto\Egresos\IndexController@newPrepLoad');
+    Route::post('presupuesto/getPrepSaved', 'Hacienda\Presupuesto\Egresos\IndexController@getPrepSaved');
 	Route::get('presupuesto/vigencia/create/{tipo}', 'Hacienda\Presupuesto\VigenciaController@create');
 	Route::resource('presupuesto/vigencia', 'Hacienda\Presupuesto\VigenciaController');
 	Route::get('presupuesto/level/create/{vigencia}', 'Hacienda\Presupuesto\LevelController@create');

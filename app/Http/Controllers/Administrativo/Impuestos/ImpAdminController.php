@@ -132,42 +132,12 @@ class ImpAdminController extends Controller
     }
 
     public function noPay(){
-        $usersPredial = PredialContribuyentes::all();
-        foreach ($usersPredial as $user){
-            $impPred = Predial::where('imp_pred_contri_id', $user->id)->get();
-            if (count($impPred) == 0) $predialNoPay[] = $user;
-            else{
-                foreach ($impPred as $item) {
-                    $pago = Pagos::where('modulo', 'PREDIAL')->where('entity_id', $item->id)->first();
-                    if ($pago->estado != "Pagado"){
-                        $predialNoPay[] = $user;
-                        break;
-                    }
-                }
-            }
-        }
 
-        $usersImp = User::all();
-        foreach ($usersImp as $user){
-            if ($user->type_id == null){
-                $pagoContri = Pagos::where('modulo', 'ICA-Contribuyente')->where('user_id', $user->id)->first();
-                if (!$pagoContri) $icaContriNoPay[] = $user;
-                else{
-                    if ($pagoContri->estado != "Pagado") $icaContriNoPay[] = $user;
-                }
-
-                $pagoReten = Pagos::where('modulo', 'ICA-AgenteRetenedor')->where('user_id', $user->id)->first();
-                if (!$pagoReten) $icaRetenNoPay[] = $user;
-                else{
-                    if ($pagoReten->estado != "Pagado") $icaRetenNoPay[] = $user;
-                }
-            }
-        }
-
+        $noPagos = Pagos::where('estado','Generado')->get();
         $fecha = Carbon::today();
         $fecha = $fecha->format('d-m-Y');
 
-        return Excel::download(new UsersNOPagosImpuestosExport($predialNoPay, $icaRetenNoPay, $icaContriNoPay),
+        return Excel::download(new UsersNOPagosImpuestosExport($noPagos),
             'Informe Usuarios no Pago Impuestos '.$fecha.'.xlsx');
 
     }

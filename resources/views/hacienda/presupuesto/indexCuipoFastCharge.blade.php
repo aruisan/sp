@@ -1,0 +1,438 @@
+@extends('layouts.dashboard')
+@section('titulo')
+    Vigencia: {{ $añoActual }}
+@stop
+@section('content')
+    @if($V != "Vacio")
+        @include('modal.Informes.reporte')
+        @include('modal.Informes.ejecucionPresupuestal')
+        @include('modal.Informes.makeInforme')
+    @endif
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <div class="row inputCenter">
+        <ul class="nav nav-pills">
+            @if($mesActual == 12)
+                <li class="nav-item pillPri">
+                    <a href="{{ url('/newPre/0',$añoActual+1) }}" class="nav-link"><span class="hide-menu"> Presupuesto de Egresos {{ $añoActual + 1 }}</span></a>
+                </li>
+            @elseif($mesActual == 1 or $mesActual == 2 and auth()->user()->roles->first()->id == 1)
+                @if(auth()->user()->roles->first()->id == 1)
+                    <li class="nav-item pillPri">
+                        <a href="{{ url('/newPre/0',$añoActual-1) }}" class="nav-link"><span class="hide-menu"> Presupuesto de Egresos {{ $añoActual - 1 }}</span></a>
+                    </li>
+                @endif
+            @endif
+                <li class="nav-item principal">
+                    <a class="nav-link"  href="#editar"> Presupuesto de Egresos {{ $añoActual }}</a>
+                </li>
+                <li class="nav-item pillPri">
+                    <a class="nav-link "  href="{{ url('/presupuestoIng') }}">Presupuesto de Ingresos {{ $añoActual }}</a>
+                </li>
+                @if($V != "Vacio" and auth()->user()->roles->first()->id == 1)
+                    <li class="nav-item pillPri">
+                        <a class="nav-link "href="{{ url('/presupuesto/level/create/'.$V) }}" class="btn btn-success">
+                            <i class="fa fa-edit"></i><span class="hide-menu">&nbsp;Editar Presupuesto</span>
+                        </a>
+                    </li>
+                @endif
+                <!-- SE DEBE ACTUALIZAR LA EJECUCIÓN PRESUPUESTAL.
+                <li class="nav-item pillPri">
+                    <a data-toggle="modal" data-target="#ejecucionPresupuestal" class="nav-link" style="cursor: pointer">Ejecución Presupuestal</a>
+                </li>
+                -->
+                @if($V != "Vacio" and auth()->user()->roles->first()->id != 2)
+                    <li class="dropdown">
+                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeInforme()">Generar Informe de Presupuestos</a>
+                        <!-- SE COMENTAN LOS REPORTES QUE NO TIENEN ACCESO FUNCIONAL.
+                        <a class="nav-item dropdown-toggle pillPri" href="" data-toggle="dropdown">Informes&nbsp;<i class="fa fa-caret-down"></i></a>
+                        <ul class="dropdown-menu ">
+                            <li class="dropdown-submenu">
+                                <a class="test btn btn-drop text-left" href="#">Contractual &nbsp;</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('/presupuesto/informes/contractual/homologar/'.$V) }}" class="btn btn-drop text-left">Homologar</a></li>
+                                    <li><a data-toggle="modal" data-target="#reporteHomologar" class="btn btn-drop text-left">Reporte</a></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="#" class="btn btn-drop text-left">FUT </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/presupuesto/informes/lvl/1') }}" class="btn btn-drop text-left">Niveles</a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn btn-drop text-left">Comparativo (Ingresos - Gastos)</a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn btn-drop text-left">Fuentes</a>
+                            </li>
+
+
+                        </ul>
+                        -->
+                    </li>
+                @endif
+                @if($V == "Vacio")
+                    <li class="nav-item pillPri">
+                        <a href="{{ url('/presupuesto/vigencia/create/0') }}" class="btn btn-drop">
+                            <i class="fa fa-plus"></i>
+                            <span class="hide-menu"> Nuevo Presupuesto de Egresos</span></a>
+                    </li>
+                @endif
+        </ul>
+        <div class="col-md-12 align-self-center" style="background-color:#fff;">
+            @if($V != "Vacio")
+                <div class="row" >
+                    <div class="breadcrumb col-md-12 text-center" >
+                        <strong>
+                            <h4><b>Presupuesto de Egresos {{ $añoActual }}</b></h4>
+                        </strong>
+                    </div>
+                </div>
+                <ul class="nav nav-pills">
+                    <li class="nav-item active">
+                        <a class="nav-link" data-toggle="pill" href="#tabHome" onclick="findPrep()"><i class="fa fa-home"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('administrativo/ordenPagos/'.$V) }}">Orden de Pago</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('administrativo/pagos/'.$V) }}">Pagos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#tab_proyectos" onclick="show_bpins()">Proyectos</a>
+                    </li>
+                </ul>
+                <hr>
+
+                <!-- TABLA DE PRESUPUESTO -->
+
+                <div class="tab-content" style="background-color: white">
+                    <div id="tabHome" class="tab-pane active"><br>
+                        <div class="table-responsive">
+                            <div class="text-center" id="cargando" style="display: none">
+                                <br><br>
+                                <h4>Buscando informacion para cargar el presupuesto...</h4>
+                            </div>
+                            <div class="text-center" id="noFind" style="display: none">
+                                <br><br>
+                                <h4>Se esta realizando la carga del presupuesto, intenta nuevamente en unos minutos por favor.</h4>
+                            </div>
+                            <table id="tabla" class="table table-hover table-bordered table-striped " style="display: none">
+                                <thead>
+                                    <th class="text-center">Codigo BPIN</th>
+                                    <th class="text-center">Codigo Actividad</th>
+                                    <th class="text-center">Nombre Actividad</th>
+                                    <th class="text-center">Rubro</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">P. Inicial</th>
+                                    <th class="text-center">Adición</th>
+                                    <th class="text-center">Reducción</th>
+                                    <th class="text-center">Credito</th>
+                                    <th class="text-center">CCredito</th>
+                                    <th class="text-center">P.Definitivo</th>
+                                    <th class="text-center">CDP's</th>
+                                    <th class="text-center">Registros</th>
+                                    <th class="text-center">Saldo Disponible</th>
+                                    <th class="text-center">Saldo de CDP</th>
+                                    <th class="text-center">Ordenes de Pago</th>
+                                    <th class="text-center">Pagos</th>
+                                    <th class="text-center">Cuentas Por Pagar</th>
+                                    <th class="text-center">Reservas</th>
+                                    @if(auth()->user()->roles->first()->id != 2)
+                                        <th class="text-center">Cod Dependencia</th>
+                                        <th class="text-center">Dependencia</th>
+                                    @endif
+                                    <th class="text-center">Fuente</th>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TABLA DE PROYECTOS  -->
+
+                    <div id="tab_proyectos" class=" tab-pane fade">
+                        <div class="table-responsive mt-3" id="tabla_bpins">
+                            <table class="table table-bordered" id="tabla_Proy">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">Codigo Proyecto</th>
+                                    <th class="text-center">Nombre Proyecto</th>
+                                    <th class="text-center">Secretaria</th>
+                                    <th class="text-center">Ver</th>
+                                    <th class="text-center"><i class="fa fa-file-pdf-o"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($bpins->unique('cod_proyecto') as $item)
+                                    <tr>
+                                        <td>{{$item->cod_proyecto}}</td>
+                                        <td>{{$item->nombre_proyecto}}</td>
+                                        <td>{{$item->secretaria}}</td>
+                                        <td><a class="btn btn-success" onclick="show_proyecto('{{$item->cod_proyecto}}')">Ver</a></td>
+                                        <td><a class="btn btn-success" href="/presupuesto/proyecto/{{$item->cod_proyecto}}" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive" id="tabla_bpin_actividades">
+                            <ul class="nav nav-tabs mt-3 mb-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="modal" data-target="#myModal">Nueva Actividad</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#menu1">Adición</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#menu2">Reducción</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#menu2">Decreto</a>
+                                </li>
+                            </ul>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">Codigo Actividad</th>
+                                    <th class="text-center">Nombre Actividad</th>
+                                    <th class="text-center">Rubro</th>
+                                    <th class="text-center"><i class="fa fa-info-circle"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody-actividades">
+                                </tbody>
+                            </table>
+
+                            <div class="modal" id="myModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Nueva Actividad</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <form method="post" action="{{route('bpin.store')}}">
+                                                <div class="row">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="cod_proyecto" id="input-cod-proyecto">
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class="col-sm-5">codigo de Actividad</label>
+                                                        <input type="text" name="cod_actividad" class="form-control col-sm-7">
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class= col-sm-5">Nombre de Actividad</label>
+                                                        <textarea name="nombre_actividad" class="form-control col-sm-7" row="3"></textarea>
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class="col-sm-5">Propios</label>
+                                                        <input type="text" name="propios" class="form-control col-sm-7">
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <label for="" class="col-sm-5">SGP</label>
+                                                        <input type="text" name="sgp" class="form-control col-sm-7">
+                                                    </div>
+                                                    <div class="input-group my-2 col-md-12">
+                                                        <button class="btn btn-primary" type="submit">Guardar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            @else
+                <div class="breadcrumb text-center">
+                    <strong>
+                        <h4><b>Presupuesto de Egresos Año {{ $añoActual }}</b></h4>
+                    </strong>
+                </div>
+                <br><br>
+                <div class="alert alert-danger">
+                    No se ha creado un presupuesto actual de egresos, para crearlo de click al siguiente link:
+                    <a href="{{ url('presupuesto/vigencia/create/0') }}" class="alert-link">Crear Presupuesto de Egresos</a>
+                </div>
+            @endif
+        </div>
+    </div><br><br>
+@stop
+@section('js')
+    <!-- Datatables personalizadas buttons-->
+    <script src="{{ asset('/js/datatableCustom.js') }}"></script>
+
+    <!-- tabla de proyectos -->
+    <script>
+
+        const vigencia_id = @json($V);
+        const prepSaved = @json($prepSaved);
+
+
+        function getModalToMakeInforme(){
+            $('#modalMakeInforme').modal('show');
+        }
+
+        function findPrep(){
+            $("#cargando").show();
+            $("#noFind").hide();
+
+            var table = $('#tabla').DataTable();
+
+            $.ajax({
+                method: "POST",
+                url: "/presupuesto/getPrepSaved",
+                data: { "id": vigencia_id, "prepSaved": prepSaved,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function(datos) {
+                $("#tabla").show();
+                table.destroy();
+                $("#cargando").hide();
+                $("#noFind").hide();
+                table = $('#tabla').DataTable( {
+                    language: {
+                        "lengthMenu": "Mostrar _MENU_ registros",
+                        "zeroRecords": "No se encontraron resultados",
+                        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sSearch": "Buscar:",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast":"Último",
+                            "sNext":"Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "sProcessing":"Procesando...",
+                    },
+                    "pageLength": 15,
+                    responsive: true,
+                    "searching": true,
+                    ordering: false,
+                    "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
+                    dom: 'Bfrtip',
+                    buttons:[
+                        {
+                            extend:    'copyHtml5',
+                            text:      '<i class="fa fa-clone"></i> ',
+                            titleAttr: 'Copiar',
+                            className: 'btn btn-primary'
+                        },
+                        {
+                            extend:    'excelHtml5',
+                            text:      '<i class="fa fa-file-excel-o"></i> ',
+                            titleAttr: 'Exportar a Excel',
+                            className: 'btn btn-primary'
+                        },
+                        {
+                            extend:    'pdfHtml5',
+                            text:      '<i class="fa fa-file-pdf-o"></i> ',
+                            titleAttr: 'Exportar a PDF',
+                            message : 'SIEX-Providencia',
+                            header :true,
+                            orientation : 'landscape',
+                            pageSize: 'LEGAL',
+                            className: 'btn btn-primary',
+                        },
+                        {
+                            extend:    'print',
+                            text:      '<i class="fa fa-print"></i> ',
+                            titleAttr: 'Imprimir',
+                            className: 'btn btn-primary'
+                        },
+                    ],
+                    data: datos,
+                    columns: [
+                        { title: "Codigo BPIN", data: "code_bpin"},
+                        { title: "Codigo Actividad", data: "code_act"},
+                        { title: "Nombre Actividad", data: "name_act"},
+                        { title: "Rubro", data: "rubro"},
+                        { title: "Nombre", data: "nombre"},
+                        { title: "P. Inicial", data: "p_inicial"},
+                        { title: "Adición", data: "adicion"},
+                        { title: "Reducción", data: "reduccion"},
+                        { title: "Credito", data: "credito"},
+                        { title: "CCredito", data: "ccredito"},
+                        { title: "P.Definitivo", data: "p_def"},
+                        { title: "CDP's", data: "cdps"},
+                        { title: "Registros", data: "rps"},
+                        { title: "Saldo Disponible", data: "saldo_disp"},
+                        { title: "Saldo de CDP", data: "saldo_cdps"},
+                        { title: "Ordenes de Pago", data: "ops"},
+                        { title: "Pagos", data: "pagos"},
+                        { title: "Cuentas Por Pagar", data: "cuentas_pagar"},
+                        { title: "Reservas", data: "reservas"},
+                        { title: "Cod Dependencia", data: "cod_dep"},
+                        { title: "Dependencia", data: "name_dep"},
+                        { title: "Fuente", data: "fuente"},
+                    ]
+                } );
+            }).fail(function() {
+                $("#tabla").hide();
+                table.destroy();
+                $("#cargando").hide();
+                $("#noFind").show();
+            });
+        }
+
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
+
+        window.onload = function () {
+            findPrep();
+        };
+
+        const bpins = @json($bpins);
+        const show_proyecto = cod_proyecto =>{
+            $('#tabla_bpins').hide();
+            $('#tabla_bpin_actividades').show();
+            $('#tbody-actividades').empty();
+            $('#input-cod-proyecto').val(cod_proyecto);
+            bpins.filter(r => r.cod_proyecto == cod_proyecto).forEach(e =>{
+                if (e.rubro != "No") var button = e.rubro+`<br> Dinero Asignado: `+e.rubro_find[0].propios.toLocaleString();
+                else {
+                    var button = `<b>No hay rubros de inversión disponibles para asignar.</b>`;
+                }
+                $('#tbody-actividades').append(`
+                <tr>
+                    <td>${e.cod_actividad}</td>
+                    <td>${e.actividad}</td>
+                    <td>${button}</td>
+                    <td><a href="/presupuesto/actividad/${e.id}/${vigencia_id}" class="btn btn-primary"><i class="fa fa-info-circle"></i></a></td>
+                </tr>
+            `);
+            });
+
+        }
+
+
+        const show_bpins = ()  =>{
+            $('#tabla_bpins').show();
+            $('#tabla_bpin_actividades').hide();
+        }
+
+    </script>
+@stop
