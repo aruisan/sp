@@ -27,6 +27,8 @@
                 <td>
                     @if($item->rit)
                         {{ $item->rit->numDocContri }}
+                    @else
+                        0
                     @endif
                 </td>
                 <td>{{ $item->user->email}}</td>
