@@ -134,6 +134,10 @@ class ImpAdminController extends Controller
     public function noPay(){
 
         $noPagos = Pagos::where('estado','Generado')->get();
+        foreach ($noPagos as $item){
+            $rit = RIT::where('user_id', $item->user->id)->first();
+            $item->rit = $rit;
+        }
         $fecha = Carbon::today();
         $fecha = $fecha->format('d-m-Y');
 
