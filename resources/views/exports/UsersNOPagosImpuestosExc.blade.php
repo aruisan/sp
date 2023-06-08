@@ -27,6 +27,8 @@
                 <td>
                     @if($item->rit)
                         {{ $item->rit->numDocContri }}
+                    @elseif($item->modulo == "PREDIAL")
+                        {{ $item->contribuyente->numIdent }}
                     @else
                         0
                     @endif
