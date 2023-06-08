@@ -1012,17 +1012,18 @@ class IndexController extends Controller
         $prepSaved = PresupuestoSnap::where('mes', $mesActual)->where('año', $añoActual)->first();
         $lastDay = Carbon::now()->subDay()->toDateString();
         $actuallyDay = Carbon::now()->toDateString();
+        $bpins = BPin::all();
+
 
         if (!$prepSaved) {
             Artisan::call("schedule:run");
             $V = "Vacio";
 
             return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
-                'añoActual', 'mesActual','V'));
+                'añoActual', 'mesActual','V','bpins'));
         } else{
             $V = $prepSaved->vigencia_id;
             $codeCon = CodeContractuales::all();
-            $bpins = BPin::all();
             foreach ($bpins as $bpin){
                 $bpin['rubro'] = "No";
                 if (count($bpin->rubroFind) > 0) {
