@@ -154,7 +154,6 @@ class OrdenPagosController extends Controller
             }
 
             $ordenPago = new OrdenPagos();
-            $ordenPago->code = $numOP;
             $ordenPago->nombre = $request->concepto;
             $ordenPago->valor = $request->ValTOP;
             $ordenPago->saldo = $request->ValTOP;
@@ -163,6 +162,9 @@ class OrdenPagosController extends Controller
             $ordenPago->registros_id = $request->IdR;
             $ordenPago->user_id = auth()->user()->id;
             //$ordenPago->created_at = '2023-04-04 12:00:00';
+            $ordenPago->save();
+
+            $ordenPago->code = $ordenPago->id;
             $ordenPago->save();
 
             Session::flash('success','La orden de pago se ha creado exitosamente');
