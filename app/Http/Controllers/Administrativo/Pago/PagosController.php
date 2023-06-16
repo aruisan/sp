@@ -105,9 +105,11 @@ class PagosController extends Controller
                         , 'persona' => $data->orden_pago->registros->persona->nombre]);
                 }
             } else{
-                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
-                if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                    $pagosAll[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago_id)->first();
+                if (isset($tesoreriaRetefuentePago)) {
+                    if ($tesoreriaRetefuentePago->vigencia_id == $id) {
+                        $pagosAll[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                    }
                 }
             }
         }
@@ -282,8 +284,10 @@ class PagosController extends Controller
 
             if (isset($pago->orden_pago->rubros[0]->cdps_registro)) $vigencia_id = $pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id;
             else {
-                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();
-                $vigencia_id = $tesoreriaRetefuentePago->vigencia_id;
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago_id)->first();
+                if (isset($tesoreriaRetefuentePago)){
+                    $vigencia_id = $tesoreriaRetefuentePago->vigencia_id;
+                }
             }
 
             return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC',
@@ -353,9 +357,9 @@ class PagosController extends Controller
                 //$pago->ff_fin = "2023-03-29";
                 $pago->save();
 
-                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago_id)->first();
 
-                if ($tesoreriaRetefuentePago != null){
+                if (isset($tesoreriaRetefuentePago)){
                     $tesoreriaRetefuentePago->comp_egreso_id = $pago->id;
                     $tesoreriaRetefuentePago->save();
                 }
@@ -417,8 +421,10 @@ class PagosController extends Controller
 
         if (isset($pago->orden_pago->rubros[0]->cdps_registro)) $vigencia_id = $pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id;
         else {
-            $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago->id)->first();
-            $vigencia_id = $tesoreriaRetefuentePago->vigencia_id;
+            $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago_id)->first();
+            if (isset($tesoreriaRetefuentePago)){
+                $vigencia_id = $tesoreriaRetefuentePago->vigencia_id;
+            }
         }
 
         $rol = auth()->user()->roles->first()->id;
