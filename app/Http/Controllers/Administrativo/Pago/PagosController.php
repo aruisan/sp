@@ -38,8 +38,10 @@ class PagosController extends Controller
                 }
             } else {
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago_id)->first();
-                if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                    $pagosTarea[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                if ($tesoreriaRetefuentePago){
+                    if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                        $pagosTarea[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                    }
                 }
             }
         }
@@ -51,9 +53,11 @@ class PagosController extends Controller
                     $pagos[] = collect(['info' => $data]);
                 }
             } else{
-                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
-                if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                    $pagos[] = collect(['info' => $data]);
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago_id)->first();
+                if ($tesoreriaRetefuentePago){
+                    if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                        $pagos[] = collect(['info' => $data]);
+                    }
                 }
             }
 
