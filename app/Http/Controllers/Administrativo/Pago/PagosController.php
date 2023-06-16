@@ -37,7 +37,7 @@ class PagosController extends Controller
                     $pagosTarea[] = collect(['info' => $data, 'cc' => $data->persona->num_dc, 'persona' => $data->persona->nombre]);
                 }
             } else {
-                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago_id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $id){
                     $pagosTarea[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
                 }
