@@ -34,7 +34,7 @@ class RegistrosController extends Controller
     public function __construct()
     {
         $this->photos_path = public_path('uploads\Registros');
-        $this->fechaFija = '2023-06-07';
+        $this->fechaFija = '2023-06-08';
     }
  
     /**
