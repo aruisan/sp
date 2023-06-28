@@ -154,6 +154,12 @@ class CdpController extends Controller
                 $fontR = FontsRubro::findOrFail($rubroCdp->fontsRubro->id);
                 $fontR->valor_disp = $fontR->valor_disp + $rubroCdp->valor;
                 $fontR->save();
+
+                if($rubroCdp->fontsDep_id){
+                    $depRubFontUpdate = DependenciaRubroFont::find($rubroCdp->fontsDep_id);
+                    $depRubFontUpdate->saldo = $depRubFontUpdate->saldo + $rubroCdp->valor;
+                    $depRubFontUpdate->save();
+                }
             }
 
             Session::flash('error','El CDP ha sido anulado');
