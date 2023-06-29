@@ -1023,7 +1023,10 @@ class IndexController extends Controller
                 'añoActual', 'mesActual','V','bpins'));
         } else{
             $V = $prepSaved->vigencia_id;
+            $dataPrepSaved = PresupuestoSnapData::where('pre_snap_id', $prepSaved->id)->first();
+            $fechaData = Carbon::parse($dataPrepSaved->created_at)->subHours(5);
             $codeCon = CodeContractuales::all();
+
             foreach ($bpins as $bpin){
                 $bpin['rubro'] = "No";
                 if (count($bpin->rubroFind) > 0) {
@@ -1036,7 +1039,7 @@ class IndexController extends Controller
             }
 
             return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
-                'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins'));
+                'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins','fechaData'));
         }
     }
 
@@ -1061,5 +1064,11 @@ class IndexController extends Controller
         }
         return $prepSaved;
 
+    }
+
+    public function refreshPrepSaved(){
+        Artisan::call("schedule:run");
+
+        return "OK";
     }
 }
