@@ -117,12 +117,24 @@
                     <div id="tabHome" class="tab-pane active"><br>
                         <div class="table-responsive">
                             <div class="text-center" id="cargando" style="display: none">
-                                <br><br>
                                 <h4>Buscando informacion para cargar el presupuesto...</h4>
                             </div>
                             <div class="text-center" id="noFind" style="display: none">
-                                <br><br>
                                 <h4>Se esta realizando la carga del presupuesto, intenta nuevamente en unos minutos por favor.</h4>
+                            </div>
+                            <div class="text-center" id="refresPrep" style="display: none">
+                                <h4>Se esta enviando la solicitud de actualización del presupuesto, un momento por favor....</h4>
+                            </div>
+                            <div class="text-center" id="refresPrepOK" style="display: none">
+                                <h4>Se envió la solicitud de actualización del presupuesto exitosamente, en unos minutos
+                                    actualice la pagina para visualizar el estado actual del presupuesto.</h4>
+                            </div>
+                            <div class="text-center" id="infoPrep" style="display: none">
+                                <h4>Fecha del Presupuesto: {{ $fechaData }}</h4>
+                                <h4>
+                                    Para actualizar el presupuesto de clic en el siguiente botón.
+                                    <a onclick="refreshPrep()" title="Actualizar Presupuesto" class="btn-sm btn-primary"><i class="fa fa-refresh"></i></a>
+                                </h4>
                             </div>
                             <table id="tabla" class="table table-hover table-bordered table-striped " style="display: none">
                                 <thead>
@@ -287,14 +299,43 @@
         const vigencia_id = @json($V);
         const prepSaved = @json($prepSaved);
 
-
         function getModalToMakeInforme(){
             $('#modalMakeInforme').modal('show');
         }
 
+        function refreshPrep(){
+            $("#noFind").hide();
+            $("#cargando").hide();
+            $("#infoPrep").hide();
+            $("#refresPrep").show();
+            $("#refresPrepOK").hide();
+
+            $.ajax({
+                method: "GET",
+                url: "/presupuesto/refreshPrepSaved",
+                data: { "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(datos) {
+                $("#refresPrepOK").show();
+                $("#refresPrep").hide();
+
+                toastr.success('SOLICITUD DE ACTUALIZACIÓN DEL PRESUPUESTO ENVIADA EXITOSAMENTE. ESPERE UNOS MINUTOS POR FAVOR Y ACTUALICE LA PAGINA.');
+            }).fail(function() {
+                $("#tabla").hide();
+                $("#cargando").hide();
+                $("#noFind").hide();
+                $("#refresPrep").hide();
+                $("#refresPrepOK").hide();
+
+                toastr.warning('OCURRIO UN ERROR AL SOLICITAR LA ACTUALIZACIÓN DEL PRESUPUESTO.');
+            });
+        }
+
+
         function findPrep(){
             $("#cargando").show();
             $("#noFind").hide();
+            $("#infoPrep").hide();
+            $("#refresPrepOK").hide();
 
             var table = $('#tabla').DataTable();
 
@@ -307,6 +348,7 @@
             }).done(function(datos) {
                 $("#tabla").show();
                 table.destroy();
+                $("#infoPrep").show();
                 $("#cargando").hide();
                 $("#noFind").hide();
                 table = $('#tabla').DataTable( {
@@ -358,6 +400,11 @@
                             extend:    'print',
                             text:      '<i class="fa fa-print"></i> ',
                             titleAttr: 'Imprimir',
+                            className: 'btn btn-primary'
+                        },
+                        {
+                            text: '<i class="fa fa-refresh"  onclick="refreshPrep()"></i>',
+                            titleAttr: 'Actualizar Presupuesto',
                             className: 'btn btn-primary'
                         },
                     ],

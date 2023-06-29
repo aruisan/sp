@@ -108,29 +108,38 @@ class TesoreriaDescuentosController extends Controller
                     foreach ($descuentosOP as $descuento){
                         $ordenPago = OrdenPagos::where('id', $descuento->orden_pagos_id)->where('estado', '1')->first();
                         if ($ordenPago){
-                            if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $request->vigencia_id){
-                                $mesOP = Carbon::parse($ordenPago->created_at)->month;
-                                //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
-                                if ($mesOP == $request->mes){
-                                    $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
-                                    if (count($pagos) > 0){
-                                        foreach ($pagos as $pago) {
-                                            //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                            $bank = PagoBanks::where('pagos_id', $pago->id)->get();
-                                            if (count($bank) > 0){
-                                                if ($bank[0]->rubros_puc_id == $request->id){
-                                                    $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
-                                                        'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
-                                                        'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $ordenPago->valor,
-                                                        'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
-                                                    $valueCred[] = $ordenPago->valor;
-                                                    $valueDeb[] = $descuento->valor;
+                            $mesOP = Carbon::parse($ordenPago->created_at)->month;
+                            //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
+                            if ($mesOP == $request->mes){
+                                $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
+                                if (count($pagos) > 0){
+                                    foreach ($pagos as $pago) {
+                                        //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
+                                        $bank = PagoBanks::where('pagos_id', $pago->id)->get();
+                                        if (count($bank) > 0){
+                                            if ($bank[0]->rubros_puc_id == $request->id){
+                                                if (isset($ordenPago->registros)){
+                                                    $tercero = $ordenPago->registros->persona->nombre;
+                                                    $numIdent = $ordenPago->registros->persona->num_dc;
+                                                    $idTercero = $ordenPago->registros->persona->id;
+                                                } else{
+                                                    $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                                                    $numIdent = 800197268;
+                                                    $idTercero = 75;
                                                 }
+
+                                                $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
+                                                    'valorDesc' => $descuento->valor, 'cc' => $numIdent, 'nameTer' => $tercero,
+                                                    'valorDeb' => $ordenPago->valor, 'idTercero' => $idTercero,
+                                                    'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                                $valueCred[] = $ordenPago->valor;
+                                                $valueDeb[] = $descuento->valor;
                                             }
                                         }
                                     }
                                 }
                             }
+
                         }
                     }
                 }
@@ -159,7 +168,6 @@ class TesoreriaDescuentosController extends Controller
                 $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'reten' => 0]);
             }
         }
-
 
 
         return $tableRT;
@@ -206,17 +214,6 @@ class TesoreriaDescuentosController extends Controller
     public function makePago(Request $request){
         $rubroPUC = PucAlcaldia::find($request->cuentaPUC);
         $cuentaPUC = PucAlcaldia::where('padre_id',660)->orWhere('padre_id',765)->get();
-        $rubI = Rubro::where('vigencia_id', $request->vigencia_id)->orderBy('cod','ASC')->get();
-        $personas = Persona::all();
-
-        $lv1 = PucAlcaldia::where('padre_id', 2 )->get();
-        foreach ($lv1 as $dato){
-            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
-            foreach ($lv2 as $cuenta) {
-                $lv3 = PucAlcaldia::where('padre_id', $cuenta->id )->get();
-                foreach ($lv3 as $hijo)  $hijosDebito[] = $hijo;
-            }
-        }
 
         foreach ($cuentaPUC as $cuenta){
 
@@ -247,7 +244,12 @@ class TesoreriaDescuentosController extends Controller
                                             $bank = PagoBanks::where('pagos_id', $pago->id)->get();
                                             if (count($bank) > 0){
                                                 if ($bank[0]->rubros_puc_id == $request->cuentaPUC){
+
                                                     $valueOP = $ordenPago->valor;
+                                                    $tableValues[] = collect(['code' => $retefuenteCode->codigo, 'concepto' => $retefuenteCode->concepto,
+                                                        'valorDesc' => $descuento->valor, 'cc' => $ordenPago->registros->persona->num_dc,
+                                                        'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
+                                                        'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
                                                     $valueCred[] = $valueOP;
                                                     $valueDeb[] = $descuento->valor;
                                                 }
@@ -267,57 +269,68 @@ class TesoreriaDescuentosController extends Controller
                     foreach ($descuentosOP as $descuento){
                         $ordenPago = OrdenPagos::where('id', $descuento->orden_pagos_id)->where('estado', '1')->first();
                         if ($ordenPago){
-                            if ($ordenPago->registros->cdpsRegistro->first()->cdp->vigencia_id == $request->vigencia_id){
-                                $mesOP = Carbon::parse($ordenPago->created_at)->month;
-                                //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
-                                if ($mesOP == $request->mes){
-                                    $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
-                                    if (count($pagos) > 0){
-                                        foreach ($pagos as $pago) {
-                                            //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                            $bank = PagoBanks::where('pagos_id', $pago->id)->get();
-                                            if (count($bank) > 0){
-                                                if ($bank[0]->rubros_puc_id == $request->cuentaPUC){
-                                                    $valueCred[] = $ordenPago->valor;
-                                                    $valueDeb[] = $descuento->valor;
+                            $mesOP = Carbon::parse($ordenPago->created_at)->month;
+                            //SE VALIDA QUE LA ORDEN DE PAGO HAYA SIDO CREADA EN EL MISMO MES DE BUSQUEDA
+                            if ($mesOP == $request->mes){
+                                $pagos = Pagos::where('orden_pago_id', $ordenPago->id)->where('estado','1')->get();
+                                if (count($pagos) > 0){
+                                    foreach ($pagos as $pago) {
+                                        //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
+                                        $bank = PagoBanks::where('pagos_id', $pago->id)->get();
+                                        if (count($bank) > 0){
+                                            if ($bank[0]->rubros_puc_id == $request->cuentaPUC){
+                                                if (isset($ordenPago->registros)){
+                                                    $tercero = $ordenPago->registros->persona->nombre;
+                                                    $numIdent = $ordenPago->registros->persona->num_dc;
+                                                    $idTercero = $ordenPago->registros->persona->id;
+                                                } else{
+                                                    $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
+                                                    $numIdent = 800197268;
+                                                    $idTercero = 75;
                                                 }
+
+                                                $tableValues[] = collect(['code' => $descMunicipal->codigo, 'concepto' => $descMunicipal->concepto,
+                                                    'valorDesc' => $descuento->valor, 'cc' => $numIdent, 'nameTer' => $tercero,
+                                                    'valorDeb' => $ordenPago->valor, 'idTercero' => $idTercero,
+                                                    'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
+                                                $valueCred[] = $ordenPago->valor;
+                                                $valueDeb[] = $descuento->valor;
                                             }
                                         }
                                     }
                                 }
                             }
+
                         }
                     }
                 }
             }
 
+
             //SE VALIDA SI HAY VALORES PARA AGREGARLE AL PADRE, SI NO HAY EL PADRE POR ENDE ESTA VACIO
-            if (isset($valueDeb)){
+            if (isset($tableValues)){
                 //SE INGRESA EL PADRE
 
-                $tableRT[] = collect(['code' => $cuenta->code, 'concepto' => $cuenta->concepto, 'valorDesc' => array_sum($valueDeb)]);
-                $form[] = array_sum($valueDeb);
+                $tableRT[] = collect(['code' => $cuenta->code, 'concepto' => $cuenta->concepto,
+                    'valorDesc' => array_sum($valueDeb), 'cc' => '', 'nameTer' => '',
+                    'codeDeb' => $padreDeb->code, 'conceptoDeb' => $padreDeb->concepto, 'valorDeb' => array_sum($valueCred),
+                    'ordenPago' => '']);
+
+                $form[] = collect(['concepto' => $cuenta->concepto, 'base' => array_sum($valueCred), 'reten' => array_sum($valueDeb)]);
+
+                //SE INGRESAN LOS HIJOS
+                foreach ($tableValues as $data) $tableRT[] = collect($data);
 
                 //SE LIMPIAN LOS ARRAY
                 if (isset($valueDeb))unset($valueDeb);
                 if (isset($valueCred))unset($valueCred);
+                if (isset($tableValues))unset($tableValues);
             } else {
-                $tableRT[] = collect(['code' => $cuenta->code, 'concepto' => $cuenta->concepto, 'valorDesc' => 0]);
-                $form[] =  0;
+                $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'reten' => 0]);
             }
         }
 
-        $vigencia = $request->vigencia_id;
-        $mes = $request->mes;
-        $fecha = $this->makeDate($request->mes);
-        $totalPago = array_sum($form);
-
-        foreach ($rubI as $rub){
-            foreach ($rub->fontsRubro as $fuente){
-                $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
-                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
-            }
-        }
+        dd($form, $tableRT, $rubroPUC);
 
         return view('administrativo.tesoreria.descuentos.make', compact('tableRT','vigencia', 'rubroPUC','mes','personas',
         'fecha', 'hijosDebito', 'totalPago', 'rubrosIngresos'));
