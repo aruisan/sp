@@ -607,7 +607,8 @@
             else if(añoGravable == 2020)  tasaDesc = 0.0;
             else tasaDesc = 0.0;
 
-            var valorDesc = totSaldoCargo * tasaDesc;
+            //SE CAMBIA EL VALOR A 0$ DEBIDO A QUE YA NO HAY DESCUENTO
+            var valorDesc = totSaldoCargo * 0.0;
 
             document.getElementById("valorDesc").value = valorDesc;
             document.getElementById("valorDescSpan").innerHTML = formatter.format(valorDesc);
