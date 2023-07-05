@@ -182,7 +182,7 @@ class PagosController extends Controller
      */
     public function validatePagoDownload(Request $request){
         $pago = Pagos::find($request->payId);
-        if ($pago->download > 0) return 'OK';
+        if ($pago) return 'OK';
         else return 'FALSE';
     }
 
@@ -244,62 +244,60 @@ class PagosController extends Controller
         $impPago = Pagos::find($id);
         if ($impPago){
             if ($impPago->modulo == "PREDIAL"){
-                if ($impPago->download > 0){
-                    $pred = Predial::find($impPago->entity_id);
-                    $contri = PredialContribuyentes::find($pred->imp_pred_contri_id);
-                    $morePropie = PredialContribuyentes::where('numCatastral', $contri->numCatastral)->get();
-                    if (count($morePropie) > 1){
-                        foreach ($morePropie as $propie) {
-                            if ($propie->id != $contri->id) $contri->contribuyente = $contri->contribuyente.' - '.$propie->contribuyente;
-                        }
+                //SE COMENTA LA VALIDACION DE SI SE PUEDE DESCARGAR EL PAZ Y SALVO
+                //if ($impPago->download > 0){
+                $pred = Predial::find($impPago->entity_id);
+                $contri = PredialContribuyentes::find($pred->imp_pred_contri_id);
+                $morePropie = PredialContribuyentes::where('numCatastral', $contri->numCatastral)->get();
+                if (count($morePropie) > 1){
+                    foreach ($morePropie as $propie) {
+                        if ($propie->id != $contri->id) $contri->contribuyente = $contri->contribuyente.' - '.$propie->contribuyente;
                     }
-
-                    $declaFecha = Carbon::parse($impPago->fechaCreacion);
-                    $fechaDeclaracion = Carbon::createFromTimeString($declaFecha);
-
-                    $hoy = Carbon::today();
-                    $fecha = Carbon::createFromTimeString($hoy);
-
-                    $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-                    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-
-                    $pazysalvo = new PazySalvo();
-                    $pazysalvo->modulo = $impPago->modulo;
-                    $pazysalvo->pago_id = $id;
-                    $pazysalvo->entity_id = $impPago->entity_id;
-                    $pazysalvo->contri_id = $pred->imp_pred_contri_id;
-                    $pazysalvo->valor = $impPago->valor;
-                    $pazysalvo->fecha = $hoy;
-                    $pazysalvo->user_id = Auth::user()->id;
-                    $pazysalvo->save();
-
-                    if (strlen($pazysalvo->id) < 6){
-                        $pazysalvo->numForm = $pazysalvo->id;
-                        for ($i = 0; $i < 6 - strlen($pazysalvo->id); $i++) {
-                            $pazysalvo->numForm =  '0'. $pazysalvo->numForm;
-                        }
-                    } else  $pazysalvo->numForm = $pazysalvo->id;
-
-                    $impPago->download = 0;
-                    $impPago->save();
-
-                    if (strlen($impPago->id) < 12){
-                        $impPago->numForm = $impPago->id;
-                        for ($i = 0; $i < 12 - strlen($impPago->id); $i++) {
-                            $impPago->numForm =  '0'.$impPago->numForm;
-                        }
-                    } else $impPago->numForm = $impPago->id;
-
-
-
-                    $pdf = \PDF::loadView('impuestos.pagos.pazysalvo', compact('dias','meses','fechaDeclaracion', 'fecha',
-                    'impPago','pred','contri','pazysalvo'))
-                        ->setOptions(['images' => true,'isRemoteEnabled' => true]);
-                    return $pdf->stream();
-                } else{
-                    Session::flash('warning','Ya ha sido generado el paz y salvo de ese predio.');
-                    return back();
                 }
+
+                $declaFecha = Carbon::parse($impPago->fechaCreacion);
+                $fechaDeclaracion = Carbon::createFromTimeString($declaFecha);
+
+                $hoy = Carbon::today();
+                $fecha = Carbon::createFromTimeString($hoy);
+
+                $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+                $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+                $pazysalvo = new PazySalvo();
+                $pazysalvo->modulo = $impPago->modulo;
+                $pazysalvo->pago_id = $id;
+                $pazysalvo->entity_id = $impPago->entity_id;
+                $pazysalvo->contri_id = $pred->imp_pred_contri_id;
+                $pazysalvo->valor = $impPago->valor;
+                $pazysalvo->fecha = $hoy;
+                $pazysalvo->user_id = Auth::user()->id;
+                $pazysalvo->save();
+
+                if (strlen($pazysalvo->id) < 6){
+                    $pazysalvo->numForm = $pazysalvo->id;
+                    for ($i = 0; $i < 6 - strlen($pazysalvo->id); $i++) {
+                        $pazysalvo->numForm =  '0'. $pazysalvo->numForm;
+                    }
+                } else  $pazysalvo->numForm = $pazysalvo->id;
+
+                //$impPago->download = 0;
+                $impPago->save();
+
+                if (strlen($impPago->id) < 12){
+                    $impPago->numForm = $impPago->id;
+                    for ($i = 0; $i < 12 - strlen($impPago->id); $i++) {
+                        $impPago->numForm =  '0'.$impPago->numForm;
+                    }
+                } else $impPago->numForm = $impPago->id;
+
+
+
+                $pdf = \PDF::loadView('impuestos.pagos.pazysalvo', compact('dias','meses','fechaDeclaracion', 'fecha',
+                'impPago','pred','contri','pazysalvo'))
+                    ->setOptions(['images' => true,'isRemoteEnabled' => true]);
+                return $pdf->stream();
+
             } else{
                 Session::flash('warning','No se puede generar paz y salvo. Contacte con el administrador.');
                 return back();
