@@ -520,7 +520,9 @@
                 }
 
                 //DESCUENTOS DE INTERESES
-                var descIntereses = datos * calenDescInt;
+                //var descIntereses = datos * calenDescInt;
+                //SE PASA EL DESCUENTO A 0
+                var descIntereses = datos * 0;
 
                 //TASA AMBIENTAL
                 var tasaAmb = tot * 0.01;
