@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\BPin;
 use App\bpinVigencias;
+use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Administrativo\Cdp\RubrosCdpValor;
@@ -274,7 +275,21 @@ class feedPresupuesto extends Command
                         if($rubroOtherFind->first()) {
 
                             if($rubroOtherFind->first()->fontsRubro){
-                                foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) $valueRubros[] = $fuenteRubro->valor;
+                                foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro){
+                                    $valueRubros[] = $fuenteRubro->valor;
+
+                                    //RECORRIDO PARA LA OBTENCION DEL VALOR DE CONTRACREDITO
+                                    $depRubFont = DependenciaRubroFont::where('rubro_font_id', $fuenteRubro->id)->get();
+                                    foreach ($depRubFont as $depRF){
+                                        $movRubs = RubrosMov::where('dep_rubro_font_cc_id', $depRF->id)->get();
+                                        foreach ($movRubs as $movRub){
+                                            if ($movRub->valor > 0){
+                                                //SE ALMACENA EL VALOR DE CC
+                                                $valueRubrosCCred[] = $movRub->valor;
+                                            }
+                                        }
+                                    }
+                                }
                             } else $valueRubros[] = 0;
 
                             //2 ADD - 3 RED  - 1 CRED
@@ -286,7 +301,7 @@ class feedPresupuesto extends Command
                                             if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at)) >= $inicio){
                                                 if ($mov->movimiento == "1") {
                                                     $valueRubrosCred[] = $mov->valor;
-                                                    $valueRubrosCCred[] = $mov->valor;
+                                                    //$valueRubrosCCred[] = $mov->valor;
                                                     $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                     $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                 }
@@ -297,7 +312,7 @@ class feedPresupuesto extends Command
                                         } else{
                                             if ($mov->movimiento == "1") {
                                                 $valueRubrosCred[] = $mov->valor;
-                                                $valueRubrosCCred[] = $mov->valor;
+                                                //$valueRubrosCCred[] = $mov->valor;
                                                 $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                 $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                             }
@@ -495,6 +510,18 @@ class feedPresupuesto extends Command
                                         $valueRubros[] = $fuenteRubro->valor;
                                         $valueRubrosDisp[] = $fuenteRubro->valor_disp;
 
+                                        //RECORRIDO PARA LA OBTENCION DEL VALOR DE CONTRACREDITO
+                                        $depRubFont = DependenciaRubroFont::where('rubro_font_id', $fuenteRubro->id)->get();
+                                        foreach ($depRubFont as $depRF){
+                                            $movRubs = RubrosMov::where('dep_rubro_font_cc_id', $depRF->id)->get();
+                                            foreach ($movRubs as $movRub){
+                                                if ($movRub->valor > 0){
+                                                    //SE ALMACENA EL VALOR DE CC
+                                                    $valueRubrosCCred[] = $movRub->valor;
+                                                }
+                                            }
+                                        }
+
                                         //VALIDACION PARA LAS ADICIONES Y REDUCCIONES
                                         foreach ($rubroOtherFind->first()->rubrosMov as $mov){
                                             if ($mov->valor > 0 ){
@@ -529,13 +556,13 @@ class feedPresupuesto extends Command
                                                 if ($inicio != null){
                                                     if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at)) >= $inicio){
                                                         $valueRubrosCred[] = $mov->valor;
-                                                        $valueRubrosCCred[] = $mov->valor;
+                                                        //$valueRubrosCCred[] = $mov->valor;
                                                         $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                         $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                     }
                                                 } else {
                                                     $valueRubrosCred[] = $mov->valor;
-                                                    $valueRubrosCCred[] = $mov->valor;
+                                                    //$valueRubrosCCred[] = $mov->valor;
                                                     $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                     $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                 }
