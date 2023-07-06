@@ -63,9 +63,6 @@
                 <a class="nav-link" data-toggle="pill" href="#cdp"> CDP's del Rubro </a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" data-toggle="pill" href="#registros"> Registros del Rubro </a>
-            </li>
-            <li class="nav-item ">
                 <a class="nav-link" data-toggle="pill" href="#movimientos"> Movimientos del Rubro </a>
             </li>
         @endif
@@ -73,6 +70,7 @@
         @if(auth()->user()->dependencia->id == 15 or auth()->user()->dependencia->id == 1)
                 @include('modal.adicionRubro')
                 @include('modal.reduccionRubro')
+            <!--
             <li class="dropdown">
                 <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                 <ul class="dropdown-menu">
@@ -84,6 +82,7 @@
                     @endif
                 </ul>
             </li>
+            -->
         @endif
         @if( $rol != 2 )
             @include('modal.asignarDineroDep')
@@ -465,6 +464,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 align-self-center">
+                    <!--
                     @if($files != 0)
                         <center>
                             <h3>Resoluciones del Rubro</h3>
@@ -486,10 +486,9 @@
                     @else
                         <center>
                             <h3>El rubro no ha recibido ningun movimiento</h3>
-                            <br>
-                            <a href="{{ url('administrativo/cdp/') }}" class="btn btn-primary btn-block m-b-12 disabled">VER TODOS LOS MOVIMIENTOS</a>
                         </center>
                     @endif
+                    -->
                 </div>
             </div>
         </div>
