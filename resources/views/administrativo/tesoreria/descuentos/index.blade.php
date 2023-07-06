@@ -162,7 +162,7 @@
                 }
             }).done(function(datos) {
                 if(datos.length > 0){
-                    $("#buttonMake").show();
+                    //$("#buttonMake").show();
                     console.log(datos);
                     $("#tabla").show();
                     table.destroy();
@@ -233,7 +233,7 @@
                     $("#tabla").hide();
                     table.destroy();
                     $("#cargando").hide();
-                    $("#buttonMake").show();
+                    //$("#buttonMake").show();
                     toastr.warning('SE REALIZO LA BUSQUEDA EXITOSAMENTE PERO NO HAY MOVIMIENTOS EN ESE MES.');
                 }
             }).fail(function() {
