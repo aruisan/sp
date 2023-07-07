@@ -207,6 +207,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
             //DESCUENTOS
         Route::get('tesoreria/descuentos/{vigencia}','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@index');
+        Route::get('tesoreria/descuentos/viewpago/{id}/view','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@show');
         Route::post('tesoreria/descuentos/movimientos/pagos','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@movAccount');
         Route::post('tesoreria/descuentos/makePago','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@makePago');
         Route::post('tesoreria/descuentos/store','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@store');
@@ -398,12 +399,12 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //Impuestos
 
             //MUELLAJE
+        Route::post('impuestos/muellaje/deleteMuellaje/{id}', 'Administrativo\Impuestos\MuellajeController@deleteMuellaje');
         Route::post('impuestos/muellaje/{id}/find','Administrativo\Impuestos\MuellajeController@findAtraque');
         Route::get('impuestos/muellaje/edit/{id}','Administrativo\Impuestos\MuellajeController@edit');
         Route::resource('impuestos/muellaje','Administrativo\Impuestos\MuellajeController');
         Route::post('impuestos/muellaje/pay','Administrativo\Impuestos\MuellajeController@pay');
         Route::delete('impuestos/muellaje/vehiculo/delete/{id}', 'Administrativo\Impuestos\MuellajeController@deleteVehiculo');
-        Route::delete('impuestos/muellaje/{id}/delete', 'Administrativo\Impuestos\MuellajeController@delete');
 
             //DELINEACION Y URBANISMO
         Route::resource('impuestos/delineacion','Administrativo\Impuestos\DelineacionController');

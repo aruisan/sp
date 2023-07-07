@@ -306,17 +306,17 @@ class MuellajeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function deleteMuellaje(Request $request)
     {
-        $vehiculosSaved = MuellajeVehiculos::where('imp_id', $id)->get();
+        $vehiculosSaved = MuellajeVehiculos::where('imp_id', $request->id)->get();
         foreach ($vehiculosSaved as $vehSaved){
             $vehSaved->delete();
         }
 
-        $pagoSaved = Pagos::where('modulo', "MUELLAJE")->where('entity_id', $id)->first();
+        $pagoSaved = Pagos::where('modulo', "MUELLAJE")->where('entity_id', $request->id)->first();
         $pagoSaved->delete();
 
-        $muellaje = Muellaje::find($id);
+        $muellaje = Muellaje::find($request->id);
         $muellaje->delete();
     }
 }

@@ -262,7 +262,7 @@
         });
 
         function eliminarPago(id){
-            var opcion = confirm("ESTA SEGURO DE ELIMIAR EL PAGO JUNTO CON EL CORRESPONDIENTE FORMULARIO?");
+            var opcion = confirm("ESTA SEGURO DE ELIMINAR EL PAGO JUNTO CON EL CORRESPONDIENTE FORMULARIO?");
             if (opcion == true) {
                 $.ajax({
                     method: "POST",

@@ -12,6 +12,9 @@ use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentos;
+use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentosDebitos;
+use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentosForms;
+use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentosIng;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Persona;
@@ -251,7 +254,7 @@ class TesoreriaDescuentosController extends Controller
                                                         'nameTer' => $ordenPago->registros->persona->nombre, 'valorDeb' => $valueOP,
                                                         'idTercero' => $ordenPago->registros->persona->id, 'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
                                                     $valueCred[] = $valueOP;
-                                                    $valueDeb[] = $descuento->valor;
+                                                    $valueDesc[] = $descuento->valor;
                                                 }
                                             }
                                         }
@@ -294,7 +297,7 @@ class TesoreriaDescuentosController extends Controller
                                                     'valorDeb' => $ordenPago->valor, 'idTercero' => $idTercero,
                                                     'ordenPago' => '#'.$ordenPago->code.'- '.$ordenPago->nombre]);
                                                 $valueCred[] = $ordenPago->valor;
-                                                $valueDeb[] = $descuento->valor;
+                                                $valueDesc[] = $descuento->valor;
                                             }
                                         }
                                     }
@@ -312,11 +315,12 @@ class TesoreriaDescuentosController extends Controller
                 //SE INGRESA EL PADRE
 
                 $tableRT[] = collect(['code' => $cuenta->code, 'concepto' => $cuenta->concepto,
-                    'valorDesc' => array_sum($valueDeb), 'cc' => '', 'nameTer' => '',
+                    'valorDesc' => array_sum($valueDesc), 'cc' => '', 'nameTer' => '',
                     'codeDeb' => $padreDeb->code, 'conceptoDeb' => $padreDeb->concepto, 'valorDeb' => array_sum($valueCred),
                     'ordenPago' => '']);
 
-                $form[] = collect(['concepto' => $cuenta->concepto, 'base' => array_sum($valueCred), 'reten' => array_sum($valueDeb)]);
+                $form[] = collect(['concepto' => $cuenta->concepto, 'OP' => array_sum($valueCred), 'valorDesc' => array_sum($valueDesc)]);
+                $descTot[] = array_sum($valueDesc);
 
                 //SE INGRESAN LOS HIJOS
                 foreach ($tableValues as $data) $tableRT[] = collect($data);
@@ -326,14 +330,34 @@ class TesoreriaDescuentosController extends Controller
                 if (isset($valueCred))unset($valueCred);
                 if (isset($tableValues))unset($tableValues);
             } else {
-                $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'reten' => 0]);
+                $form[] = collect(['concepto' => $cuenta->concepto, 'base' => 0, 'valorDesc' => 0]);
             }
         }
 
-        dd($form, $tableRT, $rubroPUC);
+        $fecha = $request->mes.'-'.Carbon::today()->year;
+        $mes = $request->mes;
+        $vigencia = $request->vigencia_id;
+        $personas = Persona::all();
+        $totalPago = array_sum($descTot);
+
+        $rubI = Rubro::where('vigencia_id', $vigencia)->orderBy('cod','ASC')->get();
+        foreach ($rubI as $rub){
+            foreach ($rub->fontsRubro as $fuente){
+                $rubrosIngresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description]);
+            }
+        }
+        $lv1 = PucAlcaldia::where('padre_id', 2 )->get();
+        foreach ($lv1 as $dato){
+            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
+            foreach ($lv2 as $cuenta) {
+                $lv3 = PucAlcaldia::where('padre_id', $cuenta->id )->get();
+                foreach ($lv3 as $hijo)  $hijosDebito[] = $hijo;
+            }
+        }
 
         return view('administrativo.tesoreria.descuentos.make', compact('tableRT','vigencia', 'rubroPUC','mes','personas',
-        'fecha', 'hijosDebito', 'totalPago', 'rubrosIngresos'));
+        'fecha', 'hijosDebito', 'totalPago', 'rubrosIngresos','form'));
     }
 
     public function makeDate($mes){
@@ -366,16 +390,42 @@ class TesoreriaDescuentosController extends Controller
     }
 
     public function store(Request $request){
-        dd($request);
+        $newPayDesc = new TesoreriaDescuentos();
+        $newPayDesc->vigencia_id = $request->vigencia_id;
+        $newPayDesc->mes = $request->mes;
+        $newPayDesc->valor = $request->totPago;
+        $newPayDesc->puc_alcaldia_id = $request->cuentaCred;
+        $newPayDesc->save();
 
-        if (array_sum($request->debCuenta) != $request->totPago ){
-            Session::flash('warning', 'El valor a pagar en debito no concuerda con el pago total de credito.');
-            return back();
+        //SE ALMACENA EL FORMULARIO
+        for ($i = 0; $i < sizeof($request->conceptoCuenta); $i++) {
+            $newDescForm = new TesoreriaDescuentosForms();
+            $newDescForm->descuento_id = $newPayDesc->id;
+            $newDescForm->concepto = $request->conceptoCuenta[$i];
+            $newDescForm->valor = $request->credCuenta[$i];
+            $newDescForm->save();
         }
 
-        $vigencia = Vigencia::find($request->vigencia_id);
+        //SE ALMACENAN LAS CUENTAS DEBITO
+        for ($i = 0; $i < sizeof($request->cuentaDeb); $i++) {
+            $newDescDeb = new TesoreriaDescuentosDebitos();
+            $newDescDeb->descuento_id = $newPayDesc->id;
+            $newDescDeb->puc_alcaldia_id = $request->cuentaDeb[$i];
+            $newDescDeb->valor = $request->debCuenta[$i];
+            $newDescDeb->save();
+        }
 
-        //dd($request);
+        //SE ALMACENAN LAS RUBROS DE INGRESOS
+        for ($i = 0; $i < sizeof($request->rubroIngresos); $i++) {
+            $newDescRub = new TesoreriaDescuentosIng();
+            $newDescRub->descuento_id = $newPayDesc->id;
+            $newDescRub->font_rubro_id = $request->rubroIngresos[$i];
+            $newDescRub->valor = $request->debRub[$i];
+            $newDescRub->save();
+        }
+
+        Session::flash('success', 'El descuento se ha elaborado exitosamente.');
+        return redirect('administrativo/tesoreria/descuentos/'.$request->vigencia_id);
     }
 
     /**
@@ -384,9 +434,11 @@ class TesoreriaDescuentosController extends Controller
      * @param  \App\TesoreriaDescuentos  $tesoreriaDescuentos
      * @return \Illuminate\Http\Response
      */
-    public function show(TesoreriaDescuentos $tesoreriaDescuentos)
+    public function show($id)
     {
-        //
+        $pago = TesoreriaDescuentos::find($id);
+        dd($pago);
+
     }
 
     /**
