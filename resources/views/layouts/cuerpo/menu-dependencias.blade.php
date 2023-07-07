@@ -299,13 +299,16 @@
                <li class="dropdown-submenu">
                   <a class="dropdown-item item-menu" >Ordenes de Pagos </a>
                   <ul class="dropdown-menu">
-                     <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/3') }}">2020</a></li>
-                     <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/5') }}">2021</a></li>
-                     <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/7') }}">2022</a></li>
                      <li><a class="item-menu" href="{{ url('/administrativo/ordenPagos/11') }}">2023</a></li>
                   </ul>
                </li>
                <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago a Terceros</a></li>
+               <li class="dropdown-submenu">
+                  <a class="dropdown-item item-menu" >Pago Descuentos </a>
+                  <ul class="dropdown-menu">
+                     <li><a class="item-menu" href="{{ url('/administrativo/tesoreria/descuentos/11') }}">2023</a></li>
+                  </ul>
+               </li>
                <li><a class="item-menu" tabindex="-1" href="{{url('#')}}">Pago Nomina</a></li>
                <!-- <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/retefuente')}}">Retención en la Fuente</a></li> -->
                <li><a class="item-menu" tabindex="-1" href="#">Informes</a></li>

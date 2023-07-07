@@ -2,6 +2,7 @@
 @section('titulo') REGISTROS DE ATRAQUES @stop
 @section('content')
     @include('modal.impuestos.pagomuellaje')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="breadcrumb text-center"><strong><h4><b>REGISTROS DE ATRAQUES</b></h4></strong></div>
     <ul class="nav nav-pills">
         <li class="nav-item active">
@@ -19,8 +20,8 @@
         </li>
     </ul>
 
-    <div class="tab-content" id="app">
-        <div id="tabTareas" class="tab-pane fade in active"><br>
+    <div class="tab-content">
+        <div id="tabTareas" class="tab-pane fade in active">
             <br>
             <div class="table-responsive">
                 @if(count($atraquesPend) > 0)
@@ -32,7 +33,7 @@
                             <th class="text-center">Nombre Embarcación</th>
                             <th class="text-center">Propietario Embarcación</th>
                             <th class="text-center">Bandera</th>
-                            <th class="text-center"># Tripulantes</th>
+                            <th class="text-center">Tripulantes</th>
                             <th class="text-center">Tipo de Carga</th>
                             <th class="text-center">Eslora</th>
                             <th class="text-center">Nombre Naviera</th>
@@ -43,7 +44,7 @@
                             <th class="text-center">Fecha Salida</th>
                             <th class="text-center">Valor Impuesto</th>
                             <th class="text-center">Ver Registro</th>
-                            <th class="text-center">Cargar Constancia de Pago</th>
+                            <th class="text-center">Cargar Pago</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -65,9 +66,12 @@
                                 <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fechaSalida)->format('d-m-Y') }}</td>
                                 <td class="text-center">$<?php echo number_format($atraque->valorPago,0) ?></td>
                                 <td class="text-center">
-                                    <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id) }}" title="Ver registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-                                    <a href="{{ url('administrativo/impuestos/muellaje/edit/'.$atraque->id) }}" title="Editar registro" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                    <a @click.prevent="eliminarRegistro({{ $atraque->id }})" class="btn btn-sm btn-primary"><i class="fa fa-trash"></i></a>
+                                    <div>
+                                        <!-- <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id.'/formulario/pdf') }}" title="Formulario" target="_blank" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a> -->
+                                        <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id) }}" title="Ver registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ url('administrativo/impuestos/muellaje/edit/'.$atraque->id) }}" title="Editar registro" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                        <a onclick="eliminarRegistro('{{$atraque->id}}')" class="btn btn-sm btn-primary"><i class="fa fa-trash"></i></a>
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <button onclick="getModalPago({{$atraque->numRegistroIngreso}}, {{$atraque->id}})" class="btn btn-danger"><i class="fa fa-usd"></i></button>
@@ -248,21 +252,27 @@
             document.getElementById("regIngresoText").innerHTML = numRefPago;
         }
 
-        new Vue({
-            el: '#app',
-
-            methods:{
-
-                eliminarRegistro: function(dato){
-                    var opcion = confirm("Esta seguro de eliminar el registro?");
-                    if (opcion == true) {
-                        var urlexogena = '/administrativo/impuestos/muellaje/'+dato+'/delete';
-                        axios.delete(urlexogena).then(response => {
-                            location.reload();
-                        });
+        function eliminarRegistro(id){
+            var opcion = confirm("ESTA SEGURO DE ELIMINAR EL REGISTRO?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/impuestos/muellaje/deleteMuellaje/"+id,
+                    data: { "id": id,
+                        "_token": $("meta[name='csrf-token']").attr("content"),
+                    },
+                    success: function (result){
+                        console.log(result);
+                        toastr.success('REGISTRO ELIMINADO');
+                        location. reload();
+                    },
+                    error: function (error){
+                        console.log(error);
+                        toastr.warning('OCURRIO UN ERROR AL INTENTAR ELIMINAR EL REGISTRO.');
                     }
-                }
+                });
             }
-        });
+
+        }
     </script>
 @stop
