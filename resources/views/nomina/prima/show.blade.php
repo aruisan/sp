@@ -76,83 +76,16 @@
                 currency: 'COP',
                 minimumFractionDigits: 0
             })
-        @if(TRUE)
+
         const movimientos_data = movimientos.map(e => 
                 [
                     e.nombre, 
                     e.num_dc, 
                     e.cargo, 
                     e.sueldo_basico, 
-                    e.dias_trabajados, 
-                    e.basico, 
-                    e.v_horas_extras, 
-                    e.v_horas_extras_festivos, 
-                    e.v_horas_extras_nocturnas,
-                    e.v_recargos_nocturnos,
-                    e.v_bonificacion_servicios,
-                    e.v_prima_antiguedad,
-                    e.v_vacaciones,
-                    e.v_prima_vacaciones,
-                    e.v_ind,
-                    e.retroactivo,
-                    e.total_devengado,
-                    e.ibc,
-                    e.eps,
-                    e.salud.empleador,
-                    e.salud.empleado,
-                    e.fondo_pensiones,
-                    e.pension.empleador, 
-                    e.pension.empleado,
-                    e.fsp, 
-                    e.tarifa_retefuente,
-                    e.retefuente,
-                    e.descuentos[0], 
-                    e.descuentos[1],
-                    e.descuentos[2],
-                    e.descuentos[3],
-                    e.descuentos[4],
-                    e.descuentos[5],
-                    e.descuentos[6],
-                    e.descuentos[7],
-                    @if(in_array($nomina->id, [58,62]))
-                    e.reintegro,
-                    @endif
-                    e.total_descuentos,
-                    e.total_deduccion,
-                    e.neto,
-                    e.tipo_cuenta_bancaria,
-                    e.banco_cuenta_bancaria,
-                    e.numero_cuenta_bancaria,
-                    'CAJASAI',
-                    '4%',
-                    e.v_caja,
-                    'POSITIVA COMPAÑIA DE SEGUROS',
-                    3,
-                    '2,436%',
-                    Math.ceil((e.ibc * 0.02436)/100)*100,
-                    '5%',
-                    e.v_sena,
-                    '3%',
-                    e.v_icbf,
-                    '5%',
-                    e.v_esap,
-                    '1%',
-                    e.v_men
+                    e.prima,
                 ]
         );
-        @else
-        const movimientos_data = movimientos.map(e => 
-                [
-                    e.nombre, 
-                    e.num_dc,
-                    e.ibc,
-                    e.eps,
-                    e.porc_salud,
-                    e.salud.empleado,
-                    "si ibc <= 1 salario 0.04, si ibc es mayop de 1 y menor o igual a 2 salarios 0.1 lo demas en 0.12"
-                ]
-        );
-        @endif
 
         $(document).ready(function(){
             fecha_principal();
@@ -195,71 +128,7 @@
                     { title: 'Cedula' },
                     { title: 'Cargo' },
                     { title: 'Sueldo Basico' },
-                    { title: 'Dias Trabajados' },
-                    { title: 'Basico' },
-                    { title: 'H. Extras' },
-                    { title: 'H. Extras Festivos' },
-                    { title: 'H. Extras Nocturnas' },
-                    { title: 'H. Recargo Nocturno' },
-                    { title: 'Bonificación Servicios' },
-                    { title: 'Prima Antiguedad' },
-                    { title: 'Vacaciones' },
-                    { title: 'Prima Vacaciones' },
-                    { title: 'Indemnización' },
-                    { title: 'Retroactivo' },
-                    { title: 'Devengado' },
-                    { title: 'Ibc' },
-                    { title: 'Entidad' },//salud
-                    { title: 'Patron' },
-                    { title: 'Empleado' },
-                    { title: 'Pension' },
-                    { title: 'Patron' },
-                    { title: 'Empleado' },
-                    { title: 'Fsp' },
-                    { title: '%Rt Fte' },
-                    { title: 'Rt Fte' },
-                    { title: 'Popular' },
-                    { title: 'Bogota' },
-                    { title: 'Agrario' },
-                    { title: 'Cooserpark' },
-                    { title: 'Davivienda' },
-                    { title: 'Juzgado' },
-                    { title: 'Coocasa' },
-                    { title: 'Sindicato' },
-                    @if(in_array($nomina->id, [58,62]))
-                    { title: 'Reintegro' },
-                    @endif
-                    { title: 'Descuentos' },
-                    { title: 'Dedución' },
-                    { title: 'Neto Pagar' },
-                    { title: 'Tipo de Cuenta' },
-                    { title: 'Entidad Bancaria' },
-                    { title: '# Cuenta' },
-                    { title: 'Caja' },
-                    { title: 'Tarifa' },
-                    { title: 'Valor Caja' },
-                    { title: 'Riezgos' },
-                    { title: 'Tarifa' },
-                    { title: 'Riesgo' },
-                    { title: 'Valor Riesgo' },
-                    { title: '%SENA' },
-                    { title: 'SENA' },
-                    { title: '%ICBF' },
-                    { title: 'ICBF' },
-                    { title: '%Esap' },
-                    { title: 'Esap' },
-                    { title: '%MEN' },
-                    { title: 'MEN' },
-                ],
-                @else
-                columns: [
-                    { title: 'Nombre' },
-                    { title: 'Cedula' },
-                    { title: 'Sueldo' },
-                    { title: 'Entidad' },
-                    { title: '%' },
-                    { title: 'SALUD' },
-                    { title: 'Regla' },
+                    { title: 'Prima' }
                 ],
                 @endif
                 buttons:[ 

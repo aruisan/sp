@@ -23,6 +23,15 @@ class OrdenPagosPuc extends Model implements Auditable
         return is_null($this->ordenPago) ? 0 : $this->ordenPago->suma_pagos_aceptados;
     }
 
+    public function getHasPucsAttribute(){
+        $r = FALSE;
+        if(!is_null($this->ordenPago)){
+          $r =  $this->ordenPago->pucs->count() > 0 ? TRUE : FALSE;
+        }
+
+        return $r;
+    }
+
 
 
 }

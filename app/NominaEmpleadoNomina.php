@@ -100,7 +100,7 @@ class NominaEmpleadoNomina extends Model
 
     public function getVIbcAttribute(){
         return $this->nomina->tipo == 'pensionado' ? $this->sueldo : $this->v_dias_laborados + $this->v_horas_extras + $this->v_horas_extras_festivos + $this->v_horas_extras_nocturnas 
-        + $this->v_recargos_nocturnos + $this->v_bonificacion_servicios + $this->v_prima_antiguedad + $this->retroactivo + $this->prima;//810000
+        + $this->v_recargos_nocturnos + $this->v_bonificacion_servicios + $this->v_prima_antiguedad + $this->retroactivo;//810000
     }
 
 
@@ -241,6 +241,14 @@ class NominaEmpleadoNomina extends Model
             endif;
         endforeach;
         return $data;
+    }
+
+    public function getDescuentosTotalAttribute(){
+        return array_sum($this->descuento_x_entidad);
+    }
+
+    public function getDescuentosCantidadAttribute(){
+        return $this->descuentos->count();
     }
 
     public function round_up($v, $f){

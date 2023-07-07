@@ -25,6 +25,7 @@
 		<a class="dropdown-item item-menu">Nomina</a>
 		<ul class="dropdown-menu">
 			<li><a class="item-menu" href="{{route('nomina.index', 'pensionado')}}">Sueldo</a></li>
+			<li><a class="item-menu" href="{{route('nomina-prima.index', 'pensionado')}}">Prima Servicios</a></li>
 		</ul>
 	</li>
 </ul>

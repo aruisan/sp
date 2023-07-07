@@ -323,14 +323,17 @@ class PruebaController extends Controller
         return view('administrativo.contabilidad.balances.prueba', compact('result'));
     }
 
-    public function informe(){
+    public function informe($mes){
+        Session::put('mes-informe-inicial', $mes);
+        //dd();
+        $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
         //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
-        $pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->get();
+        $pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->where('id', 1)->get();
         //dd($pucs);
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
 
-        return view('administrativo.contabilidad.balances.prueba',compact('añoActual', 'mesActual', 'diaActual', 'pucs'));
+        return view('administrativo.contabilidad.balances.prueba',compact('añoActual', 'mesActual', 'diaActual', 'pucs', 'meses'));
     }
 }

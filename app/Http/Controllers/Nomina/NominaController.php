@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Nomina;
 use App\NominaEmpleado;
 use App\NominaEmpleadoNomina;
+use App\NominaEmpleadoDescuentos;
 use App\Model\Persona;
 use Session, PDF;
 
@@ -26,7 +27,7 @@ class NominaController extends Controller
     }
 
     public function index($tipo){
-        $nominas = Nomina::where('tipo', $tipo)->get();
+        $nominas = Nomina::where('tipo', $tipo)->orderBy('id', 'desc')->get();
         return view("{$this->view}.index_{$tipo}", compact('nominas'));
     }
 
@@ -200,7 +201,7 @@ class NominaController extends Controller
         //dd($nomina->empleados);
         $empleados =  $nomina->empleados_nominas->map(function($e){
             return [
-                'id' => $e->empleado->id,
+                'id' => $e->id,
                 'salario' => !is_null($e->empleado->salario) ? $e->empleado->salario : 0,
                 'datos' => $e->empleado,
                 'movimiento' => [
@@ -302,35 +303,37 @@ class NominaController extends Controller
             $nomina_empleado->prima_antiguedad = $request->data[11];
             $nomina_empleado->save();
 
+            $nomina_empleado->descuentos()->delete();
             if(isset($request->data[12])):
-                $nomina_empleado->descuentos()->delete();
-                foreach($request->data[12] as $y => $descuento):
-                    $nomina_empleado->descuentos()->create([
-                        'tercero_id' => $request->data[13][$y],
-                        'nombre' => $descuento,
-                        'valor' =>  $request->data[14][$y]
-                    ]);
+                foreach($request->data[13] as $y => $tercero):
+                    $new_desc = new NominaEmpleadoDescuentos;
+                    $new_desc->nomina_empleado_nomina_id = $nomina_empleado->id;
+                    $new_desc->tercero_id = intval($tercero);
+                    $new_desc->nombre = $request->data[12][$y];
+                    $new_desc->valor =  intval($request->data[14][$y]);
+                    $new_desc->save();
                 endforeach;
             endif;
-
         return response()->json(['entrada' => $request->all(), 'salida' => $nomina_empleado]);
     }
 
     public function update_pensionado(Request $request, Nomina $nomina){
-            //return response()->json($request->all());
+        //return response()->json($request->data);
+            //return response()->json([isset($request->data[2]), isset($request->data[2]) ? $request->data[3][0] : 'no tiene']);
             $nomina_empleado = NominaEmpleadoNomina::where('nomina_id', $nomina->id)->where('nomina_empleado_id', $request->data[0])->first();
         
             $nomina_empleado->sueldo = $request->data[1];
             $nomina_empleado->save();
 
+            $nomina_empleado->descuentos()->delete();
             if(isset($request->data[2])):
-                $nomina_empleado->descuentos()->delete();
-                foreach($request->data[2] as $y => $descuento):
-                    $nomina_empleado->descuentos()->create([
-                        'tercero_id' => $request->data[3][$y],
-                        'nombre' => $descuento,
-                        'valor' =>  $request->data[4][$y]
-                    ]);
+                foreach($request->data[3] as $y => $tercero):
+                    $new_desc = new NominaEmpleadoDescuentos;
+                    $new_desc->nomina_empleado_nomina_id = $nomina_empleado->id;
+                    $new_desc->tercero_id = intval($tercero);
+                    $new_desc->nombre = $request->data[2][$y];
+                    $new_desc->valor =  intval($request->data[4][$y]);
+                    $new_desc->save();
                 endforeach;
             endif;
 

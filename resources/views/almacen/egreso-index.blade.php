@@ -23,6 +23,7 @@
                     <th>Fecha</th>
                     <th>Dependencia</th>
                     <th>Responsable</th>
+                    <th>Valor</th>
                     <th>Estado Dependencia</th>
                     <th>Estado Secretaria</th>
                     <th>Estado Almacenista</th>
@@ -36,6 +37,7 @@
                                     <td>{{$salida->fecha}}</td>
                                     <td>{{$salida->dependencia->name}}</td>
                                     <td>{{$salida->responsable->nombre}}</td>
+                                    <td>${{number_format($salida->salidas_pivot->sum('total'), 0, ',','.')}}</td>
                                     <td>Aprobado</td>
                                     <td>
                                         @if(count($salida->status) == 0)
@@ -90,6 +92,7 @@
                     <th>Fecha</th>
                     <th>Dependencia</th>
                     <th>Responsable</th>
+                    <th>Valor</th>
                     <th>Estado Dependencia</th>
                     <th>Estado Secretaria</th>
                     <th>Estado Almacenista</th>
@@ -103,6 +106,7 @@
                                 <td>{{$salida->fecha}}</td>
                                 <td>{{$salida->dependencia->name}}</td>
                                 <td>{{$salida->responsable->nombre}}</td>
+                                <td>${{number_format($salida->salidas_pivot->sum('total'), 0, ',', '.')}}</td>
                                 <td>Aprobado</td>
                                     <td>
                                         {{$salida->status[0] ? "Aprobado" : "Rechazado"}}

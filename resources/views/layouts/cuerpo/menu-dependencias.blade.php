@@ -8,6 +8,11 @@
       bbdd
    </a>
 </li>
+<li >
+   <a class="btn btn-default btn-sm item-menu" href="{{ route('tramites-cuentas.index') }}">
+      Tramites Cuentas
+   </a>
+</li>
 @endif
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
@@ -235,10 +240,10 @@
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Balances </a>
                <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="{{route('balance.inicial')}}">Balance Inicial</a></li>
+                  <li><a class="item-menu" href="{{route('balance.inicial', '01')}}">Balance Inicial</a></li>
                   <li><a class="item-menu" href="#">Comparativo</a></li>
                   <li><a class="item-menu" href="#">Por Niveles</a></li>
-                  <li><a class="item-menu" href="{{route('balance.prueba')}}">Prueba</a></li>
+                  <li><a class="item-menu" href="{{route('balance.prueba', '01')}}">Prueba</a></li>
                   <li><a class="item-menu" href="#">Terceros</a></li>
                   <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
                </ul>

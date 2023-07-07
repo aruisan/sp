@@ -13,6 +13,7 @@ use App\ChipContabilidadData;
 use \Carbon\Carbon;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\AlmacenArticulo;
+use Session;
 
 class PucAlcaldia extends Model implements Auditable
 {
@@ -68,14 +69,26 @@ class PucAlcaldia extends Model implements Auditable
         return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id');
     }
 
+    public function orden_pagos_mensual() {
+        return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id')->whereMonth('created_at', Session::get('mes-informe-inicial'));
+    }
+
     //pagos
     public function pagos_bank(){
         return $this->hasMany(PagoBanks::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'));
     }
 
+    public function pagos_bank_mensual(){
+        return $this->hasMany(PagoBanks::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get('mes-informe-inicial'));
+    }
+
     //comprobantes de ingreso son los de banco
     public function getComprobantesAttribute(){
         return ComprobanteIngresosMov::where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
+    }
+
+    public function getComprobantesmensualAttribute(){
+        return ComprobanteIngresosMov::whereMonth('created_at', Session::get('mes-informe-inicial'))->where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
     }
 
     //retefuente
@@ -86,7 +99,7 @@ class PucAlcaldia extends Model implements Auditable
     //suma de otros pucs 
     public function getOtrosOrdenesPagoPucsAttribute(){
         $data = collect();
-        $op_pucs = $this->orden_pagos->count() == 0 ? [] : $this->orden_pagos->filter(function($op_p){ return $op_p->ordenPago->pucs->count() > 0;});
+        $op_pucs = $this->orden_pagos->count() == 0 ? [] : $this->orden_pagos->filter(function($op_p){ return $op_p->has_pucs;});
         foreach($op_pucs as $op_puc):
             foreach($op_puc->ordenPago->pucs as $orden_pago_puc):
                 $data->push($orden_pago_puc);
@@ -207,8 +220,9 @@ class PucAlcaldia extends Model implements Auditable
         $totCredAll = 0;
         $totCred = 0;
         $totDeb = 0;
-        $inicio = "2023-01-01";
-        $final = "2023-03-31";
+        $mes = Session::get('mes-informe-inicial');
+        $inicio = "2023-{$mes}-01";
+        $final = \Carbon\Carbon::createFromFormat('Y-m-d', $inicio)->addMonth()->format('Y-m-d');
 
         if($this->otros_ordenes_pago_pucs->count() > 0):
             $otros_pucs = $this->otros_ordenes_pago_pucs;
@@ -224,19 +238,19 @@ class PucAlcaldia extends Model implements Auditable
             $totDeb += $this->almacen_items_creditos->sum('total');
         endif;
         
-        if($this->pagos_bank->count() > 0):
-            $totCredAll = $this->pagos_bank->sum('valor');
-            $totCred += $this->pagos_bank->filter(function($p){ return $p->pago->estado == 1;})->sum('valor');
+        if($this->pagos_bank_mensual->count() > 0):
+            $totCredAll = $this->pagos_bank_mensual->sum('valor');
+            $totCred += $this->pagos_bank_mensual->filter(function($p){ return $p->pago->estado == 1;})->sum('valor');
         endif;
 
-        if($this->comprobantes->count() > 0):
-            $totDeb += $this->comprobantes->sum('debito');
-            $totCred += $this->comprobantes->sum('credito');
+        if($this->comprobantes_mensual->count() > 0):
+            $totDeb += $this->comprobantes_mensual->sum('debito');
+            $totCred += $this->comprobantes_mensual->sum('credito');
         endif;
 
-        if($this->orden_pagos->count() > 0):
-            $totDeb += $this->orden_pagos->sum('valor_debito');
-            $totCred += $this->orden_pagos->sum('valor_credito');
+        if($this->orden_pagos_mensual->count() > 0):
+            $totDeb += $this->orden_pagos_mensual->sum('valor_debito');
+            $totCred += $this->orden_pagos_mensual->sum('valor_credito');
         endif;
         
         return ['debito' => $totDeb, 'credito' => $totCred];

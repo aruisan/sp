@@ -30,7 +30,7 @@
 <script>
     var container = document.getElementById('example');
     var hot = new Handsontable(container, {
-        data: Handsontable.helper.createSpreadsheetData(70,2),
+        data: Handsontable.helper.createSpreadsheetData(3,2),
         rowHeaders: true,
         colHeaders: ['cedula','retroactivo'],
         filters: true,

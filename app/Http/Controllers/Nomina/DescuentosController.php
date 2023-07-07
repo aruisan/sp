@@ -7,18 +7,19 @@ use App\Http\Controllers\Controller;
 use App\NominaEmpleado;
 use App\Nomina;
 use App\NominaEmpleadoNomina;
+use App\Model\Persona;
 use Session, PDF;
 
-class HorasController extends Controller
+class DescuentosController extends Controller
 {
     private $view = "nomina.descuentos";
 
-    public function index(){
-        $nominas = Nomina::where('tipo', 'empleado')->where('descuentos', '<>', 0)->get();
+    public function index($tipo){
+        $nominas = Nomina::where('tipo', $tipo)->where('finalizado', true)->orderBy('id', 'desc')->get();
         //dd($nominas);
-        return view("{$this->view}.index", compact('nominas'));
+        return view("{$this->view}.index", compact('nominas', 'tipo'));
     }
-
+/*
     public function create(){
         $age_actual = date('Y');
         $nominas = Nomina::whereYear('created_at', $age_actual)->where('tipo', 'empleado')->where('descuentos', 0)->get()->map(function($n){
@@ -60,9 +61,19 @@ class HorasController extends Controller
         return redirect()->route('nomina-descuentos.edit', $nomina->id);
     }
 
-
+*/
     public function edit(Nomina $nomina){
         $movimientos = $nomina->empleados_nominas->filter(function($e){ return $e->descuentos;});
+        $empleados =  $nomina->empleados_nominas->map(function($e){
+            return [
+                'id' => $e->id,
+                'salario' => !is_null($e->empleado->salario) ? $e->empleado->salario : 0,
+                'datos' => $e->empleado,
+                'descuentos' => $e->descuentos,
+                'total_descuentos' => $e->descuentos->count() > 0 ? $e->descuentos->sum('valor'): 0 
+            ];
+        });
+        $terceros = Persona::where('tipo_tercero', 'especial')->get();
         //dd($movimientos);
         $salarios = $nomina->empleados_nominas->map(function($m){
             return [
@@ -81,42 +92,50 @@ class HorasController extends Controller
 
         //dd($salarios);
 
-        return view("{$this->view}.edit", compact('nomina', 'movimientos', 'salarios'));
+        return view("{$this->view}.edit", compact('nomina', 'movimientos', 'salarios', 'terceros', 'empleados'));
     }
 
     public function update(Request $request, Nomina $nomina){
         //dd($request->all());
         $nomina->update([
-            'finalizado' => $request->accion == 'finalizar' ? 1 : 0
+            'descuentos' => $request->accion == 'finalizar' ? 1 : 0
         ]);
-            
-        foreach($request->empleado_id as $k => $empleado):
-            //dd($empleado);
-            $nomina_empleado = NominaEmpleadoNomina::find($empleado);
-            $nomina_empleado->horas_extras = $request['horas_extras_'.$empleado];
-            $nomina_empleado->horas_extras_festivos = $request['horas_extras__festivos'.$empleado];
-            $nomina_empleado->horas_extras_nocturnas = $request['horas_extras_nocturnas_'.$empleado];
-            $nomina_empleado->recargos_nocturnos = $request['recargos_nocturnos_'.$empleado];
-            $nomina_empleado->save();
-        endforeach;
+
+        $nomina_empleado = NominaEmpleadoNomina::where('nomina_id', $nomina->id)->where('nomina_empleado_id', $request->data[0])->first();
+        $nomina_empleado->descuentos()->delete();
+        if(isset($request->data[12])):
+            foreach($request->data[13] as $y => $tercero):
+                $new_desc = new NominaEmpleadoDescuentos;
+                $new_desc->nomina_empleado_nomina_id = $nomina_empleado->id;
+                $new_desc->tercero_id = intval($tercero);
+                $new_desc->nombre = $request->data[12][$y];
+                $new_desc->valor =  intval($request->data[14][$y]);
+                $new_desc->save();
+            endforeach;
+        endif;
 
         if($request->accion == 'finalizar'):
-            $nomina->horas = 2;
-            $nomina->save();
             Session::flash('success', 'se ha finalizado la nomina de vacaciones.');
             return redirect()->route('nomina-horas.show', $nomina->id);
         else:
-            $nomina->horas = 1;
-            $nomina->save();
             Session::flash('success', 'se ha guardado los cambios.');
             return back();
         endif;
     }
-+
+
 
     public function show(Nomina $nomina){
-        $movimientos = $nomina->empleados_nominas->filter(function($e){ return $e->horas;});
-        
+        $movimientos =  $nomina->empleados_nominas->filter(function($e){ return $e->descuentos->count() > 0;})->map(function($e){
+            return [
+                'nombre' => $e->empleado->nombre,
+                'num_dc' => $e->empleado->num_dc,
+                'cargo' => $e->empleado->cargo,
+                'dias_trabajados' => $e->dias_laborados,
+                'descuentos' => $e->descuento_x_entidad,
+                'total_descuentos' => array_sum($e->descuento_x_entidad),
+            ];
+        })->values();
+        //dd($movimientos);
         return view("{$this->view}.show", compact('nomina', 'movimientos'));
     }
 

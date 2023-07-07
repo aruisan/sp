@@ -56,8 +56,8 @@
                                 <td>{{ $item->articulo->marca }}</td>
                                 <td>{{ $item->articulo->presentacion }}</td>
                                 <td>{{ $item->cantidad}}</td>
-                                <td>{{ $item->articulo->valor_unitario}}</td>
-                                <td>{{ $item->total}}</td>
+                                <td>${{number_format($item->articulo->valor_unitario, 0, ',', '.')}}</td>
+                                <td>${{number_format($item->total, 0, ',', '.')}}</td>
                                 <td>{{ $item->articulo->puc_ccd->code}}</td>
                                 <td>{{ $egreso->puc_credito->code}}</td>
                             </tr>
@@ -95,7 +95,7 @@
                                 <td>{{$egreso->responsable->num_dc}}</td>
                                 <td>{{$egreso->responsable->nombre}}</td>
                                 <td></td>
-                                <td>{{$pucs_array_debito[$puc->code]}}</td>
+                                <td>${{number_format($pucs_array_debito[$puc->code], 0, ',', '.')}}</td>
                             </tr>
                         @endforeach
                         <tr>
@@ -103,7 +103,7 @@
                             <td>{{$egreso->puc_credito->concepto}}</td>
                             <td>{{$egreso->responsable->num_dc}}</td>
                             <td>{{$egreso->responsable->nombre}}</td>
-                            <td>{{$egreso->salidas_pivot->sum('total')}}</td>
+                            <td>${{number_format($egreso->salidas_pivot->sum('total'), 0, ',', '.')}}</td>
                             <td></td>
                         </tr>
                         </tbody>

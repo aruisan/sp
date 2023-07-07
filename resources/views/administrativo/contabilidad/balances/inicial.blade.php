@@ -8,9 +8,21 @@
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>Balance Inicial </b></h4>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Balance Inicial Mes {{$meses[Session::get('mes-informe-inicial')]}}
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a href="{{route('balance.inicial', '01')}}">Enero</a></li>
+                    <li><a href="{{route('balance.inicial', '02')}}">Febrero</a></li>
+                    <li><a href="{{route('balance.inicial', '03')}}">Marzo</a></li>
+                    <li><a href="{{route('balance.inicial', '04')}}">Abril</a></li>
+                    <li><a href="{{route('balance.inicial', '05')}}">Mayo</a></li>
+                    <li><a href="{{route('balance.inicial', '06')}}">Junio</a></li>
+                </ul>
+            </div>
             </strong>
         </div>
+        
         <div class="table-responsive">
             <br>
             <table class="table" id="tabla">

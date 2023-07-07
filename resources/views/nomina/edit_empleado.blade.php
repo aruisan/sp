@@ -132,7 +132,7 @@
                 --}}
                 <div class="empleados ${index > 0 ? 'ocultar' : ''} " id="empleado_${index}">
                         <div class="col-md-12">
-                            <label>ID: ${parseInt(index)+1} -- ${e.id}</label>
+                            <label>ID: ${parseInt(index)+1} -- ${e.id} -- ${e.datos.id}</label>
                         </div>
                         <div class="col-md-12">
                             <label>CC: ${e.datos.num_dc}</label>
@@ -323,7 +323,7 @@
             let item = `
                 <tr>
                     <td>
-                        <select name="descuento_tercero_${index}[]" class="form_control">
+                        <select name="descuento_tercero_${index}[]" class="form_control descuento_tercero_${index}">
                             ${options_terceros}
                         </select>
                     </td>
@@ -373,6 +373,7 @@
                     });
 
                     $(`.descuento_tercero_${index}`).each(function(i){
+                        console.log('terceros_'+index, $(this).val());
                         descuentos_terceros.push($(this).val());
                     });
 
@@ -392,6 +393,8 @@
                        contador_final +=1;
                         console.log(`empleado_${index}`, result);
                        if(empleados.length == contador_final){
+                           /*
+                        */
                         $('#input_accion').val(action);
                         $('#formulario').submit();
                        }

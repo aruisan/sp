@@ -260,7 +260,7 @@ class ImportEstadisticaPresupuestoController extends Controller
         foreach($request->data as $item):
             $empleado = NominaEmpleado::where('num_dc', intval($item[0]))->first();
             if(!is_null($empleado)):
-                $nomina_empleado = NominaEmpleadoNomina::where('nomina_id', 60)->where('nomina_empleado_id', $empleado->id)->first();
+                $nomina_empleado = NominaEmpleadoNomina::where('nomina_id', 62)->where('nomina_empleado_id', $empleado->id)->first();
                 $nomina_empleado->retroactivo = intval($item[1]);
                 $nomina_empleado->save();
                 $si->push($item[0]);

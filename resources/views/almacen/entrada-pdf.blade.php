@@ -5,10 +5,12 @@
 			<center><h3>Comprobante de Entrada de Almacen No. {{$ingreso->index}}</h3></center>
 		</div>
 		<div style="border:1px solid black;">
-			<div style="width: 70%;   display: inline-block; margin-left: 3%">
+			<div style="width: 30%;   display: inline-block; margin-left: 3%">
 				<h4>Fecha: {{date('Y-m-d')}}</h4>
 			</div>
-			
+			<div style="width: 35%;   display: inline-block; margin-left: 3%">
+				<h4>Valor: ${{number_format($ingreso->articulos->sum('total'), 0, ',', '.')}}</h4>
+			</div>
 			<div style="width: 20%;  display: inline-block; border:1px solid black; margin: 6px 0px 0px 0px;" class="col-md-2">
 				<h4>Número {{ $ingreso->index }}</h4>
 			</div> 
@@ -66,12 +68,18 @@
                                 <td>{{ $item->marca }}</td>
                                 <td>{{ $item->presentacion }}</td>
                                 <td>{{ $item->cantidad}}</td>
-                                <td>{{ $item->valor_unitario}}</td>
-                                <td>{{ $item->total}}</td>
+                                <td>${{number_format($item->valor_unitario, 0, ',', '.')}}</td>
+                                <td>${{number_format($item->total, 0, ',', '.')}}</td>
                                 <td>{{ $item->puc_ccd->code}}</td>
                                 <td>{{ is_null($item->puc_ccd->almacen_puc_credito) ? "no tiene credito" : $item->puc_ccd->almacen_puc_credito->code}}</td>
                             </tr>
                         @endforeach
+                            <tr>
+                                <td colspan="5" class="text-rigth"> <b>Totales</b></td>
+                                <td><b>${{number_format($ingreso->articulos->sum('valor_unitario'), 0, ',', '.')}}</b></td>
+                                <td><b>${{number_format($ingreso->articulos->sum('total'), 0, ',', '.')}}</b></td>
+                                <td colspan="2"></td>
+                            </tr>
                         </tbody>
                     </table>
 		</div>
@@ -97,7 +105,7 @@
                                 <td>{{$puc->concepto}}</td>
                                 <td>{{$ingreso->proovedor->num_dc}}</td>
                                 <td>{{$ingreso->proovedor->nombre}}</td>
-                                <td>{{$puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total')}}</td>
+                                <td>${{number_format($puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total'), 0, ',', '.')}}</td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -106,7 +114,7 @@
                                 <td>{{$ingreso->proovedor->num_dc}}</td>
                                 <td>{{$ingreso->proovedor->nombre}}</td>
                                 <td></td>
-                                <td>{{$puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total')}}</td>
+                                <td>${{number_format($puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total'), 0, ',', '.')}}</td>
                             </tr>
                         @endforeach
                         </tbody>
