@@ -399,6 +399,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //Impuestos
 
             //MUELLAJE
+        Route::get('impuestos/muellaje/{id}/formulario/pdf','Administrativo\Impuestos\MuellajeController@formulario');
         Route::post('impuestos/muellaje/deleteMuellaje/{id}', 'Administrativo\Impuestos\MuellajeController@deleteMuellaje');
         Route::post('impuestos/muellaje/{id}/find','Administrativo\Impuestos\MuellajeController@findAtraque');
         Route::get('impuestos/muellaje/edit/{id}','Administrativo\Impuestos\MuellajeController@edit');

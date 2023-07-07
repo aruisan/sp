@@ -222,6 +222,18 @@ class InformeController extends Controller
                                 foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro) {
                                     if (auth()->user()->roles->first()->id != 2){
                                         $valueRubros[] = $fuenteRubro->valor;
+
+                                        //RECORRIDO PARA LA OBTENCION DEL VALOR DE CONTRACREDITO
+                                        $depRubFont = DependenciaRubroFont::where('rubro_font_id', $fuenteRubro->id)->get();
+                                        foreach ($depRubFont as $depRF){
+                                            $movRubs = RubrosMov::where('dep_rubro_font_cc_id', $depRF->id)->get();
+                                            foreach ($movRubs as $movRub){
+                                                if ($movRub->valor > 0){
+                                                    //SE ALMACENA EL VALOR DE CC
+                                                    $valueRubrosCCred[] = $movRub->valor;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             } else $valueRubros[] = 0;
@@ -235,7 +247,7 @@ class InformeController extends Controller
                                             if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at)) >= $inicio){
                                                 if ($mov->movimiento == "1") {
                                                     $valueRubrosCred[] = $mov->valor;
-                                                    $valueRubrosCCred[] = $mov->valor;
+                                                    //$valueRubrosCCred[] = $mov->valor;
                                                     $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                     $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                 }
@@ -246,7 +258,7 @@ class InformeController extends Controller
                                         } else{
                                             if ($mov->movimiento == "1") {
                                                 $valueRubrosCred[] = $mov->valor;
-                                                $valueRubrosCCred[] = $mov->valor;
+                                                //$valueRubrosCCred[] = $mov->valor;
                                                 $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                 $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                             }
@@ -444,6 +456,18 @@ class InformeController extends Controller
                                         $valueRubros[] = $fuenteRubro->valor;
                                         $valueRubrosDisp[] = $fuenteRubro->valor_disp;
 
+                                        //RECORRIDO PARA LA OBTENCION DEL VALOR DE CONTRACREDITO
+                                        $depRubFont = DependenciaRubroFont::where('rubro_font_id', $fuenteRubro->id)->get();
+                                        foreach ($depRubFont as $depRF){
+                                            $movRubs = RubrosMov::where('dep_rubro_font_cc_id', $depRF->id)->get();
+                                            foreach ($movRubs as $movRub){
+                                                if ($movRub->valor > 0){
+                                                    //SE ALMACENA EL VALOR DE CC
+                                                    $valueRubrosCCred[] = $movRub->valor;
+                                                }
+                                            }
+                                        }
+
                                         //VALIDACION PARA LAS ADICIONES Y REDUCCIONES
                                         foreach ($rubroOtherFind->first()->rubrosMov as $mov){
                                             if ($mov->valor > 0 ){
@@ -478,13 +502,13 @@ class InformeController extends Controller
                                                 if ($inicio != null){
                                                     if (date('Y-m-d', strtotime($mov->created_at)) <= $final and date('Y-m-d', strtotime($mov->created_at)) >= $inicio){
                                                         $valueRubrosCred[] = $mov->valor;
-                                                        $valueRubrosCCred[] = $mov->valor;
+                                                        //$valueRubrosCCred[] = $mov->valor;
                                                         $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                         $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                     }
                                                 } else {
                                                     $valueRubrosCred[] = $mov->valor;
-                                                    $valueRubrosCCred[] = $mov->valor;
+                                                    //$valueRubrosCCred[] = $mov->valor;
                                                     $rubAfectado = FontsRubro::find($mov->fonts_rubro_id);
                                                     $rubrosCC[] = ['id'=> $rubAfectado->rubro->plantilla_cuipos_id, 'value'=> $mov->valor];
                                                 }
@@ -1014,7 +1038,7 @@ class InformeController extends Controller
                 }
             } elseif (count($rubro) == 0){
                 if ($data->id == 465 or $data->id == 514 or $data->id == 527 or $data->id == 543 or $data->id == 551 or
-                    $data->id == 584 or $data->id == 589 or $data->id == 624 or $data->id == 827 or
+                    $data->id == 584 or $data->id == 589 or $data->id == 624 or $data->id == 783 or $data->id == 827 or
                     $data->id == 923 or $data->id == 924 or $data->id == 925 or $data->id == 1014 or $data->id == 1026 or
                     $data->id == 1044 or $data->id == 1046 or $data->id == 1070) {
                     $found_key = array_search($data->padre_id, array_column($presupuesto, 'id'));

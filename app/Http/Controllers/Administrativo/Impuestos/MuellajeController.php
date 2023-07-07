@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Session;
+use PDF;
 
 class MuellajeController extends Controller
 {
@@ -318,5 +319,18 @@ class MuellajeController extends Controller
 
         $muellaje = Muellaje::find($request->id);
         $muellaje->delete();
+    }
+
+
+    public function formulario($id)
+    {
+        $muellaje = Muellaje::find($id);
+        $pago = Pagos::where('entity_id',$id)->where('modulo','MUELLAJE')->first();
+        if ($pago->user_pago_id) $pago->user_pago = User::find($pago->user_pago_id);
+        $responsable = User::find($muellaje->funcionario_id);
+
+        $pdf = PDF::loadView('administrativo.impuestos.muellaje.pdf', compact('muellaje','pago','responsable'))
+            ->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
     }
 }
