@@ -70,23 +70,25 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <table class="table text-center" id="vehiculosTable">
-                                <tbody>
-                                <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" class="text-center" colspan="2">VEHÍCULOS</th>
-                                </tr>
-                                <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" class="text-center">Número de Vehículos</th>
-                                    <th scope="row" class="text-center">Clase de Vehículos</th>
-                                </tr>
-                                @foreach($muellaje->vehiculosRelation as $vehiculo)
-                                    <tr>
-                                        <td>{{ $vehiculo->vehiculos }}</td>
-                                        <td>{{ $vehiculo->claseVehiculo }}</td>
+                            @if(count($muellaje->vehiculosRelation) > 0)
+                                <table class="table text-center" id="vehiculosTable">
+                                    <tbody>
+                                    <tr style="background-color: #0e7224; color: white">
+                                        <th scope="row" class="text-center" colspan="2">VEHÍCULOS</th>
                                     </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                                    <tr style="background-color: #0e7224; color: white">
+                                        <th scope="row" class="text-center">Número de Vehículos</th>
+                                        <th scope="row" class="text-center">Clase de Vehículos</th>
+                                    </tr>
+                                    @foreach($muellaje->vehiculosRelation as $vehiculo)
+                                        <tr>
+                                            <td>{{ $vehiculo->vehiculos }}</td>
+                                            <td>{{ $vehiculo->claseVehiculo }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
                             <table class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
