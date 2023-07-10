@@ -2,18 +2,6 @@
 @section('contenido')
     <div class="col-md-12 align-self-center" translate="no">
         <div class="col-lg-12">
-            <ul class="nav nav-pills">
-                <li class="nav-item regresar">
-                    <a class="nav-link "  href="{{ url('/administrativo/impuestos/muellaje') }}"><i class="fa fa-arrow-circle-left"></i><i class="fa fa-ship"></i> </a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" data-toggle="pill" href="#tabTareas"><i class="fa fa-ship"></i> {{ $muellaje->numRegistroIngreso }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/administrativo/impuestos/muellaje/create') }}"><i class="fa fa-plus"></i>
-                        <i class="fa fa-ship"></i>NUEVO REGISTRO</a>
-                </li>
-            </ul>
             <div class="tab-content">
                 <div id="nuevo" class="tab-pane fade in active">
                     <div class="breadcrumb text-center">
@@ -28,13 +16,13 @@
                             <table id="TABLA1" class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="3">REGISTRO DE INGRESO EMBARCACIÓN Y LIQUIDACION IMPUESTO MUELLAJE</th>
+                                    <th class="text-center" scope="row" colspan="3">REGISTRO DE INGRESO EMBARCACIÓN Y LIQUIDACION IMPUESTO MUELLAJE</th>
                                 </tr>
                                 <tr style="background-color: #bfc3bf; color: black">
                                     <td colspan="3"><b>Registro de ingreso No. {{ $muellaje->numRegistroIngreso }}</b></td>
                                 </tr>
                                 <tr style="background-color: #bfc3bf; color: black">
-                                    <td><b>{{ Carbon\Carbon::today()->Format('d-m-Y')}}</b></td>
+                                    <td><b>{{ Carbon\Carbon::parse($muellaje->fecha)->Format('d-m-Y')}}</b></td>
                                     <td colspan="2">Funcionario Responsable: {{ $responsable->name }} - {{ $responsable->email }}</td>
                                 </tr>
                                 </tbody>
@@ -192,14 +180,13 @@
                                 <table class="table text-center">
                                     <tbody>
                                     <tr style="background-color: #0e7224; color: white">
-                                        <th scope="row" colspan="6">DETALLE DEL PAGO</th>
+                                        <th scope="row">DETALLE DEL PAGO</th>
                                     </tr>
                                     <tr style="background-color: #bfc3bf; color: black">
                                         <td style="vertical-align: middle">FECHA DE PAGO: {{ \Carbon\Carbon::parse($pago->fechaPago)->format('d-m-Y') }}</td>
-                                        <td><a href="{{Storage::url($pago->Resource->ruta)}}" target="_blank" title="Ver" class="btn btn-success">CONSTANCIA DE PAGO <i class="fa fa-file-pdf-o"></i> </a></td>
                                     </tr>
                                     <tr style="background-color: #bfc3bf; color: black">
-                                        <td colspan="2">CONSTANCIA DE PAGO SUBIDA POR: {{$pago->user_pago->name}} - {{$pago->user_pago->email}}</td>
+                                        <td>CONSTANCIA DE PAGO SUBIDA POR: {{$pago->user_pago->name}} - {{$pago->user_pago->email}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
