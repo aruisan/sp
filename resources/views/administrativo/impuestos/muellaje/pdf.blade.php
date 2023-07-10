@@ -30,7 +30,7 @@
                             <table class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="6">DESCRIPCIÓN EMBARCACIÓN</th>
+                                    <th scope="row" class="text-center" colspan="6">DESCRIPCIÓN EMBARCACIÓN</th>
                                 </tr>
                                 <tr>
                                     <td>Nombre Embarcación</td>
@@ -73,11 +73,11 @@
                             <table class="table text-center" id="vehiculosTable">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="2">VEHÍCULOS</th>
+                                    <th scope="row" class="text-center" colspan="2">VEHÍCULOS</th>
                                 </tr>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row">Número de Vehículos</th>
-                                    <th scope="row">Clase de Vehículos</th>
+                                    <th scope="row" class="text-center">Número de Vehículos</th>
+                                    <th scope="row" class="text-center">Clase de Vehículos</th>
                                 </tr>
                                 @foreach($muellaje->vehiculosRelation as $vehiculo)
                                     <tr>
@@ -90,7 +90,7 @@
                             <table class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="4">PROPIETARIO EMBARCACIÓN</th>
+                                    <th scope="row" class="text-center" colspan="4">PROPIETARIO EMBARCACIÓN</th>
                                 </tr>
                                 <tr>
                                     <td>Nombre Capitan o responsable embarcación</td>
@@ -113,7 +113,7 @@
                             <table class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="4">DESCRIPCIÓN NAVIERA</th>
+                                    <th scope="row" class="text-center" colspan="4">DESCRIPCIÓN NAVIERA</th>
                                 </tr>
                                 <tr>
                                     <td>Nombre Naviera</td>
@@ -142,7 +142,7 @@
                             <table class="table text-center">
                                 <tbody>
                                 <tr style="background-color: #0e7224; color: white">
-                                    <th scope="row" colspan="6">LIQUIDACION IMPUESTO MUELLAJE</th>
+                                    <th scope="row" class="text-center" colspan="6">LIQUIDACION IMPUESTO MUELLAJE</th>
                                 </tr>
                                 <tr>
                                     <td colspan="2">Nombre responsable del pago</td>
