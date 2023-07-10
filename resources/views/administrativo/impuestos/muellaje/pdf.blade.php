@@ -170,7 +170,7 @@
                                     <td>Número total de días</td>
                                     <td>{{$muellaje->numTotalDias}}</td>
                                     <td>Valor a pagar</td>
-                                    <td colspan="3">$<?php echo number_format($muellaje->valorPago,0) ?></td>
+                                    <td colspan="3"><b>$<?php echo number_format($muellaje->valorPago,0) ?></b></td>
                                 </tr>
                                 <tr>
                                     <td>Observaciones</td>
