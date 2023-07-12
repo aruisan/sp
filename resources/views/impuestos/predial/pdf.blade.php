@@ -138,7 +138,7 @@
                 <tbody>
                 <tr style="background-color: #818785;">
                     <td style="vertical-align: middle"><b>Paguese Hasta</b></td>
-                    <td>Fecha <br>30-06-2023</td>
+                    <td>Fecha <br>{{ \Carbon\Carbon::parse($predial->presentacion)->format('d-m-Y') }}</td>
                     <td>Valor <br>$ <?php echo number_format($predial->tot_pago,0) ?></td>
                 </tr>
                 </tbody>

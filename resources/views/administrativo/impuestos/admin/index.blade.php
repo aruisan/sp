@@ -5,6 +5,7 @@
     @include('modal.impuestos.pazysalvo')
     @include('modal.impuestos.sml')
     @include('modal.impuestos.uvt')
+    @include('modal.impuestos.usd')
     @include('modal.impuestos.confirmarpago')
     <div class="breadcrumb text-center">
         <strong>
@@ -24,6 +25,7 @@
             <ul class="dropdown-menu">
                 <li><a class="item-menu" style="cursor: pointer" onclick="getModalSML()">SALARIO MINIMO</a></li>
                 <li><a class="item-menu" style="cursor: pointer" onclick="getModalUVT()">UVT</a></li>
+                <li><a class="item-menu" style="cursor: pointer" onclick="getModalUSD()">USD</a></li>
             </ul>
         </li>
     </ul>
@@ -96,11 +98,24 @@
                             <tr>
                                 <td class="text-center">{{ $pago->id }}</td>
                                 <td class="text-center">{{ $pago->modulo }}</td>
-                                <td class="text-center">{{ $pago->user->name }}</td>
+                                <td class="text-center">
+                                    @if($pago->modulo == "MUELLAJE")
+                                        Embarcación: {{ $pago->detalleBarco->name }}
+                                    @else
+                                        {{ $pago->user->name }}
+                                    @endif
+                                </td>
                                 <td class="text-center">{{ $pago->user->email }}</td>
                                 <td class="text-center">{{ $pago->estado }}</td>
                                 <td class="text-center"> {{ \Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y') }}</td>
-                                <td class="text-center">$<?php echo number_format($pago->valor,0) ?></td>
+                                <td class="text-center">
+                                    @if($pago->modulo == "MUELLAJE")
+                                        USD $<?php echo number_format($pago->valor,0) ?><br>
+                                        COP $<?php echo number_format($pago->valueCop,0) ?>
+                                    @else
+                                        $<?php echo number_format($pago->valor,0) ?>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     @if($pago->modulo == "ICA-Contribuyente")
                                         <a href="{{ url('impuestos/ICA/contri/form/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
@@ -108,6 +123,8 @@
                                         <a href="{{ url('impuestos/PREDIAL/pdf/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
                                     @elseif($pago->modulo == "ICA-AgenteRetenedor")
                                         <a href="{{ url('impuestos/ICA/retenedor/form/'.$pago->entity_id) }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                    @elseif($pago->modulo == "MUELLAJE")
+                                        <a href="{{ url('administrativo/impuestos/muellaje/'.$pago->entity_id.'/formulario/pdf') }}" target="_blank" title="Descargar Formulario" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -297,6 +314,10 @@
 
         function getModalSML(){
             $('#formSML').modal('show');
+        }
+
+        function getModalUSD(){
+            $('#formUSD').modal('show');
         }
 
         function descargarPazySalvo(evento) {

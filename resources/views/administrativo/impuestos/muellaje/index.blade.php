@@ -67,7 +67,7 @@
                                 <td class="text-center">$<?php echo number_format($atraque->valorPago,0) ?></td>
                                 <td class="text-center">
                                     <div>
-                                        <!-- <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id.'/formulario/pdf') }}" title="Formulario" target="_blank" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a> -->
+                                        <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id.'/formulario/pdf') }}" title="Formulario" target="_blank" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                         <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id) }}" title="Ver registro" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                         <a href="{{ url('administrativo/impuestos/muellaje/edit/'.$atraque->id) }}" title="Editar registro" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                         <a onclick="eliminarRegistro('{{$atraque->id}}')" class="btn btn-sm btn-primary"><i class="fa fa-trash"></i></a>

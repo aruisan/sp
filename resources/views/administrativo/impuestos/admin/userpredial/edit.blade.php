@@ -1,11 +1,11 @@
 @extends('layouts.dashboard')
-@section('titulo') Editar Usuario @stop
+@section('titulo') Editar Contribuyente @stop
 @section('content')
     @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>Editar Información del Usuario</b></h4>
+                <h4><b>Editar Información del Contribuyente</b></h4>
             </strong>
         </div>
         <div class="col-lg-12">
@@ -18,44 +18,24 @@
             <div class="tab-content">
                 <div id="info" class="tab-pane fade in active">
                     <div class="row text-center">
-                        <br>
-                        <div class="col-sm-4"><h4>NUM CATASTRAL: {{ $user->numCatastral }} </h4></div>
-                        <div class="col-sm-4"><h4>NUM IDENTI: {{ $user->numIdent }} </h4></div>
-                        <div class="col-sm-4"><h4>NOMBRE: {{ $user->contribuyente }}</h4></div>
-                        <div class="col-sm-4"><h4>HECTAREAS: {{ $user->hect }} </h4></div>
-                        <div class="col-sm-4"><h4>{{ $user->metros }} m2 </h4></div>
-                        <div class="col-sm-4"><h4>AREA CONSTRUIDA: {{ $user->area }}</h4></div>
-                        <div class="col-sm-4"><h4>AVALUO 2018: $ <?php echo number_format( $user->a2018,0);?></h4></div>
-                        <div class="col-sm-4"><h4>AVALUO 2019: $ <?php echo number_format( $user->a2019,0);?></h4></div>
-                        <div class="col-sm-4"><h4>AVALUO 2020: $ <?php echo number_format( $user->a2020,0);?></h4></div>
-                        <div class="col-sm-4"><h4>AVALUO 2021: $ <?php echo number_format( $user->a2021,0);?></h4></div>
-                        <div class="col-sm-4"><h4>AVALUO 2022: $ <?php echo number_format( $user->a2022,0);?></h4></div>
-                        <div class="col-sm-4"><h4>AVALUO 2023: $ <?php echo number_format( $user->a2023,0);?></h4></div>
-                        <br><br><br><br><br><br><br>
                         <div class="form-validation">
                             <form class="form" action="{{url('/administrativo/impuestos/admin/predial/user/'.$user->id)}}" method="POST">
+                                <h3 class="text-center">CONTRIBUYENTE</h3>
                                 <hr>
                                 {!! method_field('PUT') !!}
                                 {{ csrf_field() }}
                                 <div class="col-md-6 align-self-center">
                                     <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="correo">Email <span class="text-danger">*</span></label>
+                                        <label class="control-label text-right col-md-4" for="numIdent">Num Identidad <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="email" class="form-control" required name="correo" id="correo" style="text-align:center" value="{{ $user->email }}">
+                                            <input type="number" class="form-control" required name="numIdent" id="numIdent" style="text-align:center" value="{{ $user->numIdent }}">
                                         </div>
                                     </div>
                                     <br>
                                     <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="dirPred">Cedula Catastral</label>
+                                        <label class="control-label text-right col-md-4" for="correo">Email</label>
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control" name="cedCatastral" id="cedCatastral" style="text-align:center" value="{{ $user->cedCatastral }}">
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="dirPred">Dirección del Predio</label>
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control" name="dirPred" id="dirPred" style="text-align:center" value="{{ $user->dir_predio }}">
+                                            <input type="email" class="form-control" name="correo" id="correo" style="text-align:center" value="{{ $user->email }}">
                                         </div>
                                     </div>
                                     <br>
@@ -65,19 +45,26 @@
                                             <input type="text" class="form-control" name="otraRed" id="otraRed" style="text-align:center" value="{{ $user->otra_red }}">
                                         </div>
                                     </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="facebook">Facebook</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control" name="facebook" id="facebook" style="text-align:center" value="{{ $user->facebook }}">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 align-self-center">
                                     <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="dirNoti">Dirección de Notificación</label>
+                                        <label class="control-label text-right col-md-4" for="name">Nombre <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control" name="dirNoti" id="dirNoti" style="text-align:center" value="{{ $user->dir_notificacion }}">
+                                            <input type="text" class="form-control" required name="name" id="name" style="text-align:center" value="{{ $user->contribuyente }}">
                                         </div>
                                     </div>
                                     <br>
                                     <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="dirPred">Matricula Inmobiliaria</label>
+                                        <label class="control-label text-right col-md-4" for="dirNoti">Dirección de Notificación</label>
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control" name="matInmobiliaria" id="matInmobiliaria" style="text-align:center" value="{{ $user->matInmobiliaria }}">
+                                            <input type="text" class="form-control" name="dirNoti" id="dirNoti" style="text-align:center" value="{{ $user->dir_notificacion }}">
                                         </div>
                                     </div>
                                     <br>
@@ -94,19 +81,113 @@
                                             <input type="text" class="form-control" name="whatsapp" id="whatsapp" style="text-align:center" value="{{ $user->whatsapp }}">
                                         </div>
                                     </div>
+                                </div>
+                                <br>
+                                <h3 class="text-center">PREDIO</h3>
+                                <hr>
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="dirPred">Dirección del Predio</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control" name="dirPred" id="dirPred" style="text-align:center" value="{{ $user->dir_predio }}">
+                                        </div>
+                                    </div>
                                     <br>
                                     <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="facebook">Facebook</label>
+                                        <label class="control-label text-right col-md-4" for="numCat">Número Catastral</label>
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control" name="facebook" id="facebook" style="text-align:center" value="{{ $user->facebook }}">
+                                            <input type="text" class="form-control" name="numCat" id="numCat" style="text-align:center" value="{{ $user->numCatastral }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="hectareas">Hectareas <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" required name="hectareas" id="hectareas" min="0" style="text-align:center" value="{{ $user->hect }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="dirPred">Cedula Catastral</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control" name="cedCatastral" id="cedCatastral" style="text-align:center" value="{{ $user->cedCatastral }}">
                                         </div>
                                     </div>
                                 </div>
-                                    <div class="form-group row">
-                                        <div class="col-lg-12 text-center">
-                                            <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="mt2">mt2 <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" required min="0" name="mt2" id="mt2" style="text-align:center" value="{{ $user->metros }}">
                                         </div>
                                     </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="aConst">Area Construida <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" required name="aConst" id="aConst" min="0" style="text-align:center" value="{{ $user->area }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="dirPred">Matricula Inmobiliaria</label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control" name="matInmobiliaria" id="matInmobiliaria" style="text-align:center" value="{{ $user->matInmobiliaria }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">&nbsp;</div>
+                                    <br>
+                                </div>
+                                <br>
+                                <h3 class="text-center">AVALUOS</h3>
+                                <hr>
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="a2023">2023 <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" min="1" required name="a2023" id="a2023" style="text-align:center" value="{{ $user->a2023 }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="a2021">2021 <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" min="1" required name="a2021" id="a2021" style="text-align:center" value="{{ $user->a2021 }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="a2019">2019 <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" min="1" required name="a2019" id="a2019" style="text-align:center" value="{{ $user->a2019 }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 align-self-center">
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="a2022">2022 <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" min="1" required name="a2022" id="a2022" style="text-align:center" value="{{ $user->a2022 }}">
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="a2020">2020 <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" min="1" required name="a2020" id="a2020" style="text-align:center" value="{{ $user->a2020 }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label text-right col-md-4" for="a2018">2018 <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <input type="number" class="form-control" min="1" required name="a2018" id="a2018" style="text-align:center" value="{{ $user->a2018 }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-12 text-center">
+                                        <button type="submit" class="btn btn-primary">Actualizar Contribuyente</button>
+                                    </div>
+                                </div>
                             </form>
                             <br>
                         </div>
