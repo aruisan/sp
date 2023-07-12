@@ -216,9 +216,9 @@
 				@endfor
 				@if($Egreso_id == 9640)
 					<tr>
-						<td colspan="2" class="text-center">TOTALES</td>
-						<td>{{ array_sum($totDeb) }}</td>
-						<td>{{ array_sum($totCred) }}</td>
+						<td colspan="3" class="text-center">TOTALES</td>
+						<td>$<?php echo number_format(array_sum($totDeb),0);?></td>
+						<td>$<?php echo number_format(array_sum($totCred),0);?></td>
 					</tr>
 				@endif
 				</tbody>
