@@ -214,13 +214,11 @@
 						<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
 					</tr>
 				@endfor
-				@if($Egreso_id == 9640)
-					<tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
-						<td colspan="3"><b>Totales</b></td>
-						<td><b>$<?php echo number_format(array_sum($totDeb),0);?></b></td>
-						<td><b>$<?php echo number_format(array_sum($totCred),0);?></b></td>
-					</tr>
-				@endif
+				<tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
+					<td colspan="3"><b>Totales</b></td>
+					<td><b>$<?php echo number_format(array_sum($totDeb),0);?></b></td>
+					<td><b>$<?php echo number_format(array_sum($totCred),0);?></b></td>
+				</tr>
 				</tbody>
 			</table>
 		</div>
