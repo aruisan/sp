@@ -184,6 +184,7 @@
 				<tbody>
 				@for($z = 0; $z < $OrdenPago->pucs->count(); $z++)
 					@if($OrdenPago->pucs[$z]->valor_credito > 0)
+						@php($totDeb[] = $OrdenPago->pucs[$z]->valor_credito )
 						<tr class="text-center">
 							<td>{{$OrdenPago->pucs[$z]->data_puc->code}}</td>
 							<td>{{$OrdenPago->pucs[$z]->data_puc->concepto}}</td>
@@ -194,6 +195,7 @@
 					@endif
 				@endfor
 				@for($y = 0; $y < count($banks); $y++)
+					@php($totCred[] = $banks[$y]->valor )
 					<tr class="text-center">
 						<td>{{ $banks[$y]->data_puc->code }}</td>
 						@if($Pago->type_pay == "ACCOUNT")
@@ -212,6 +214,13 @@
 						<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
 					</tr>
 				@endfor
+				@if($Egreso_id == 9640)
+					<tr>
+						<td colspan="2" class="text-center">TOTALES</td>
+						<td>{{ array_sum($totDeb) }}</td>
+						<td>{{ array_sum($totCred) }}</td>
+					</tr>
+				@endif
 				</tbody>
 			</table>
 		</div>
