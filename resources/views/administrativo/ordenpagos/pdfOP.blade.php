@@ -163,7 +163,7 @@
 									<td>{{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->code }} - {{ $R->cdpRegistroValor[$i]->fontRubro->fontVigencia->name }}</td>
 								@endif
 								<td>{{ $OrdenPago->registros->objeto }}</td>
-								<td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+								<td>$ <?php echo number_format($R->cdpRegistroValor[$i]->valor,0);?></td>
 							</tr>
 						@elseif($R->cdpRegistroValor[$i]->cdps->tipo == "Inversion")
 							<tr class="text-center">
