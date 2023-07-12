@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrativo\Impuestos;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Impuestos\Muellaje;
 use App\Model\Administrativo\Impuestos\MuellajeVehiculos;
+use App\Model\Impuestos\ImpUSD;
 use App\Model\Impuestos\Pagos;
 use App\Model\User;
 use App\Traits\ResourceTraits;
@@ -325,6 +326,18 @@ class MuellajeController extends Controller
     public function formulario($id)
     {
         $muellaje = Muellaje::find($id);
+        $today = Carbon::today()->format('Y-m-d');
+        $usdDay = ImpUSD::where('fecha', $today)->first();
+        if ($usdDay) $valorUSDToday = $usdDay->valor;
+        else{
+            $dataUSD = json_decode( file_get_contents('http://apilayer.net/api/live?access_key=c87dcbdc363ac7e963a3a8ac4f2ac02a&currencies=COP'), true );
+            $saveUSD = new ImpUSD();
+            $saveUSD->fecha = Carbon::createFromTimestamp($dataUSD['timestamp'])->format('Y-m-d');
+            $saveUSD->valor = $dataUSD['quotes']['USDCOP'];
+            $saveUSD->save();
+            $valorUSDToday = $saveUSD->valor;
+        }
+        $muellaje->valueCOP = $valorUSDToday * $muellaje->valorPago;
         $pago = Pagos::where('entity_id',$id)->where('modulo','MUELLAJE')->first();
         if ($pago->user_pago_id) $pago->user_pago = User::find($pago->user_pago_id);
         $responsable = User::find($muellaje->funcionario_id);
