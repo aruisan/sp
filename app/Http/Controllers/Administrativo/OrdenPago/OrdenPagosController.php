@@ -159,7 +159,7 @@ class OrdenPagosController extends Controller
             }
 
             $ordenPago = new OrdenPagos();
-            $ordenPago->nombre = $request->concepto;
+            $ordenPago->nombre = trim(preg_replace('/\s+/', ' ', $request->concepto));
             $ordenPago->valor = $request->ValTOP;
             $ordenPago->saldo = $request->ValTOP;
             $ordenPago->iva = $request->ValIOP;
@@ -396,7 +396,8 @@ class OrdenPagosController extends Controller
         $Registros = Registro::where('secretaria_e', '3')->get();
         $ordenPago = OrdenPagos::findOrFail($id);
         $vigenc = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
-        return view('administrativo.ordenpagos.edit', compact('Registros','ordenPago', 'vigenc'));
+        $hijosPUC = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
+        return view('administrativo.ordenpagos.edit', compact('Registros','ordenPago', 'vigenc','hijosPUC'));
     }
 
     /**
@@ -408,22 +409,22 @@ class OrdenPagosController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $ordenPago = OrdenPagos::findOrFail($id);
         $vigenc = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
-        $Descuentos = OrdenPagosDescuentos::where('orden_pagos_id','=',$ordenPago->id)->get();
+        $ordenPago->nombre = $request->nombre;
+        $ordenPago->save();
 
-        if($Descuentos->count() == 0){
-            $ordenPago->nombre = $request->nombre;
-            $ordenPago->save();
-
-            Session::flash('success','La orden de pago se ha actualizado exitosamente');
-            return redirect('/administrativo/ordenPagos/'.$vigenc);
-
-        } else{
-
-            Session::flash('warning','Ya se tienen asignados descuentos a la orden de pago, no puede ser modificada');
-            return redirect('/administrativo/ordenPagos/'.$id.'/edit');
+        //SE ACTUALIZAN LAS CUENTAS DEL PUC
+        foreach ($ordenPago->pucs as $index => $puc){
+            $puc->rubros_puc_id = $request->PUC[$index];
+            $puc->save();
         }
+
+        Session::flash('success','La orden de pago se ha actualizado exitosamente');
+        return redirect('/administrativo/ordenPagos/'.$vigenc);
+
+
     }
 
     public function deleteRF($id){

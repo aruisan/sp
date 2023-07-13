@@ -155,7 +155,7 @@ class PagosController extends Controller
 
             $Pago = new Pagos();
             $Pago->code = $codePago;
-            $Pago->concepto = $request->Objeto;
+            $Pago->concepto = trim(preg_replace('/\s+/', ' ', $request->Objeto));
             if (isset($OrdenPago->registros->cdpsRegistro)) $Pago->persona_id = $OrdenPago->registros->persona_id;
             else $Pago->persona_id = 75;
             $Pago->orden_pago_id = $request->IdOP;
