@@ -222,7 +222,7 @@
                     return;
                 }
 
-                //$('#form-pago').submit();
+                $('#form-pago').submit();
             }
         }
 
