@@ -7,6 +7,7 @@
         @include('modal.Informes.reporte')
         @include('modal.Informes.ejecucionPresupuestal')
         @include('modal.Informes.makeInforme')
+        @include('modal.Informes.makeCHIP')
     @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="row inputCenter">
@@ -43,6 +44,8 @@
                 @if($V != "Vacio" and auth()->user()->roles->first()->id != 2)
                     <li class="dropdown">
                         <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeInforme()">Generar Informe de Presupuestos</a>
+                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeCHIP()">Informes CHIP</a>
+
                         <!-- SE COMENTAN LOS REPORTES QUE NO TIENEN ACCESO FUNCIONAL.
                         <a class="nav-item dropdown-toggle pillPri" href="" data-toggle="dropdown">Informes&nbsp;<i class="fa fa-caret-down"></i></a>
                         <ul class="dropdown-menu ">
@@ -299,8 +302,12 @@
         const vigencia_id = @json($V);
         const prepSaved = @json($prepSaved);
 
-        function getModalToMakeInforme(){
+        function getModalToMakeInforme() {
             $('#modalMakeInforme').modal('show');
+        }
+
+        function getModalToMakeCHIP(){
+            $('#modalMakeCHIP').modal('show');
         }
 
         function refreshPrep(){
