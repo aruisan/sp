@@ -222,7 +222,7 @@ class MuellajeController extends Controller
     {
 
         $muellaje = Muellaje::find($id);
-        $muellaje->fecha = Carbon::today();
+        //$muellaje->fecha = Carbon::today();
         $muellaje->name = $request->name;
         $muellaje->bandera = $request->bandera;
         $muellaje->tipo = $request->tipo;
