@@ -74,7 +74,7 @@
                         -->
                     </li>
                     <li class="nav-item pillPri">
-                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeCHIP()">Informes CHIP</a>
+                        <a class="nav-link" style="cursor: pointer" onclick="getModalToMakeCHIP()">Informes CHIP</a>
                     </li>
 
                 @endif
