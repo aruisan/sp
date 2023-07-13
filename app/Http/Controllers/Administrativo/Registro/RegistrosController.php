@@ -172,7 +172,7 @@ class RegistrosController extends Controller
 
         $registro = new Registro();
         $registro->code = $numRP;
-        $registro->objeto = $request->objeto;
+        $registro->objeto = trim(preg_replace('/\s+/', ' ', $request->objeto));
         $registro->ff_expedicion = $request->fecha;
         $registro->ruta = $ruta;
         $registro->valor = "0";
