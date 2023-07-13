@@ -240,6 +240,12 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td colspan="2">Valor del Dolar Diario</td>
+                                    <td colspan="2">
+                                        <input class="form-control" type="text" name="valorUSD" id="valorUSD" value="{{ $muellaje->valorDolar }}">
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="2"><h3>Valor a pagar</h3></td>
                                     <td colspan="2">
                                         <input class="form-control" type="hidden" name="valorPago" id="valorPago" min="1" value="{{$muellaje->valorPago}}" step=".001" required>
