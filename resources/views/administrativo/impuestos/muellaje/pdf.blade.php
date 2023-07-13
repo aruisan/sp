@@ -169,10 +169,12 @@
                                 <tr>
                                     <td>Número total de días</td>
                                     <td>{{$muellaje->numTotalDias}}</td>
+                                    <td>Valor del Dolar</td>
+                                    <td>$<?php echo number_format($muellaje->valorDolar,0) ?></td>
                                     <td>Valor a pagar</td>
-                                    <td colspan="3"><b>
+                                    <td><b>
                                             USD $<?php echo number_format($muellaje->valorPago,0) ?> <br>
-                                            COP $<?php echo number_format($muellaje->valueCOP,0) ?>
+                                            COP $<?php echo number_format($muellaje->valorPago * $muellaje->valorDolar,0) ?>
                                         </b></td>
                                 </tr>
                                 <tr>

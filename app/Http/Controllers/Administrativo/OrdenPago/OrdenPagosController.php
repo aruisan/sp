@@ -233,6 +233,10 @@ class OrdenPagosController extends Controller
 
     public function liquidar(Request $request)
     {
+        if (count($request->PUC) > 2){
+            Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC. Por favor seleccionelas nuevamente. ');
+            return back();
+        }
         $ordenPago = OrdenPagos::findOrFail($request->ordenPago_id);
         $registro = Registro::findOrFail($ordenPago->registros_id);
         for ($i=0;$i< count($request->PUC); $i++){
@@ -245,6 +249,10 @@ class OrdenPagosController extends Controller
                 $totalDes = $ordenPago->descuentos->sum('valor');
                 if ( $totalCred + $totalDes == $totalDeb){
                     $registro->saldo = $registro->saldo - $request->valorPucD[$i];
+                    if ($registro->saldo < 0){
+                        Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC y la Orden de Pago ya este finalizada. Revice la orden de pago '.$request->ordenPago_id);
+                        return redirect('/administrativo/ordenPagos/show/'.$request->ordenPago_id);
+                    }
                     $registro->save();
                     $oPP = new OrdenPagosPuc();
                     $oPP->rubros_puc_id = $request->PUC[$i];

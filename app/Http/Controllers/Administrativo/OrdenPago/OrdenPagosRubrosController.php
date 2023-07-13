@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\OrdenPago;
 
+use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Registro\CdpsRegistroValor;

@@ -53,7 +53,18 @@ class MuellajeController extends Controller
     {
         $atraques = Muellaje::all()->unique('name');
         $responsable = Auth::user()->name.' - '.Auth::user()->email;
-        return view('administrativo.impuestos.muellaje.create', compact('responsable','atraques'));
+        $today = Carbon::today()->format('Y-m-d');
+        $usdDay = ImpUSD::where('fecha', $today)->first();
+        if ($usdDay) $valorUSDToday = $usdDay->valor;
+        else{
+            $dataUSD = json_decode( file_get_contents('http://apilayer.net/api/live?access_key=c87dcbdc363ac7e963a3a8ac4f2ac02a&currencies=COP'), true );
+            $saveUSD = new ImpUSD();
+            $saveUSD->fecha = Carbon::createFromTimestamp($dataUSD['timestamp'])->format('Y-m-d');
+            $saveUSD->valor = $dataUSD['quotes']['USDCOP'];
+            $saveUSD->save();
+            $valorUSDToday = $saveUSD->valor;
+        }
+        return view('administrativo.impuestos.muellaje.create', compact('responsable','atraques','valorUSDToday'));
     }
 
     /**
@@ -100,6 +111,7 @@ class MuellajeController extends Controller
         $muellaje->numTotalDias = $request->numTotalDias;
         $muellaje->valorPago = $request->valorPago;
         $muellaje->observaciones = $request->observaciones;
+        $muellaje->valorDolar = $request->valorUSD;
         $muellaje->funcionario_id = Auth::user()->id;
         $muellaje->save();
 
@@ -245,6 +257,7 @@ class MuellajeController extends Controller
         $muellaje->numTotalDias = $request->numTotalDias;
         $muellaje->valorPago = $request->valorPago;
         $muellaje->observaciones = $request->observaciones;
+        $muellaje->valorDolar = $request->valorUSD;
         $muellaje->funcionario_id = Auth::user()->id;
         $muellaje->save();
 

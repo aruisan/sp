@@ -83,6 +83,8 @@ class PagosController extends Controller
     {
         $oP = OrdenPagos::where([['estado', '1'], ['saldo', '>', 0]])->get();
         foreach ($oP as $data){
+            $data->maxValuePay = $data->pucs->sum('valor_credito');
+
             if (isset($data->registros->cdpsRegistro)){
                 if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
                     $ordenPagos[] = collect(['info' => $data]);
@@ -135,15 +137,15 @@ class PagosController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->Monto > $request->SaldoOP){
+        $OrdenPago = OrdenPagos::findOrFail($request->IdOP);
+        $vigencia = Vigencia::find($request->vigencia_id);
 
-            Session::flash('warning','El valor que va a pagar: $'.$request->Monto.' es mayor al valor disponible de la orden de pago: $'.$request->SaldoOP);
+        if ($request->Monto > $OrdenPago->saldo){
+
+            Session::flash('warning','El valor que va a pagar: $'.$request->Monto.' es mayor al valor disponible de la orden de pago: $'.$OrdenPago->saldo);
             return back();
 
         } else {
-
-            $OrdenPago = OrdenPagos::findOrFail($request->IdOP);
-            $vigencia = Vigencia::find($request->vigencia_id);
 
             //SE REALIZA LA BUSQUEDA DEL CODIGO CORRESPONDIENTE AL NUEVO PAGO
             $pago = Pagos::orderBy('code','DESC')->first();

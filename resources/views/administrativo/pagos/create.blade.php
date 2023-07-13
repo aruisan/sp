@@ -30,7 +30,7 @@
                                 <tr>
                                     <th class="text-center hidden"><i class="fa fa-hashtag"></i></th>
                                     <th class="text-center"><i class="fa fa-hashtag"></i></th>
-                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Objeto</th>
                                     <th class="text-center">Num Ident Tercero</th>
                                     <th class="text-center">Tercero</th>
                                     <th class="text-center">Valor</th>
@@ -52,7 +52,7 @@
                                     @endif
 
                                     <?php $desc = $data['info']->valor - $data['info']->descuentos->sum('valor');?>
-                                    <tr onclick="ver('col{{$data['info']->id}}','Obj{{$data['info']->nombre}}','Name{{$personaName}}','Val{{$data['info']->saldo}}','ValTo{{$data['info']->valor}}','Iva{{$data['info']->iva}}','Desc{{$desc}}');" style="cursor:pointer">
+                                    <tr onclick="ver('col{{$data['info']->id}}','Obj{{$data['info']->nombre}}','Name{{$personaName}}','Val{{$data['info']->saldo}}','ValTo{{$data['info']->valor}}','Iva{{$data['info']->iva}}','Desc{{$data['info']->maxValuePay}}');" style="cursor:pointer">
                                         <td id="col{{$data['info']->id}}" class="text-center hidden">{{ $data['info']->id }}</td>
                                         <td class="text-center">{{ $data['info']->code}}</td>
                                         <td id="Obj{{$data['info']->nombre}}" class="text-center">{{ $data['info']->nombre }}</td>
@@ -63,7 +63,7 @@
                                         <td id="Val{{$data['info']->saldo}}" class="text-center hidden">{{ $data['info']->saldo }}</td>
                                         <td id="ValTo{{$data['info']->valor}}" class="text-center hidden">{{ $data['info']->valor }}</td>
                                         <td id="Iva{{$data['info']->iva}}" class="text-center hidden">{{ $data['info']->iva }}</td>
-                                        <td id="Desc{{$desc}}" class="text-center hidden">{{ $desc }}</td>
+                                        <td id="Desc{{$data['info']->maxValuePay}}" class="text-center hidden">{{ $data['info']->maxValuePay }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -80,7 +80,7 @@
                         <div class="col-md-12">
                             <div class="col-md-4 align-self-center">
                                 <div class="form-group">
-                                    <label class="control-label text-right col-md-4">Nombre Orden de Pago: </label>
+                                    <label class="control-label text-right col-md-4">Objeto del Pago: </label>
                                     <div class="col-lg-6">
                                         <input type="hidden" name="IdOP" id="IdOP">
                                         <input type="hidden" name="numPago" value="{{ $numP + 1 }}">
@@ -200,7 +200,7 @@
             var Id = document.getElementById(col);
             var Obj = document.getElementById(Obj);
             var Name = document.getElementById(Name);
-            var Val = document.getElementById(Val);
+            var Val = document.getElementById(Desc);
             var ValTo = document.getElementById(ValTo);
             var Iva = document.getElementById(Iva);
             var Desc = document.getElementById(Desc);

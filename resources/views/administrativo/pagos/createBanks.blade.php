@@ -17,11 +17,18 @@
             <div class="row">
                 <div class="col-md-4 text-center">
                     Orden de Pago: {{ $pago->orden_pago->nombre }}
+                    @if(count($pago->orden_pago->pucs) > 0)
+                        @for($z = 0; $z < $pago->orden_pago->pucs->count(); $z++)
+                            @php($totDeb[] = $pago->orden_pago->pucs[$z]->valor_credito )
+                        @endfor
+                    @else
+                        @php($totDeb[] = $pago->valor)
+                    @endif
                 </div>
                 <div class="col-md-4 text-center">
                     <b>Monto a Pagar:
-                        <input type="hidden" id="montoPago" value="{{$pago->valor}}">
-                        <span id="montoPagoSpan">$<?php echo number_format($pago->valor,0) ?></span></b>
+                        <input type="hidden" id="montoPago" value="{{ array_sum($totDeb)}}">
+                        <span id="montoPagoSpan">$<?php echo number_format( array_sum($totDeb),0) ?></span></b>
                 </div>
                 <div class="col-md-4 text-center">
                     @if(isset($pago->orden_pago->registros))
@@ -157,7 +164,7 @@
                                 </td>
                                 <td>
                                     <input type="number" required class="form-control" id="val[]" name="val[]" min="0" style="text-align:center"
-                                    value="{{$pago->valor}}">
+                                    value="{{array_sum($totDeb)}}">
                                 </td>
                                 <td class="text-center">
                                     @if(isset($pago->orden_pago->registros))
@@ -197,7 +204,25 @@
                 let nombre = select == 1 ? 'cheque' : 'Referencia';
                 alert(`el Número de ${nombre} es obligatorio`);
             }else{
-                $('#form-pago').submit();
+
+
+                const pagoDeb= document.querySelectorAll('input[name="val[]"]');
+                var pagoTotal = document.getElementById('montoPago').value;
+                pagoTotal = parseInt(pagoTotal);
+
+                let valores = [0]
+                pagoDeb.forEach((elemento) => {
+                    valores.push(parseInt(elemento.value));
+                });
+
+                let total = valores.reduce((a, b) => a + b, 0);
+
+                if(total < pagoTotal || total > pagoTotal) {
+                    alert('Debe tener un pago igual a '+pagoTotal+' actualmente esta el total en '+total);
+                    return;
+                }
+
+                //$('#form-pago').submit();
             }
         }
 

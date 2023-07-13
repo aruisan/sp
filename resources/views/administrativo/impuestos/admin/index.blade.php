@@ -111,7 +111,9 @@
                                 <td class="text-center">
                                     @if($pago->modulo == "MUELLAJE")
                                         USD $<?php echo number_format($pago->valor,0) ?><br>
-                                        COP $<?php echo number_format($pago->valueCop,0) ?>
+                                        @if($pago->detalleBarco->valorDolar)
+                                            COP $<?php echo number_format($pago->valor * $pago->detalleBarco->valorDolar,0) ?>
+                                       @endif
                                     @else
                                         $<?php echo number_format($pago->valor,0) ?>
                                     @endif

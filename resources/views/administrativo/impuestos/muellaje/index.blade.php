@@ -64,7 +64,13 @@
                                 <td class="text-center">{{ $atraque->nameRepPago }}</td>
                                 <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fechaAtraque)->format('d-m-Y') }}</td>
                                 <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fechaSalida)->format('d-m-Y') }}</td>
-                                <td class="text-center">$<?php echo number_format($atraque->valorPago,0) ?></td>
+                                <td class="text-center">
+                                    USD $<?php echo number_format($atraque->valorPago,0) ?>
+                                    @if($atraque->valorDolar)
+                                        <br>
+                                        COP $<?php echo number_format($atraque->valorPago * $atraque->valorDolar,0) ?>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     <div>
                                         <a href="{{ url('administrativo/impuestos/muellaje/'.$atraque->id.'/formulario/pdf') }}" title="Formulario" target="_blank" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
