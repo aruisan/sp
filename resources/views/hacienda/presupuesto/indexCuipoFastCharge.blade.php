@@ -44,7 +44,6 @@
                 @if($V != "Vacio" and auth()->user()->roles->first()->id != 2)
                     <li class="dropdown">
                         <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeInforme()">Generar Informe de Presupuestos</a>
-                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeCHIP()">Informes CHIP</a>
 
                         <!-- SE COMENTAN LOS REPORTES QUE NO TIENEN ACCESO FUNCIONAL.
                         <a class="nav-item dropdown-toggle pillPri" href="" data-toggle="dropdown">Informes&nbsp;<i class="fa fa-caret-down"></i></a>
@@ -74,6 +73,10 @@
                         </ul>
                         -->
                     </li>
+                    <li class="nav-item pillPri">
+                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeCHIP()">Informes CHIP</a>
+                    </li>
+
                 @endif
                 @if($V == "Vacio")
                     <li class="nav-item pillPri">
