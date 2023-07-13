@@ -39,8 +39,13 @@ class OrdenPagosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($id = null)
     {
+        if ($id == null){
+            $añoActual = Carbon::now()->year;
+            $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
+            $id = $vigens->id;
+        }
         $oPT = OrdenPagos::where('estado', '0')->get();
         foreach ($oPT as $data){
             if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
