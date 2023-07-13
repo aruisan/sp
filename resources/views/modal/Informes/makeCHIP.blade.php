@@ -46,7 +46,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-lg-12 ml-auto text-center">
-                                    <br><br><br>
+                                    <br><br>
                                     <button type="submit" class="btn btn-primary">Generar CHIP</button>
                                 </div>
                             </div>
@@ -54,7 +54,6 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-
                 </div>
             </div>
         </form>
