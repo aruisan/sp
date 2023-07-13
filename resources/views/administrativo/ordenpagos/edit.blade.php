@@ -46,7 +46,7 @@
                         <div class="col-md-12 align-self-center">
                             <hr>
                             <center>
-                                <h3>Contabilización</h3>
+                                <h3>Corregir Cuentas Contables de la Contabilización</h3>
                             </center>
                             <hr>
                             <br>
