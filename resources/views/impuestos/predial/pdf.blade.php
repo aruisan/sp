@@ -197,7 +197,7 @@
                     <b>IMPUESTO PREDIAL UNIFICADO</b><br>
                     <b>FACTURA NO {{$numFacturaCodebar}}</b><br>
                     <b>PERIODO FACTURADO {{$liquidacion[0]->año}} AL {{$liquidacion[$liquidacion->count() - 1]->año}}</b><br>
-                    <b>Paguese Hasta 30-06-2023</b><br>
+                    <b>Paguese Hasta {{ \Carbon\Carbon::parse($predial->presentacion)->format('d-m-Y') }}</b><br>
                     <b>Valor $ <?php echo number_format($predial->tot_pago,0) ?></b><br>
                 </div>
             </div>
