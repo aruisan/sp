@@ -25,21 +25,17 @@
                                             <option value="4">Diciembre</option>
                                         </select>
                                     </div>
-                                    <label class="col-lg-4 col-form-label text-right" for="dep">Dependencia: <span class="text-danger">*</span></label>
-                                    <div class="col-lg-6">
-                                        <select name="dep" id="dep" class="form-control">
-                                            <option value="AdmC">Administración Central</option>
-                                            <option value="Con">Concejo</option>
-                                            <option value="Per">Personeria</option>
-                                        </select>
-                                    </div>
                                     <label class="col-lg-4 col-form-label text-right" for="categoria">Categoria: <span class="text-danger">*</span></label>
                                     <div class="col-lg-6">
                                         <select name="categoria" id="categoria" class="form-control">
                                             <option value="ProgIng">PROGRAMACION DE INGRESOS</option>
                                             <option value="EjecIng">EJECUCION DE INGRESOS</option>
-                                            <option value="ProgGas">PROGRAMACION DE GASTOS</option>
-                                            <option value="EjecGas">EJECUCION DE GASTOS</option>
+                                            <option value="ProgGas">PROGRAMACION DE GASTOS ADMINISTRACION CENTRAL</option>
+                                            <option value="ProgGas">PROGRAMACION DE GASTOS CONCEJO</option>
+                                            <option value="ProgGas">PROGRAMACION DE GASTOS PERSONERIA</option>
+                                            <option value="EjecGas">EJECUCION DE GASTOS ADMINISTRACION CENTRAL</option>
+                                            <option value="EjecGas">EJECUCION DE GASTOS CONCEJO</option>
+                                            <option value="EjecGas">EJECUCION DE GASTOS PERSONERIA</option>
                                         </select>
                                     </div>
                                 </div>
