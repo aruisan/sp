@@ -255,7 +255,7 @@
                                 <hr>
                                 <br>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" id="tablaP">
+                                    <table class="table table-bordered" id="tablaPagos">
                                         <thead>
                                         <tr>
                                             <th class="text-center">Ver Pago</th>
@@ -306,7 +306,7 @@
     @stop
 @section('js')
     <script>
-        $('#tablaP').DataTable( {
+        $('#tablaPagos').DataTable( {
             responsive: true,
             "searching": true,
             dom: 'Bfrtip',
