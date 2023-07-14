@@ -20,7 +20,7 @@
                                     <div class="col-lg-6">
                                         <select name="periodo" id="periodo" class="form-control">
                                             <option value="1">Marzo</option>
-                                            <option selected value="2">Junio</option>
+                                            <option value="2">Junio</option>
                                             <option value="3">Septiembre</option>
                                             <option value="4">Diciembre</option>
                                         </select>
