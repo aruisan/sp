@@ -28,14 +28,24 @@
                                     <label class="col-lg-4 col-form-label text-right" for="categoria">Categoria: <span class="text-danger">*</span></label>
                                     <div class="col-lg-6">
                                         <select name="categoria" id="categoria" class="form-control">
+                                            <option value="BolDeuMor">BOLETÍN DEUDORES MOROSOS</option>
+                                            <option value="CGRPerCos">CGR PERSONAL Y COSTOS</option>
+                                            <option value="ConPriInf">CONPES PRIMERA INFANCIA</option>
                                             <option value="ProgIng">PROGRAMACION DE INGRESOS</option>
                                             <option value="EjecIng">EJECUCION DE INGRESOS</option>
-                                            <option value="ProgGas">PROGRAMACION DE GASTOS ADMINISTRACION CENTRAL</option>
-                                            <option value="ProgGas">PROGRAMACION DE GASTOS CONCEJO</option>
-                                            <option value="ProgGas">PROGRAMACION DE GASTOS PERSONERIA</option>
-                                            <option value="EjecGas">EJECUCION DE GASTOS ADMINISTRACION CENTRAL</option>
-                                            <option value="EjecGas">EJECUCION DE GASTOS CONCEJO</option>
-                                            <option value="EjecGas">EJECUCION DE GASTOS PERSONERIA</option>
+                                            <option value="ProgGasAdm">PROGRAMACION DE GASTOS ADMINISTRACION CENTRAL</option>
+                                            <option value="ProgGasCon">PROGRAMACION DE GASTOS CONCEJO</option>
+                                            <option value="ProgGasPer">PROGRAMACION DE GASTOS PERSONERIA</option>
+                                            <option value="EjecGasAdm">EJECUCION DE GASTOS ADMINISTRACION CENTRAL</option>
+                                            <option value="EjecGasCon">EJECUCION DE GASTOS CONCEJO</option>
+                                            <option value="EjecGasPer">EJECUCION DE GASTOS PERSONERIA</option>
+                                            <option value="FUTCieFis">FUT CIERRE FISCAL</option>
+                                            <option value="FUTDeuPub">FUT DEUDA PUBLICA</option>
+                                            <option value="FUTRegPre">FUT REGISTRO PRESUPUESTAL</option>
+                                            <option value="FUTTesFonSal">FUT TESORERIA FONDO SALUD</option>
+                                            <option value="FUTVic">FUT VICTIMAS</option>
+                                            <option value="FUTVigFut">FUT VIGENCIAS FUTURAS</option>
+                                            <option value="AUPPAE">AUPA PAE</option>
                                         </select>
                                     </div>
                                 </div>
