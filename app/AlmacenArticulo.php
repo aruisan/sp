@@ -30,7 +30,7 @@ class AlmacenArticulo extends Model
     }
 
     public function getStockAttribute(){
-        return  $this->cantidad - $this->hasMany(AlmacenArticuloSalida::class, 'almacen_articulo_id')->sum('cantidad');
+        return  $this->cantidad - $this->articulos_salida->sum('cantidad');
     }
 
     public function puc_ccd(){

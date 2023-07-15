@@ -67,6 +67,7 @@
                             <th>Codigo</th>
                             <th>Articulo</th>
                             <th>Referencia</th>
+                            <th>Existencia</th>
                             <th>Cantidad</th>
                             <th>Valor Unitario</th>
                             <th>Total</th>
@@ -76,7 +77,11 @@
                                 <tr>
                                     <td>{{$item->articulo->codigo}}</td>
                                     <td>{{$item->articulo->nombre_articulo}}</td>
+
                                     <td>{{$item->articulo->referencia}}</td>
+                                    <td>
+                                        {{$item->articulo->stock}}
+                                    </td>
                                     <td>
                                         @if(auth()->user()->validar_cargo('Secretaria'))
                                             <input type="hidden" value="{{$item->id}}" class="form-control" name="id[]">

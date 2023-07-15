@@ -59,7 +59,7 @@
                                 <td>${{number_format($item->articulo->valor_unitario, 0, ',', '.')}}</td>
                                 <td>${{number_format($item->total, 0, ',', '.')}}</td>
                                 <td>{{ $item->articulo->puc_ccd->code}}</td>
-                                <td>{{ $egreso->puc_credito->code}}</td>
+                                <td>{{ is_null($egreso->puc_credito) ? "No se ha asignado" : $egreso->puc_credito->code}}</td>
                             </tr>
                             @php
                                 $pucs_array_debito[$item->articulo->puc_ccd->code] += $item->total;
@@ -99,8 +99,8 @@
                             </tr>
                         @endforeach
                         <tr>
-                            <td>{{$egreso->puc_credito->code}}</td>
-                            <td>{{$egreso->puc_credito->concepto}}</td>
+                            <td>{{is_null($egreso->puc_credito) ? "No se ha asignado" : $egreso->puc_credito->code}}</td>
+                            <td>{{is_null($egreso->puc_credito) ? "No se ha asignado" : $egreso->puc_credito->concepto}}</td>
                             <td>{{$egreso->responsable->num_dc}}</td>
                             <td>{{$egreso->responsable->nombre}}</td>
                             <td>${{number_format($egreso->salidas_pivot->sum('total'), 0, ',', '.')}}</td>

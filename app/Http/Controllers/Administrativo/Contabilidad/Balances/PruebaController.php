@@ -9,6 +9,8 @@ use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
+use App\InformeContableMensual;
+use App\InformeContableMensualData;
 
 class PruebaController extends Controller
 {
@@ -323,17 +325,106 @@ class PruebaController extends Controller
         return view('administrativo.contabilidad.balances.prueba', compact('result'));
     }
 
-    public function informe($mes){
-        Session::put('mes-informe-inicial', $mes);
-        //dd();
+
+    public function reload_informe(InformeContableMensual $informe){
+        $informe->finalizar = FALSE;
+        $informe->save();
+        $pucs = PucAlcaldia::get();
+        return view('administrativo.contabilidad.balances.pre_prueba',compact('informe', 'pucs'));
+    }
+
+    public function pre_informe($mes){
+        
+        Session::put(auth()->id().'-mes-informe-contable-mes', $mes);
+        $fecha = "2023-{$mes}-01";
+        $informe = InformeContableMensual::where('fecha', $fecha)->first();
+        $pucs = PucAlcaldia::get();
+        if(is_null($informe)):
+            $informe = InformeContableMensual::create(['fecha' => $fecha]);
+        endif;
+
+        if($informe->finalizar){
+            return redirect()->route('balance.prueba-informe', $informe->id);
+        }
+        //Session::flash('error','Actualmente no existe un PUC para poder ver los informes. Se recomienda crearlo.');
+        return view('administrativo.contabilidad.balances.pre_prueba',compact('informe', 'pucs'));
+    }
+
+    public function generar_informe(InformeContableMensual $informe, PucAlcaldia $puc){
+        $mes = Session::get(auth()->id().'-mes-informe-contable-mes');
+        $mes_integer = intval($mes)-1;
+        $mes_anterior = $mes_integer > 9 ? $mes_integer : "0{$mes_integer}";
+        $fecha_anterior = "2023-{$mes_anterior}-01";
+        $pucs_count = PucAlcaldia::count();
+        $puc_mensual = InformeContableMensualData::where('informe_contable_mensual_id', $informe->id)->where('puc_alcaldia_id', $puc->id)->first();
+
+        if(is_null($puc_mensual)):
+            $puc_mensual = new InformeContableMensualData;
+        endif;
+
+        if($mes_integer == 0){
+            $i_debito = $puc->naturaleza  == 'DEBITO' ? $puc->v_inicial: 0;
+            $i_credito = $puc->naturaleza == 'CREDITO' ? $puc->v_inicial: 0;
+        }else{
+            $informe_anterior = InformeContableMensual::where('fecha', $fecha_anterior)->first();
+            //dd([$informe_anterior, $fecha_anterior]);
+            if(is_null($informe_anterior)){
+                $informe->delete();
+                return "no se ha generado el mes anterior";
+            }
+            $puc_informe_contable_mensual_anterior = InformeContableMensualData::where('informe_contable_mensual_id', $informe_anterior->id)->where('puc_alcaldia_id', $puc->id)->first();
+
+            $i_debito = $puc_informe_contable_mensual_anterior->s_debito;
+            $i_credito = $puc_informe_contable_mensual_anterior->s_credito;
+        }
+
+        $m_credito = $puc->m_credito;
+        $m_debito = $puc->m_debito;
+        $s_debito = $puc->naturaleza == "DEBITO" ? $i_debito + $m_debito - $m_credito : 0;
+        $s_credito = $puc->naturaleza == "CREDITO" ?  $i_credito + $m_credito - $m_debito : 0;
+        
+        $puc_mensual->informe_contable_mensual_id = $informe->id;
+        $puc_mensual->puc_alcaldia_id = $puc->id;
+        $puc_mensual->m_credito = $m_credito;
+        $puc_mensual->m_debito = $m_debito;
+        $puc_mensual->i_credito = $i_credito;
+        $puc_mensual->i_debito = $i_debito;
+        $puc_mensual->s_credito = $s_credito;
+        $puc_mensual->s_debito = $s_debito;    
+        $puc_mensual->save();
+        
+
+        return response()->json($pucs_count == $informe->datos->count() ? TRUE : FALSE);
+    }
+
+    public function generar_informe_relaciones(InformeContableMensual $informe){
+        $pucs = PucAlcaldia::get();
+
+        foreach($informe->datos->filter(function($d){ return is_null($d->padre_id); }) as $puc_mensual):
+            if($puc_mensual->puc_alcaldia->hijos->count()):
+                $hijos = $informe->datos->filter(function($e)use($puc_mensual){ return in_array($e->puc_alcaldia_id, $puc_mensual->puc_alcaldia->hijos->pluck('id')->toArray()); });
+                foreach($hijos as $puc_data):
+                    $puc_data->update(['padre_id' => $puc_mensual->id]); 
+                endforeach;
+            endif;
+        endforeach;
+
+        $informe->finalizar = TRUE;
+        $informe->save;
+        return response()->json(TRUE);
+    }
+
+    public function informe(InformeContableMensual $informe){
         $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
         //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
-        $pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->where('id', 1)->get();
+        $pucs = $informe->datos->filter(function($p){ return is_null($p->padre); })->sortBy('puc_alcaldia.code');
+
+        //dd($pucs->first()->hijos->map(function($e){ return $e->puc_alcaldia->code; }));
         //dd($pucs);
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
 
-        return view('administrativo.contabilidad.balances.prueba',compact('añoActual', 'mesActual', 'diaActual', 'pucs', 'meses'));
+        return view('administrativo.contabilidad.balances.prueba',compact('añoActual', 'mesActual', 'diaActual', 'pucs', 'meses', 'informe'));
     }
 }

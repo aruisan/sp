@@ -51,7 +51,7 @@
                 </div>
             </div><br>
             <div class="row">
-                 <div class="col-md-12 align-self-center">
+                 <div class="col-md-6 align-self-center">
                     <div class="form-group">
                         <label class="col-lg-1 col-form-label text-right" for="nombre">seleccione Clase:<span class="text-danger">*</span></label>
                         <div class="col-lg-5">
@@ -109,6 +109,7 @@
         } );
 
         $(document).ready(function(){
+            console.log('articulos', articulos);
         });
 
         $('#debito_id').on('change', function(){
@@ -117,7 +118,7 @@
 
         const select_debito = () =>{
             let debitos_id = $('#debito_id').val();
-            articulos_select = articulos.filter(a => debitos_id.includes(a.ccd.toString()) );
+            articulos_select = articulos.filter(a => debitos_id.includes(a.ccd.toString()) && a.stock > 0 );
             console.log([debitos_id, articulos, articulos_select])
             aumentar_articulo();
         }

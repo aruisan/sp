@@ -70,7 +70,7 @@ class PucAlcaldia extends Model implements Auditable
     }
 
     public function orden_pagos_mensual() {
-        return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id')->whereMonth('created_at', Session::get('mes-informe-inicial'));
+        return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id')->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
     }
 
     //pagos
@@ -79,7 +79,7 @@ class PucAlcaldia extends Model implements Auditable
     }
 
     public function pagos_bank_mensual(){
-        return $this->hasMany(PagoBanks::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get('mes-informe-inicial'));
+        return $this->hasMany(PagoBanks::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
     }
 
     //comprobantes de ingreso son los de banco
@@ -88,7 +88,7 @@ class PucAlcaldia extends Model implements Auditable
     }
 
     public function getComprobantesmensualAttribute(){
-        return ComprobanteIngresosMov::whereMonth('created_at', Session::get('mes-informe-inicial'))->where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
+        return ComprobanteIngresosMov::whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))->where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
     }
 
     //retefuente
@@ -144,11 +144,16 @@ class PucAlcaldia extends Model implements Auditable
     }
 
     public function getDebCredTrimestreAttribute(){
-        $age =  Carbon::today()->format('Y');
+        $trimestre = [1,4,7,10];
+        $age = Session::get(auth()->id().'-mes-informe-chip-age');
+        $mes_ = $trimestre[Session::get(auth()->id().'-mes-informe-chip-trimestre')];
+        $mes = $mes_ < 10 ? "0{$mes_}" : $mes_;
+        $mes_final = $mes_ < 10 ? "0".$mes_+2 : $mes_+2;
+        //$age =  Carbon::today()->format('Y');
         $totCred = 0;
         $totDeb = 0;
-        $inicio = "2023-01-01";
-        $final = "2023-03-31";
+        $inicio = "{$age}-{$mes}-1";
+        $final = "{$age}-{$mes_final}-1";
 
         if($this->otros_ordenes_pago_pucs->count() > 0):
             $otros_pucs = $this->otros_ordenes_pago_pucs->where('created_at', '>=', $inicio)->where('created_at', '<=', $final);
@@ -220,7 +225,7 @@ class PucAlcaldia extends Model implements Auditable
         $totCredAll = 0;
         $totCred = 0;
         $totDeb = 0;
-        $mes = Session::get('mes-informe-inicial');
+        $mes = Session::get(auth()->id().'-mes-informe-contable-mes',);
         $inicio = "2023-{$mes}-01";
         $final = \Carbon\Carbon::createFromFormat('Y-m-d', $inicio)->addMonth()->format('Y-m-d');
 

@@ -7,20 +7,21 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
-            <strong>
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Balance Prueba Mes {{$meses[Session::get('mes-informe-inicial')]}}
-                <span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    <li><a href="{{route('balance.prueba', '01')}}">Enero</a></li>
-                    <li><a href="{{route('balance.prueba', '02')}}">Febrero</a></li>
-                    <li><a href="{{route('balance.prueba', '03')}}">Marzo</a></li>
-                    <li><a href="{{route('balance.prueba', '04')}}">Abril</a></li>
-                    <li><a href="{{route('balance.prueba', '05')}}">Mayo</a></li>
-                    <li><a href="{{route('balance.prueba', '06')}}">Junio</a></li>
-                </ul>
+            <div class="btn-group">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Balance Prueba Mes {{$meses[Session::get(auth()->id().'-mes-informe-contable-mes')]}} <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{route('balance.pre-prueba', '01')}}">Enero</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '02')}}">Febrero</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '03')}}">Marzo</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '04')}}">Abril</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '05')}}">Mayo</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '06')}}">Junio</a></li>
+                    </ul>
+                </div>
+                <a class="btn btn-danger pull-right" href="{{route('balance.prueba-informe-reload', $informe->id)}}"><i class="fa fa-refresh" aria-hidden="true"></i></a>
             </div>
-            </strong>
         </div>
         <div class="table-responsive">
             <br>
@@ -58,45 +59,50 @@
                         {{--
                         --}}
                     </tr>
+                    
                 </thead>
                 <tbody>
                 @foreach($pucs as $puc)
-                            @php 
-                                $debito = $puc->naturaleza == "DEBITO" ? $puc->v_inicial : 0;
-                                $credito= $puc->naturaleza != "DEBITO" ? $puc->v_inicial : 0;
-                                $m_debito = $puc->m_debito;
-                                $m_credito = $puc->m_credito;
-                                $s_debito = $puc-> naturaleza == "DEBITO" ? $debito + $m_debito - $m_credito:0;
-                                $s_credito = $puc-> naturaleza == "CREDITO" ? $credito + $m_credito - $m_debito: 0;
-                            @endphp
                     <tr>
-                        <td class="text-left">{{$puc->code}}</td>
-                        <td class="text-center">{{$puc->concepto}}</td>
+                    <td class="text-left">{{$puc->puc_alcaldia->code}}</td>
+                        <td class="text-center">{{$puc->puc_alcaldia->concepto}}</td>
 
-                        <td class="text-right" style="width=200px;">${{number_format($debito  ,0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">${{number_format($credito ,0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">{{$debito}}</td>
-                        <td class="text-right" style="width=200px;">{{$credito}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->i_debito  ,0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->i_credito ,0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->i_debito}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->i_credito}}</td>
 
-                        <td class="text-right" style="width=200px;">${{number_format($m_debito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">${{number_format($m_credito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">{{$m_debito}}</td>
-                        <td class="text-right" style="width=200px;">{{$m_credito}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->m_debito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->m_credito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->m_debito}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->m_credito}}</td>
 
-                        <td class="text-right" style="width=200px;">${{number_format($s_debito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">${{number_format($s_credito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">{{$s_debito}}</td>
-                        <td class="text-right" style="width=200px;">{{$s_credito}}</td>
-                        {{--
-                        <td>{{$puc->naturaleza}}</td>
-                        <td>{{$puc->saldo_inicial}}</td>
-                        <td>{{is_null($puc->padre) ? 'no tiene' : $puc->padre->code}}</td>
-                        <td>{{$puc->hijos->pluck('id')}}</td>
-                        --}}
+                        <td class="text-right" style="width=200px;">${{number_format($puc->s_debito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->s_credito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->s_debito}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->s_credito}}</td>
                     </tr>
-                    {!!$puc['format_hijos_prueba']!!}
                 @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2"><b>Sumas Iguales</b></td>
+                        <td><b>${{number_format($pucs->sum('i_debito')  ,0,",", ".")}}</b></td>
+                        <td><b>${{number_format($pucs->sum('i_credito')  ,0,",", ".")}}</b></td>
+                        <td><b>{{$pucs->sum('i_debito')}}</b></td>
+                        <td><b>{{$pucs->sum('i_credito')}}</b></td>
+
+                        <td><b>${{number_format($pucs->sum('m_debito')  ,0,",", ".")}}</b></td>
+                        <td><b>${{number_format($pucs->sum('m_credito')  ,0,",", ".")}}</b></td>
+                        <td><b>{{$pucs->sum('m_debito')}}</b></td>
+                        <td><b>{{$pucs->sum('m_credito')}}</b></td>
+
+                        <td><b>${{number_format($pucs->sum('s_debito')  ,0,",", ".")}}</b></td>
+                        <td><b>${{number_format($pucs->sum('s_credito')  ,0,",", ".")}}</b></td>
+                        <td><b>{{$pucs->sum('s_debito')}}</b></td>
+                        <td><b>{{$pucs->sum('s_credito')}}</b></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -106,6 +112,10 @@
     <script>
         $(document).ready(function() {
           let tbl =  $('#tabla').DataTable({
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
                 language: {
                     "lengthMenu": "Mostrar _MENU_ registros",
                     "zeroRecords": "No se encontraron resultados",

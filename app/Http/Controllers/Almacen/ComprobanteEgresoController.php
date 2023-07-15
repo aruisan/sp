@@ -41,13 +41,13 @@ class ComprobanteEgresoController extends Controller
     }
 
     public function update(Request $request, AlmacenComprobanteEgreso $egreso){
-        //dd($request->all());
         $data_factura_update = $request->except(['id', 'cantidad']);
         $egreso->update($data_factura_update + ['owner_id' => auth()->id()]);
         $egreso->responsable_id = $request->responsable_id;
         $egreso->save();
 
-        if(is_null($egreso->dependencia->encargado)){
+        //if(is_null($egreso->dependencia->encargado)){
+        if(false){
             $egreso->delete();
             Session::flash('error','la dependencia asiganda no tiene encargado');
         }else{
@@ -59,7 +59,8 @@ class ComprobanteEgresoController extends Controller
             endforeach;
             Session::flash('success','se ha generado la salida de almacen con exito.');
         }
-        return redirect()->route('almacen.egreso.show', $egreso->id);
+        return back();
+        //return redirect()->route('almacen.egreso.show', $egreso->id);
     }
 
     public function show(AlmacenComprobanteEgreso $egreso){

@@ -19,16 +19,20 @@ class ChipController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function informe_contable(){
+    public function informe_contable($age, $trimestre){
+        Session::put(auth()->id().'-mes-informe-chip-trimestre', $trimestre);
+        Session::put(auth()->id().'-mes-informe-chip-age', $age);
         //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id','<>', 0)->orderBy('code', 'asc')->get()->filter(function($e){ return $e->level == 4; });
         $pucs_ = PucAlcaldia::where('hijo','0')->where('padre_id', 0)->get();
         $pucs = collect();
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
-
+        $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio','Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        
         foreach($pucs_ as $puc):
-            if(is_null($puc->contabilidad_data)):
+            $contabilidad_data = ChipContabilidadData::where('puc_id', $puc->id)->where('age', $age)->where('trimestre', $trimestre)->first();
+            if(is_null($contabilidad_data)):
                 $m_debito = $puc['m_debito_trimestre'];
                 $m_credito = $puc['m_credito_trimestre'];
                 $s_final = $puc['naturaleza'] == "DEBITO" ? $puc['v_inicial'] + $m_debito - $m_credito : $puc['v_inicial'] + $m_credito - $m_debito;
@@ -54,22 +58,26 @@ class ChipController extends Controller
                 $data .= $puc['format_hijos_contabilidad'];
     
                 $new = new ChipContabilidadData;
+                $new->trimestre = $trimestre;
+                $new->age = $age;
                 $new->puc_id = $puc->id;
                 $new->data = $data;
                 $new->save();
             else:
-                $data = $puc->contabilidad_data->data;
+                $data = $contabilidad_data->data;
             endif;
             $pucs->push($data);
         endforeach;
 
-        return view('administrativo.contabilidad.informes.chip_contable',compact('añoActual', 'mesActual', 'diaActual', 'pucs'));
+        return view('administrativo.contabilidad.informes.chip_contable',compact('añoActual', 'mesActual', 'diaActual', 'pucs', 'age', 'trimestre', 'meses'));
     }
 
 
-    public function informe_contable_actualizacion(){
+    public function informe_contable_actualizacion($age, $trimestre){
+        Session::put(auth()->id().'-mes-informe-chip-trimestre', $trimestre);
+        Session::put(auth()->id().'-mes-informe-chip-age', $age);
         $pucs = PucAlcaldia::where('hijo','0')->where('padre_id', 0)->get();
-        $chips_contables_data = ChipContabilidadData::all();
+        $chips_contables_data = ChipContabilidadData::where('age', $age)->where('trimestre', $trimestre)->get();
         foreach($chips_contables_data as $cc):
             $cc->delete();
         endforeach;
@@ -108,6 +116,8 @@ class ChipController extends Controller
             $data .= $puc['format_hijos_contabilidad'];
 
             $new = new ChipContabilidadData;
+            $new->trimestre = Session::get(auth()->id().'-mes-informe-chip-trimestre');
+            $new->age = Session::get(auth()->id().'-mes-informe-chip-age');
             $new->puc_id = $puc->id;
             $new->data = $data;
             $new->save();

@@ -13,7 +13,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'almacen'] ,function(){
     
     Route::get('/comprobante-egresos', "Almacen\ComprobanteEgresoController@index")->name('almacen.comprobante.egreso.index');
     Route::get('/comprobante-egresos/create', "Almacen\ComprobanteEgresoController@create")->name('almacen.comprobante.egreso');
-    Route::put('/comprobante-egresos/{egreso}', "Almacen\ComprobanteEgresoController@update")->name('almacen.egreso.update');
+    Route::put('/comprobante-egresos/update/{egreso}', "Almacen\ComprobanteEgresoController@update")->name('almacen.egreso.update');
     Route::get('/comprobante-egresos/{egreso}', "Almacen\ComprobanteEgresoController@show")->name('almacen.egreso.show');
     Route::get('/comprobante-egresos/pdf/{egreso}', "Almacen\ComprobanteEgresoController@pdf")->name('almacen.comprobante.egreso.pdf');
     Route::post('/comprobante-egresos/autorizar/{egreso}', "Almacen\ComprobanteEgresoController@autorizar_store")->name('almacen.comprobante.egreso.autorizar');

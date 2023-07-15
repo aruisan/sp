@@ -986,4 +986,13 @@ class BancosController extends Controller
 
         return collect(['total' => $total, 'fecha' => $mes]);
     }
+
+    public function eliminar_conciliacion(ConciliacionBancaria $conciliacion){
+        //dd($conciliacion);
+        $conciliacion->cheques_mano()->delete(); //conciliacion a la mano
+        $conciliacion->cuentas_temporales()->delete();//conciliacion viejos
+        $conciliacion->delete();//conciliacion
+
+        return back();
+    }
 }

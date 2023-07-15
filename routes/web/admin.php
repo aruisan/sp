@@ -205,7 +205,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::post('tesoreria/bancos/makeConciliacion','Administrativo\Tesoreria\BancosController@makeConciliacion');
         Route::resource('bancos','Administrativo\Tesoreria\BancosController');
         Route::post('tesoreria/bancos/conciliacion/guardar-ver','Administrativo\Tesoreria\BancosController@saveAndSeePdf')->name('conciliacion.guardar-ver');
-
+        Route::get('tesoreria/bancos/eliminar-conciliacion/{conciliacion}','Administrativo\Tesoreria\BancosController@eliminar_conciliacion')->name('eliminar.conciliacion');
             //DESCUENTOS
         Route::get('tesoreria/descuentos/{vigencia}','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@index');
         Route::get('tesoreria/descuentos/viewpago/{id}/view','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@show');
