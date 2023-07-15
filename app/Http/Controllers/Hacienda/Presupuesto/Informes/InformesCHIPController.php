@@ -1846,4 +1846,50 @@ class InformesCHIPController extends Controller
         return Excel::download(new ChipIngExcExport($presupuesto),
             'Programacion Presupuesto de Ingresos '.$inicio.'-'.$final.'.xlsx');
     }
+
+    public function make(Request $request){
+        $año = Carbon::today()->year;
+        $inicio = $año.'-01-01';
+        switch ($request->periodo){
+            case 1:
+                $final = $año.'-03-31';
+                break;
+            case 2:
+                $final = $año.'-06-30';
+                break;
+            case 3:
+                $final = $año.'-09-30';
+                break;
+            case 4:
+                $final = $año.'-12-31';
+                break;
+        }
+
+        if ($request->categoria == 'ProgIng') {
+            $presupuesto = $this->prepIngresos($inicio, $final);
+            $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11206, '4' => $año, '5' => 'A_PROGRAMACION_DE_INGRESOS']);
+            $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'Ppto Inicial', '4' => 'Ppto Final']);
+            foreach ($presupuesto as $data) {
+                $prep[] = collect(['1' => 'D', '2' => $data['code'], '3' => $data['inicial'], '4' => $data['definitivo']]);
+            }
+
+            return $prep;
+        } elseif ($request->categoria == 'EjecIng'){
+            $presupuesto = $this->prepIngresos($inicio, $final);
+            $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11212, '4' => $año, '5' => 'B_EJECUCION_DE_INGRESOS']);
+            $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'CPC', '4' => 'Detalle Sectorial', '5' => 'Codigo Fuente',
+                '6' => 'Tercero', '7' => 'Politica Publica', '8' => 'Numero y Fecha Norma', '9' => 'Tipo Norma',
+                '10' => 'Recaudo vigencia actual sin situación de fondos', '11' => 'Recaudo vigencia actual con fondos',
+                '12' => 'Recaudo vigencia anterior sin situación de fondos', '13' => 'Recaudo Anterior  con fondos']);
+            foreach ($presupuesto as $data) {
+                if ($data['cod_fuente']) $prep[] = collect(['1' => 'D', '2' => $data['code'], '3' => 0, '4' => 0, '5' => $data['cod_fuente'],
+                    '6' => 1, '7' => 0, 8 => 'ley 99 de 1993', '9' => 5, '10' => 0, '11' => $data['recaudado'],
+                    '12' => 0, '13' =>0]);
+            }
+
+            return $prep;
+        } else {
+            dd("other");
+        }
+    }
 }

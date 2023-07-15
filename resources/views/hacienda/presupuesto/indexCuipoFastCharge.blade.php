@@ -299,6 +299,7 @@
     <!-- Datatables personalizadas buttons-->
     <script src="{{ asset('/js/datatableCustom.js') }}"></script>
 
+
     <!-- tabla de proyectos -->
     <script>
 
@@ -311,6 +312,73 @@
 
         function getModalToMakeCHIP(){
             $('#modalMakeCHIP').modal('show');
+        }
+
+        function JSONToCSVConvertor(JSONData, ReportTitle) {
+            var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+            var CSV = '';
+
+            for (var i = 0; i < arrData.length; i++) {
+                var row = "";
+
+                for (var index in arrData[i]) {
+                    row += '"' + arrData[i][index] + '",';
+                }
+
+                row.slice(0, row.length - 1);
+
+                CSV += row + '\r\n';
+            }
+
+            if (CSV == '') {
+                alert("Invalid data");
+                return;
+            }
+
+            //Generate a file name
+            var fileName = "";
+            fileName += ReportTitle.replace(/ /g,"_");
+
+            //Initialize file format you want csv or xls
+            var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+            var link = document.createElement("a");
+            link.href = uri;
+
+            link.style = "visibility:hidden";
+            link.download = fileName + ".csv";
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function formCHIPSubmit(){
+            $("#cargandoCHIP").show();
+            var periodo = document.getElementById("periodo").value;
+            var categoria = document.getElementById("categoria").value;
+            if(periodo == 1) var mes = '03';
+            else if(periodo == 2) var mes = '06'
+            else if(periodo == 3) var mes = '09'
+            else if(periodo == 4) var mes = '12'
+            const fecha = new Date();
+            const añoActual = fecha.getFullYear();
+
+            $.ajax({
+                method: "POST",
+                url: "/presupuesto/generate/CHIP",
+                data: { "periodo": periodo, "categoria": categoria,
+                    "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(datos) {
+                console.log(datos);
+                if (categoria == 'ProgIng') JSONToCSVConvertor(datos, 'Programacion_Ingresos_'+mes+'/'+añoActual);
+                else toastr.warning('SE RECIBIO LA SOLITUD PERO ESTAMOS TRABAJANDO EN HABILITAR ESE INFORME CHIP.');
+                $("#cargandoCHIP").hide();
+            }).fail(function() {
+                $("#cargandoCHIP").hide();
+
+                toastr.warning('OCURRIO UN ERROR AL GENERAR EL CHIP, INTENTE NUEVAMENTE MAS TARDE POR FAVOR.');
+            });
         }
 
         function refreshPrep(){

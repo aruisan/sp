@@ -298,7 +298,31 @@ class RegistrosController extends Controller
             $rol= $role->id;
         }
         $ordenesPago = $registro->ordenPagos;
-        return view('administrativo.registros.show', compact('registro','rol','cdps','vigencia','ordenesPago'));
+
+        if ($rol == 3 and $registro->jefe_e != 3){
+            if ($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento") {
+                foreach ($registro->cdpRegistroValor as $cdpRegVal){
+                    if ($cdpRegVal->valor > 0){
+                        $infoRubro[] = ['codCDP' => $cdpRegVal->cdps->code, 'nameCDP' => $cdpRegVal->cdps->name,
+                            'id_rubro' => $cdpRegVal->fontRubro->rubro->id ,'id' => '', 'codigo' => $cdpRegVal->fontRubro->rubro->cod,
+                            'name' =>$cdpRegVal->fontRubro->rubro->name,'value' => $cdpRegVal->valor, 'font' =>
+                                $cdpRegVal->fontRubro->sourceFunding->code.' - '.$cdpRegVal->fontRubro->sourceFunding->description
+                        ];
+                    }
+                }
+                $bpins = [];
+            }else {
+                if (isset($registro->cdpRegistroValor->first()->bpin_cdp_valor_id)){
+                    foreach ($registro->cdpRegistroValor as $cdpReg) $bpins[] = BpinCdpValor::find($cdpReg->bpin_cdp_valor_id);
+                } else $bpins = $registro->cdpsRegistro->first()->cdp->bpinsCdpValor;
+            }
+        }
+        if (!isset($infoRubro)) $infoRubro = [];
+        if (!isset($bpins)) $bpins = [];
+
+
+        return view('administrativo.registros.show', compact('registro','rol','cdps','vigencia','ordenesPago',
+        'bpins','infoRubro'));
     }
 
     public function update(Request $request, $id)
