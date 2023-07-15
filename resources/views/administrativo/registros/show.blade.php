@@ -170,6 +170,67 @@
                 </center>
                 <hr>
                 <br>
+                @if($rol == 3 and $registro->jefe_e != 3)
+                    @if($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento")
+                        <table class="table table-bordered" >
+                            <thead>
+                            <tr>
+                                <th class="text-center" colspan="6">DINERO TOMADO DE LOS RUBROS DE CDPs</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center"># CDP</th>
+                                <th class="text-center">Nombre CDP</th>
+                                <th class="text-center">Codigo</th>
+                                <th class="text-center">Nombre</th>
+                                <th class="text-center">Fuente</th>
+                                <th class="text-center">Valor</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($infoRubro as $rubro)
+                                <tr class="text-center">
+                                    <td>{{$rubro['codCDP']}} </td>
+                                    <td>{{$rubro['nameCDP']}} </td>
+                                    <td>{{$rubro['codigo']}} </td>
+                                    <td> {{$rubro['name']}}</td>
+                                    <td> {{$rubro['font']}}</td>
+                                    <td>${{number_format($rubro['value'])}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <table class="table table-bordered">
+                            <tbody>
+                            @foreach($bpins as $bpin)
+                                @if(isset($bpin->depRubroFont->fontRubro))
+                                    <tr class="text-center">
+                                        <td>Rubro: </td>
+                                        <td>{{$bpin->depRubroFont->fontRubro->rubro->cod}} - {{$bpin->depRubroFont->fontRubro->rubro->name}}</td>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <td>Fuente: </td>
+                                        <td>{{$bpin->depRubroFont->fontRubro->sourceFunding->code}} - {{$bpin->depRubroFont->fontRubro->sourceFunding->description}}</td>
+                                    </tr>
+                                @endif
+                                <tr class="text-center">
+                                    <td>Proyecto: </td>
+                                    <td>{{$bpin->actividad->cod_proyecto}} - {{$bpin->actividad->nombre_proyecto}}</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>Actividad: </td>
+                                    <td>{{$bpin->actividad->cod_actividad}} - {{$bpin->actividad->actividad}}</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>Valor CDP: </td>
+                                    <td style="vertical-align: middle">$ {{number_format($bpin->valor)}}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                @endif
+                <br>
                 <div class="table-responsive" id="prog">
                     @if($registro->cdpsRegistro->count() == 0 and $rol == 3)
                     @else

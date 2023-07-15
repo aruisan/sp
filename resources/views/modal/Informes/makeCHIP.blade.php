@@ -8,8 +8,8 @@
                 </div>
                 <div class="modal-body text-center" id="prog">
                     <div class="form-validation">
-                        <form class="form-valide" action="{{url('#')}}" method="POST" enctype="multipart/form-data" id="formulario">
-                        {{ csrf_field() }}
+                        <form class="form-valide" action="{{url('presupuesto/CHIP')}}" method="POST" enctype="multipart/form-data" id="formCHIP">
+                            {{ csrf_field() }}
                             <div class="col-md-12 align-self-center">
                                 <div class="form-group">
                                     <label class="col-lg-4 col-form-label text-right" for="year">Año: </label>
@@ -53,8 +53,11 @@
                             <div class="form-group row">
                                 <div class="col-lg-12 ml-auto text-center">
                                     <br><br>
-                                    <button type="submit" class="btn btn-primary">Generar CHIP</button>
+                                    <a onclick="formCHIPSubmit()" class="btn btn-primary">Generar CHIP</a>
                                 </div>
+                            </div>
+                            <div class="text-center" id="cargandoCHIP" style="display: none">
+                                <h4>Buscando informacion para generar el informe CHIP...</h4>
                             </div>
                         </form>
                     </div>
