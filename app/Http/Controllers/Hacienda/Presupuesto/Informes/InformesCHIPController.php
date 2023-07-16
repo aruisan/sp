@@ -1866,7 +1866,7 @@ class InformesCHIPController extends Controller
                 break;
         }
 
-        if ($request->categoria == 'ProgIng') {
+        if ($request->categoria == "ProgIng") {
             $presupuesto = $this->prepIngresos($inicio, $final);
             $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11206, '4' => $año, '5' => 'A_PROGRAMACION_DE_INGRESOS']);
             $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'Ppto Inicial', '4' => 'Ppto Final']);
@@ -1875,7 +1875,7 @@ class InformesCHIPController extends Controller
             }
 
             return $prep;
-        } elseif ($request->categoria == 'EjecIng') {
+        } elseif ($request->categoria == "EjecIng") {
             $presupuesto = $this->prepIngresos($inicio, $final);
             $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11212, '4' => $año, '5' => 'B_EJECUCION_DE_INGRESOS']);
             $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'CPC', '4' => 'Detalle Sectorial', '5' => 'Codigo Fuente',
@@ -1890,12 +1890,13 @@ class InformesCHIPController extends Controller
 
             return $prep;
 
-        }elseif ($request->categoria == 'ProgGasAdm'){
+        }elseif ($request->categoria == "ProgGasAdm"){
 
             $vigencia = Vigencia::where('vigencia', Carbon::now()->year)->where('tipo', 0)->where('estado', '0')->first();
             $presupuesto = new PrepEgresosTraits();
-            $presupuesto->prepEgresos($vigencia, $inicio, $final);
-            foreach ($presupuesto as $prep){
+            $result = $presupuesto->prepEgresos($vigencia, $inicio, $final);
+            dd($result);
+            foreach ($result as $prep){
 
                 dd($prep);
             }
