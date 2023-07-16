@@ -1895,7 +1895,10 @@ class InformesCHIPController extends Controller
             $vigencia = Vigencia::where('vigencia', Carbon::now()->year)->where('tipo', 0)->where('estado', '0')->first();
             $presupuesto = new PrepEgresosTraits();
             $presupuesto->prepEgresos($vigencia, $inicio, $final);
-            dd($presupuesto);
+            foreach ($presupuesto as $prep){
+
+                dd($prep);
+            }
 
             $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11212, '4' => $año, '5' => 'B_EJECUCION_DE_INGRESOS']);
             $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'CPC', '4' => 'Detalle Sectorial', '5' => 'Codigo Fuente',
