@@ -127,7 +127,7 @@
                                         <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPago['info']['id']) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
                                     @endif
                                     @if($ordenPago['info']['estado'] == "1")
-                                        <!--<a href="{{ url('administrativo/ordenPagos/'.$ordenPagoT['info']->id.'/edit') }}" title="Editar" class="btn-sm btn-success"><i class="fa fa-edit"></i></a> -->
+                                        <a href="{{ url('administrativo/ordenPagos/'.$ordenPagoT['info']->id.'/edit') }}" title="Editar" class="btn-sm btn-success"><i class="fa fa-edit"></i></a>
                                         <a href="{{ url('administrativo/ordenPagos/pdf/'.$ordenPago['info']['id']) }}" title="Orden de Pago" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
