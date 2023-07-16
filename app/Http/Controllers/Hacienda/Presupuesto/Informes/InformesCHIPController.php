@@ -1898,8 +1898,8 @@ class InformesCHIPController extends Controller
             $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11212, '4' => $año, '5' => 'C_PROGRAMACION_GASTOS_ADMINISTRACION_CENTRAL']);
             $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'Vigencia', '4' => 'Administracion Central', '5' => 'Programa MGA',
                 '6' => 'BPIN', '7' => 'Apropiacion Inicial', '8' => 'Apropiacion Definitiva']);
-            foreach ($result as $prep){
-                if ( $prep['dep'] != "" and $prep['dep'] != "ADMINISTRACION CENTRAL"){
+            foreach ($result as $data){
+                if ( $data['dep'] != "" and $data['dep'] != "ADMINISTRACION CENTRAL"){
                     $prep[] = collect(['1' => 'D', '2' => $data['code'], '3' => 1, '4' => 16, '5' => 0,
                         '6' => 0, '7' => $data['presupuesto_inicial'], 8 => $data['presupuesto_def']]);
 
