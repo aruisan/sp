@@ -354,6 +354,9 @@ class PagosController extends Controller
                     $pago->num = $request->num_cuenta;
                 }
 
+                //SE REGISTRA SI EL PAGO ES POR EMBARGO
+                if (isset($request->embargo) and $request->embargo == "1") $pago->embargo = '1';
+
                 $pago->estado = "1";
                 $pago->ff_fin = today()->format("Y-m-d");
                 //$pago->ff_fin = "2023-06-30";

@@ -1900,7 +1900,7 @@ class InformesCHIPController extends Controller
                 '5' => 'Programa MGA', '6' => 'BPIN', '7' => 'Apropiacion Inicial', '8' => 'Apropiacion Definitiva']);
             foreach ($result as $data){
                 if ( $data['dep'] != "" and $data['dep'] != "ADMINISTRACION CENTRAL"){
-                    $prep[] = collect(['1' => 'D', '2' => $data['cod'], '3' => 1, '4' => $data['codDep'].'-'.$data['dep'],
+                    $prep[] = collect(['1' => 'D', '2' => $data['cod'], '3' => 1, '4' => $data['codDep'].' - '.$data['dep'],
                         '5' => $data['codProgMGA'], '6' => $data['codBpin'], '7' => $data['presupuesto_inicial'],
                         '8' => $data['presupuesto_def']]);
                 }

@@ -168,6 +168,8 @@
                                         <th class="text-center">Dependencia</th>
                                     @endif
                                     <th class="text-center">Fuente</th>
+                                    <th class="text-center">Código Producto</th>
+                                    <th class="text-center">Código Indicador Producto</th>
                                 </thead>
                                 <tbody></tbody>
                             </table>
@@ -510,6 +512,8 @@
                         { title: "Cod Dependencia", data: "cod_dep"},
                         { title: "Dependencia", data: "name_dep"},
                         { title: "Fuente", data: "fuente"},
+                        { title: "Código Producto", data: "cod_producto"},
+                        { title: "Código Indicador Producto", data: "cod_indicador"},
                     ]
                 } );
             }).fail(function() {
