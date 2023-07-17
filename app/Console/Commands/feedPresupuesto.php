@@ -20,6 +20,7 @@ use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\Vigencia;
+use App\Traits\PrepEgresosTraits;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -80,7 +81,9 @@ class feedPresupuesto extends Command
                 $idSnap = $newSnap->id;
             }
 
-            $presupuesto = $this->prepEgresos($vigens);
+            //$presupuesto = $this->prepEgresos($vigens);
+            $prepTrait = new PrepEgresosTraits();
+            $presupuesto = $prepTrait->prepEgresos($vigens);
             foreach ($presupuesto as $data){
                 $newData = new PresupuestoSnapData();
                 $newData->pre_snap_id = $idSnap;
@@ -106,6 +109,8 @@ class feedPresupuesto extends Command
                 $newData->cod_dep = $data['codDep'];
                 $newData->name_dep = $data['dep'];
                 $newData->fuente = $data['fuente'];
+                $newData->cod_producto = $data['codProd'];
+                $newData->cod_indicador = $data['codIndProd'];
                 $newData->save();
             }
         }
