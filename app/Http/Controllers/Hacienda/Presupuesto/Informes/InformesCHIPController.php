@@ -1895,14 +1895,14 @@ class InformesCHIPController extends Controller
             $vigencia = Vigencia::where('vigencia', Carbon::now()->year)->where('tipo', 0)->where('estado', '0')->first();
             $presupuesto = new PrepEgresosTraits();
             $result = $presupuesto->prepEgresos($vigencia, $inicio, $final);
-            $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11212, '4' => $año, '5' => 'C_PROGRAMACION_GASTOS_ADMINISTRACION_CENTRAL']);
-            $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'Vigencia', '4' => 'Administracion Central', '5' => 'Programa MGA',
-                '6' => 'BPIN', '7' => 'Apropiacion Inicial', '8' => 'Apropiacion Definitiva']);
+            $prep[] = collect(['1' => 'S', '2' => 216488564, '3' => 11212, '4' => $año, '5' => 'C_PROGRAMACION_DE_GASTOS_ADMINISTRACION_CENTRAL']);
+            $prep[] = collect(['1' => 'Detalle', '2' => 'Rubro', '3' => 'Vigencia', '4' => 'Administracion Central',
+                '5' => 'Programa MGA', '6' => 'BPIN', '7' => 'Apropiacion Inicial', '8' => 'Apropiacion Definitiva']);
             foreach ($result as $data){
                 if ( $data['dep'] != "" and $data['dep'] != "ADMINISTRACION CENTRAL"){
-                    $prep[] = collect(['1' => 'D', '2' => $data['cod'], '3' => 1, '4' => $data['codDep'].'-'.$data['dep'], '5' => 0,
-                        '6' => $data['codBpin'], '7' => $data['presupuesto_inicial'], 8 => $data['presupuesto_def']]);
-
+                    $prep[] = collect(['1' => 'D', '2' => $data['cod'], '3' => 1, '4' => $data['codDep'].'-'.$data['dep'],
+                        '5' => $data['codProgMGA'], '6' => $data['codBpin'], '7' => $data['presupuesto_inicial'],
+                        '8' => $data['presupuesto_def']]);
                 }
             }
 
