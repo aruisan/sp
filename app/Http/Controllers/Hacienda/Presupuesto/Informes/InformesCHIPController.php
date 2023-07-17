@@ -1900,7 +1900,7 @@ class InformesCHIPController extends Controller
                 '6' => 'BPIN', '7' => 'Apropiacion Inicial', '8' => 'Apropiacion Definitiva']);
             foreach ($result as $data){
                 if ( $data['dep'] != "" and $data['dep'] != "ADMINISTRACION CENTRAL"){
-                    $prep[] = collect(['1' => 'D', '2' => $data['code'], '3' => 1, '4' => 16, '5' => 0,
+                    $prep[] = collect(['1' => 'D', '2' => $data['cod'], '3' => 1, '4' => 16, '5' => 0,
                         '6' => 0, '7' => $data['presupuesto_inicial'], 8 => $data['presupuesto_def']]);
 
                 }
