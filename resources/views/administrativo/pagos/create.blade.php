@@ -200,7 +200,7 @@
             var Id = document.getElementById(col);
             var Obj = document.getElementById(Obj);
             var Name = document.getElementById(Name);
-            var Val = document.getElementById(Desc);
+            var Val = document.getElementById(Val);
             var ValTo = document.getElementById(ValTo);
             var Iva = document.getElementById(Iva);
             var Desc = document.getElementById(Desc);
