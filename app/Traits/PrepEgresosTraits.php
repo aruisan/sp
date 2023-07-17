@@ -173,7 +173,7 @@ Class PrepEgresosTraits
                         'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos),
                         'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago), 'rubros_disp' => 0, 'codBpin' => '',
                         'codActiv' => '', 'nameActiv' => '','codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '',
-                        'codProd' => '', 'codIndProd' => ''];
+                        'codProd' => '', 'codIndProd' => '', 'codProgMGA' => ''];
 
                     unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
                     unset($valueOrdenPago);unset($valuePagos);
@@ -331,7 +331,8 @@ Class PrepEgresosTraits
                             'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos),
                             'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
                             'rubros_disp' => 0, 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '','codDep' => '',
-                            'dep' => '', 'depRubID' => '', 'fuente' => '', 'codProd' => '', 'codIndProd' => ''];
+                            'dep' => '', 'depRubID' => '', 'fuente' => '', 'codProd' => '', 'codIndProd' => '',
+                            'codProgMGA' => ''];
                     }
 
 
@@ -685,7 +686,7 @@ Class PrepEgresosTraits
                                 'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
                                 'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
                                 'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '', 'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '',
-                                'codProd' => '', 'codIndProd' => ''];
+                                'codProd' => '', 'codIndProd' => '', 'codProgMGA' => ''];
                         }
 
                         unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
@@ -780,6 +781,7 @@ Class PrepEgresosTraits
                                     $nameActiv = $bpinVigen->first()->bpin->actividad;
                                     $codProd = $bpinVigen->first()->bpin->cod_producto;
                                     $codIndProd = $bpinVigen->first()->bpin->cod_indicador;
+                                    $codProgMGA = $bpinVigen->first()->bpin->cod_sector;
 
                                     if (isset($rubrosCC)){
                                         foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
@@ -895,6 +897,7 @@ Class PrepEgresosTraits
                                     $nameActiv = "";
                                     $codProd = "";
                                     $codIndProd = "";
+                                    $codProgMGA = "";
 
                                     if (isset($rubrosCC)){
                                         foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
@@ -1035,7 +1038,7 @@ Class PrepEgresosTraits
                                         'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
                                         'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $rubro->first()->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
                                         'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
-                                        'codProd' => $codProd, 'codIndProd' => $codIndProd];
+                                        'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
 
                                 } elseif(array_sum($valueRubrosCCred) == array_sum($value)){
                                     $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
@@ -1047,7 +1050,7 @@ Class PrepEgresosTraits
                                         'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
                                         'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $rubro->first()->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
                                         'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
-                                        'codProd' => $codProd, 'codIndProd' => $codIndProd];
+                                        'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
 
                                 } elseif(array_sum($valueRubrosCCred) == array_sum($valueRubrosAdd)){
                                     $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
@@ -1059,7 +1062,7 @@ Class PrepEgresosTraits
                                         'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
                                         'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $rubro->first()->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
                                         'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
-                                        'codProd' => $codProd, 'codIndProd' => $codIndProd];
+                                        'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
                                 }
 
                                 unset($value);unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
@@ -1072,7 +1075,8 @@ Class PrepEgresosTraits
                     $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro->first()->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => 0,
                         'adicion' => 0, 'reduccion' => 0, 'credito' => 0, 'ccredito' => 0, 'presupuesto_def' => 0, 'cdps' => 0, 'registros' => 0,
                         'saldo_disp' => 0, 'ordenes_pago' => 0, 'pagos' => 0, 'cuentas_pagar' => 0, 'reservas' => 0, 'rubros_disp' => 0, 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '',
-                        'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '', 'codProd' => '', 'codIndProd' => ''];
+                        'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '', 'codProd' => '', 'codIndProd' => '',
+                        'codProgMGA' => ''];
                 }
             } elseif (count($rubro) == 0){
                 if ($data->id == 465 or $data->id == 514 or $data->id == 527 or $data->id == 543 or $data->id == 551 or
@@ -1380,7 +1384,7 @@ Class PrepEgresosTraits
                     'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
                     'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
                     'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '', 'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '',
-                    'codProd' => '', 'codIndProd' => ''];
+                    'codProd' => '', 'codIndProd' => '', 'codProgMGA' => ''];
             }  elseif(array_sum($valueRubrosCCred) == array_sum($valueRubros)){
                 $presupuesto = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code, 'name' => $data->name, 'presupuesto_inicial' => array_sum($valueRubros),
                     'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
@@ -1388,7 +1392,7 @@ Class PrepEgresosTraits
                     'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
                     'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
                     'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '', 'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '',
-                    'codProd' => '', 'codIndProd' => ''];
+                    'codProd' => '', 'codIndProd' => '', 'codProgMGA' => ''];
             }
 
             unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
