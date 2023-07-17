@@ -28,6 +28,7 @@
                     <table class="table table-bordered" id="tabla_CDP">
                         <thead>
                         <tr>
+                            <th class="text-center">#</th>
                             <th class="text-center">Fecha Impuesto</th>
                             <th class="text-center">Registro de ingreso No.</th>
                             <th class="text-center">Nombre Embarcación</th>
@@ -50,6 +51,7 @@
                         <tbody>
                         @foreach($atraquesPend as $index => $atraque)
                             <tr>
+                                <td class="text-center">{{ $atraque->id }}</td>
                                 <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fecha)->format('d-m-Y') }}</td>
                                 <td class="text-center">{{ $atraque->numRegistroIngreso }}</td>
                                 <td class="text-center">{{ $atraque->name }}</td>
