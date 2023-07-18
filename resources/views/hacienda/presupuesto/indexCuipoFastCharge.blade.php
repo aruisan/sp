@@ -162,6 +162,9 @@
                                     @if(auth()->user()->roles->first()->id != 2)
                                         <th class="text-center">Cod Dependencia</th>
                                         <th class="text-center">Dependencia</th>
+                                    @else
+                                        <th class="text-center">Cod Dependencia</th>
+                                        <th class="text-center">Dependencia</th>
                                     @endif
                                     <th class="text-center">Fuente</th>
                                     <th class="text-center">Código Producto</th>
@@ -300,6 +303,7 @@
 
     <!-- tabla de proyectos -->
     <script>
+        var rol = @json(auth()->user()->roles->first()->id)
 
         const vigencia_id = @json($V);
         const prepSaved = @json($prepSaved);
@@ -428,91 +432,180 @@
                 $("#infoPrep").show();
                 $("#cargando").hide();
                 $("#noFind").hide();
-                table = $('#tabla').DataTable( {
-                    language: {
-                        "lengthMenu": "Mostrar _MENU_ registros",
-                        "zeroRecords": "No se encontraron resultados",
-                        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-                        "sSearch": "Buscar:",
-                        "oPaginate": {
-                            "sFirst": "Primero",
-                            "sLast":"Último",
-                            "sNext":"Siguiente",
-                            "sPrevious": "Anterior"
+                if(rol != 2){
+                    table = $('#tabla').DataTable( {
+                        language: {
+                            "lengthMenu": "Mostrar _MENU_ registros",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                            "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "sSearch": "Buscar:",
+                            "oPaginate": {
+                                "sFirst": "Primero",
+                                "sLast":"Último",
+                                "sNext":"Siguiente",
+                                "sPrevious": "Anterior"
+                            },
+                            "sProcessing":"Procesando...",
                         },
-                        "sProcessing":"Procesando...",
-                    },
-                    "pageLength": 15,
-                    responsive: true,
-                    "searching": true,
-                    ordering: false,
-                    "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
-                    dom: 'Bfrtip',
-                    buttons:[
-                        {
-                            extend:    'copyHtml5',
-                            text:      '<i class="fa fa-clone"></i> ',
-                            titleAttr: 'Copiar',
-                            className: 'btn btn-primary'
+                        "pageLength": 15,
+                        responsive: true,
+                        "searching": true,
+                        ordering: false,
+                        "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
+                        dom: 'Bfrtip',
+                        buttons:[
+                            {
+                                extend:    'copyHtml5',
+                                text:      '<i class="fa fa-clone"></i> ',
+                                titleAttr: 'Copiar',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend:    'excelHtml5',
+                                text:      '<i class="fa fa-file-excel-o"></i> ',
+                                titleAttr: 'Exportar a Excel',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend:    'pdfHtml5',
+                                text:      '<i class="fa fa-file-pdf-o"></i> ',
+                                titleAttr: 'Exportar a PDF',
+                                message : 'SIEX-Providencia',
+                                header :true,
+                                orientation : 'landscape',
+                                pageSize: 'LEGAL',
+                                className: 'btn btn-primary',
+                            },
+                            {
+                                extend:    'print',
+                                text:      '<i class="fa fa-print"></i> ',
+                                titleAttr: 'Imprimir',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                text: '<i class="fa fa-refresh"  onclick="refreshPrep()"></i>',
+                                titleAttr: 'Actualizar Presupuesto',
+                                className: 'btn btn-primary'
+                            },
+                        ],
+                        data: datos,
+                        columns: [
+                            { title: "Codigo BPIN", data: "code_bpin"},
+                            { title: "Codigo Actividad", data: "code_act"},
+                            { title: "Nombre Actividad", data: "name_act"},
+                            { title: "Rubro", data: "rubroLink"},
+                            { title: "Nombre", data: "nombre"},
+                            { title: "P. Inicial", data: "p_inicial"},
+                            { title: "Adición", data: "adicion"},
+                            { title: "Reducción", data: "reduccion"},
+                            { title: "Credito", data: "credito"},
+                            { title: "CCredito", data: "ccredito"},
+                            { title: "P.Definitivo", data: "p_def"},
+                            { title: "CDP's", data: "cdps"},
+                            { title: "Registros", data: "rps"},
+                            { title: "Saldo Disponible", data: "saldo_disp"},
+                            { title: "Saldo de CDP", data: "saldo_cdps"},
+                            { title: "Ordenes de Pago", data: "ops"},
+                            { title: "Pagos", data: "pagos"},
+                            { title: "Cuentas Por Pagar", data: "cuentas_pagar"},
+                            { title: "Reservas", data: "reservas"},
+                            { title: "Cod Dependencia", data: "cod_dep"},
+                            { title: "Dependencia", data: "name_dep"},
+                            { title: "Fuente", data: "fuente"},
+                            { title: "Código Producto", data: "cod_producto"},
+                            { title: "Código Indicador Producto", data: "cod_indicador"},
+                        ]
+                    } );
+                } else {
+                    table = $('#tabla').DataTable( {
+                        language: {
+                            "lengthMenu": "Mostrar _MENU_ registros",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                            "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "sSearch": "Buscar:",
+                            "oPaginate": {
+                                "sFirst": "Primero",
+                                "sLast":"Último",
+                                "sNext":"Siguiente",
+                                "sPrevious": "Anterior"
+                            },
+                            "sProcessing":"Procesando...",
                         },
-                        {
-                            extend:    'excelHtml5',
-                            text:      '<i class="fa fa-file-excel-o"></i> ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            extend:    'pdfHtml5',
-                            text:      '<i class="fa fa-file-pdf-o"></i> ',
-                            titleAttr: 'Exportar a PDF',
-                            message : 'SIEX-Providencia',
-                            header :true,
-                            orientation : 'landscape',
-                            pageSize: 'LEGAL',
-                            className: 'btn btn-primary',
-                        },
-                        {
-                            extend:    'print',
-                            text:      '<i class="fa fa-print"></i> ',
-                            titleAttr: 'Imprimir',
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            text: '<i class="fa fa-refresh"  onclick="refreshPrep()"></i>',
-                            titleAttr: 'Actualizar Presupuesto',
-                            className: 'btn btn-primary'
-                        },
-                    ],
-                    data: datos,
-                    columns: [
-                        { title: "Codigo BPIN", data: "code_bpin"},
-                        { title: "Codigo Actividad", data: "code_act"},
-                        { title: "Nombre Actividad", data: "name_act"},
-                        { title: "Rubro", data: "rubroLink"},
-                        { title: "Nombre", data: "nombre"},
-                        { title: "P. Inicial", data: "p_inicial"},
-                        { title: "Adición", data: "adicion"},
-                        { title: "Reducción", data: "reduccion"},
-                        { title: "Credito", data: "credito"},
-                        { title: "CCredito", data: "ccredito"},
-                        { title: "P.Definitivo", data: "p_def"},
-                        { title: "CDP's", data: "cdps"},
-                        { title: "Registros", data: "rps"},
-                        { title: "Saldo Disponible", data: "saldo_disp"},
-                        { title: "Saldo de CDP", data: "saldo_cdps"},
-                        { title: "Ordenes de Pago", data: "ops"},
-                        { title: "Pagos", data: "pagos"},
-                        { title: "Cuentas Por Pagar", data: "cuentas_pagar"},
-                        { title: "Reservas", data: "reservas"},
-                        { title: "Cod Dependencia", data: "cod_dep"},
-                        { title: "Dependencia", data: "name_dep"},
-                        { title: "Fuente", data: "fuente"},
-                        { title: "Código Producto", data: "cod_producto"},
-                        { title: "Código Indicador Producto", data: "cod_indicador"},
-                    ]
-                } );
+                        "pageLength": 15,
+                        responsive: true,
+                        "searching": true,
+                        ordering: false,
+                        "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
+                        dom: 'Bfrtip',
+                        buttons:[
+                            {
+                                extend:    'copyHtml5',
+                                text:      '<i class="fa fa-clone"></i> ',
+                                titleAttr: 'Copiar',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend:    'excelHtml5',
+                                text:      '<i class="fa fa-file-excel-o"></i> ',
+                                titleAttr: 'Exportar a Excel',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend:    'pdfHtml5',
+                                text:      '<i class="fa fa-file-pdf-o"></i> ',
+                                titleAttr: 'Exportar a PDF',
+                                message : 'SIEX-Providencia',
+                                header :true,
+                                orientation : 'landscape',
+                                pageSize: 'LEGAL',
+                                className: 'btn btn-primary',
+                            },
+                            {
+                                extend:    'print',
+                                text:      '<i class="fa fa-print"></i> ',
+                                titleAttr: 'Imprimir',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                text: '<i class="fa fa-refresh"  onclick="refreshPrep()"></i>',
+                                titleAttr: 'Actualizar Presupuesto',
+                                className: 'btn btn-primary'
+                            },
+                        ],
+                        data: datos,
+                        columns: [
+                            { title: "Codigo BPIN", data: "code_bpin"},
+                            { title: "Codigo Actividad", data: "code_act"},
+                            { title: "Nombre Actividad", data: "name_act"},
+                            { title: "Rubro", data: "rubroLink"},
+                            { title: "Nombre", data: "nombre"},
+                            { title: "P. Inicial", data: "p_inicial"},
+                            { title: "Adición", data: "adicion"},
+                            { title: "Reducción", data: "reduccion"},
+                            { title: "Credito", data: "credito"},
+                            { title: "CCredito", data: "ccredito"},
+                            { title: "P.Definitivo", data: "p_def"},
+                            { title: "CDP's", data: "cdps"},
+                            { title: "Registros", data: "rps"},
+                            { title: "Saldo Disponible", data: "saldo_disp"},
+                            { title: "Saldo de CDP", data: "saldo_cdps"},
+                            { title: "Ordenes de Pago", data: "ops"},
+                            { title: "Pagos", data: "pagos"},
+                            { title: "Cuentas Por Pagar", data: "cuentas_pagar"},
+                            { title: "Reservas", data: "reservas"},
+                            { title: "Cod Dependencia", data: "cod_dep"},
+                            { title: "Dependencia", data: "name_dep"},
+                            { title: "Fuente", data: "fuente"},
+                            { title: "Código Producto", data: "cod_producto"},
+                            { title: "Código Indicador Producto", data: "cod_indicador"},
+                        ]
+                    } );
+                }
+
             }).fail(function() {
                 $("#tabla").hide();
                 table.destroy();
