@@ -142,7 +142,11 @@ class RegistrosController extends Controller
         $cdps = Cdp::where('jefe_e','3')->where('saldo','>','0')->where('vigencia_id',$id)->orderBy('id','DESC')->get();
         $registros = Registro::all();
         $registrocount = 0;
-        foreach ($registros as $registro) if ($registro->cdpsRegistro[0]->cdp->vigencia_id == $id) $registrocount = $registrocount +1;
+        foreach ($registros as $registro) {
+            if (isset($registro->cdpsRegistro[0]->cdp)){
+                if ($registro->cdpsRegistro[0]->cdp->vigencia_id == $id) $registrocount = $registrocount +1;
+            }
+        }
         if(count($cdps) > 0) {
             return view('administrativo.registros.create', compact('rol','personas','cdps', 'id','registrocount'));
         } else {
