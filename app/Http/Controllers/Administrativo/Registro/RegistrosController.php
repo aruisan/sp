@@ -63,7 +63,7 @@ class RegistrosController extends Controller
             }
             $regP = Registro::where('secretaria_e', '3')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
             foreach ($regP as $dataP) {
-                if (isset($dataT->cdpsRegistro[0]->cdp)){
+                if (isset($dataP->cdpsRegistro[0]->cdp)){
                     if ($dataP->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
                         $registrosProcess[] = collect(['id' => $dataP->id, 'code' => $dataP->code, 'objeto' => $dataP->objeto, 'nombre' => $dataP->persona->nombre, 'valor' => $dataP->val_total, 'saldo' => $dataP->saldo, 'secretaria_e' => $dataP->secretaria_e,
                             'ff_secretaria_e' => $dataP->ff_secretaria_e, 'jefe_e' => $dataP->jefe_e, 'ff_jefe_e' => $dataP->ff_jefe_e,
@@ -86,7 +86,7 @@ class RegistrosController extends Controller
             }
             $regP = Registro::where('secretaria_e', '3')->where('jefe_e','0')->orderBy('id', 'DESC')->get();
             foreach ($regP as $dataP) {
-                if (isset($dataT->cdpsRegistro[0]->cdp)){
+                if (isset($dataP->cdpsRegistro[0]->cdp)){
                     if ($dataP->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
                         $registrosProcess[] = collect(['id' => $dataP->id, 'code' => $dataP->code, 'objeto' => $dataP->objeto, 'nombre' => $dataP->persona->nombre, 'valor' => $dataP->val_total, 'saldo' => $dataP->saldo, 'secretaria_e' => $dataP->secretaria_e,
                             'ff_secretaria_e' => $dataP->ff_secretaria_e, 'jefe_e' => $dataP->jefe_e, 'ff_jefe_e' => $dataP->ff_jefe_e,
@@ -102,7 +102,7 @@ class RegistrosController extends Controller
         })->orderBy('id', 'DESC')->get();
 
         foreach ($regH as $data) {
-            if (isset($dataT->cdpsRegistro[0]->cdp)){
+            if (isset($data->cdpsRegistro[0]->cdp)){
                 if ($data->cdpsRegistro[0]->cdp->vigencia_id == $vigencia) {
                     $fecha = Carbon::parse($data->created_at)->format('d-m-Y');
                     $registrosHistorico[] = collect(['id' => $data->id, 'fecha' => $fecha,'code' => $data->code, 'objeto' => $data->objeto, 'nombre' => $data->persona->nombre, 'valor' => $data->val_total, 'saldo' => $data->saldo, 'secretaria_e' => $data->secretaria_e,
