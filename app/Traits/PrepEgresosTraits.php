@@ -1,29 +1,26 @@
 <?php
 namespace App\Traits;
-use App\BPin;
-use App\bpinVigencias;
-use App\Model\Admin\DependenciaRubroFont;
-use App\Model\Administrativo\Cdp\BpinCdpValor;
-use App\Model\Administrativo\Cdp\Cdp;
-use App\Model\Administrativo\Cdp\RubrosCdpValor;
-use App\Model\Administrativo\OrdenPago\OrdenPagos;
-use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
-use App\Model\Administrativo\Pago\Pagos;
-use App\Model\Administrativo\Registro\CdpsRegistroValor;
-use App\Model\Administrativo\Registro\Registro;
-use App\Model\Hacienda\Presupuesto\FontsRubro;
-use App\Model\Hacienda\Presupuesto\PlantillaCuipoEgresos;
-use App\Model\Hacienda\Presupuesto\ResourcesMov;
-use App\Model\Hacienda\Presupuesto\Rubro;
-use App\Model\Hacienda\Presupuesto\RubrosMov;
-use App\Resource;
-use Illuminate\Support\Facades\DB;
 
-//App\Traits\ResourceTraits
+use App\Model\Hacienda\Presupuesto\PlantillaCuipoEgresos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
+use App\Model\Administrativo\Registro\CdpsRegistroValor;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\Cdp\RubrosCdpValor;
+use App\Model\Administrativo\Registro\Registro;
+use App\Model\Administrativo\Cdp\BpinCdpValor;
+use App\Model\Hacienda\Presupuesto\FontsRubro;
+use App\Model\Hacienda\Presupuesto\RubrosMov;
+use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Hacienda\Presupuesto\Rubro;
+use App\Model\Administrativo\Pago\Pagos;
+use App\Model\Administrativo\Cdp\Cdp;
+use Illuminate\Support\Facades\DB;
+use App\bpinVigencias;
+use App\BPin;
 
 Class PrepEgresosTraits
 {
-    public function prepEgresos($vigencia ,$inicio = null, $final = null){
+    public function prepEgresos($vigencia, $inicio = null, $final = null){
         $V = $vigencia->id;
         $vigencia_id = $V;
 
@@ -36,7 +33,6 @@ Class PrepEgresosTraits
         //LLENADO DEL PRESUPUESTO
         foreach ($plantilla as $data) {
             $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
-            //if ($data->id == 750) dd($data, end($presupuesto), $rubro);
             //PRIMER RUBRO
             if ($data->id < '324') {
                 //RUBROS INICIALES
@@ -241,13 +237,6 @@ Class PrepEgresosTraits
                                 $valueRubrosCCred[] = 0;
                             }
 
-                            //VALORES CONTRA CREDITO
-                            if (isset($rubrosCC)) {
-                                //dd($rubrosCC);
-
-                                //foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
-                            }
-
                             //CDPS
                             foreach ($rubroOtherFind->first()->fontsRubro as $fuenteRubro){
                                 $rubCdpValue = RubrosCdpValor::where('fontsRubro_id', $fuenteRubro->id)->get();
@@ -324,7 +313,8 @@ Class PrepEgresosTraits
                             'name' => $data->name, 'presupuesto_inicial' => array_sum($valueRubros),
                             'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed),
                             'credito' => array_sum($valueRubrosCred), 'ccredito' => array_sum($valueRubrosCCred),
-                            'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                            'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs),
+                            'registros' => array_sum($valueRegistros),
                             'saldo_disp' => $PDef - array_sum($valueCDPs),
                             'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros),
                             'ordenes_pago' => array_sum($valueOrdenPago), 'pagos' => array_sum($valuePagos),
@@ -390,14 +380,7 @@ Class PrepEgresosTraits
 
             } elseif (count($rubro) > 0) {
 
-                //LLENADO PARA LAS FUENTES DEL PRESUPUESTO
-                //foreach ($rubro->first()->fontsRubro as $fuente){
-                //$sourceFund = SourceFunding::findOrFail($fuente->source_fundings_id);
-                //$fonts[] = ['id' => $rubro[0]->cod ,'idFont' => $sourceFund->id, 'code' => $sourceFund->code, 'description' => $sourceFund->description, 'value' => $fuente->valor ];
-                //}
-
                 $key = array_search($oldId, array_column($presupuesto, 'id'));
-                //if ($data->id == 1074) dd($data, end($presupuesto), $rubro->first()->fontsRubro, $key, $oldId);
 
                 if ($key == false) {
                     //VALIDACION DE LOS PADRES DE LOS PADRES
@@ -612,12 +595,6 @@ Class PrepEgresosTraits
                             } else $valueRubros[] = 0;$valueCDPs[] = 0;$valueRegistros[] = 0;$valueOrdenPago[] = 0; $valuePagos[] = 0; $valueRubrosDisp[] = 0;
                         }
 
-
-                        //VALORES CONTRA CREDITO
-                        if (isset($rubrosCC)){
-                            //dd($rubrosCC);
-                            //foreach ($rubrosCC as $cc) if ($cc['id'] == $other->id) $valueRubrosCCred[] = $cc['value'];
-                        }
 
                         if (!isset($valueRubrosAdd)) {
                             $valueRubrosAdd[] = null;

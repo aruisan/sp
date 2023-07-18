@@ -2,28 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\BPin;
-use App\bpinVigencias;
-use App\Model\Admin\DependenciaRubroFont;
-use App\Model\Administrativo\Cdp\BpinCdpValor;
-use App\Model\Administrativo\Cdp\Cdp;
-use App\Model\Administrativo\Cdp\RubrosCdpValor;
-use App\Model\Administrativo\OrdenPago\OrdenPagos;
-use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
-use App\Model\Administrativo\Pago\Pagos;
-use App\Model\Administrativo\Registro\CdpsRegistroValor;
-use App\Model\Administrativo\Registro\Registro;
-use App\Model\Hacienda\Presupuesto\FontsRubro;
-use App\Model\Hacienda\Presupuesto\PlantillaCuipoEgresos;
-use App\Model\Hacienda\Presupuesto\Rubro;
-use App\Model\Hacienda\Presupuesto\RubrosMov;
-use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
+use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Traits\PrepEgresosTraits;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class feedPresupuesto extends Command
 {
