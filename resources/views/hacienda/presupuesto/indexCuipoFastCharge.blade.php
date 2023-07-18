@@ -136,11 +136,7 @@
                                     actualice la pagina para visualizar el estado actual del presupuesto.</h4>
                             </div>
                             <div class="text-center" id="infoPrep" style="display: none">
-                                <h4>Fecha del Presupuesto: {{ $fechaData }}</h4>
-                                <h4>
-                                    Para actualizar el presupuesto de clic en el siguiente botón.
-                                    <a onclick="refreshPrep()" title="Actualizar Presupuesto" class="btn-sm btn-primary"><i class="fa fa-refresh"></i></a>
-                                </h4>
+                                <h4>{{ $fechaData }}</h4>
                             </div>
                             <table id="tabla" class="table table-hover table-bordered table-striped " style="display: none">
                                 <thead>
@@ -168,6 +164,8 @@
                                         <th class="text-center">Dependencia</th>
                                     @endif
                                     <th class="text-center">Fuente</th>
+                                    <th class="text-center">Código Producto</th>
+                                    <th class="text-center">Código Indicador Producto</th>
                                 </thead>
                                 <tbody></tbody>
                             </table>
@@ -372,6 +370,7 @@
             }).done(function(datos) {
                 console.log(datos);
                 if (categoria == 'ProgIng') JSONToCSVConvertor(datos, 'Programacion_Ingresos_'+mes+'/'+añoActual);
+                if (categoria == 'EjecIng') JSONToCSVConvertor(datos, 'Ejecucion_Ingresos_'+mes+'/'+añoActual);
                 else toastr.warning('SE RECIBIO LA SOLITUD PERO ESTAMOS TRABAJANDO EN HABILITAR ESE INFORME CHIP.');
                 $("#cargandoCHIP").hide();
             }).fail(function() {
@@ -491,7 +490,7 @@
                         { title: "Codigo BPIN", data: "code_bpin"},
                         { title: "Codigo Actividad", data: "code_act"},
                         { title: "Nombre Actividad", data: "name_act"},
-                        { title: "Rubro", data: "rubro"},
+                        { title: "Rubro", data: "rubroLink"},
                         { title: "Nombre", data: "nombre"},
                         { title: "P. Inicial", data: "p_inicial"},
                         { title: "Adición", data: "adicion"},
@@ -510,6 +509,8 @@
                         { title: "Cod Dependencia", data: "cod_dep"},
                         { title: "Dependencia", data: "name_dep"},
                         { title: "Fuente", data: "fuente"},
+                        { title: "Código Producto", data: "cod_producto"},
+                        { title: "Código Indicador Producto", data: "cod_indicador"},
                     ]
                 } );
             }).fail(function() {

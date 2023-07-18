@@ -1047,6 +1047,11 @@ class IndexController extends Controller
 
         $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->get();
         foreach ($prepSaved as $item){
+
+            $rubro = Rubro::where('vigencia_id', $request->prepSaved['vigencia_id'])->where('cod', $item->rubro)->first();
+            if ($rubro) $item->rubroLink = '<a href="presupuesto/rubro/'.$rubro->id.'">'.$item->rubro.'</a>';
+            else $item->rubroLink = $item->rubro;
+
             $item->p_inicial = '$'.number_format($item->p_inicial, 0);
             $item->adicion = '$'.number_format($item->adicion, 0);
             $item->reduccion = '$'.number_format($item->reduccion, 0);

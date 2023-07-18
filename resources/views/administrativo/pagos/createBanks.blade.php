@@ -57,7 +57,9 @@
                                 <th class="text-center">%</th>
                                 <th class="text-center">Valor</th>
                                 </thead>
+                                @php($embargo = false)
                                 @foreach($pago->orden_pago->descuentos as $descuento)
+                                    @if($descuento->cuenta_puc_id == 655) @php($embargo = true) @endif
                                     <tr>
                                         @if($descuento->desc_municipal_id != null)
                                             <td>{{ $descuento->descuento_mun['codigo'] }}</td>
@@ -95,18 +97,37 @@
                     <input type="hidden" name="ordenPago_id" value="{{ $pago->orden_pago->id }}">
                     <input type="hidden" name="pago_id" value="{{ $pago->id }}">
 
-                    <div>
-                        <label>Adulto Mayor: </label>
-                        <div class="input-group text-center">
-                            <select class="select-tercero" name="adultoMayor">
-                                <option value="0">NO APLICA</option>
-                                @foreach($personas as $persona)
-                                    <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
-                                @endforeach
-                            </select>
+                    <div class="col-md-12 align-self-center">
+                        <div class="row justify-content-center">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <label>Seleccione Adulto Mayor si corresponde: </label>
+                                    <div class="input-group text-center">
+                                        <select class="select-tercero" name="adultoMayor">
+                                            <option value="0">NO APLICA</option>
+                                            @foreach($personas as $persona)
+                                                <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    @if($embargo)
+                                        <div>
+                                            <label>PAGO DE EMBARGO: </label>
+                                            <select class="form-control text-center" name="embargo">
+                                                <option value="0">NO APLICA</option>
+                                                <option value="1">SI</option>
+                                            </select>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
+                        <br>
                     </div>
-                    <br><br>
+                    <hr>
+                    <br>
                     <div class="col-md-4 align-self-center">
                         <div class="form-group">
                             <select class="form-control" id="form_pay" name="type_pay" onchange="var date= document.getElementById('fecha'); var cheque = document.getElementById('cheque'); var tarjeta = document.getElementById('tarjeta'); var bank = document.getElementById('table_bank'); if(this.value=='1'){ fecha.style.display='inline'; cheque.style.display='inline'; bank.style.display='inline'; tarjeta.style.display='none';}else if(this.value=='2'){ fecha.style.display='inline'; cheque.style.display='none'; bank.style.display='inline'; tarjeta.style.display='inline';}else{fecha.style.display='none'; bank.style.display='none'; cheque.style.display='none'; tarjeta.style.display='none'; }">
