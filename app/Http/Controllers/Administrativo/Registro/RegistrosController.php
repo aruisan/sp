@@ -176,8 +176,10 @@ class RegistrosController extends Controller
         $allRegistros = Registro::orderBy('code','ASC')->get();
         $cdpFind = Cdp::find($request->cdp_id[0]);
         foreach ($allRegistros as $data){
-            if ($cdpFind->vigencia_id == $data->cdpsRegistro[0]->cdp->vigencia_id){
-                $RPs[] = collect(['info' => $data]);
+            if (isset($data->cdpsRegistro[0]->cdp)){
+                if ($cdpFind->vigencia_id == $data->cdpsRegistro[0]->cdp->vigencia_id){
+                    $RPs[] = collect(['info' => $data]);
+                }
             }
         }
         if (isset($RPs)){
