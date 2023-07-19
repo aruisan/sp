@@ -27,8 +27,8 @@
                 </div>
                 <div class="col-md-4 text-center">
                     <b>Monto a Pagar:
-                        <input type="hidden" id="montoPago" value="{{ array_sum($totDeb)}}">
-                        <span id="montoPagoSpan">$<?php echo number_format( array_sum($totDeb),0) ?></span></b>
+                        <input type="hidden" id="montoPago" value="{{ $pago->orden_pago->saldo }}">
+                        <span id="montoPagoSpan">$<?php echo number_format( $pago->orden_pago->saldo,0) ?></span></b>
                 </div>
                 <div class="col-md-4 text-center">
                     @if(isset($pago->orden_pago->registros))
