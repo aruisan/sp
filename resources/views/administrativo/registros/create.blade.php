@@ -109,7 +109,8 @@
                         <label>Tipo de Documento: </label>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-file-o" aria-hidden="true"></i></span>
-                            <select name="tipo_doc" class="form-control" onchange="var obj= document.getElementById('tipo_doc_text');if(this.value=='Otro'){obj.style.display='inline'; }else{obj.style.display='none';};">
+                            <select name="tipo_doc" class="form-control" onchange="changeTipoDoc(this.value)">
+                                <option>Seleccione una opción</option>
                                 <option value="Contrato">Contrato</option>
                                 <option value="Factura">Factura</option>
                                 <option value="Resolución">Resolución</option>
@@ -159,10 +160,69 @@
                     </div>
                 </div>
 
+                <div id="infoContrato" style="display: none">
+                    <hr>
+                    <center>
+                        <h3>Información del Contrato</h3>
+                    </center>
+                    <hr>
+                    <div class="row">
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Tipo de Contrato </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                <select name="tipo_contrato" class="form-control">
+                                    <option value="3">3 - DE OBRA PUBLICA</option>
+                                    <option value="4">4 - DE CONSULTORIA</option>
+                                    <option value="5">5 - DE INTERVENTORIA</option>
+                                    <option value="6">6 - DE SUMINISTRO</option>
+                                    <option value="10">10 - DE PRESTACION DE SERVICIOS</option>
+                                    <option value="11">11 - DE ENCARGO FIDUCIARIO Y FIDUCIA PUBLICA</option>
+                                    <option value="12">12 - ALQUILER O ARRENDAMIENTO</option>
+                                    <option value="13">13 - DE CONCESION</option>
+                                    <option value="20">20 - DEUDA PUBLICA</option>
+                                    <option value="21">21 - CONVENIO INTERADMINISTRATIVO</option>
+                                    <option value="22">22 - OTROS NO ESPECIFICADOS ANTERIORMENTE</option>
+                                </select>
+                            </div>
+                            <small class="form-text text-muted"> Seleccione el tipo de contrato.</small>
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Modalidad de Seleccion </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                <select name="mod_seleccion" class="form-control">
+                                    <option value="0">NO APLICA</option>
+                                    <option value="1">1 - LICITACION PUBLICA</option>
+                                    <option value="2">2 - CONCURSO DE MERITOS</option>
+                                    <option value="3">3 - SELECCION ABREVIADA</option>
+                                    <option value="4">4 - CONTRATACION DIRECTA</option>
+                                    <option value="8">8 - CUANTIA MINIMA</option>
+                                </select>
+                            </div>
+                            <small class="form-text text-muted"> Seleccione la modalidad de selección.</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Estado de Ejecución </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                <select name="estado_ejec" class="form-control">
+                                    <option value="0">NO APLICA</option>
+                                    <option value="1">1 - EJECUCION</option>
+                                    <option value="2">2 - LIQUIDADO</option>
+                                    <option value="3">3 - SUSPENDIDO</option>
+                                </select>
+                            </div>
+                            <small class="form-text text-muted"> Seleccione el estado de ejecución.</small>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                     <center>
                         <button type="submit" class="btn btn-primary btn-raised btn-lg" id="storeRegistro">Guardar</button>
-
                     </center>
                 </div>
                 {!! Form::close() !!}
@@ -198,6 +258,23 @@
     <script>
 
         $('.select-tercero').select2();
+
+        function changeTipoDoc(value){
+            var obj= document.getElementById('tipo_doc_text');
+            var contratosView= document.getElementById('infoContrato');
+
+            if(value=='Otro'){
+                obj.style.display='inline';
+                contratosView.style.display='none';
+            }else{
+                obj.style.display='none';
+                if(value == "Contrato"){
+                    contratosView.style.display='inline';
+                } else {
+                    contratosView.style.display='none';
+                }
+            }
+        }
 
         function ShowSelected()
         {
