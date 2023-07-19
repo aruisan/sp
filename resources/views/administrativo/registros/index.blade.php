@@ -259,7 +259,7 @@
                                         <a href="{{ url('administrativo/registro/pdf/'.$data['id'].'/'.$vigencia) }}" target="_blank" title="Ver Archivo" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
-                                @if($rol != 2)
+                                @if($rol != 2 and $data['jefe_e'] == "3")
                                     <td class="text-center">
                                         <a onclick="showFormObjetoRP({{ $data['id'] }}, {{ $data['code'] }},'{{ $data['objeto'] }}')" title="Editar Objeto" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                     </td>
