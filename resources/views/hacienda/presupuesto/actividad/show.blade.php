@@ -10,24 +10,22 @@
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills">
-                <li class="nav-item regresar"><a class="nav-link" href="{{ url('/presupuesto/actividades/'.$vigencia->id) }}">Volver a Actividades</a></li>
+                <li class="nav-item regresar"><a class="nav-link" href="{{ url('/presupuesto/actividades/'.$vigencia->id) }}">Volver a Proyectos</a></li>
                 <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Actividad {{ $bpin->cod_actividad }}</a></li>
-                @if(auth()->user()->roles->first()->id != 2)
-                    <li class="hidden">
-                        <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a>
-                            </li>
-                            <li>
-                                <a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a>
-                            </li>
-                            <li>
-                                <a data-toggle="modal" data-target="#credito" class="btn btn-drop  text-left">Credito</a>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
+                <li class="hidden">
+                    <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" data-target="#credito" class="btn btn-drop  text-left">Credito</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <div class="col-lg-12" id="prog">
@@ -212,7 +210,6 @@
                 $(this).closest('tr').remove();
             });
 
-1163
         } );
     </script>
 @stop

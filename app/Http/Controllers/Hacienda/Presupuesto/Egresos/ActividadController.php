@@ -33,8 +33,21 @@ class ActividadController extends Controller
 
     public function index($vigencia_id){
         $vigencia = Vigencia::find($vigencia_id);
+        $bpins = BPin::all();
 
-        return back();
+        foreach ($bpins as $bpin){
+            $bpin['rubro'] = "No";
+            if (count($bpin->rubroFind) > 0) {
+                foreach ($bpin->rubroFind as $rub){
+                    if ($rub->vigencia_id == $vigencia_id){
+                        $bpin['rubro'] = $rub->rubro->fontRubro->rubro->cod.' - '.$rub->rubro->fontRubro->rubro->name;
+                        $bpin['fuente'] = $rub->rubro->fontRubro->sourceFunding->code.' - '.$rub->rubro->fontRubro->sourceFunding->description;
+                    }
+                }
+            }
+        }
+
+        return view('hacienda.presupuesto.actividad.index', compact('bpins','vigencia'));
     }
 
     public function show($id, $vigencia_id){

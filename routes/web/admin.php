@@ -316,6 +316,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //PAGOS
 
         Route::post('changeCheque/pago/{id}/', 'Administrativo\Pago\PagosController@changeCheque');
+        Route::get('pago/{id}/cheque', 'Administrativo\Pago\PagosController@getCheque');
         Route::delete('pagos/{id}/{vigencia}', 'Administrativo\Pago\PagosController@delete')->name('pago-delete');
         Route::get('pagos/{id}', 'Administrativo\Pago\PagosController@index');
         Route::get('pagos/create/{id}', 'Administrativo\Pago\PagosController@create');
