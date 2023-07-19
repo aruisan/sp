@@ -375,6 +375,7 @@
                 console.log(datos);
                 if (categoria == 'ProgIng') JSONToCSVConvertor(datos, 'Programacion_Ingresos_'+mes+'/'+añoActual);
                 if (categoria == 'EjecIng') JSONToCSVConvertor(datos, 'Ejecucion_Ingresos_'+mes+'/'+añoActual);
+                if (categoria == 'ProgGasAdm') JSONToCSVConvertor(datos, 'Programacion_Gastos_Administracion_Central_'+mes+'/'+añoActual);
                 else toastr.warning('SE RECIBIO LA SOLITUD PERO ESTAMOS TRABAJANDO EN HABILITAR ESE INFORME CHIP.');
                 $("#cargandoCHIP").hide();
             }).fail(function() {

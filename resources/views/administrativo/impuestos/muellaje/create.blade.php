@@ -103,6 +103,11 @@
                                             <option value="Hasta 90 mts - 101 mts - 90.252 USD">Hasta 90 mts - 101 mts - 90.252 USD</option>
                                             <option value="Hasta 102 mts y más - 180.396 USD">Hasta 102 mts y más - 180.396 USD</option>
                                         </select>
+                                        <select class="form-control" id="piesEsloraTipo2" onchange="changeTarifa(this.value)" name="piesEslora"  style="display: none">
+                                            <option>Seleccione una opción</option>
+                                            <option value="Hasta 37 mts - 130 USD">Hasta 37 mts - 130 USD</option>
+                                            <option value="38 mts en adelante - 223.85 USD">38 mts en adelante - 223.85 USD</option>
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>
@@ -404,13 +409,20 @@
             var bandera = document.getElementById('bandera').value;
 
             if(tipo == 0){
-                if(bandera == "NACIONAL"){
+                if(bandera == "NACIONAL") {
                     $('#piesEsloraTipo0NAC').show();
                     $('#piesEsloraTipo1').hide();
+                    $('#piesEsloraTipo2').hide();
+                    $('#piesEsloraTipo0INT').hide();
+                }else if(bandera == "NACIONAL ADZ-PVA-ADZ"){
+                    $('#piesEsloraTipo0NAC').hide();
+                    $('#piesEsloraTipo1').hide();
+                    $('#piesEsloraTipo2').show();
                     $('#piesEsloraTipo0INT').hide();
                 } else if(bandera == "INTERNACIONAL"){
                     $('#piesEsloraTipo0NAC').hide();
                     $('#piesEsloraTipo1').hide();
+                    $('#piesEsloraTipo2').hide();
                     $('#piesEsloraTipo0INT').show();
                 }
             } else{

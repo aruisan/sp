@@ -20,6 +20,7 @@ use App\Model\Persona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Session;
+use PDF;
 
 class PagosController extends Controller
 {
@@ -473,5 +474,13 @@ class PagosController extends Controller
 
         Session::flash('error','Pago borrado correctamente');
         return redirect('../administrativo/pagos/'.$vigencia);
+    }
+
+    public function getCheque($id){
+        $pago = Pagos::find($id);
+        $pdf = PDF::loadView('administrativo.pagos.pdfCheque', compact('pago'))->setOptions(['images' => true,
+            'isRemoteEnabled' => true]);
+
+        return $pdf->stream('Cheque Pago #'.$pago->code.'.pdf');
     }
 }

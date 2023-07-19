@@ -143,6 +143,13 @@
          </li>
          --}}
 @endif
+@if(auth()->user()->roles->first()->id == 1 or auth()->user()->dependencia_id == 4)
+   <li >
+      <a class="btn btn-default btn-sm item-menu" href="{{ url('/presupuesto/actividades/11') }}">
+         PROYECTOS
+      </a>
+   </li>
+@endif
 @if(auth()->user()->id != 54 && auth()->user()->id != 984)
    @if(auth()->user()->roles->first()->id != 7)
       @if(auth()->user()->roles->first()->id != 8 && auth()->user()->roles->first()->id != 9)

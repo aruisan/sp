@@ -125,6 +125,7 @@
                                     @if($pago['info']->estado == "1")
                                         <a href="{{ url('/administrativo/egresos/pdf/'.$pago['info']->id) }}" title="Comprobante de Egresos" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
                                         @if($pago['info']->type_pay == 'CHEQUE')
+                                            <a href="{{ url('administrativo/pago/'.$pago['info']->id.'/cheque') }}" title="Descargar Cheque" class="btn-sm btn-success" target="_blank"><i class="fa fa-print"></i></a>
                                             <a onclick="showFormCheque({{ $pago['info']->id }}, {{ $pago['info']->code }},'{{ $pago['info']->num }}')" title="Editar Cheque" class="btn-sm btn-success"><i class="fa fa-edit"></i></a>
                                         @endif
                                     @endif
