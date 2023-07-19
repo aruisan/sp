@@ -137,8 +137,8 @@
                         </td>
                         <td><input type="text" class="form-control" value="${a.nombre_articulo}" readonly></td>
                         <td><input type="text" class="form-control" value="${a.referencia}" readonly></td>
-                        <td><input type="text" class="form-control" value="${a.cantidad}" readonly></td>
-                        <td><input type="number" class="form-control" name="cantidad[]" onchange="total(${contador_articulo})" id="cantidad_${contador_articulo}"  value="1" required></td>
+                        <td><input type="text" class="form-control" value="${a.stock}" readonly></td>
+                        <td><input type="number" class="form-control" name="cantidad[]" onchange="total(${contador_articulo})" id="cantidad_${contador_articulo}"  value="0" required></td>
                         <td><input type="text" class="form-control" value="${a.valor_unitario}" id="valor_${contador_articulo}" readonly></td>
                         <td><input type="text" class="form-control" id="total_${contador_articulo}" readonly></td>
                     </tr>`;

@@ -152,8 +152,9 @@ class PucAlcaldia extends Model implements Auditable
         //$age =  Carbon::today()->format('Y');
         $totCred = 0;
         $totDeb = 0;
+        $dia_final = date("t", strtotime("2023-{$mes_final}-01"));
         $inicio = "{$age}-{$mes}-1";
-        $final = "{$age}-{$mes_final}-1";
+        $final = "{$age}-{$mes_final}-{$dia_final}";
 
         if($this->otros_ordenes_pago_pucs->count() > 0):
             $otros_pucs = $this->otros_ordenes_pago_pucs->where('created_at', '>=', $inicio)->where('created_at', '<=', $final);

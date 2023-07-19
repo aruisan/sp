@@ -410,7 +410,7 @@ class PruebaController extends Controller
         endforeach;
 
         $informe->finalizar = TRUE;
-        $informe->save;
+        $informe->save();
         return response()->json(TRUE);
     }
 

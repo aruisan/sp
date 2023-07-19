@@ -100,6 +100,7 @@
                         <th>Presentación</th>
                         <th>Cantidad</th>
                         <th>Valor Unitario</th>
+                        <th>Valor Total</th>
                         <th>Vida Util</th>
                         <th>estado</th>
                         <th>tipo</th>
@@ -145,6 +146,13 @@
             let puc_credito = pucs_creditos.find(p => p.id == puc_debito.almacen_pucs_creditos[0].id);
             $(`#puc_credito_${index}`).text(`${puc_credito.code} ${puc_credito.concepto}`);
         }
+
+        const valor_total = index => {
+            let cantidad = $(`cantidad_${index}`).val();
+            let valor_unitario = $(`valor_unitario_${index}`).val();
+            let total = parseInt(cantidad == '' ? 0 : cantidad) * parseInt(valor_unitario == '' ? 0 : valor_unitario);
+            $(`#valor_total_${index}`).html(`<span>${total}</span>`)
+        }
         
         
 
@@ -156,8 +164,10 @@
                     <td><input type="text" class="form-control" name="codigo[]" required></td>
                     <td><input type="text" class="form-control" name="referencia[]" required></td>
                     <td><input type="text" class="form-control" name="presentacion[]" required></td>
-                    <td><input type="number" class="form-control" name="cantidad[]" required></td>
-                    <td><input type="number" class="form-control" name="valor_unitario[]" required></td>
+                    <td><input type="number" class="form-control" name="cantidad[]" required id="cantidad_${contador_item}" onchange="valor_total(${contador_item})"></td>
+                    <td><input type="number" class="form-control" name="valor_unitario[]" required id="valor_unitario_${contador_item}" onchange="valor_total(${contador_item})"></td>
+                    <td id="valor_total_${contador_item}"></td>
+
                     <td><input type="number" class="form-control" name="vida_util[]" required></td>
                     <td> 
                         <select class="form-control" name="estado[]">

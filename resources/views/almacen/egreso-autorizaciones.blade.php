@@ -83,7 +83,7 @@
                                         {{$item->articulo->stock}}
                                     </td>
                                     <td>
-                                        @if(auth()->user()->validar_cargo('Secretaria'))
+                                        @if(auth()->id() == 45)
                                             <input type="hidden" value="{{$item->id}}" class="form-control" name="id[]">
                                             <input type="text" value="{{$item->cantidad}}" class="form-control" name="cantidad[{{$item->id}}]">
                                         @else

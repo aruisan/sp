@@ -20,6 +20,18 @@
                         <li><a href="{{route('balance.pre-prueba', '06')}}">Junio</a></li>
                     </ul>
                 </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        niveles <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="">Nivel 1</a></li>
+                        <li><a href="">Nivel 2</a></li>
+                        <li><a href="">Nivel 3</a></li>
+                        <li><a href="">Nivel 4</a></li>
+                        <li><a href="">Nivel 5</a></li>
+                        <li><a href="">Nivel 6</a></li>
+                    </ul>
+                </div>
                 <a class="btn btn-danger pull-right" href="{{route('balance.prueba-informe-reload', $informe->id)}}"><i class="fa fa-refresh" aria-hidden="true"></i></a>
             </div>
         </div>

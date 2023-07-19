@@ -185,8 +185,7 @@
          <ul class="dropdown-menu">
             <li><a class="item-menu" tabindex="-1" href="{{route('almacen.inventario')}}">Inventorio</a></li>
             <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso.index')}}">Comprobante de Entrada</a></li>
-            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso.index')}}">Comprobante de Salida bienes de consumo</a></li>
-            <li><a class="item-menu" tabindex="-1" href="jj">Comprobante de Salida bienes devolutivos</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso.index')}}">Comprobante de Salidas</a></li>
             <li><a class="item-menu" tabindex="-1" href="rt">Comprobante de Traslados</a></li>
             <li><a class="item-menu" tabindex="-1" href="er">Comprobante de Bajas</a></li>
          </ul>
@@ -234,20 +233,19 @@
                </ul>
             </li> --}}
             <li><a class="item-menu" tabindex="-1" href="#">Comprobantes de Contabilidad</a></li>
-            <li><a class="item-menu" tabindex="-1" href="#">Estado de Resultados</a></li>
-            <li><a class="item-menu" tabindex="-1" href="#">Notas al Balance</a></li>
-            <li><a class="item-menu" tabindex="-1" href="#">Estado al cambio del patrimonio</a></li>
-            <li><a class="item-menu" tabindex="-1" href="#">Estado de FLujo de Caja</a></li>
             <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/config')}}">Configuración</a></li>
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Balances </a>
                <ul class="dropdown-menu">
                   <li><a class="item-menu" href="{{route('balance.inicial', '01')}}">Balance Inicial</a></li>
                   <li><a class="item-menu" href="#">Comparativo</a></li>
-                  <li><a class="item-menu" href="#">Por Niveles</a></li>
                   <li><a class="item-menu" href="{{route('balance.pre-prueba', '01')}}">Prueba</a></li>
                   <li><a class="item-menu" href="#">Terceros</a></li>
                   <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
+                  <li><a class="item-menu" href="#">Notas al Balance</a></li>
+                  <li><a class="item-menu" href="#">Estado de Resultados</a></li>
+                  <li><a class="item-menu" href="#">Estado al cambio del patrimonio</a></li>
+                  <li><a class="item-menu" href="#">Estado de FLujo de Caja</a></li>
                </ul>
             </li>
             <li class="dropdown-submenu">
@@ -264,8 +262,8 @@
                   --}}
 
 
-                  <li><a class="item-menu" href="{{route('chip.contable', [2023, 0])}}">CHIP Contaduria Primer Trimestre</a></li>
-                  <li><a class="item-menu" href="{{route('chip.contable', [2023, 1])}}">CHIP Contaduria Segundo Trimestre</a></li>
+                  <li><a class="item-menu" href="{{route('chip.pre', [2023, 0])}}">CHIP Contaduria Primer Trimestre</a></li>
+                  <li><a class="item-menu" href="{{route('chip.pre', [2023, 1])}}">CHIP Contaduria Segundo Trimestre</a></li>
                   <li><a class="item-menu" target="_blank" href="{{url('/administrativo/impuestos/admin/noPayUsers')}}">Deudores Morosos</a></li>
                   <li><a class="item-menu" href="#">Exogeno</a></li>
                   <li><a class="item-menu" href="#">Reciprocas</a></li>

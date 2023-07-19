@@ -99,6 +99,9 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @php
+                            $tt = 0;
+                        @endphp
                         @foreach($pucs as $puc)
                             <tr class="text-center">
                                 <td>{{$puc->code}}</td>
@@ -116,7 +119,22 @@
                                 <td></td>
                                 <td>${{number_format($puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total'), 0, ',', '.')}}</td>
                             </tr>
+
+                            @php 
+                                $tt += $puc->almacen_items->filter(function($item)use($ingreso){ return $item->almacen_comprobante_ingreso_id == $ingreso->id; })->sum('total');
+                            @endphp
                         @endforeach
+                        {{--
+                        --}}
+                            <tr>
+                                <td colspan="4"><b>Sumas Iguales</b></td>
+                                <td>
+                                    <b>${{number_format($tt, 0, ',', '.')}}</b>
+                                </td>
+                                <td>
+                                    <b>${{number_format($tt, 0, ',', '.')}}</b>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
 		</div>

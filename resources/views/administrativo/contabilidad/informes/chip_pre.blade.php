@@ -86,20 +86,22 @@
         const pucs = @json($pucs);
         const informe = @json($informe);
         const data_count = {{$informe->datos->count()}};
-        const porcentaje_pucs = (85/pucs.length)/2;
+        const porcentaje_pucs = (97/pucs.length)/2;
         let porcentaje_carga = 0;
         let contador = 0;
         let contador_inicial = 0;
 
         $(document).ready(function() {
+            //cargar_relaciones_data();
             pucs.forEach(async p => {
                 contador_inicial +=1;
                 cargar_porcentaje_actual();
-                let resp = await fetch(`/administrativo/contabilidad/blance-prueba/${informe.id}/${p.id}`)
+                console.log('final', [contador, data_count, contador_inicial]);
+                let resp = await fetch(`/administrativo/contabilidad/chip/${informe.id}/${p.id}`)
                 .then(response => response.json())
                 .then(data => {
-                    contador +=1;
                     cargar_porcentaje_actual();
+                    contador +=1;
                     return data;
                 });
 
@@ -118,16 +120,17 @@
         }
 
         const cargar_relaciones_data = async () => {
-            let resp = await fetch(`/administrativo/contabilidad/blance-prueba-relaciones/${informe.id}`)
+            let resp = await fetch(`/administrativo/contabilidad/chip-relaciones/${informe.id}`)
             .then(response => response.json())
             .then(data => data);
 
             if(resp){
                 $('#progress-bar').attr("style","width:100%").text(`100%`);
-
+                window.location.href = "{{route('chip-informe', $informe)}}";
+/*
                 setTimeout(function(){
-                    window.location.href = "{{route('balance.prueba-informe', $informe)}}";
                 }, 2000);
+                */
             }
         }
 
