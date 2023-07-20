@@ -135,26 +135,6 @@ class LibrosController extends Controller
                                                     'debito' => '$'.number_format($op_puc->valor_debito,0),'credito' => '$'.number_format($op_puc->valor_credito,0),
                                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                                     'total' => '$'.number_format($total,0), 'from' => 2]);
-
-                                                //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                                if ($op_puc->ordenPago->saldo == 0){
-                                                    $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
-                                                    foreach ($pagosOP as $pay){
-                                                        if ($op_puc->valor_debito > 0){
-                                                            $debito = 0;
-                                                            $credito = $pay->valor;
-                                                            $total = $total - $credito;
-                                                        } else{
-                                                            $debito = $pay->valor;
-                                                            $credito = 0;
-                                                            $total = $total + $debito;
-                                                        }
-                                                        $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
-                                                            'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
-                                                            'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                            'total' => '$'.number_format($total,0), 'from' => 2]);
-                                                    }
-                                                }
                                             } elseif ($mes == Carbon::parse($op_puc->ordenPago->created_at)->format('m')){
                                                 $total = $total + $op_puc->valor_debito;
                                                 $total = $total - $op_puc->valor_credito;
@@ -169,26 +149,6 @@ class LibrosController extends Controller
                                                     'debito' => '$'.number_format($op_puc->valor_debito,0),'credito' => '$'.number_format($op_puc->valor_credito,0),
                                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                                     'total' => '$'.number_format($total,0), 'from' => 2]);
-
-                                                //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                                if ($op_puc->ordenPago->saldo == 0){
-                                                    $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
-                                                    foreach ($pagosOP as $pay){
-                                                        if ($op_puc->valor_debito > 0){
-                                                            $debito = 0;
-                                                            $credito = $pay->valor;
-                                                            $total = $total - $credito;
-                                                        } else{
-                                                            $debito = $pay->valor;
-                                                            $credito = 0;
-                                                            $total = $total + $debito;
-                                                        }
-                                                        $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
-                                                            'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
-                                                            'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                            'total' => '$'.number_format($total,0), 'from' => 2]);
-                                                    }
-                                                }
                                             }
                                         }
                                     }
@@ -379,25 +339,6 @@ class LibrosController extends Controller
                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
                                     'cuenta' => $account->code.' - '.$account->concepto, 'total' => '$'.number_format($total,0), 'from' => 6]);
 
-                                //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                if ($op_puc->ordenPago->saldo == 0){
-                                    $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
-                                    foreach ($pagosOP as $pay){
-                                        if ($op_puc->valor_debito > 0){
-                                            $debito = 0;
-                                            $credito = $pay->valor;
-                                            $total = $total - $credito;
-                                        } else{
-                                            $debito = $pay->valor;
-                                            $credito = 0;
-                                            $total = $total + $debito;
-                                        }
-                                        $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
-                                            'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
-                                            'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                            'total' => '$'.number_format($total,0), 'from' => 6]);
-                                    }
-                                }
                             } elseif ($mes == Carbon::parse($op_puc->ordenPago->created_at)->format('m')){
                                 $total = $total + $op_puc->valor_debito;
                                 $total = $total - $op_puc->valor_credito;
@@ -412,26 +353,6 @@ class LibrosController extends Controller
                                     'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
                                     'cuenta' => $account->code.' - '.$account->concepto, 'total' => '$'.number_format($total,0), 'from' => 6]);
-
-                                //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                if ($op_puc->ordenPago->saldo == 0){
-                                    $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
-                                    foreach ($pagosOP as $pay){
-                                        if ($op_puc->valor_debito > 0){
-                                            $debito = 0;
-                                            $credito = $pay->valor;
-                                            $total = $total - $credito;
-                                        } else{
-                                            $debito = $pay->valor;
-                                            $credito = 0;
-                                            $total = $total + $debito;
-                                        }
-                                        $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
-                                            'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
-                                            'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                            'total' => '$'.number_format($total,0), 'from' => 6]);
-                                    }
-                                }
                             }
                         }
                     }
@@ -613,26 +534,6 @@ class LibrosController extends Controller
                                             'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                             'total' => '$'.number_format($total,0), 'from' => 10]);
-
-                                        //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                        if ($op_puc->ordenPago->saldo == 0){
-                                            $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
-                                            foreach ($pagosOP as $pay){
-                                                if ($op_puc->valor_debito > 0){
-                                                    $debito = 0;
-                                                    $credito = $pay->valor;
-                                                    $total = $total - $credito;
-                                                } else{
-                                                    $debito = $pay->valor;
-                                                    $credito = 0;
-                                                    $total = $total + $debito;
-                                                }
-                                                $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
-                                                    'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
-                                                    'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                                    'total' => '$'.number_format($total,0), 'from' => 10]);
-                                            }
-                                        }
                                     } elseif ($mes == Carbon::parse($op_puc->ordenPago->created_at)->format('m')){
                                         $total = $total + $op_puc->valor_debito;
                                         $total = $total - $op_puc->valor_credito;
@@ -647,26 +548,6 @@ class LibrosController extends Controller
                                             'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                             'total' => '$'.number_format($total,0), 'from' => 10]);
-
-                                        //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                        if ($op_puc->ordenPago->saldo == 0){
-                                            $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
-                                            foreach ($pagosOP as $pay){
-                                                if ($op_puc->valor_debito > 0){
-                                                    $debito = 0;
-                                                    $credito = $pay->valor;
-                                                    $total = $total - $credito;
-                                                } else{
-                                                    $debito = $pay->valor;
-                                                    $credito = 0;
-                                                    $total = $total + $debito;
-                                                }
-                                                $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
-                                                    'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
-                                                    'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                                    'total' => '$'.number_format($total,0), 'from' => 10]);
-                                            }
-                                        }
                                     }
                                 }
                             }
