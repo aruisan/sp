@@ -17,7 +17,7 @@
             <input type="hidden" name="fechaFinal" id="fechaFinal" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
 
             <br>
-            <select class="form-control" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC()">
+            <select class="select-cuenta" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC()" style="width: 100%;">
                 <option value="0">Seleccione la cuenta para obtener el libro</option>
                 @foreach($result as $cuenta)
                     <option @if($cuenta['hijo'] == 0) disabled @endif value="{{$cuenta['id']}}">{{$cuenta['code']}} -
@@ -57,6 +57,8 @@
 @section('js')
 
     <script>
+
+        $('.select-cuenta').select2();
 
         const formatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
