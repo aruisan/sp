@@ -207,9 +207,7 @@
                             <th class="text-center">Estado Jefe</th>
                             <th class="text-center">Ver</th>
                             <th class="text-center">PDF</th>
-                            @if($rol != 2)
-                                <th class="text-center"><i class="fa fa-edit"></i></th>
-                            @endif
+                            <th class="text-center"><i class="fa fa-edit"></i></th>
                         </tr>
                         </thead>
                         <tbody>

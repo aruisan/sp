@@ -150,6 +150,78 @@
                             @endif
                         </div>
                     @endif
+                    @if( $registro->tipo_doc == "Contrato")
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <label>Tipo de Contrato: </label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                    @if($registro->tipo_contrato == '3')
+                                        3 - DE OBRA PUBLICA
+                                    @elseif($registro->tipo_contrato == '4')
+                                        4 - DE CONSULTORIA
+                                    @elseif($registro->tipo_contrato == '5')
+                                        5 - DE INTERVENTORIA
+                                    @elseif($registro->tipo_contrato == '6')
+                                        6 - DE SUMINISTRO
+                                    @elseif($registro->tipo_contrato == '10')
+                                        10 - DE PRESTACION DE SERVICIOS
+                                    @elseif($registro->tipo_contrato == '11')
+                                        11 - DE ENCARGO FIDUCIARIO Y FIDUCIA PUBLICA
+                                    @elseif($registro->tipo_contrato == '12')
+                                        12 - ALQUILER O ARRENDAMIENTO
+                                    @elseif($registro->tipo_contrato == '13')
+                                        13 - DE CONCESION
+                                    @elseif($registro->tipo_contrato == '20')
+                                        20 - DEUDA PUBLICA
+                                    @elseif($registro->tipo_contrato == '21')
+                                        21 - CONVENIO INTERADMINISTRATIVO
+                                    @elseif($registro->tipo_contrato == '22')
+                                        22 - OTROS NO ESPECIFICADOS ANTERIORMENTE
+                                    @endif
+                                </div>
+                                <small class="form-text text-muted">Tipo de Contrato</small>
+                            </div>
+                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <label>Modalidad de Seleccion: </label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                    @if($registro->mod_seleccion == '0')
+                                        NO APLICA
+                                    @elseif($registro->mod_seleccion == '1')
+                                        1 - LICITACION PUBLICA
+                                    @elseif($registro->mod_seleccion == '2')
+                                        2 - CONCURSO DE MERITOS
+                                    @elseif($registro->mod_seleccion == '3')
+                                        3 - SELECCION ABREVIADA
+                                    @elseif($registro->mod_seleccion == '4')
+                                        4 - CONTRATACION DIRECTA
+                                    @elseif($registro->mod_seleccion == '8')
+                                        8 - CUANTIA MINIMA
+                                    @endif
+                                </div>
+                                <small class="form-text text-muted">Modalidad de Selección del contrato del registro</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <label>Estado de Ejecución: </label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                    @if($registro->estado_ejec == '0')
+                                        NO APLICA
+                                    @elseif($registro->estado_ejec == '1')
+                                        1 - EJECUCION
+                                    @elseif($registro->estado_ejec == '2')
+                                        2 - LIQUIDADO
+                                    @elseif($registro->estado_ejec == '3')
+                                        3 - SUSPENDIDO
+                                    @endif
+                                </div>
+                                <small class="form-text text-muted">Estado de Ejecución del contrato del registro</small>
+                            </div>
+                        </div>
+                    @endif
                     <div class="row">
                         @if($registro->jefe_e == 1)
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -475,6 +547,108 @@
                             <br>
                             <center>
                                 @if($rol == 2 and $registro->secretaria_e != 3 and $registro->secretaria_e != 2)
+                                    @php($fuenteAgua = false)
+                                    @if($registro->cdpsRegistro->first()->cdp->tipo == "Funcionamiento")
+                                        @foreach($infoRubro as $rubro)
+                                            @if($rubro['codigo'] == "1.2.4.6.00" or $rubro['codigo'] == "1.3.2.2.13" or $rubro['codigo'] == "1.3.3.8.00" or $rubro['codigo'] == "1.3.3.11.13")
+                                                @php($fuenteAgua = true)
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        @foreach($cdpsRegistroData->cdp->bpinsCdpValor as $item)
+                                            @if($item->depRubroFont->fontRubro->sourceFunding->code == "1.2.4.6.00" or
+                                                $item->depRubroFont->fontRubro->sourceFunding->code == "1.3.2.2.13" or
+                                                $item->depRubroFont->fontRubro->sourceFunding->code == "1.3.3.8.00" or
+                                                $item->depRubroFont->fontRubro->sourceFunding->code == "1.3.3.11.13")
+                                                @php($fuenteAgua = true)
+                                            @endif
+                                        @endforeach
+                                    @endif
+
+                                    @if($fuenteAgua)
+                                        <div class="row">
+                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                <label>Valor con Cargo: </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                                    <input type="number" class="form-control" id="value_water" name="value_water" required min="0" style="text-align: center">
+                                                </div>
+                                                <small class="form-text text-muted">Valor con cargo a la fuente</small>
+                                            </div>
+                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                <label>Actividad </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                                    <select name="actividad" class="form-control">
+                                                        <option value="0">NO APLICA</option>
+                                                        <option value="1">A.3.10.1 ACUEDUCTO-CAPTACION</option>
+                                                        <option value="2">A.3.10.10 ACUEDUCTO-PREINVERSIONES, ESTUDIOS</option>
+                                                        <option value="3">A.3.10.11 ACUEDUCTO-INTERVENTORIA</option>
+                                                        <option value="4">A.3.10.12 ACUEDUCTO-FORMULACION, IMPLEMENTACION Y ACCIONES DE FORTALECIMIENTO PARA LA ADMINISTRACION Y OPERACION DE LOS SERVICIOS</option>
+                                                        <option value="5">A.3.10.13 ACUEDUCTO-SUBSIDIOS</option>
+                                                        <option value="6">A.3.10.2 ACUEDUCTO-ADUCCION</option>
+                                                        <option value="7">A.3.10.3 ACUEDUCTO-ALMACENAMIENTO</option>
+                                                        <option value="8">A.3.10.4 ACUEDUCTO-TRATAMIENTO</option>
+                                                        <option value="9">A.3.10.5 ACUEDUCTO-CONDUCCION</option>
+                                                        <option value="10">A.3.10.6 ACUEDUCTO-MACROMEDICION</option>
+                                                        <option value="11">A.3.10.7 ACUEDUCTO-DISTRIBUCION</option>
+                                                        <option value="12">A.3.10.8 ACUEDUCTO-MICROMEDICION</option>
+                                                        <option value="13">A.3.10.9 ACUEDUCTO-INDICE DE AGUA NO CONTABILIZADA</option>
+                                                        <option value="14">A.3.11.1 ALCANTARILLADO-RECOLECCION</option>
+                                                        <option value="15">A.3.11.2 ALCANTARILLADO-TRANSPORTE</option>
+                                                        <option value="16">A.3.11.3 ALCANTARILLADO-TRATAMIENTO</option>
+                                                        <option value="17">A.3.11.4 ALCANTARILLADO-DESCARGA</option>
+                                                        <option value="18">A.3.11.5 ALCANTARILLADO-PREINVENSIONES, ESTUDIOS</option>
+                                                        <option value="19">A.3.11.6 ALCANTARILLADO-INTERVENTORIA</option>
+                                                        <option value="20">A.3.11.7 ALCANTARILLADO-FORTALECIMIENTO INSTITUCIONAL</option>
+                                                        <option value="21">A.3.11.8 ALCANTARILLADO-SUBSIDIOS</option>
+                                                        <option value="23">A.3.12.1 ASEO-PROYECTO DE TRATAMIENTO Y APROVECHAMIENTO DE RESIDUOS SOLIDOS</option>
+                                                        <option value="24">A.3.12.2 ASEO-MAQUINARIA Y EQUIPOS</option>
+                                                        <option value="25">A.3.12.3 ASEO-DISPOSICION FINAL</option>
+                                                        <option value="26">A.3.12.4 ASEO-PREINVERSION Y ESTUDIOS</option>
+                                                        <option value="27">A.3.12.5 ASEO-ASEO INTERVENTORIA</option>
+                                                        <option value="28">A.3.12.6 ASEO-ASEO FORTALECIMIENTO INSTITUCIONAL</option>
+                                                        <option value="29">A.3.12.7 ASEO-SUBSIDIOS</option>
+                                                        <option value="30">A.3.13 TRANSFERENCIAS PDA INVERSION</option>
+                                                        <option value="31">A.3.15 PAGOS PASIVOS LABORALES</option>
+                                                        <option value="32">A.3.17 PAGO DE DEFICIT DE INVERSION EN AGUA POTABLE Y SANEAMIENTO BASICO</option>
+                                                        <option value="33">A.3.18 PAGO SERVICIO A LA DEUDA</option>
+                                                    </select>
+                                                </div>
+                                                <small class="form-text text-muted"> Seleccione la actividad.</small>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                <label>Fuente: </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                                    <select name="font_water" class="form-control">
+                                                        <option value="0">NO APLICA</option>
+                                                        <option value="280">SGP APSB - SALDOS NO EJECUTADOS VIGENCIA</option>
+                                                        <option value="290">SGP APSB - ONCE DOCEAVAS VIGENCIA</option>
+                                                        <option value="300">SGP APSB - RENDIMIENTOS FINANCIEROS</option>
+                                                        <option value="305">SGP MUNICIPIOS DESCERTIFICADOS</option>
+                                                    </select>
+                                                </div>
+                                                <small class="form-text text-muted">Seleccione la fuente.</small>
+                                            </div>
+                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                <label>Localización: </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                                                    <select name="loc_water" class="form-control">
+                                                        <option value="0">NO APLICA</option>
+                                                        <option value="1">URBANO</option>
+                                                        <option value="2">CENTRO POBLADO</option>
+                                                        <option value="3">RURAL DISPERSO</option>
+                                                    </select>
+                                                </div>
+                                                <small class="form-text text-muted">Seleccione la localización.</small>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                     <button type="submit" class="btn btn-danger">Actualizar Registro</button>
                                     @if($registro->cdpRegistroValor->sum('valor') > 0 )
                                         @php($valTot = $registro->iva + $registro->cdpRegistroValor->sum('valor'))
