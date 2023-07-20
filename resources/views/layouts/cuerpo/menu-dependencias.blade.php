@@ -224,7 +224,12 @@
                   <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/puc/pucIndexAct')}}">PUC de vigencia</a></li>
                </ul>
             </li> --}}
-            <li><a class="item-menu" tabindex="-1" href="#">Comprobantes de Contabilidad</a></li>
+            <li class="dropdown-submenu">
+               <a class="dropdown-item item-menu" >Comprobantes de Contabilidad </a>
+               <ul class="dropdown-menu">
+                  <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/12') }}">2023</a></li>
+               </ul>
+            </li>
             <li><a class="item-menu" tabindex="-1" href="#">Estado de Resultados</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Notas al Balance</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Estado al cambio del patrimonio</a></li>

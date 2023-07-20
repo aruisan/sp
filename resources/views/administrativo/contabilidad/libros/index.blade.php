@@ -11,8 +11,12 @@
                 <h4><b>Libros</b></h4>
             </strong>
         </div>
-        <label for="mes">Seleccione el filtro de tiempo de busqueda.</label>
-        <select style="width: 100%" class="form-control" id="mes" name="mes">
+        <h5>Seleccione la fecha</h5>
+        <input type="text" name="fecha" id="fecha" class="form-control" required>
+        <input type="hidden" name="fechaInicial" id="fechaInicial" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
+        <input type="hidden" name="fechaFinal" id="fechaFinal" class="form-control" value="{{ Carbon\Carbon::today()->Format('Y-m-d')}}">
+
+        <select style="display: none" class="form-control" id="mes" name="mes">
             <option value="0">AÑO</option>
             <option value="1">ENERO</option>
             <option value="2">FEBRERO</option>
@@ -28,7 +32,7 @@
             <option value="12">DICIEMBRE</option>
         </select>
         <br>
-        <select style="width: 100%" class="select-cuenta" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
+        <select style="width: 100%" class="select-cuenta" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC()">
             <option value="0">Seleccione la cuenta para obtener el libro</option>
             @foreach($result as $cuenta)
                 <option value="{{$cuenta['id']}}">{{$cuenta['code']}} - {{$cuenta['concepto']}}</option>
@@ -42,6 +46,8 @@
             <table style="display: none" class="table table-bordered table-hover" id="tabla">
                 <hr>
                 <thead>
+                <tr><th colspan="9" class="text-center"> <span id="cuentaBanco"></span></th></tr>
+                <tr>
                     <th class="text-center">Fecha</th>
                     <th class="text-center">Cuenta</th>
                     <th class="text-center">Nombre Documento</th>
@@ -51,6 +57,7 @@
                     <th class="text-center">Debito</th>
                     <th class="text-center">Credito</th>
                     <th class="text-center">Saldo</th>
+                </tr>
                 </thead>
                 <tbody id="bodyTabla"></tbody>
             </table>
@@ -62,6 +69,24 @@
     <script>
 
         $('.select-cuenta').select2();
+
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
+
+        $('input[name="fecha"]').daterangepicker({
+            opens: 'center'
+        }, function(start, end) {
+            document.getElementById("fechaInicial").value = start.format('YYYY-MM-DD');
+            document.getElementById("fechaFinal").value = end.format('YYYY-MM-DD');
+
+            const cuenta = document.getElementById("cuentaPUC").value;
+            if(parseInt(cuenta) != 0){
+                findRubroPUC();
+            }
+        });
 
         $(document).ready(function() {
             toastr.options = {
@@ -84,19 +109,23 @@
 
         });
 
-        function findRubroPUC(option){
+        function findRubroPUC(){
             $("#cargando").show();
 
+            const cuenta = document.getElementById("cuentaPUC").value;
+
+            const fechaInicial = document.getElementById("fechaInicial").value;
+            const fechaFinal =document.getElementById("fechaFinal").value;
             var table = $('#tabla').DataTable();
-            var mes = document.getElementById('mes').value;
 
             $.ajax({
                 method: "POST",
-                url: "/administrativo/contabilidad/libros/rubros_puc",
-                data: { "id": option.value, "mes": mes,
+                url: "/administrativo/tesoreria/bancos/movAccountLibros",
+                data: { "id": cuenta, "fechaInicial": fechaInicial, "fechaFinal": fechaFinal,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
+                document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
                 $("#tabla").show();
                 table.destroy();
                 $("#cargando").hide();
@@ -165,8 +194,15 @@
                         { title: "Saldo", data: "total"}
                     ]
                 } );
+
+
+                //$("#tabla").hide();
+                //table.destroy();
+                //$("#cargando").hide();
+                //toastr.warning('SE ESTAN REALIZANDO AJUSTES. INTENTE NUEVAMENTE MAS TARDE.');
             }).fail(function() {
                 $("#tabla").hide();
+                $("#buttonMake").hide();
                 table.destroy();
                 $("#cargando").hide();
                 toastr.warning('NO SE OBTUVIERON DATOS DE ESA CUENTA');
