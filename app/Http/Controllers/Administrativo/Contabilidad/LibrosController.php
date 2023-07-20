@@ -143,7 +143,7 @@ class LibrosController extends Controller
                                                         if ($op_puc->valor_debito > 0){
                                                             $debito = 0;
                                                             $credito = $pay->valor;
-                                                            $total = $total - $debito;
+                                                            $total = $total - $credito;
                                                         } else{
                                                             $debito = $pay->valor;
                                                             $credito = 0;
@@ -177,7 +177,7 @@ class LibrosController extends Controller
                                                         if ($op_puc->valor_debito > 0){
                                                             $debito = 0;
                                                             $credito = $pay->valor;
-                                                            $total = $total - $debito;
+                                                            $total = $total - $credito;
                                                         } else{
                                                             $debito = $pay->valor;
                                                             $credito = 0;
@@ -386,7 +386,7 @@ class LibrosController extends Controller
                                         if ($op_puc->valor_debito > 0){
                                             $debito = 0;
                                             $credito = $pay->valor;
-                                            $total = $total - $debito;
+                                            $total = $total - $credito;
                                         } else{
                                             $debito = $pay->valor;
                                             $credito = 0;
@@ -420,7 +420,7 @@ class LibrosController extends Controller
                                         if ($op_puc->valor_debito > 0){
                                             $debito = 0;
                                             $credito = $pay->valor;
-                                            $total = $total - $debito;
+                                            $total = $total - $credito;
                                         } else{
                                             $debito = $pay->valor;
                                             $credito = 0;
@@ -617,7 +617,7 @@ class LibrosController extends Controller
                                                 if ($op_puc->valor_debito > 0){
                                                     $debito = 0;
                                                     $credito = $pay->valor;
-                                                    $total = $total - $debito;
+                                                    $total = $total - $credito;
                                                 } else{
                                                     $debito = $pay->valor;
                                                     $credito = 0;
@@ -651,7 +651,7 @@ class LibrosController extends Controller
                                                 if ($op_puc->valor_debito > 0){
                                                     $debito = 0;
                                                     $credito = $pay->valor;
-                                                    $total = $total - $debito;
+                                                    $total = $total - $credito;
                                                 } else{
                                                     $debito = $pay->valor;
                                                     $credito = 0;
