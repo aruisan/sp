@@ -33,6 +33,12 @@ class CdpsRegistroController extends Controller
             $registro_id = $request->registro_id;
             $registro = Registro::findOrFail($registro_id);
             $registro->iva = $request->iva;
+            if ($request->value_water){
+                $registro->value_water = $request->value_water;
+                $registro->act_water = $request->actividad;
+                $registro->font_water = $request->font_water;
+                $registro->loc_water = $request->loc_water;
+            }
             $registro->save();
             $count = count($cdps);
 

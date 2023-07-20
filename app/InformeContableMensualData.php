@@ -36,9 +36,11 @@ class InformeContableMensualData extends Model
     }
 
     public function format_puc($data, $puc){
+        $codigo = is_null($puc) ? "Se elimino" : $puc->code;
+        $concepto = is_null($puc) ? "Se elimino" : $puc->concepto;
         $item =  "<tr>
-                    <td class='text-left'>{$puc['code']}</td>
-                    <td class='text-rigth'>{$puc['concepto']}</td>
+                    <td class='text-left'>{$codigo}</td>
+                    <td class='text-rigth'>{$concepto}</td>
                     <td class='text-right'>$".number_format($data['i_debito'])."</td>
                     <td class='text-right'>$".number_format($data['i_credito'])."</td>
                     <td class='text-right'>{$data['i_debito']}</td>

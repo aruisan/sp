@@ -40,7 +40,7 @@
             <table class="table" id="tabla">
                 <thead>
                     <tr>
-                        <th colspan="14" class="text-center"><b>Balance Prueba {{ $añoActual }}-{{ $mesActual }}-{{ $diaActual }}</b></th>
+                        <th colspan="14" class="text-center"><b>Balance Prueba {{$meses[Session::get(auth()->id().'-mes-informe-contable-mes')]}}</b></th>
                     </tr>
                         {{--
                     <tr>
@@ -76,8 +76,8 @@
                 <tbody>
                 @foreach($pucs as $puc)
                     <tr>
-                    <td class="text-left">{{$puc->puc_alcaldia->code}}</td>
-                        <td class="text-center">{{$puc->puc_alcaldia->concepto}}</td>
+                    <td class="text-left">{{is_null($puc->puc_alcaldia) ? "Se Elimino" : $puc->puc_alcaldia->code}}</td>
+                        <td class="text-center">{{is_null($puc->puc_alcaldia) ? "Se Elimino" : $puc->puc_alcaldia->concepto}}</td>
 
                         <td class="text-right" style="width=200px;">${{number_format($puc->i_debito  ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">${{number_format($puc->i_credito ,0,",", ".")}}</td>
@@ -94,6 +94,7 @@
                         <td class="text-right" style="width=200px;">{{$puc->s_debito}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->s_credito}}</td>
                     </tr>
+                    {!!$puc->format_hijos_prueba!!}
                 @endforeach
                 </tbody>
                 <tfoot>

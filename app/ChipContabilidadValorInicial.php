@@ -36,9 +36,11 @@ class ChipContabilidadValorInicial extends Model
     }
 
     public function format_puc($data, $puc){
+        $codigo = is_null($puc) ? "no tiene" :  $puc->codigo_punto;
+
         return "<tr>
                     <td class='text-left'>D</td>
-                    <td class='text-center'>{$puc['codigo_punto']}</td>
+                    <td class='text-center'>{$codigo}</td>
                     <td class='text-right' style='width=200px;'>$".number_format($data['valor_inicial'])."</td>
                     <td class='text-right' style='width=200px;'>{$data['valor_inicial']}</td>
                     <td class='text-right' style='width=200px;'>$".number_format($data['m_debito'])."</td>

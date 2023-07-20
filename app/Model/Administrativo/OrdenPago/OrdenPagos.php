@@ -5,6 +5,8 @@ namespace App\Model\Administrativo\OrdenPago;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Model\Administrativo\Pago\Pagos;
+use Carbon\Carbon;
+use Session;
 
 class OrdenPagos extends Model implements Auditable
 {
@@ -25,6 +27,10 @@ class OrdenPagos extends Model implements Auditable
 
     public function pucs(){
         return $this->hasMany('App\Model\Administrativo\OrdenPago\OrdenPagosPuc','orden_pago_id');
+    }
+
+    public function otras_ordenes_con_pucs_mensual(){
+        return $this->hasMany('App\Model\Administrativo\OrdenPago\OrdenPagosPuc','orden_pago_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));;
     }
 
     public function pago(){

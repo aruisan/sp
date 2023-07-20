@@ -70,7 +70,7 @@ class PucAlcaldia extends Model implements Auditable
     }
 
     public function orden_pagos_mensual() {
-        return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id')->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
+        return $this->hasMany(OrdenPagosPuc::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
     }
 
     //pagos
@@ -88,7 +88,8 @@ class PucAlcaldia extends Model implements Auditable
     }
 
     public function getComprobantesmensualAttribute(){
-        return ComprobanteIngresosMov::whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))->where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
+        //fecha de compriobante
+        return ComprobanteIngresosMov::whereMonth('fechaComp', Session::get(auth()->id().'-mes-informe-contable-mes'))->where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('fechaComp', Carbon::today()->format('Y'))->get();
     }
 
     //retefuente
@@ -102,6 +103,18 @@ class PucAlcaldia extends Model implements Auditable
         $op_pucs = $this->orden_pagos->count() == 0 ? [] : $this->orden_pagos->filter(function($op_p){ return $op_p->has_pucs;});
         foreach($op_pucs as $op_puc):
             foreach($op_puc->ordenPago->pucs as $orden_pago_puc):
+                $data->push($orden_pago_puc);
+            endforeach;
+        endforeach;
+        
+        return $data;
+    }
+
+    public function getOtrosOrdenesPagoPucsMensualAttribute(){
+        $data = collect();
+        $op_pucs = $this->orden_pagos_mensual->count() == 0 ? [] : $this->orden_pagos_mensual->filter(function($op_p){ return $op_p->has_pucs;});
+        foreach($op_pucs as $op_puc):
+            foreach($op_puc->ordenPago->otras_ordenes_con_pucs_mensual as $orden_pago_puc):
                 $data->push($orden_pago_puc);
             endforeach;
         endforeach;
@@ -230,8 +243,8 @@ class PucAlcaldia extends Model implements Auditable
         $inicio = "2023-{$mes}-01";
         $final = \Carbon\Carbon::createFromFormat('Y-m-d', $inicio)->addMonth()->format('Y-m-d');
 
-        if($this->otros_ordenes_pago_pucs->count() > 0):
-            $otros_pucs = $this->otros_ordenes_pago_pucs;
+        if($this->otros_ordenes_pago_pucs_mensual->count() > 0):
+            $otros_pucs = $this->otros_ordenes_pago_pucs_mensual;
             $totDeb += $otros_pucs->sum('valor_debito');
             $totCred += $otros_pucs->sum('valor_credito');
         endif;

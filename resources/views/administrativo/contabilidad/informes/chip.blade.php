@@ -44,7 +44,7 @@
                 @foreach($pucs as $puc)
                     <tr>
                         <td class='text-left'>D</td>
-                        <td class='text-center'>{{$puc->puc_alcaldia->codigo_punto}}</td>
+                        <td class='text-center'>{{is_null($puc->puc_alcaldia) ? "no tiene" : $puc->puc_alcaldia->codigo_punto}}</td>
                         <td class='text-right' style='width=200px;'>${{number_format($puc->valor_inicial)}}</td>
                         <td class='text-right' style='width=200px;'>{{$puc->valor_inicial}}</td>
                         <td class='text-right' style='width=200px;'>${{number_format($puc->m_debito)}}</td>

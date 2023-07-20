@@ -222,6 +222,58 @@
                             </div>
                         </div>
                     @endif
+                    @if($registro->value_water)
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Valor con Cargo: </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                {{number_format($registro->value_water)}}
+                            </div>
+                            <small class="form-text text-muted">Valor con cargo a la fuente.</small>
+                        </div>
+                    @endif
+                    @if($registro->act_water)
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Actividad </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                @if($registro->act_water == "0") NO APLICA @endif
+                                @if($registro->act_water == "1") A.3.10.1 ACUEDUCTO-CAPTACION @endif
+                                @if($registro->act_water == "2") A.3.10.10 ACUEDUCTO-PREINVERSIONES, ESTUDIOS @endif
+                                @if($registro->act_water == "3") A.3.10.11 ACUEDUCTO-INTERVENTORIA @endif
+                                @if($registro->act_water == "4") A.3.10.12 ACUEDUCTO-FORMULACION, IMPLEMENTACION Y ACCIONES DE FORTALECIMIENTO PARA LA ADMINISTRACION Y OPERACION DE LOS SERVICIOS @endif
+                                @if($registro->act_water == "5") A.3.10.13 ACUEDUCTO-SUBSIDIOS @endif
+                                @if($registro->act_water == "6") A.3.10.2 ACUEDUCTO-ADUCCION @endif
+                                @if($registro->act_water == "7") A.3.10.3 ACUEDUCTO-ALMACENAMIENTO @endif
+                                @if($registro->act_water == "8") A.3.10.4 ACUEDUCTO-TRATAMIENTO @endif
+                                @if($registro->act_water == "9") A.3.10.5 ACUEDUCTO-CONDUCCION @endif
+                                @if($registro->act_water == "10") A.3.10.6 ACUEDUCTO-MACROMEDICION @endif
+                                @if($registro->act_water == "11") A.3.10.7 ACUEDUCTO-DISTRIBUCION @endif
+                                @if($registro->act_water == "12") A.3.10.8 ACUEDUCTO-MICROMEDICION @endif
+                                @if($registro->act_water == "13") A.3.10.9 ACUEDUCTO-INDICE DE AGUA NO CONTABILIZADA @endif
+                                @if($registro->act_water == "14") A.3.11.1 ALCANTARILLADO-RECOLECCION @endif
+                                @if($registro->act_water == "15") A.3.11.2 ALCANTARILLADO-TRANSPORTE @endif
+                                @if($registro->act_water == "16") A.3.11.3 ALCANTARILLADO-TRATAMIENTO @endif
+                                @if($registro->act_water == "17") A.3.11.4 ALCANTARILLADO-DESCARGA @endif
+                                @if($registro->act_water == "18") A.3.11.5 ALCANTARILLADO-PREINVENSIONES, ESTUDIOS @endif
+                                @if($registro->act_water == "19") A.3.11.6 ALCANTARILLADO-INTERVENTORIA @endif
+                                @if($registro->act_water == "20") A.3.11.7 ALCANTARILLADO-FORTALECIMIENTO INSTITUCIONAL @endif
+                                @if($registro->act_water == "21") A.3.11.8 ALCANTARILLADO-SUBSIDIOS @endif
+                                @if($registro->act_water == "22") A.3.12.1 ASEO-PROYECTO DE TRATAMIENTO Y APROVECHAMIENTO DE RESIDUOS SOLIDOS @endif
+                                @if($registro->act_water == "23") A.3.12.2 ASEO-MAQUINARIA Y EQUIPOS @endif
+                                @if($registro->act_water == "24") A.3.12.3 ASEO-DISPOSICION FINAL @endif
+                                @if($registro->act_water == "25") A.3.12.4 ASEO-PREINVERSION Y ESTUDIOS @endif
+                                @if($registro->act_water == "26") A.3.12.5 ASEO-ASEO INTERVENTORIA @endif
+                                @if($registro->act_water == "27") A.3.12.6 ASEO-ASEO FORTALECIMIENTO INSTITUCIONAL @endif
+                                @if($registro->act_water == "28") A.3.12.7 ASEO-SUBSIDIOS @endif
+                                @if($registro->act_water == "29") A.3.13 TRANSFERENCIAS PDA INVERSION @endif
+                                @if($registro->act_water == "30") A.3.15 PAGOS PASIVOS LABORALES @endif
+                                @if($registro->act_water == "31") A.3.17 PAGO DE DEFICIT DE INVERSION EN AGUA POTABLE Y SANEAMIENTO BASICO @endif
+                                @if($registro->act_water == "32") A.3.18 PAGO SERVICIO A LA DEUDA @endif
+                            </div>
+                            <small class="form-text text-muted"> Actividad.</small>
+                        </div>
+                    @endif
                     <div class="row">
                         @if($registro->jefe_e == 1)
                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -567,56 +619,60 @@
 
                                     @if($fuenteAgua)
                                         <div class="row">
-                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                <label>Valor con Cargo: </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></span>
-                                                    <input type="number" class="form-control" id="value_water" name="value_water" required min="0" style="text-align: center">
+                                            @if(!$registro->value_water)
+                                                <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                    <label>Valor con Cargo: </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></span>
+                                                        <input type="number" class="form-control" id="value_water" name="value_water" required min="0" value="0" style="text-align: center">
+                                                    </div>
+                                                    <small class="form-text text-muted">Valor con cargo a la fuente</small>
                                                 </div>
-                                                <small class="form-text text-muted">Valor con cargo a la fuente</small>
-                                            </div>
-                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                <label>Actividad </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
-                                                    <select name="actividad" class="form-control">
-                                                        <option value="0">NO APLICA</option>
-                                                        <option value="1">A.3.10.1 ACUEDUCTO-CAPTACION</option>
-                                                        <option value="2">A.3.10.10 ACUEDUCTO-PREINVERSIONES, ESTUDIOS</option>
-                                                        <option value="3">A.3.10.11 ACUEDUCTO-INTERVENTORIA</option>
-                                                        <option value="4">A.3.10.12 ACUEDUCTO-FORMULACION, IMPLEMENTACION Y ACCIONES DE FORTALECIMIENTO PARA LA ADMINISTRACION Y OPERACION DE LOS SERVICIOS</option>
-                                                        <option value="5">A.3.10.13 ACUEDUCTO-SUBSIDIOS</option>
-                                                        <option value="6">A.3.10.2 ACUEDUCTO-ADUCCION</option>
-                                                        <option value="7">A.3.10.3 ACUEDUCTO-ALMACENAMIENTO</option>
-                                                        <option value="8">A.3.10.4 ACUEDUCTO-TRATAMIENTO</option>
-                                                        <option value="9">A.3.10.5 ACUEDUCTO-CONDUCCION</option>
-                                                        <option value="10">A.3.10.6 ACUEDUCTO-MACROMEDICION</option>
-                                                        <option value="11">A.3.10.7 ACUEDUCTO-DISTRIBUCION</option>
-                                                        <option value="12">A.3.10.8 ACUEDUCTO-MICROMEDICION</option>
-                                                        <option value="13">A.3.10.9 ACUEDUCTO-INDICE DE AGUA NO CONTABILIZADA</option>
-                                                        <option value="14">A.3.11.1 ALCANTARILLADO-RECOLECCION</option>
-                                                        <option value="15">A.3.11.2 ALCANTARILLADO-TRANSPORTE</option>
-                                                        <option value="16">A.3.11.3 ALCANTARILLADO-TRATAMIENTO</option>
-                                                        <option value="17">A.3.11.4 ALCANTARILLADO-DESCARGA</option>
-                                                        <option value="18">A.3.11.5 ALCANTARILLADO-PREINVENSIONES, ESTUDIOS</option>
-                                                        <option value="19">A.3.11.6 ALCANTARILLADO-INTERVENTORIA</option>
-                                                        <option value="20">A.3.11.7 ALCANTARILLADO-FORTALECIMIENTO INSTITUCIONAL</option>
-                                                        <option value="21">A.3.11.8 ALCANTARILLADO-SUBSIDIOS</option>
-                                                        <option value="23">A.3.12.1 ASEO-PROYECTO DE TRATAMIENTO Y APROVECHAMIENTO DE RESIDUOS SOLIDOS</option>
-                                                        <option value="24">A.3.12.2 ASEO-MAQUINARIA Y EQUIPOS</option>
-                                                        <option value="25">A.3.12.3 ASEO-DISPOSICION FINAL</option>
-                                                        <option value="26">A.3.12.4 ASEO-PREINVERSION Y ESTUDIOS</option>
-                                                        <option value="27">A.3.12.5 ASEO-ASEO INTERVENTORIA</option>
-                                                        <option value="28">A.3.12.6 ASEO-ASEO FORTALECIMIENTO INSTITUCIONAL</option>
-                                                        <option value="29">A.3.12.7 ASEO-SUBSIDIOS</option>
-                                                        <option value="30">A.3.13 TRANSFERENCIAS PDA INVERSION</option>
-                                                        <option value="31">A.3.15 PAGOS PASIVOS LABORALES</option>
-                                                        <option value="32">A.3.17 PAGO DE DEFICIT DE INVERSION EN AGUA POTABLE Y SANEAMIENTO BASICO</option>
-                                                        <option value="33">A.3.18 PAGO SERVICIO A LA DEUDA</option>
-                                                    </select>
+                                            @endif
+                                            @if(!$registro->act_water)
+                                                <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                    <label>Actividad </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                                        <select name="actividad" class="form-control">
+                                                            <option value="0">NO APLICA</option>
+                                                            <option value="1">A.3.10.1 ACUEDUCTO-CAPTACION</option>
+                                                            <option value="2">A.3.10.10 ACUEDUCTO-PREINVERSIONES, ESTUDIOS</option>
+                                                            <option value="3">A.3.10.11 ACUEDUCTO-INTERVENTORIA</option>
+                                                            <option value="4">A.3.10.12 ACUEDUCTO-FORMULACION, IMPLEMENTACION Y ACCIONES DE FORTALECIMIENTO PARA LA ADMINISTRACION Y OPERACION DE LOS SERVICIOS</option>
+                                                            <option value="5">A.3.10.13 ACUEDUCTO-SUBSIDIOS</option>
+                                                            <option value="6">A.3.10.2 ACUEDUCTO-ADUCCION</option>
+                                                            <option value="7">A.3.10.3 ACUEDUCTO-ALMACENAMIENTO</option>
+                                                            <option value="8">A.3.10.4 ACUEDUCTO-TRATAMIENTO</option>
+                                                            <option value="9">A.3.10.5 ACUEDUCTO-CONDUCCION</option>
+                                                            <option value="10">A.3.10.6 ACUEDUCTO-MACROMEDICION</option>
+                                                            <option value="11">A.3.10.7 ACUEDUCTO-DISTRIBUCION</option>
+                                                            <option value="12">A.3.10.8 ACUEDUCTO-MICROMEDICION</option>
+                                                            <option value="13">A.3.10.9 ACUEDUCTO-INDICE DE AGUA NO CONTABILIZADA</option>
+                                                            <option value="14">A.3.11.1 ALCANTARILLADO-RECOLECCION</option>
+                                                            <option value="15">A.3.11.2 ALCANTARILLADO-TRANSPORTE</option>
+                                                            <option value="16">A.3.11.3 ALCANTARILLADO-TRATAMIENTO</option>
+                                                            <option value="17">A.3.11.4 ALCANTARILLADO-DESCARGA</option>
+                                                            <option value="18">A.3.11.5 ALCANTARILLADO-PREINVENSIONES, ESTUDIOS</option>
+                                                            <option value="19">A.3.11.6 ALCANTARILLADO-INTERVENTORIA</option>
+                                                            <option value="20">A.3.11.7 ALCANTARILLADO-FORTALECIMIENTO INSTITUCIONAL</option>
+                                                            <option value="21">A.3.11.8 ALCANTARILLADO-SUBSIDIOS</option>
+                                                            <option value="22">A.3.12.1 ASEO-PROYECTO DE TRATAMIENTO Y APROVECHAMIENTO DE RESIDUOS SOLIDOS</option>
+                                                            <option value="23">A.3.12.2 ASEO-MAQUINARIA Y EQUIPOS</option>
+                                                            <option value="24">A.3.12.3 ASEO-DISPOSICION FINAL</option>
+                                                            <option value="25">A.3.12.4 ASEO-PREINVERSION Y ESTUDIOS</option>
+                                                            <option value="26">A.3.12.5 ASEO-ASEO INTERVENTORIA</option>
+                                                            <option value="27">A.3.12.6 ASEO-ASEO FORTALECIMIENTO INSTITUCIONAL</option>
+                                                            <option value="28">A.3.12.7 ASEO-SUBSIDIOS</option>
+                                                            <option value="39">A.3.13 TRANSFERENCIAS PDA INVERSION</option>
+                                                            <option value="30">A.3.15 PAGOS PASIVOS LABORALES</option>
+                                                            <option value="31">A.3.17 PAGO DE DEFICIT DE INVERSION EN AGUA POTABLE Y SANEAMIENTO BASICO</option>
+                                                            <option value="32">A.3.18 PAGO SERVICIO A LA DEUDA</option>
+                                                        </select>
+                                                    </div>
+                                                    <small class="form-text text-muted"> Seleccione la actividad.</small>
                                                 </div>
-                                                <small class="form-text text-muted"> Seleccione la actividad.</small>
-                                            </div>
+                                            @endif
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
