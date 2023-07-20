@@ -86,7 +86,7 @@ class LibrosController extends Controller
                                                         $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
                                                         $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                                             'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                            'total' => '$'.number_format($total,0)]);
+                                                            'total' => '$'.number_format($total,0), 'from' => 1]);
                                                         //return $descuento->descuento_mun;
 
                                                     }
@@ -104,7 +104,7 @@ class LibrosController extends Controller
                                                         $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
                                                         $result[] = collect(['fecha' => Carbon::parse($pagoF->ff_fin)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                                             'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                            'total' => '$'.number_format($total,0)]);
+                                                            'total' => '$'.number_format($total,0), 'from' => 1]);
                                                         //return $descuento->descuento_mun;
 
                                                     }
@@ -134,7 +134,7 @@ class LibrosController extends Controller
                                                 $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
                                                     'debito' => '$'.number_format($op_puc->valor_debito,0),'credito' => '$'.number_format($op_puc->valor_credito,0),
                                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 2]);
 
                                                 //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
                                                 if ($op_puc->ordenPago->saldo == 0){
@@ -144,7 +144,7 @@ class LibrosController extends Controller
                                                         $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
                                                             'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
                                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                            'total' => '$'.number_format($total,0)]);
+                                                            'total' => '$'.number_format($total,0), 'from' => 2]);
                                                     }
                                                 }
                                             } elseif ($mes == Carbon::parse($op_puc->ordenPago->created_at)->format('m')){
@@ -160,7 +160,7 @@ class LibrosController extends Controller
                                                 $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
                                                     'debito' => '$'.number_format($op_puc->valor_debito,0),'credito' => '$'.number_format($op_puc->valor_credito,0),
                                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 2]);
 
                                                 //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
                                                 if ($op_puc->ordenPago->saldo == 0){
@@ -170,7 +170,7 @@ class LibrosController extends Controller
                                                         $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
                                                             'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
                                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                            'total' => '$'.number_format($total,0)]);
+                                                            'total' => '$'.number_format($total,0), 'from' => 2]);
                                                     }
                                                 }
                                             }
@@ -198,7 +198,7 @@ class LibrosController extends Controller
                                                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code,
                                                     'debito' => '$'.number_format($pagoBank->valor,0),
                                                     'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 3]);
                                             } elseif ($mes == Carbon::parse($pagoBank->pago->created_at)->format('m')){
                                                 $total = $total + $pagoBank->valor;
                                                 $pago = Pagos::find($pagoBank->pagos_id);
@@ -212,7 +212,7 @@ class LibrosController extends Controller
                                                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code,
                                                     'debito' => '$'.number_format($pagoBank->valor,0),
                                                     'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 3]);
                                             }
                                         }
                                     }
@@ -242,7 +242,7 @@ class LibrosController extends Controller
                                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 4]);
                                             } else{
                                                 $total = $total + $compCont->debito;
                                                 $total = $total - $compCont->credito;
@@ -250,7 +250,7 @@ class LibrosController extends Controller
                                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 4]);
                                             }
                                         } elseif ($mes == Carbon::parse($compCont->comprobante->ff)->format('m')){
                                             if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
@@ -269,7 +269,7 @@ class LibrosController extends Controller
                                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 4]);
                                             } else{
                                                 $total = $total + $compCont->debito;
                                                 $total = $total - $compCont->credito;
@@ -277,7 +277,7 @@ class LibrosController extends Controller
                                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 4]);
                                             }
                                         }
                                     }
@@ -313,7 +313,7 @@ class LibrosController extends Controller
                                         $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
                                         $result[] = collect(['fecha' => Carbon::parse($pagoF->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                             'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 5]);
                                         //return $descuento->descuento_mun;
 
                                     }
@@ -331,7 +331,7 @@ class LibrosController extends Controller
                                         $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
                                         $result[] = collect(['fecha' => Carbon::parse($pagoF->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                             'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 5]);
                                         //return $descuento->descuento_mun;
 
                                     }
@@ -361,7 +361,7 @@ class LibrosController extends Controller
                                 $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
                                     'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
-                                    'cuenta' => $account->code.' - '.$account->concepto, 'total' => '$'.number_format($total,0)]);
+                                    'cuenta' => $account->code.' - '.$account->concepto, 'total' => '$'.number_format($total,0), 'from' => 6]);
 
                                 //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
                                 if ($op_puc->ordenPago->saldo == 0){
@@ -371,7 +371,7 @@ class LibrosController extends Controller
                                         $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
                                             'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 6]);
                                     }
                                 }
                             } elseif ($mes == Carbon::parse($op_puc->ordenPago->created_at)->format('m')){
@@ -387,7 +387,7 @@ class LibrosController extends Controller
                                 $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
                                     'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
-                                    'cuenta' => $account->code.' - '.$account->concepto, 'total' => '$'.number_format($total,0)]);
+                                    'cuenta' => $account->code.' - '.$account->concepto, 'total' => '$'.number_format($total,0), 'from' => 6]);
 
                                 //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
                                 if ($op_puc->ordenPago->saldo == 0){
@@ -397,7 +397,7 @@ class LibrosController extends Controller
                                         $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
                                             'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 6]);
                                     }
                                 }
                             }
@@ -424,7 +424,7 @@ class LibrosController extends Controller
                                 }
                                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->pago->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code, 'debito' => '$'.number_format($pagoBank->valor,0),
                                     'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                    'total' => '$'.number_format($total,0)]);
+                                    'total' => '$'.number_format($total,0), 'from' => 7]);
                             } elseif ($mes == Carbon::parse($pagoBank->pago->created_at)->format('m')){
                                 $total = $total + $pagoBank->valor;
                                 $pago = Pagos::find($pagoBank->pagos_id);
@@ -437,7 +437,7 @@ class LibrosController extends Controller
                                 }
                                 $result[] = collect(['fecha' => Carbon::parse($pagoBank->pago->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code, 'debito' => '$'.number_format($pagoBank->valor,0),
                                     'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                    'total' => '$'.number_format($total,0)]);
+                                    'total' => '$'.number_format($total,0), 'from' => 7]);
                             }
                         }
                     }
@@ -467,7 +467,7 @@ class LibrosController extends Controller
                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                    'total' => '$'.number_format($total,0)]);
+                                    'total' => '$'.number_format($total,0), 'from' => 8]);
                             } else{
                                 $total = $total + $compCont->debito;
                                 $total = $total - $compCont->credito;
@@ -475,7 +475,7 @@ class LibrosController extends Controller
                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                    'total' => '$'.number_format($total,0)]);
+                                    'total' => '$'.number_format($total,0), 'from' => 8]);
                             }
                         } elseif ($mes == Carbon::parse($compCont->comprobante->ff)->format('m')){
                             if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
@@ -494,7 +494,7 @@ class LibrosController extends Controller
                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                    'total' => '$'.number_format($total,0)]);
+                                    'total' => '$'.number_format($total,0), 'from' => 8]);
                             } else{
                                 $total = $total + $compCont->debito;
                                 $total = $total - $compCont->credito;
@@ -502,7 +502,7 @@ class LibrosController extends Controller
                                     'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                     'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                     'concepto' => $compCont->comprobante->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                    'total' => '$'.number_format($total,0)]);
+                                    'total' => '$'.number_format($total,0), 'from' => 8]);
                             }
                         }
 
@@ -539,7 +539,7 @@ class LibrosController extends Controller
                                                 $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
                                                 $result[] = collect(['fecha' => Carbon::parse($pagoF->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                                     'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 9]);
                                                 //return $descuento->descuento_mun;
                                             } elseif ($mes == Carbon::parse($pagoF->created_at)->format('m')){
                                                 $total = $total + $descuento->valor;
@@ -547,7 +547,7 @@ class LibrosController extends Controller
                                                 $numIdent = $pagoF->orden_pago->registros->persona->num_dc;
                                                 $result[] = collect(['fecha' => Carbon::parse($pagoF->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pagoF->code, 'debito' => '$'.number_format(0,0),
                                                     'credito' => '$'.number_format($descuento->valor,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $descuento->descuento_mun->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 9]);
                                                 //return $descuento->descuento_mun;
                                             }
                                         }
@@ -576,7 +576,7 @@ class LibrosController extends Controller
                                         $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
                                             'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 10]);
 
                                         //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
                                         if ($op_puc->ordenPago->saldo == 0){
@@ -586,7 +586,7 @@ class LibrosController extends Controller
                                                 $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
                                                     'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
                                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 10]);
                                             }
                                         }
                                     } elseif ($mes == Carbon::parse($op_puc->ordenPago->created_at)->format('m')){
@@ -602,7 +602,7 @@ class LibrosController extends Controller
                                         $result[] = collect(['fecha' => Carbon::parse($op_puc->created_at)->format('d-m-Y'), 'modulo' => 'Orden de Pago #'.$op_puc->ordenPago->code,
                                             'debito' => '$'.number_format($op_puc->valor_debito,0), 'credito' => '$'.number_format($op_puc->valor_credito,0),
                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 10]);
 
                                         //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
                                         if ($op_puc->ordenPago->saldo == 0){
@@ -612,7 +612,7 @@ class LibrosController extends Controller
                                                 $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
                                                     'debito' => '$'.number_format($op_puc->valor_credito,0),'credito' => '$0',
                                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $account->code.' - '.$account->concepto,
-                                                    'total' => '$'.number_format($total,0)]);
+                                                    'total' => '$'.number_format($total,0), 'from' => 10]);
                                             }
                                         }
                                     }
@@ -639,7 +639,7 @@ class LibrosController extends Controller
                                         }
                                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->pago->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code, 'debito' => '$'.number_format($pagoBank->valor,0),
                                             'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 11]);
                                     } elseif ($mes == Carbon::parse($pagoBank->pago->created_at)->format('m')){
                                         $total = $total + $pagoBank->valor;
                                         $pago = Pagos::find($pagoBank->pagos_id);
@@ -652,7 +652,7 @@ class LibrosController extends Controller
                                         }
                                         $result[] = collect(['fecha' => Carbon::parse($pagoBank->pago->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pago->code, 'debito' => '$'.number_format($pagoBank->valor,0),
                                             'credito' => '$'.number_format(0,0), 'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 11]);
                                     }
                                 }
                             }
@@ -682,7 +682,7 @@ class LibrosController extends Controller
                                             'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                             'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                             'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 12]);
                                     } else{
                                         $total = $total + $compCont->debito;
                                         $total = $total - $compCont->credito;
@@ -690,7 +690,7 @@ class LibrosController extends Controller
                                             'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                             'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                             'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 12]);
                                     }
                                 } elseif ($mes == Carbon::parse($compCont->comprobante->ff)->format('m')){
                                     if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
@@ -709,7 +709,7 @@ class LibrosController extends Controller
                                             'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                             'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                             'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 12]);
                                     } else{
                                         $total = $total + $compCont->debito;
                                         $total = $total - $compCont->credito;
@@ -717,7 +717,7 @@ class LibrosController extends Controller
                                             'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => '$'.number_format($compCont->debito,0),
                                             'credito' => '$'.number_format($compCont->credito,0), 'tercero' => $tercero, 'CC' => $numIdent,
                                             'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                            'total' => '$'.number_format($total,0)]);
+                                            'total' => '$'.number_format($total,0), 'from' => 12]);
                                     }
                                 }
                             }
