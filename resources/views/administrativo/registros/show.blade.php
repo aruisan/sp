@@ -203,23 +203,21 @@
                                 <small class="form-text text-muted">Modalidad de Selección del contrato del registro</small>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                <label>Estado de Ejecución: </label>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
-                                    @if($registro->estado_ejec == '0')
-                                        NO APLICA
-                                    @elseif($registro->estado_ejec == '1')
-                                        1 - EJECUCION
-                                    @elseif($registro->estado_ejec == '2')
-                                        2 - LIQUIDADO
-                                    @elseif($registro->estado_ejec == '3')
-                                        3 - SUSPENDIDO
-                                    @endif
-                                </div>
-                                <small class="form-text text-muted">Estado de Ejecución del contrato del registro</small>
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Estado de Ejecución: </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                @if($registro->estado_ejec == '0')
+                                    NO APLICA
+                                @elseif($registro->estado_ejec == '1')
+                                    1 - EJECUCION
+                                @elseif($registro->estado_ejec == '2')
+                                    2 - LIQUIDADO
+                                @elseif($registro->estado_ejec == '3')
+                                    3 - SUSPENDIDO
+                                @endif
                             </div>
+                            <small class="form-text text-muted">Estado de Ejecución del contrato del registro</small>
                         </div>
                     @endif
                     @if($registro->value_water)
@@ -272,6 +270,33 @@
                                 @if($registro->act_water == "32") A.3.18 PAGO SERVICIO A LA DEUDA @endif
                             </div>
                             <small class="form-text text-muted"> Actividad.</small>
+                        </div>
+                    @endif
+                    @if($registro->font_water)
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Fuente: </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                @if($registro->font_water == "0") NO APLICA @endif
+                                @if($registro->font_water == "280") SGP APSB - SALDOS NO EJECUTADOS VIGENCIA @endif
+                                @if($registro->font_water == "290") SGP APSB - ONCE DOCEAVAS VIGENCIA @endif
+                                @if($registro->font_water == "300") SGP APSB - RENDIMIENTOS FINANCIEROS @endif
+                                @if($registro->font_water == "305") SGP MUNICIPIOS DESCERTIFICADOS @endif
+                            </div>
+                            <small class="form-text text-muted">Fuente.</small>
+                        </div>
+                    @endif
+                    @if($registro->loc_water)
+                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <label>Localización: </label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                                @if($registro->loc_water == "0") NO APLICA @endif
+                                @if($registro->loc_water == "1") URBANO @endif
+                                @if($registro->loc_water == "2") CENTRO POBLADO @endif
+                                @if($registro->loc_water == "3") RURAL DISPERSO @endif
+                            </div>
+                            <small class="form-text text-muted">Localización.</small>
                         </div>
                     @endif
                     <div class="row">
@@ -675,33 +700,37 @@
                                             @endif
                                         </div>
                                         <div class="row">
-                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                <label>Fuente: </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
-                                                    <select name="font_water" class="form-control">
-                                                        <option value="0">NO APLICA</option>
-                                                        <option value="280">SGP APSB - SALDOS NO EJECUTADOS VIGENCIA</option>
-                                                        <option value="290">SGP APSB - ONCE DOCEAVAS VIGENCIA</option>
-                                                        <option value="300">SGP APSB - RENDIMIENTOS FINANCIEROS</option>
-                                                        <option value="305">SGP MUNICIPIOS DESCERTIFICADOS</option>
-                                                    </select>
+                                            @if(!$registro->font_water)
+                                                <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                    <label>Fuente: </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-file" aria-hidden="true"></i></span>
+                                                        <select name="font_water" class="form-control">
+                                                            <option value="0">NO APLICA</option>
+                                                            <option value="280">SGP APSB - SALDOS NO EJECUTADOS VIGENCIA</option>
+                                                            <option value="290">SGP APSB - ONCE DOCEAVAS VIGENCIA</option>
+                                                            <option value="300">SGP APSB - RENDIMIENTOS FINANCIEROS</option>
+                                                            <option value="305">SGP MUNICIPIOS DESCERTIFICADOS</option>
+                                                        </select>
+                                                    </div>
+                                                    <small class="form-text text-muted">Seleccione la fuente.</small>
                                                 </div>
-                                                <small class="form-text text-muted">Seleccione la fuente.</small>
-                                            </div>
-                                            <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                <label>Localización: </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                                                    <select name="loc_water" class="form-control">
-                                                        <option value="0">NO APLICA</option>
-                                                        <option value="1">URBANO</option>
-                                                        <option value="2">CENTRO POBLADO</option>
-                                                        <option value="3">RURAL DISPERSO</option>
-                                                    </select>
+                                            @endif
+                                            @if(!$registro->loc_water)
+                                                <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                    <label>Localización: </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                                                        <select name="loc_water" class="form-control">
+                                                            <option value="0">NO APLICA</option>
+                                                            <option value="1">URBANO</option>
+                                                            <option value="2">CENTRO POBLADO</option>
+                                                            <option value="3">RURAL DISPERSO</option>
+                                                        </select>
+                                                    </div>
+                                                    <small class="form-text text-muted">Seleccione la localización.</small>
                                                 </div>
-                                                <small class="form-text text-muted">Seleccione la localización.</small>
-                                            </div>
+                                            @endif
                                         </div>
                                     @endif
 
