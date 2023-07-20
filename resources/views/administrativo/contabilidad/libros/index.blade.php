@@ -11,6 +11,23 @@
                 <h4><b>Libros</b></h4>
             </strong>
         </div>
+        <label for="mes">Seleccione el filtro de tiempo de busqueda.</label>
+        <select style="width: 100%" class="form-control" id="mes" name="mes">
+            <option value="0">AÑO</option>
+            <option value="1">ENERO</option>
+            <option value="2">FEBRERO</option>
+            <option value="3">MARZO</option>
+            <option value="4">ABRIL</option>
+            <option value="5">MAYO</option>
+            <option value="6">JUNIO</option>
+            <option value="7">JULIO</option>
+            <option value="8">AGOSTO</option>
+            <option value="9">SEPTIEMBRE</option>
+            <option value="10">OCTUBRE</option>
+            <option value="11">NOVIEMBRE</option>
+            <option value="12">DICIEMBRE</option>
+        </select>
+        <br>
         <select style="width: 100%" class="select-cuenta" id="cuentaPUC" name="cuentaPUC" onchange="findRubroPUC(this)">
             <option value="0">Seleccione la cuenta para obtener el libro</option>
             @foreach($result as $cuenta)
@@ -71,11 +88,12 @@
             $("#cargando").show();
 
             var table = $('#tabla').DataTable();
+            var mes = document.getElementById('mes').value;
 
             $.ajax({
                 method: "POST",
                 url: "/administrativo/contabilidad/libros/rubros_puc",
-                data: { "id": option.value,
+                data: { "id": option.value, "mes": mes,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
