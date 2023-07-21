@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('feed:presupuesto')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));
+        $schedule->command('update:OP')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));
+        //$schedule->command('feed:presupuesto')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));
     }
 
     /**
