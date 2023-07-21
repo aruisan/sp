@@ -287,7 +287,7 @@ class BancosController extends Controller
                                     'cuenta' => $rubroPUC->code . ' - ' . $rubroPUC->concepto, 'total' => '$' . number_format($total, 0), 'from' => 6]);
 
                                 //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                if ($op_puc->ordenPago->saldo == 0 and $op_puc->ordenPago->code != 228 ){
+                                if ($op_puc->ordenPago->saldo == 0 and $op_puc->ordenPago->code != 2228 ){
                                     $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
                                     foreach ($pagosOP as $pay){
                                         if ($op_puc->valor_debito > 0){
@@ -435,7 +435,7 @@ class BancosController extends Controller
                                         'totDeb' => $totDeb, 'totCred' => $totCred]);
 
                                     //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                    if ($op_puc->ordenPago->saldo == 0 and $op_puc->ordenPago->code != 228){
+                                    if ($op_puc->ordenPago->saldo == 0 and $op_puc->ordenPago->code != 2228){
                                         $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
                                         foreach ($pagosOP as $pay){
                                             if ($op_puc->valor_debito > 0){
@@ -583,7 +583,7 @@ class BancosController extends Controller
                                             'cuenta' => $rubroPUC->code . ' - ' . $rubroPUC->concepto, 'total' => '$' . number_format($total, 0), 'from' => 6]);
 
                                         //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
-                                        if ($op_puc->ordenPago->saldo == 0 and $op_puc->ordenPago->code != 228){
+                                        if ($op_puc->ordenPago->saldo == 0 and $op_puc->ordenPago->code != 2228){
                                             $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
                                             foreach ($pagosOP as $pay){
                                                 if ($op_puc->valor_debito > 0){
