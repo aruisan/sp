@@ -285,6 +285,28 @@ class BancosController extends Controller
                                     'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
                                     'totDeb' => $totDeb, 'totCred' => $totCred,
                                     'cuenta' => $rubroPUC->code . ' - ' . $rubroPUC->concepto, 'total' => '$' . number_format($total, 0), 'from' => 6]);
+
+                                //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
+                                if ($op_puc->ordenPago->saldo == 0){
+                                    $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
+                                    foreach ($pagosOP as $pay){
+                                        if ($op_puc->valor_debito > 0){
+                                            $debito = 0;
+                                            $credito = $pay->valor;
+                                            $total = $total - $credito;
+                                            $totCred = $totCred + $credito;
+                                        } else{
+                                            $debito = $pay->valor;
+                                            $credito = 0;
+                                            $total = $total + $debito;
+                                            $totDeb = $totDeb + $debito;
+                                        }
+                                        $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
+                                            'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
+                                            'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                            'total' => '$'.number_format($total,0), 'from' => 2,'totDeb' => $totDeb, 'totCred' => $totCred ]);
+                                    }
+                                }
                             }
                         }
                     }
@@ -411,6 +433,28 @@ class BancosController extends Controller
                                         'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
                                         'cuenta' => $rubroPUC->code . ' - ' . $rubroPUC->concepto, 'total' => '$' . number_format($total, 0), 'from' => 6,
                                         'totDeb' => $totDeb, 'totCred' => $totCred]);
+
+                                    //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
+                                    if ($op_puc->ordenPago->saldo == 0){
+                                        $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
+                                        foreach ($pagosOP as $pay){
+                                            if ($op_puc->valor_debito > 0){
+                                                $debito = 0;
+                                                $credito = $pay->valor;
+                                                $total = $total - $credito;
+                                                $totCred = $totCred + $credito;
+                                            } else{
+                                                $debito = $pay->valor;
+                                                $credito = 0;
+                                                $total = $total + $debito;
+                                                $totDeb = $totDeb + $debito;
+                                            }
+                                            $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
+                                                'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
+                                                'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                                'total' => '$'.number_format($total,0), 'from' => 2,'totDeb' => $totDeb, 'totCred' => $totCred ]);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -537,6 +581,28 @@ class BancosController extends Controller
                                             'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $op_puc->ordenPago->nombre,
                                             'totDeb' => $totDeb, 'totCred' => $totCred,
                                             'cuenta' => $rubroPUC->code . ' - ' . $rubroPUC->concepto, 'total' => '$' . number_format($total, 0), 'from' => 6]);
+
+                                        //SI LA ORDEN DE PAGO TIENE SU SALDO EN 0$ POR ENDE YA FUE PAGADA Y SE DEBE VOLTEAR EL VALOR
+                                        if ($op_puc->ordenPago->saldo == 0){
+                                            $pagosOP = Pagos::where('orden_pago_id', $op_puc->ordenPago->id)->get();
+                                            foreach ($pagosOP as $pay){
+                                                if ($op_puc->valor_debito > 0){
+                                                    $debito = 0;
+                                                    $credito = $pay->valor;
+                                                    $total = $total - $credito;
+                                                    $totCred = $totCred + $credito;
+                                                } else{
+                                                    $debito = $pay->valor;
+                                                    $credito = 0;
+                                                    $total = $total + $debito;
+                                                    $totDeb = $totDeb + $debito;
+                                                }
+                                                $result[] = collect(['fecha' => Carbon::parse($pay->created_at)->format('d-m-Y'), 'modulo' => 'Pago #'.$pay->code,
+                                                    'debito' => '$'.number_format($debito,0),'credito' => '$'.number_format($credito,0),
+                                                    'tercero' => $tercero, 'CC' => $numIdent, 'concepto' => $pay->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
+                                                    'total' => '$'.number_format($total,0), 'from' => 2,'totDeb' => $totDeb, 'totCred' => $totCred ]);
+                                            }
+                                        }
                                     }
                                 }
                             }
