@@ -9,6 +9,8 @@ class PagoBanksNew extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
+    protected $table = 'pago_banks_new';
+
     public function data_puc(){
         return $this->belongsTo('App\Model\Administrativo\Contabilidad\PucAlcaldia','rubros_puc_id');
     }
