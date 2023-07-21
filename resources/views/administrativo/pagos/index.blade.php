@@ -106,7 +106,7 @@
                                 <td>{{ $pago['info']->code }}</td>
                                 <td>
                                     @if($pago['info']->reteFuente == "1")
-                                        <a href="{{ url('administrativo/ordenPagos/pdf/'.$pago['info']->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ url('administrativo/ordenPagos/pdf/'.$pago['info']->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success" target="_blank"><i class="fa fa-eye"></i></a>
                                     @else
                                         <a href="{{ url('administrativo/ordenPagos/show/'.$pago['info']->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
                                     @endif
