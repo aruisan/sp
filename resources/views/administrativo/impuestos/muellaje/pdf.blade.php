@@ -156,7 +156,7 @@
                                     <td>Fecha de Salida</td>
                                     <td>{{ \Carbon\Carbon::parse($muellaje->fechaSalida)->format('d-m-Y') }}</td>
                                     <td>Tarifa</td>
-                                    <td>$<?php echo number_format($muellaje->tarifa,2) ?></td>
+                                    <td>$<?php echo number_format($muellaje->tarifa,3) ?></td>
                                 </tr>
                                 <tr>
                                     <td>Hora de Ingreso</td>
