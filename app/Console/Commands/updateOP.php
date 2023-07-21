@@ -55,7 +55,6 @@ class updateOP extends Command
                         $newPagoBank->persona_id = $pago->persona_id;
                         $newPagoBank->created_at = $pago->created_at;
                         $newPagoBank->save();
-                        echo $newPagoBank;
                     }
                 }
             } elseif ($pago->reteFuente == '1'){
@@ -71,7 +70,6 @@ class updateOP extends Command
                         $newPagoBank->persona_id = $debPay->persona_id;
                         $newPagoBank->created_at = $pago->created_at;
                         $newPagoBank->save();
-                        echo $newPagoBank;
                     }
                 }
             } else{
