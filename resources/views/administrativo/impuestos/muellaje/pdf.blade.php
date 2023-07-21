@@ -156,7 +156,7 @@
                                     <td>Fecha de Salida</td>
                                     <td>{{ \Carbon\Carbon::parse($muellaje->fechaSalida)->format('d-m-Y') }}</td>
                                     <td>Tarifa</td>
-                                    <td>$<?php echo number_format($muellaje->tarifa,3) ?></td>
+                                    <td>$<?php echo number_format($muellaje->tarifa,2) ?></td>
                                 </tr>
                                 <tr>
                                     <td>Hora de Ingreso</td>
@@ -170,11 +170,11 @@
                                     <td>Número total de días</td>
                                     <td>{{$muellaje->numTotalDias}}</td>
                                     <td>Valor del Dolar</td>
-                                    <td>$<?php echo number_format($muellaje->valorDolar,3) ?></td>
+                                    <td>$<?php echo number_format($muellaje->valorDolar,2) ?></td>
                                     <td>Valor a pagar</td>
                                     <td><b>
-                                            USD $<?php echo number_format($muellaje->valorPago,3) ?> <br>
-                                            COP $<?php echo number_format($muellaje->valorPago * $muellaje->valorDolar,3) ?>
+                                            USD $<?php echo number_format($muellaje->valorPago,2) ?> <br>
+                                            COP $<?php echo number_format($muellaje->valorPago * $muellaje->valorDolar,2) ?>
                                         </b></td>
                                 </tr>
                                 <tr>
