@@ -226,62 +226,62 @@ class LibrosController extends Controller
                                     if (Carbon::parse($OP->created_at)->month == 1){
                                         $enero[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     } elseif (Carbon::parse($OP->created_at)->month == 2){
                                         $febrero[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 3){
                                         $marzo[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 4){
                                         $abril[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 5){
                                         $mayo[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 6){
                                         $junio[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 7){
                                         $julio[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 8){
                                         $agosto[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 9){
                                         $septiembre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 10){
                                         $octubre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 11){
                                         $noviembre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 12){
                                         $diciembre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
-                                            'credito' =>  $descRet->valor , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }
                                 }
@@ -300,62 +300,62 @@ class LibrosController extends Controller
                                     if (Carbon::parse($OP->created_at)->month == 1){
                                         $enero[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     } elseif (Carbon::parse($OP->created_at)->month == 2){
                                         $febrero[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito , 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito , 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 3){
                                         $marzo[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 4){
                                         $abril[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 5){
                                         $mayo[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 6){
                                         $junio[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 7){
                                         $julio[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' => $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 8){
                                         $agosto[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 9){
                                         $septiembre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 10){
                                         $octubre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 11){
                                         $noviembre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 12){
                                         $diciembre[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                             'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
-                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
+                                            'credito' =>  $descRet->valor_credito, 'concepto' => $OP->nombre,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }
                                 }
