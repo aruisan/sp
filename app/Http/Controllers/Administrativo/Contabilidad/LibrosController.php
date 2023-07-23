@@ -397,12 +397,12 @@ class LibrosController extends Controller
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($pago->created_at)->month == 6){
                                         $junio[] = ['fecha' => Carbon::parse($pago->created_at)->format('d-m-Y'),
-                                            'modulo' => 'Pago #'.$pago->code, 'debito' =>  $descRet->debito ,
+                                            'modulo' => 'Pago #'.$pago->code, 'debito' =>  $descRet->debito,
                                             'credito' =>  $descRet->credito, 'concepto' => $pago->concepto,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($pago->created_at)->month == 7){
                                         $julio[] = ['fecha' => Carbon::parse($pago->created_at)->format('d-m-Y'),
-                                            'modulo' => 'Pago #'.$pago->code, $descRet->debito ,
+                                            'modulo' => 'Pago #'.$pago->code, 'debito' => $descRet->debito ,
                                             'credito' =>  $descRet->credito, 'concepto' => $pago->concepto,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($pago->created_at)->month == 8){
