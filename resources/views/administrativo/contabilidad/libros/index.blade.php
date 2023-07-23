@@ -62,6 +62,180 @@
                 <tbody id="bodyTabla"></tbody>
             </table>
         </div>
+        <hr>
+        <h3 class="text-center">ENERO</h3>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr><th class="text-center" colspan="7">ENERO</th></tr>
+                <tr>
+                    <th class="text-center" colspan="2">Fecha</th>
+                    <th class="text-center">Cuenta</th>
+                    <th class="text-center">Nombre Documento</th>
+                    <th class="text-center">Concepto</th>
+                    <th class="text-center">Debito</th>
+                    <th class="text-center">Credito</th>
+                </tr>
+                </thead>
+                <tbody>
+                @php($deb = 0)
+                @php($cred = 0)
+                @foreach($result2 as $cuenta2)
+                    @foreach($resultEne as $padEnero)
+                        @if($cuenta2['id'] == $padEnero['cuenta_id'])
+                            <tr>
+                                <td colspan="2">Enero</td>
+                                <td>{{$padEnero['code']}} - {{$padEnero['concepto']}}</td>
+                                <td colspan="2">{{$padEnero['concepto']}}</td>
+                                <td>{{$padEnero['debito']}}</td>
+                                <td>{{$padEnero['credito']}}</td>
+                            </tr>
+                            @if(strlen($padEnero['code']) == 2)
+                                @php($deb = $deb + $padEnero['debito'])
+                                @php($cred = $cred + $padEnero['credito'])
+                            @endif
+                            @foreach($enero as $value)
+                                @if($padEnero['cuenta_id'] == $value['padre_id'])
+                                    <tr>
+                                        <td>Enero</td>
+                                        <td>{{$value['fecha']}}</td>
+                                        <td>{{$value['cuenta']}}</td>
+                                        <td>{{$value['modulo']}}</td>
+                                        <td>{{$value['concepto']}}</td>
+                                        <td>{{$value['debito']}}</td>
+                                        <td>{{$value['credito']}}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endforeach
+                <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
+                    <td colspan="2">ENERO</td>
+                    <td colspan="3"><b>TOTALES</b></td>
+                    <td><b>{{$deb}}</b></td>
+                    <td><b>{{$cred}}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <h3 class="text-center">FEBRERO</h3>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr><th class="text-center" colspan="7">FEBRERO</th></tr>
+                <tr>
+                    <th class="text-center" colspan="2">Fecha</th>
+                    <th class="text-center">Cuenta</th>
+                    <th class="text-center">Nombre Documento</th>
+                    <th class="text-center">Concepto</th>
+                    <th class="text-center">Debito</th>
+                    <th class="text-center">Credito</th>
+                </tr>
+                </thead>
+                <tbody>
+                @php($deb = 0)
+                @php($cred = 0)
+                @foreach($result2 as $cuenta2)
+                    @foreach($resultFeb as $padFeb)
+                        @if($cuenta2['id'] == $padFeb['cuenta_id'])
+                            <tr>
+                                <td colspan="2">Febrero</td>
+                                <td>{{$padFeb['code']}} - {{$padFeb['concepto']}}</td>
+                                <td colspan="2">{{$padFeb['concepto']}}</td>
+                                <td>{{$padFeb['debito']}}</td>
+                                <td>{{$padFeb['credito']}}</td>
+                            </tr>
+                            @if(strlen($padFeb['code']) == 2)
+                                @php($deb = $deb + $padFeb['debito'])
+                                @php($cred = $cred + $padFeb['credito'])
+                            @endif
+                            @foreach($febrero as $value)
+                                @if($padFeb['cuenta_id'] == $value['padre_id'])
+                                    <tr>
+                                        <td>Febrero</td>
+                                        <td>{{$value['fecha']}}</td>
+                                        <td>{{$value['cuenta']}}</td>
+                                        <td>{{$value['modulo']}}</td>
+                                        <td>{{$value['concepto']}}</td>
+                                        <td>{{$value['debito']}}</td>
+                                        <td>{{$value['credito']}}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endforeach
+                <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
+                    <td colspan="2">FEBRERO</td>
+                    <td colspan="3"><b>TOTALES</b></td>
+                    <td><b>{{$deb}}</b></td>
+                    <td><b>{{$cred}}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <h3 class="text-center">MARZO</h3>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr><th class="text-center" colspan="7">MARZO</th></tr>
+                <tr>
+                    <th class="text-center" colspan="2">Fecha</th>
+                    <th class="text-center">Cuenta</th>
+                    <th class="text-center">Nombre Documento</th>
+                    <th class="text-center">Concepto</th>
+                    <th class="text-center">Debito</th>
+                    <th class="text-center">Credito</th>
+                </tr>
+                </thead>
+                <tbody>
+                @php($deb = 0)
+                @php($cred = 0)
+                @foreach($result2 as $cuenta2)
+                    @foreach($resultMar as $pad)
+                        @if($cuenta2['id'] == $pad['cuenta_id'])
+                            <tr>
+                                <td colspan="2">Marzo</td>
+                                <td>{{$pad['code']}} - {{$pad['concepto']}}</td>
+                                <td colspan="2">{{$pad['concepto']}}</td>
+                                <td>{{$pad['debito']}}</td>
+                                <td>{{$pad['credito']}}</td>
+                            </tr>
+                            @if(strlen($pad['code']) == 2)
+                                @php($deb = $deb + $pad['debito'])
+                                @php($cred = $cred + $pad['credito'])
+                            @endif
+                            @foreach($marzo as $value)
+                                @if($pad['cuenta_id'] == $value['padre_id'])
+                                    <tr>
+                                        <td>Marzo</td>
+                                        <td>{{$value['fecha']}}</td>
+                                        <td>{{$value['cuenta']}}</td>
+                                        <td>{{$value['modulo']}}</td>
+                                        <td>{{$value['concepto']}}</td>
+                                        <td>{{$value['debito']}}</td>
+                                        <td>{{$value['credito']}}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endforeach
+                <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
+                    <td colspan="2">MARZO</td>
+                    <td colspan="3"><b>TOTALES</b></td>
+                    <td><b>{{$deb}}</b></td>
+                    <td><b>{{$cred}}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 @stop
 
