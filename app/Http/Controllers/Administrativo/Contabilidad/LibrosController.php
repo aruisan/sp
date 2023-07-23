@@ -329,7 +329,7 @@ class LibrosController extends Controller
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 7){
                                         $julio[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
-                                            'modulo' => 'Orden de Pago #'.$OP->code, $descRet->valor_debito ,
+                                            'modulo' => 'Orden de Pago #'.$OP->code, 'debito' => $descRet->valor_debito ,
                                             'credito' =>  $descRet->valor_credito, 'concepto' => $OP->concepto,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($OP->created_at)->month == 8){
@@ -475,7 +475,7 @@ class LibrosController extends Controller
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($compCont->created_at)->month == 7){
                                         $julio[] = ['fecha' => Carbon::parse($compCont->created_at)->format('d-m-Y'),
-                                            'modulo' => 'Comprobante Contable #'.$compCont->code, $descRet->debito ,
+                                            'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' => $descRet->debito ,
                                             'credito' =>  $descRet->credito, 'concepto' => $compCont->concepto,
                                             'cuenta' => $hijo->code.' - '.$hijo->concepto, 'from' => $from, 'padre_id' => $hijo->padre_id];
                                     }elseif (Carbon::parse($compCont->created_at)->month == 8){
