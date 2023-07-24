@@ -38,7 +38,7 @@ class CdpController extends Controller
 
     public function __construct()
     {
-        $this->fechaFija = '2023-07-11';
+        $this->fechaFija = '2023-07-12';
     }
 
     /**
