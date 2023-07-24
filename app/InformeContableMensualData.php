@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use Session;
 
 class InformeContableMensualData extends Model
 {
@@ -28,8 +29,12 @@ class InformeContableMensualData extends Model
     public function getFormatHijosPruebaAttribute(){
         $grupo_puc = "";
         foreach($this->hijos->sortBy('puc_alcaldia.code') as $item):
-            $grupo_puc .= $this->format_puc($item, $item->puc_alcaldia);
-            $grupo_puc .= $item->format_hijos_prueba;
+            if(!is_null($item->puc_alcaldia)){
+                if($item->puc_alcaldia->level <= Session::get(auth()->id().'-mes-informe-contable-nivel')){
+                    $grupo_puc .= $this->format_puc($item, $item->puc_alcaldia);
+               }
+           }            
+           $grupo_puc .= $item->format_hijos_prueba;
         endforeach;
             
         return $grupo_puc;
@@ -52,8 +57,26 @@ class InformeContableMensualData extends Model
                     <td class='text-right'>$".number_format($data['s_debito'])."</td>
                     <td class='text-right'>$".number_format($data['s_credito'])."</td>
                     <td class='text-right'>{$data['s_debito']}</td>
-                    <td class='text-right'>{$data['s_credito']}</td>
-                </tr>";
+                    <td class='text-right'>{$data['s_credito']}</td>";
+
+                    if(auth()->id() == 1){
+
+                        $item .=  '   <td class="text-right" style="width=200px;">';
+                        if(!is_null($puc) ){
+
+                            if($puc->level == 5){
+                                $item .= "<a class='btn btn-primary' href='".route("chip.contable.puc.ver", $puc->id)."' target='_blank'>Movimientos</a>";
+                            }
+                        }
+                        $item .= '</td>';
+
+                              
+                            
+                    }
+                    
+
+
+        $item .= "</tr>";
 
         return $item;
     }

@@ -8,6 +8,7 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'administrativo/contabilidad'
     Route::get('/blance-prueba/{informe}/{puc}','Administrativo\Contabilidad\Balances\PruebaController@generar_informe')->name('balance.prueba');
     Route::get('/blance-prueba-relaciones/{informe}','Administrativo\Contabilidad\Balances\PruebaController@generar_informe_relaciones')->name('balance.prueba-relaciones');
     Route::get('/blance-prueba-informe/{informe}','Administrativo\Contabilidad\Balances\PruebaController@informe')->name('balance.prueba-informe');
+    Route::get('/blance-prueba-nivel/{nivel}/{informe}','Administrativo\Contabilidad\Balances\PruebaController@informe_nivel')->name('balance.prueba-nivel');
     Route::get('/blance-prueba-reload-informe/{informe}','Administrativo\Contabilidad\Balances\PruebaController@reload_informe')->name('balance.prueba-informe-reload');
 
     Route::get('/chip-pre/{age}/{trimestre}','Administrativo\Contabilidad\Balances\ChipController@pre_informe')->name('chip.pre');

@@ -130,6 +130,7 @@ class ChipController extends Controller
     }
 
     public function informe_contable_puc_ver(PucAlcaldia $puc) {
+        //dd($puc->comprobantes_mensual);
         return view('administrativo.contabilidad.informes.chip_contable_valores_puc',compact('puc'));
     }
 

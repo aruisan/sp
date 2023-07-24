@@ -28,7 +28,11 @@ class ChipContabilidadValorInicial extends Model
     public function getFormatoHijosAttribute(){
         $grupo_puc = "";
         foreach($this->hijos->sortBy('puc_alcaldia.code') as $item):
-            $grupo_puc .= $this->format_puc($item, $item->puc_alcaldia);
+            if(!is_null($item->puc_alcaldia)){
+                 if($item->puc_alcaldia->level <= 4){
+                    $grupo_puc .= $this->format_puc($item, $item->puc_alcaldia);
+                }
+            }
             $grupo_puc .= $item->formato_hijos;
         endforeach;
             
@@ -37,6 +41,7 @@ class ChipContabilidadValorInicial extends Model
 
     public function format_puc($data, $puc){
         $codigo = is_null($puc) ? "no tiene" :  $puc->codigo_punto;
+
 
         return "<tr>
                     <td class='text-left'>D</td>

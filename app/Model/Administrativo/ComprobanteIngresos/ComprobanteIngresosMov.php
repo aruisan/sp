@@ -8,6 +8,10 @@ class ComprobanteIngresosMov extends Model implements Auditable
 {
     protected $table = 'comprobante_ingresos_movs';
 
+    protected $dates = [
+        'fechaComp',
+    ];
+
     use \OwenIt\Auditing\Auditable;
 
     public function comprobante(){

@@ -336,6 +336,7 @@ class PruebaController extends Controller
     public function pre_informe($mes){
         
         Session::put(auth()->id().'-mes-informe-contable-mes', $mes);
+        Session::put(auth()->id().'-mes-informe-contable-age', 2023);
         $fecha = "2023-{$mes}-01";
         $informe = InformeContableMensual::where('fecha', $fecha)->first();
         $pucs = PucAlcaldia::get();
@@ -415,6 +416,23 @@ class PruebaController extends Controller
     }
 
     public function informe(InformeContableMensual $informe){
+        $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
+        Session::put(auth()->id().'-mes-informe-contable-nivel', 1);
+        //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
+        $pucs = $informe->datos->filter(function($p){ return is_null($p->padre); })->sortBy('puc_alcaldia.code');
+
+        //dd($pucs->first()->hijos->map(function($e){ return $e->puc_alcaldia->code; }));
+        //dd($pucs);
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+
+        return view('administrativo.contabilidad.balances.prueba',compact('añoActual', 'mesActual', 'diaActual', 'pucs', 'meses', 'informe'));
+    }
+
+    public function informe_nivel($nivel, InformeContableMensual $informe){
+        //dd($nivel);
+        Session::put(auth()->id().'-mes-informe-contable-nivel', $nivel);
         $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
         //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
         $pucs = $informe->datos->filter(function($p){ return is_null($p->padre); })->sortBy('puc_alcaldia.code');

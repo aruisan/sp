@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
 use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\CompContMov;
 use App\ChipContabilidadData;
 use \Carbon\Carbon;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
+use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\AlmacenArticulo;
 use Session;
 
@@ -28,6 +30,14 @@ class PucAlcaldia extends Model implements Auditable
 
     public function almacen_items(){
         return $this->hasMany(AlmacenArticulo::class, 'ccd');
+    }
+
+    public function almacen_salidas(){
+
+    }
+
+    public function almacen_items_mensual(){
+        return $this->hasMany(AlmacenArticulo::class, 'ccd')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
     }
 
     public function almacen_pucs_creditos(){
@@ -87,14 +97,25 @@ class PucAlcaldia extends Model implements Auditable
         return ComprobanteIngresosMov::where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
     }
 
-    public function getComprobantesmensualAttribute(){
+    public function getComprobantesMensualAttribute(){
         //fecha de compriobante
-        return ComprobanteIngresosMov::whereMonth('fechaComp', Session::get(auth()->id().'-mes-informe-contable-mes'))->where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('fechaComp', Carbon::today()->format('Y'))->get();
+        $mes = Session::get(auth()->id().'-mes-informe-contable-mes');
+        $age = Carbon::today()->format('Y');
+        $inicio = $age."-".$mes."-01";
+        $dia_final = date("t", strtotime($inicio));
+        $final = $age."-".$mes."-".$dia_final;
+        return ComprobanteIngresosMov::where('cuenta_banco', $this->id)->whereBetween('fechaComp', [$inicio, $final])->orwhere('cuenta_puc_id', $this->id)->whereBetween('fechaComp', [$inicio, $final])->get();
     }
 
     //retefuente
     public function retefuente_movimientos(){
         return $this->hasMany(CompContMov::class, 'cuenta_puc_id')->where('comp_cont_id', '>', 2);
+    }
+
+    public function getRetefuenteMensualAttribute(){
+        return OrdenPagosDescuentos::where('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))
+                                    ->orwhere('retencion_fuente_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))
+                                    ->orwhere('desc_municipal_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))->get();
     }
 
     //suma de otros pucs 
@@ -108,6 +129,10 @@ class PucAlcaldia extends Model implements Auditable
         endforeach;
         
         return $data;
+    }
+
+    public function pagos_bank_new_mensual(){
+        return $this->hasMany(PagoBanksNew::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
     }
 
     public function getOtrosOrdenesPagoPucsMensualAttribute(){
@@ -243,33 +268,48 @@ class PucAlcaldia extends Model implements Auditable
         $inicio = "2023-{$mes}-01";
         $final = \Carbon\Carbon::createFromFormat('Y-m-d', $inicio)->addMonth()->format('Y-m-d');
 
+        /*
         if($this->otros_ordenes_pago_pucs_mensual->count() > 0):
             $otros_pucs = $this->otros_ordenes_pago_pucs_mensual;
             $totDeb += $otros_pucs->sum('valor_debito');
             $totCred += $otros_pucs->sum('valor_credito');
         endif;
-
-        if($this->almacen_items->count() > 0):
-            $totDeb += $this->almacen_items->sum('total');
-        endif;
-
+        
+        
         if($this->almacen_items_creditos->count() > 0):
             $totDeb += $this->almacen_items_creditos->sum('total');
         endif;
-        
-        if($this->pagos_bank_mensual->count() > 0):
-            $totCredAll = $this->pagos_bank_mensual->sum('valor');
-            $totCred += $this->pagos_bank_mensual->filter(function($p){ return $p->pago->estado == 1;})->sum('valor');
-        endif;
+        */
 
-        if($this->comprobantes_mensual->count() > 0):
-            $totDeb += $this->comprobantes_mensual->sum('debito');
-            $totCred += $this->comprobantes_mensual->sum('credito');
-        endif;
+        if($this->level == 5):
+            if($this->almacen_items_mensual->count() > 0):
+                $totDeb += $this->almacen_items_mensual->sum('total');
+            endif;
+            
+            if($this->pagos_bank_mensual->count() > 0):
+                $totCredAll = $this->pagos_bank_mensual->sum('valor');
+                $totCred += $this->pagos_bank_mensual->filter(function($p){ return $p->pago->estado == 1;})->sum('valor');
+            endif;
 
-        if($this->orden_pagos_mensual->count() > 0):
-            $totDeb += $this->orden_pagos_mensual->sum('valor_debito');
-            $totCred += $this->orden_pagos_mensual->sum('valor_credito');
+            if($this->pagos_bank_new_mensual->count() > 0):
+                $totDeb += $this->pagos_bank_new_mensual->sum('debito');
+                $totCred = $this->pagos_bank_new_mensual->sum('credito');
+            endif;
+
+            if($this->comprobantes_mensual->count() > 0):
+                $totDeb += $this->comprobantes_mensual->sum('debito');
+                $totCred += $this->comprobantes_mensual->sum('credito');
+            endif;
+
+            if($this->orden_pagos_mensual->count() > 0):
+                $totDeb += $this->orden_pagos_mensual->sum('valor_debito');
+                $totCred += $this->orden_pagos_mensual->sum('valor_credito');
+            endif;
+/*
+            if($this->retefuente_mensual->count() > 0):
+                $totCred += $this->retefuente_mensual->count() > 0 ? $this->retefuente_mensual->sum('valor') : 0;
+            endif;
+            */
         endif;
         
         return ['debito' => $totDeb, 'credito' => $totCred];

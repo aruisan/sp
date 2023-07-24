@@ -238,7 +238,7 @@ class OrdenPagosController extends Controller
 
     public function liquidar(Request $request)
     {
-        if (count($request->PUC) > 2){
+        if (count($request->PUC) > 200){
             Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC. Por favor seleccionelas nuevamente. ');
             return back();
         }

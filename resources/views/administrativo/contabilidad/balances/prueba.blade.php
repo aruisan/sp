@@ -18,18 +18,18 @@
                         <li><a href="{{route('balance.pre-prueba', '04')}}">Abril</a></li>
                         <li><a href="{{route('balance.pre-prueba', '05')}}">Mayo</a></li>
                         <li><a href="{{route('balance.pre-prueba', '06')}}">Junio</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '07')}}">Julio</a></li>
                     </ul>
                 </div>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        niveles <span class="caret"></span></button>
+                        nivel {{Session::get(auth()->id().'-mes-informe-contable-nivel')}}<span class="caret"></span></button>
                     <ul class="dropdown-menu">
-                        <li><a href="">Nivel 1</a></li>
-                        <li><a href="">Nivel 2</a></li>
-                        <li><a href="">Nivel 3</a></li>
-                        <li><a href="">Nivel 4</a></li>
-                        <li><a href="">Nivel 5</a></li>
-                        <li><a href="">Nivel 6</a></li>
+                        <li><a href="{{route('balance.prueba-nivel', [1,$informe->id])}}">Nivel 1</a></li>
+                        <li><a href="{{route('balance.prueba-nivel', [2,$informe->id])}}">Nivel 2</a></li>
+                        <li><a href="{{route('balance.prueba-nivel', [3,$informe->id])}}">Nivel 3</a></li>
+                        <li><a href="{{route('balance.prueba-nivel', [4,$informe->id])}}">Nivel 4</a></li>
+                        <li><a href="{{route('balance.prueba-nivel', [5,$informe->id])}}">Nivel 5</a></li>
                     </ul>
                 </div>
                 <a class="btn btn-danger pull-right" href="{{route('balance.prueba-informe-reload', $informe->id)}}"><i class="fa fa-refresh" aria-hidden="true"></i></a>
@@ -68,6 +68,9 @@
                         <th class="text-center">Credito</th>
                         <th class="text-center">Debito</th>
                         <th class="text-center">Credito</th>
+                        @if(auth()->id() == 1)
+                        <th class="text-center">movimientos</th>
+                        @endif
                         {{--
                         --}}
                     </tr>
@@ -93,6 +96,15 @@
                         <td class="text-right" style="width=200px;">${{number_format($puc->s_credito, 0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->s_debito}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->s_credito}}</td>
+                        @if(auth()->id() == 1)
+                        <td class="text-right" style="width=200px;">
+                            @if(!is_null($puc->puc_alcaldia) )
+                                @if($puc->puc_alcaldia->level == 5)
+                                    <a class="btn btn-primary" href='{{route("chip.contable.puc.ver", $puc->puc_alcaldia->id)}}' target="_blank">Movimientos</a>
+                                @endif
+                            @endif
+                        </td>
+                        @endif
                     </tr>
                     {!!$puc->format_hijos_prueba!!}
                 @endforeach
@@ -114,6 +126,9 @@
                         <td><b>${{number_format($pucs->sum('s_credito')  ,0,",", ".")}}</b></td>
                         <td><b>{{$pucs->sum('s_debito')}}</b></td>
                         <td><b>{{$pucs->sum('s_credito')}}</b></td>
+                        @if(auth()->id() == 1)
+                        <td></td>
+                        @endif
                     </tr>
                 </tfoot>
             </table>
