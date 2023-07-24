@@ -11,15 +11,11 @@
                 <h4><b>BALANCE</b></h4>
             </strong>
         </div>
-        <hr>
-        <h3 class="text-center">{{ $mes }}</h3>
-        <hr>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
-                <tr><th class="text-center" colspan="7">{{ $mes }}</th></tr>
                 <tr>
-                    <th class="text-center" colspan="2">Fecha</th>
+                    <th class="text-center">Fecha</th>
                     <th class="text-center">Cuenta</th>
                     <th class="text-center">Nombre Documento</th>
                     <th class="text-center">Concepto</th>
@@ -34,7 +30,7 @@
                     @foreach($result as $padres)
                         @if($cuenta2['id'] == $padres['cuenta_id'])
                             <tr>
-                                <td colspan="2">{{ $mes }}</td>
+                                <td></td>
                                 <td>{{$padres['code']}} - {{$padres['concepto']}}</td>
                                 <td colspan="2">{{$padres['concepto']}}</td>
                                 <td>{{$padres['debito']}}</td>
@@ -47,7 +43,6 @@
                             @foreach($hijosResult as $value)
                                 @if($padres['cuenta_id'] == $value['padre_id'])
                                     <tr>
-                                        <td>{{ $mes }}</td>
                                         <td>{{$value['fecha']}}</td>
                                         <td>{{$value['cuenta']}}</td>
                                         <td>{{$value['modulo']}}</td>
@@ -61,8 +56,7 @@
                     @endforeach
                 @endforeach
                 <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
-                    <td colspan="2">{{ $mes }}</td>
-                    <td colspan="3"><b>TOTALES</b></td>
+                    <td colspan="4"><b>TOTALES</b></td>
                     <td><b>{{$deb}}</b></td>
                     <td><b>{{$cred}}</b></td>
                 </tr>
