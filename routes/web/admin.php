@@ -432,7 +432,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //LIBROS
         Route::post('contabilidad/libros/rubros_puc','Administrativo\Contabilidad\LibrosController@getRubrosPUC');
-        Route::get('contabilidad/libros/balance/make','Administrativo\Contabilidad\LibrosController@balance');
+        Route::get('contabilidad/libros/balance/make/{mes}','Administrativo\Contabilidad\LibrosController@balance');
         Route::resource('contabilidad/libros','Administrativo\Contabilidad\LibrosController');
 
         //BALANCES
