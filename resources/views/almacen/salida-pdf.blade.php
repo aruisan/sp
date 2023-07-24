@@ -6,7 +6,7 @@
 		</div>
 		<div style="border:1px solid black;">
 			<div style="width: 70%;   display: inline-block; margin-left: 3%">
-				<h4>Fecha: {{date('Y-m-d')}}</h4>
+				<h4>Fecha: {{$egreso->fecha}}</h4>
 			</div>
 			
 			<div style="width: 20%;  display: inline-block; border:1px solid black; margin: 6px 0px 0px 0px;" class="col-md-2">
