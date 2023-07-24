@@ -38,6 +38,30 @@
                 <option value="{{$cuenta['id']}}">{{$cuenta['code']}} - {{$cuenta['concepto']}}</option>
             @endforeach
         </select>
+        <div class="table-responsive">
+            <div class="text-center" id="cargando" style="display: none">
+                <br><br>
+                <h4>Buscando informacion para cargar libro...</h4>
+            </div>
+            <table style="display: none" class="table table-bordered table-hover" id="tabla">
+                <hr>
+                <thead>
+                <tr><th colspan="9" class="text-center"> <span id="cuentaBanco"></span></th></tr>
+                <tr>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Cuenta</th>
+                    <th class="text-center">Nombre Documento</th>
+                    <th class="text-center">Concepto</th>
+                    <th class="text-center">Tercero</th>
+                    <th class="text-center">NIT/CC</th>
+                    <th class="text-center">Debito</th>
+                    <th class="text-center">Credito</th>
+                    <th class="text-center">Saldo</th>
+                </tr>
+                </thead>
+                <tbody id="bodyTabla"></tbody>
+            </table>
+        </div>
     </div>
 @stop
 
