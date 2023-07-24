@@ -12,12 +12,12 @@
             </strong>
         </div>
         <hr>
-        <h3 class="text-center">ENERO</h3>
+        <h3 class="text-center">{{ $mes }}</h3>
         <hr>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
-                <tr><th class="text-center" colspan="7">ENERO</th></tr>
+                <tr><th class="text-center" colspan="7">{{ $mes }}</th></tr>
                 <tr>
                     <th class="text-center" colspan="2">Fecha</th>
                     <th class="text-center">Cuenta</th>
@@ -31,23 +31,23 @@
                 @php($deb = 0)
                 @php($cred = 0)
                 @foreach($result2 as $cuenta2)
-                    @foreach($resultEne as $padEnero)
-                        @if($cuenta2['id'] == $padEnero['cuenta_id'])
+                    @foreach($result as $padres)
+                        @if($cuenta2['id'] == $padres['cuenta_id'])
                             <tr>
-                                <td colspan="2">Enero</td>
-                                <td>{{$padEnero['code']}} - {{$padEnero['concepto']}}</td>
-                                <td colspan="2">{{$padEnero['concepto']}}</td>
-                                <td>{{$padEnero['debito']}}</td>
-                                <td>{{$padEnero['credito']}}</td>
+                                <td colspan="2">{{ $mes }}</td>
+                                <td>{{$padres['code']}} - {{$padres['concepto']}}</td>
+                                <td colspan="2">{{$padres['concepto']}}</td>
+                                <td>{{$padres['debito']}}</td>
+                                <td>{{$padres['credito']}}</td>
                             </tr>
-                            @if(strlen($padEnero['code']) == 2)
-                                @php($deb = $deb + $padEnero['debito'])
-                                @php($cred = $cred + $padEnero['credito'])
+                            @if(strlen($padres['code']) == 1)
+                                @php($deb = $deb + $padres['debito'])
+                                @php($cred = $cred + $padres['credito'])
                             @endif
-                            @foreach($enero as $value)
-                                @if($padEnero['cuenta_id'] == $value['padre_id'])
+                            @foreach($hijosResult as $value)
+                                @if($padres['cuenta_id'] == $value['padre_id'])
                                     <tr>
-                                        <td>Enero</td>
+                                        <td>{{ $mes }}</td>
                                         <td>{{$value['fecha']}}</td>
                                         <td>{{$value['cuenta']}}</td>
                                         <td>{{$value['modulo']}}</td>
@@ -61,7 +61,7 @@
                     @endforeach
                 @endforeach
                 <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
-                    <td colspan="2">ENERO</td>
+                    <td colspan="2">{{ $mes }}</td>
                     <td colspan="3"><b>TOTALES</b></td>
                     <td><b>{{$deb}}</b></td>
                     <td><b>{{$cred}}</b></td>
