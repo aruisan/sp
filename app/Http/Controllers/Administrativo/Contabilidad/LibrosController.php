@@ -51,6 +51,10 @@ class LibrosController extends Controller
             }
         }
 
+        return view('administrativo.contabilidad.libros.index',compact('result'));
+    }
+
+    public function balance(){
         $año = Carbon::today()->year;
         $count2 = PucAlcaldia::where('code',2)->first();
         $lv2 = PucAlcaldia::where('padre_id', $count2->id )->get();
@@ -751,7 +755,7 @@ class LibrosController extends Controller
                 'concepto' =>   $dato->concepto, 'padre_id' =>  $dato->padre_id, 'cuenta_id' => $dato->id]);
         }
 
-        return view('administrativo.contabilidad.libros.index',compact('result','result2', 'resultEne',
+        return view('administrativo.contabilidad.libros.balance',compact('result2', 'resultEne',
             'enero', 'resultFeb','febrero', 'resultMar', 'marzo'));
     }
 
