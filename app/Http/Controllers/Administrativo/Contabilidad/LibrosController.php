@@ -852,8 +852,12 @@ class LibrosController extends Controller
                                 $dataBalanceHijo->cuenta_puc_id = $hijo['cuenta'];
                                 $dataBalanceHijo->documento = $hijo['modulo'];
                                 $dataBalanceHijo->concepto = $hijo['concepto'];
-                                $dataBalanceHijo->debito = $hijo['debito'];
-                                $dataBalanceHijo->credito = $hijo['credito'];
+                                
+                                if ($hijo['debito'] > 0) $dataBalanceHijo->debito = $hijo['debito'];
+                                else $dataBalanceHijo->debito = 0;
+                                if ($hijo['credito'] > 0) $dataBalanceHijo->credito = $hijo['credito'];
+                                else $dataBalanceHijo->credito = 0;
+
                                 $dataBalanceHijo->save();
                             }
                         }
