@@ -401,14 +401,11 @@ class RegistrosController extends Controller
                 $update->saldo = $valTot;
                 $update->valor = $valTot;
                 $update->val_total = $valTot;
-                $update->save();
 
                 $cdpsRegistroValor = CdpsRegistroValor::where('registro_id', $id)->get();
                 foreach ($cdpsRegistroValor as $value){
                     if ($value->valor > 0){
                         $cdp = Cdp::findOrFail($value->cdp_id);
-                        $cdp->saldo = $cdp->saldo - $value->valor;
-                        $cdp->save();
 
                         if ($cdp->tipo == "Funcionamiento"){
                             $rubCdpValor = RubrosCdpValor::where('cdp_id', $value->cdp_id)
@@ -416,6 +413,10 @@ class RegistrosController extends Controller
                             if ($rubCdpValor){
                                 //SE DESCUENTA EL DINERO DE LA FUENTE DEL RUBRO DEL CDP
                                 $rubCdpValor->valor_disp = $rubCdpValor->valor_disp - $value->valor;
+                                if ($rubCdpValor->valor_disp < 0){
+                                    Session::flash('error','Se esta sobrepasando el valor disponible de la fuente del rubro del CDP, verifique las sumas asignadas y el valor del iva.');
+                                    return back();
+                                }
                                 $rubCdpValor->save();
                             }
                         } else {
@@ -423,15 +424,29 @@ class RegistrosController extends Controller
                             if (isset($value->bpin_cdp_valor_id)){
                                 $bpinCdp = BpinCdpValor::find($value->bpin_cdp_valor_id);
                                 $bpinCdp->valor_disp = $bpinCdp->valor_disp - $value->valor;
+                                if ($bpinCdp->valor_disp < 0){
+                                    Session::flash('error','Se esta sobrepasando el valor disponible de la actividad del CDP, verifique las sumas asignadas y el valor del iva.');
+                                    return back();
+                                }
                                 $bpinCdp->save();
                             } else{
                                 $bpinCdp = BpinCdpValor::where('cdp_id',$value->cdp_id )->first();
                                 $bpinCdp->valor_disp = $bpinCdp->valor_disp - $value->valor;
+                                if ($bpinCdp->valor_disp < 0){
+                                    Session::flash('error','Se esta sobrepasando el valor disponible de la actividad del CDP, verifique las sumas asignadas y el valor del iva.');
+                                    return back();
+                                }
                                 $bpinCdp->save();
                             }
                         }
+
+                        $cdp->saldo = $cdp->saldo - $value->valor;
+                        $cdp->save();
                     }
                 }
+
+                //SE GUARDA A ULTIMA MEDIDA EL CAMBIO HECHO
+                $update->save();
 
                 Session::flash('success','El registro ha sido finalizado exitosamente.');
                 return redirect('/administrativo/registros/show/'.$id);
