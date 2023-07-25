@@ -136,10 +136,10 @@ Class BalanceTraits
                             foreach ($compContMovs as $descRet){
                                 $compCont = ComprobanteIngresos::find($descRet->comp_id);
                                 if ($compCont){
-                                    if (Carbon::parse($compCont->created_at)->year == $año ){
-                                        if (Carbon::parse($compCont->created_at)->month >= $mes1 and
-                                            Carbon::parse($compCont->created_at)->month <= $mes2){
-                                            $hijosResult[] = ['fecha' => Carbon::parse($compCont->created_at)->format('d-m-Y'),
+                                    if (Carbon::parse($compCont->ff)->year == $año ){
+                                        if (Carbon::parse($compCont->ff)->month >= $mes1 and
+                                            Carbon::parse($compCont->ff)->month <= $mes2){
+                                            $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
                                                 'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $descRet->debito ,
                                                 'credito' =>  $descRet->credito , 'concepto' => $compCont->concepto,
                                                 'cuenta' => $hijo->id, 'from' => 6,
