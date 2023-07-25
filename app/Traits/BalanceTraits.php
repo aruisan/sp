@@ -130,7 +130,7 @@ Class BalanceTraits
                                 }
                             }
 
-                            //COMP CONTABLES
+                            //COMP CONTABLES cuenta_puc_id
 
                             $compContMovs = ComprobanteIngresosMov::where('cuenta_puc_id', $hijo->id)->get();
                             foreach ($compContMovs as $descRet){
@@ -142,6 +142,25 @@ Class BalanceTraits
                                             $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
                                                 'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $descRet->debito ,
                                                 'credito' =>  $descRet->credito , 'concepto' => $compCont->concepto,
+                                                'cuenta' => $hijo->id, 'from' => 6,
+                                                'padre_id' => $hijo->padre_id];
+                                        }
+                                    }
+                                }
+                            }
+
+                            //COMP CONTABLES cuenta_banco
+
+                            $compContMovsCuentaBanco = ComprobanteIngresosMov::where('cuenta_banco', $hijo->id)->get();
+                            foreach ($compContMovsCuentaBanco as $compBanco){
+                                $compCont = ComprobanteIngresos::find($compBanco->comp_id);
+                                if ($compCont){
+                                    if (Carbon::parse($compCont->ff)->year == $año ){
+                                        if (Carbon::parse($compCont->ff)->month >= $mes1 and
+                                            Carbon::parse($compCont->ff)->month <= $mes2){
+                                            $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $compBanco->debito ,
+                                                'credito' =>  $compBanco->credito , 'concepto' => $compCont->concepto,
                                                 'cuenta' => $hijo->id, 'from' => 6,
                                                 'padre_id' => $hijo->padre_id];
                                         }
