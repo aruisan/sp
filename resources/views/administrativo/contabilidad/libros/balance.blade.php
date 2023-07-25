@@ -8,12 +8,15 @@
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>BALANCE</b></h4>
+                <h4><b>BALANCE {{ $balance->tipo }} {{ $balance->año }}</b></h4>
             </strong>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
+                <tr>
+                    <th class="text-center" colspan="6">BALANCE {{ $balance->tipo }} MESES: {{ $balance->mes }}</th>
+                </tr>
                 <tr>
                     <th class="text-center">Fecha</th>
                     <th class="text-center">Cuenta</th>
@@ -24,41 +27,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                @php($deb = 0)
-                @php($cred = 0)
-                @foreach($result2 as $cuenta2)
-                    @foreach($result as $padres)
-                        @if($cuenta2['id'] == $padres['cuenta_id'])
-                            <tr>
-                                <td></td>
-                                <td>{{$padres['code']}} - {{$padres['concepto']}}</td>
-                                <td colspan="2">{{$padres['concepto']}}</td>
-                                <td>{{$padres['debito']}}</td>
-                                <td>{{$padres['credito']}}</td>
-                            </tr>
-                            @if(strlen($padres['code']) == 1)
-                                @php($deb = $deb + $padres['debito'])
-                                @php($cred = $cred + $padres['credito'])
-                            @endif
-                            @foreach($hijosResult as $value)
-                                @if($padres['cuenta_id'] == $value['padre_id'])
-                                    <tr>
-                                        <td>{{$value['fecha']}}</td>
-                                        <td>{{$value['cuenta']}}</td>
-                                        <td>{{$value['modulo']}}</td>
-                                        <td>{{$value['concepto']}}</td>
-                                        <td>{{$value['debito']}}</td>
-                                        <td>{{$value['credito']}}</td>
-                                    </tr>
-                                @endif
-                            @endforeach
+                @foreach($datSavedBalance as $data)
+                    <tr>
+                        <td>{{$data['fecha']}}</td>
+                        <td>{{$data['code']}} - {{$data['cuentaConcept']}}</td>
+                        @if($data['concepto'] == "")
+                            <td colspan="2">{{$data['documento']}}</td>
+                        @else
+                            <td>{{$data['documento']}}</td>
+                            <td>{{$data['concepto']}}</td>
                         @endif
-                    @endforeach
+                        <td>{{$data['debito']}}</td>
+                        <td>{{$data['credito']}}</td>
+                    </tr>
                 @endforeach
                 <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
                     <td colspan="4"><b>TOTALES</b></td>
-                    <td><b>{{$deb}}</b></td>
-                    <td><b>{{$cred}}</b></td>
+                    <td><b>{{$balance->data[count($balance->data) - 1]['debito']}}</b></td>
+                    <td><b>{{$balance->data[count($balance->data) - 1]['credito']}}</b></td>
                 </tr>
                 </tbody>
             </table>
