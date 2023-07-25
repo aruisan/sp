@@ -406,6 +406,7 @@ class RegistrosController extends Controller
                 foreach ($cdpsRegistroValor as $value){
                     if ($value->valor > 0){
                         $cdp = Cdp::findOrFail($value->cdp_id);
+                        $cdp->saldo = $cdp->saldo - $value->valor;
 
                         if ($cdp->tipo == "Funcionamiento"){
                             $rubCdpValor = RubrosCdpValor::where('cdp_id', $value->cdp_id)
@@ -439,8 +440,7 @@ class RegistrosController extends Controller
                                 $bpinCdp->save();
                             }
                         }
-
-                        $cdp->saldo = $cdp->saldo - $value->valor;
+                        //SE GUARDA A ULTIMA MEDIDA EL CAMBIO HECHO
                         $cdp->save();
                     }
                 }
