@@ -256,7 +256,7 @@
                   <li><a class="item-menu" href="{{route('balance.inicial', '01')}}">Balance Inicial</a></li>
                   <li><a class="item-menu" href="#">Comparativo</a></li>
                   <li><a class="item-menu" href="{{route('balance.pre-prueba', '01')}}">Prueba</a></li>
-                  <li><a class="item-menu" href="#">Terceros</a></li>
+                  <li><a class="item-menu" href="{{route('balance.terceros')}}">Terceros</a></li>
                   <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
                   <li><a class="item-menu" href="#">Notas al Balance</a></li>
                   <li><a class="item-menu" href="#">Estado de Resultados</a></li>
