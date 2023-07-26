@@ -432,13 +432,14 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         //LIBROS
         Route::post('contabilidad/libros/rubros_puc','Administrativo\Contabilidad\LibrosController@getRubrosPUC');
-        Route::get('contabilidad/libros/balance/make/trim/{mes1}/{mes2}','Administrativo\Contabilidad\LibrosController@balanceTrim');
         Route::resource('contabilidad/libros','Administrativo\Contabilidad\LibrosController');
 
         //BALANCES
+        Route::get('contabilidad/balances/{mes1}/{mes2}','Administrativo\Contabilidad\LibrosController@balanceTrim');
+        Route::get('contabilidad/balances/terceros','Administrativo\Contabilidad\Balances\TercerosController@index')->name('balance.terceros');
         Route::resource('contabilidad/balances/prueba','Administrativo\Contabilidad\Balances\PruebaController');
 
-	});
+    });
 
 
 	Route::group(['prefix' => 'admin'] ,function () 
