@@ -464,31 +464,6 @@
                     </div>
                 </div>
                 <div class="col-md-4 align-self-center">
-                    <!--
-                    @if($files != 0)
-                        <center>
-                            <h3>Resoluciones del Rubro</h3>
-                        </center>
-                        <br>
-                        <div class="input-group">
-                            <div class="row text-center">
-                                @foreach($files as $file)
-                                    @if($file['mov'] == 1)
-                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Credito y Contracredito - {{ $file['fecha'] }}</a>
-                                    @elseif($file['mov'] == 2)
-                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o">&nbsp; Adición - {{ $file['fecha'] }}</i></a>
-                                    @elseif($file['mov'] == 3)
-                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o">&nbsp; Reducción - {{ $file['fecha'] }}</i></a>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <center>
-                            <h3>El rubro no ha recibido ningun movimiento</h3>
-                        </center>
-                    @endif
-                    -->
                 </div>
             </div>
         </div>
