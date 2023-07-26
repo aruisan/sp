@@ -242,7 +242,7 @@
                   <li><a class="item-menu" href="#">Comparativo</a></li>
                   <li><a class="item-menu" href="#">Por Niveles</a></li>
                   <li><a class="item-menu" href="{{route('balance.prueba')}}">Prueba</a></li>
-                  <li><a class="item-menu" href="#">Terceros</a></li>
+                  <li><a class="item-menu" href="{{route('balance.terceros')}}">Terceros</a></li>
                   <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
                </ul>
             </li>
