@@ -9,5 +9,7 @@ use Carbon\Carbon;
 
 class TercerosController extends Controller
 {
-    //
+    public function index(){
+        return view('administrativo.contabilidad.balances.terceros');
+    }
 }
