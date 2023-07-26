@@ -115,7 +115,7 @@
                 else if(mes === '1/6') var mesText = "Balance Segundo Semestre - "+year
                 else if(mes === '1/9') var mesText = "Balance Tercer Semestre - "+year
                 else if(mes === '1/12') var mesText = "Balance Cuarto Semestre - "+year
-                if (datos == "OK"){
+                if (datos == "NO"){
                     $("#tabla").hide();
                     table.destroy();
                     $("#cargando").hide();

@@ -1,22 +1,70 @@
 <?php
-namespace App\Traits;
+
+namespace App\Console\Commands;
 
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
+use App\Model\Administrativo\Contabilidad\BalanceData;
+use App\Model\Administrativo\Contabilidad\Balances;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Pago\PagoBanksNew;
-use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Pago\Pagos;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
-Class BalanceTraits
+class makeBigBalances extends Command
 {
-    public function balance($mes1, $mes2 = null){
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'make:Balances';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Comando encargado de elaborar balances que superan tiempos de carga';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $mes1 = 1;
+        $mes2 = 6;
         $año = Carbon::today()->year;
+
+        $newBal = new Balances();
+        $newBal->año = $año;
+        if($mes1 == $mes2) {
+            $newBal->mes = $mes1;
+            $newBal->tipo = 'MENSUAL';
+        }else{
+            $newBal->mes = $mes1.'-'.$mes2;
+            $newBal->tipo = 'TRIMESTRAL';
+        }
+        $newBal->save();
+
         $count = PucAlcaldia::where('padre_id',0)->get();
         foreach ($count as $first){
             $result2[] = $first;
@@ -222,7 +270,53 @@ Class BalanceTraits
         }
         $result[] = collect([ 'hijos' => $hijosResult]);
 
-        return $result;
-    }
 
+        $deb = 0;
+        $cre = 0;
+        foreach ($result2 as $cuenta) {
+            foreach ($result as $index => $padre) {
+                if ($index == count($result) - 1) break;
+                if ($cuenta['id'] == $padre['cuenta_id']) {
+                    $dataBalance = new BalanceData();
+                    $dataBalance->balance_id = $newBal->id;
+                    $dataBalance->cuenta_puc_id = $padre['cuenta_id'];
+                    $dataBalance->documento = $padre['concepto'];
+                    $dataBalance->debito = $padre['debito'];
+                    $dataBalance->credito = $padre['credito'];
+                    $dataBalance->save();
+
+                    if(strlen($padre['code']) == 1){
+                        $deb = $deb + $padre['debito'];
+                        $cre = $cre + $padre['credito'];
+                    }
+
+                    foreach ($result[count($result) - 1]['hijos'] as $hijo){
+                        if($padre['cuenta_id'] == $hijo['padre_id']){
+                            $dataBalanceHijo = new BalanceData();
+                            $dataBalanceHijo->balance_id = $newBal->id;
+                            $dataBalanceHijo->fecha = Carbon::parse($hijo['fecha'])->format('Y-m-d');
+                            $dataBalanceHijo->cuenta_puc_id = $hijo['cuenta'];
+                            $dataBalanceHijo->documento = $hijo['modulo'];
+                            $dataBalanceHijo->concepto = $hijo['concepto'];
+
+                            if ($hijo['debito'] > 0) $dataBalanceHijo->debito = $hijo['debito'];
+                            else $dataBalanceHijo->debito = 0;
+                            if ($hijo['credito'] > 0) $dataBalanceHijo->credito = $hijo['credito'];
+                            else $dataBalanceHijo->credito = 0;
+
+                            $dataBalanceHijo->save();
+                        }
+                    }
+                }
+            }
+        }
+        $dataBalanceTot = new BalanceData();
+        $dataBalanceTot->balance_id = $newBal->id;
+        $dataBalanceTot->documento = 'TOTALES';
+        $dataBalanceTot->debito = $deb;
+        $dataBalanceTot->credito = $cre;
+        $dataBalanceTot->save();
+
+        echo "TERMINADO BALANCE";
+    }
 }
