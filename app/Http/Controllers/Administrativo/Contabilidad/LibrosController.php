@@ -73,7 +73,7 @@ class LibrosController extends Controller
 
             return $datSavedBalance;
 
-        } else{
+        } elseif($mes1 == $mes2){
             $newBal = new Balances();
             $newBal->año = $año;
             if($mes1 == $mes2) {
@@ -153,9 +153,7 @@ class LibrosController extends Controller
             $dataBalanceTot->credito = $cre;
             $dataBalanceTot->save();
 
-        }
-
-        return "OK";
+        } else return "NO";
     }
 
     /**
