@@ -155,14 +155,7 @@ class LibrosController extends Controller
 
         }
 
-        $datSavedBalance = BalanceData::where('balance_id', $newBal->id)->select('balances_data.fecha',
-            'puc_alcaldia.code', 'puc_alcaldia.concepto AS cuentaConcept', 'balances_data.documento', 'balances_data.concepto',
-            'balances_data.debito', 'balances_data.credito')
-            ->join('puc_alcaldia','balances_data.cuenta_puc_id','=','puc_alcaldia.id')->orderBy('puc_alcaldia.code','ASC')->get();
-        $datSavedBalance[] = collect(['fecha' => '', 'code' => '', 'documento' => 'TOTALES', 'concepto' => '',
-            'debito' => $dataBalanceTot->debito, 'credito' => $dataBalanceTot->credito]);
-
-        return $datSavedBalance;
+        return "OK";
     }
 
     /**

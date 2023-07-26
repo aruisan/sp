@@ -115,76 +115,83 @@
                 else if(mes === '1/6') var mesText = "Balance Segundo Semestre - "+year
                 else if(mes === '1/9') var mesText = "Balance Tercer Semestre - "+year
                 else if(mes === '1/12') var mesText = "Balance Cuarto Semestre - "+year
-                document.getElementById("cuentaBanco").innerHTML = mesText;
-                $("#tabla").show();
-                table.destroy();
-                $("#cargando").hide();
-                table = $('#tabla').DataTable( {
-                    language: {
-                        "lengthMenu": "Mostrar _MENU_ registros",
-                        "zeroRecords": "No se encontraron resultados",
-                        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-                        "sSearch": "Buscar:",
-                        "oPaginate": {
-                            "sFirst": "Primero",
-                            "sLast":"Último",
-                            "sNext":"Siguiente",
-                            "sPrevious": "Anterior"
+                if (datos == "OK"){
+                    $("#tabla").hide();
+                    table.destroy();
+                    $("#cargando").hide();
+                    toastr.success('SE ESTA REALIZANDO LA CREACION DEL BALANCE INTENTE NUEVAMENTE EN UNOS MINUTOS.');
+                } else{
+                    document.getElementById("cuentaBanco").innerHTML = mesText;
+                    $("#tabla").show();
+                    table.destroy();
+                    $("#cargando").hide();
+                    table = $('#tabla').DataTable( {
+                        language: {
+                            "lengthMenu": "Mostrar _MENU_ registros",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                            "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "sSearch": "Buscar:",
+                            "oPaginate": {
+                                "sFirst": "Primero",
+                                "sLast":"Último",
+                                "sNext":"Siguiente",
+                                "sPrevious": "Anterior"
+                            },
+                            "sProcessing":"Procesando...",
                         },
-                        "sProcessing":"Procesando...",
-                    },
-                    "pageLength": 15,
-                    responsive: true,
-                    "searching": true,
-                    ordering: false,
-                    "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
-                    dom: 'Bfrtip',
-                    buttons:[
-                        {
-                            extend:    'copyHtml5',
-                            text:      '<i class="fa fa-clone"></i> ',
-                            titleAttr: 'Copiar',
-                            title:     mesText,
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            extend:    'excelHtml5',
-                            text:      '<i class="fa fa-file-excel-o"></i> ',
-                            titleAttr: 'Exportar a Excel',
-                            title:     mesText,
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            extend:    'pdfHtml5',
-                            text:      '<i class="fa fa-file-pdf-o"></i> ',
-                            titleAttr: 'Exportar a PDF',
-                            message : 'SIEX-Providencia',
-                            header :true,
-                            orientation : 'landscape',
-                            pageSize: 'LEGAL',
-                            className: 'btn btn-primary',
-                            title:     mesText,
-                        },
-                        {
-                            extend:    'print',
-                            text:      '<i class="fa fa-print"></i> ',
-                            titleAttr: 'Imprimir',
-                            className: 'btn btn-primary',
-                            title:     mesText,
-                        },
-                    ],
-                    data: datos,
-                    columns: [
-                        { title: "Fecha", data: "fecha"},
-                        { title: "Cuenta", data: "code"},
-                        { title: "Nombre Documento", data: "documento"},
-                        { title: "Concepto", data: "concepto"},
-                        { title: "Debito", data: "debito"},
-                        { title: "Credito", data: "credito"},
-                    ]
-                } );
+                        "pageLength": 15,
+                        responsive: true,
+                        "searching": true,
+                        ordering: false,
+                        "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
+                        dom: 'Bfrtip',
+                        buttons:[
+                            {
+                                extend:    'copyHtml5',
+                                text:      '<i class="fa fa-clone"></i> ',
+                                titleAttr: 'Copiar',
+                                title:     mesText,
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend:    'excelHtml5',
+                                text:      '<i class="fa fa-file-excel-o"></i> ',
+                                titleAttr: 'Exportar a Excel',
+                                title:     mesText,
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend:    'pdfHtml5',
+                                text:      '<i class="fa fa-file-pdf-o"></i> ',
+                                titleAttr: 'Exportar a PDF',
+                                message : 'SIEX-Providencia',
+                                header :true,
+                                orientation : 'landscape',
+                                pageSize: 'LEGAL',
+                                className: 'btn btn-primary',
+                                title:     mesText,
+                            },
+                            {
+                                extend:    'print',
+                                text:      '<i class="fa fa-print"></i> ',
+                                titleAttr: 'Imprimir',
+                                className: 'btn btn-primary',
+                                title:     mesText,
+                            },
+                        ],
+                        data: datos,
+                        columns: [
+                            { title: "Fecha", data: "fecha"},
+                            { title: "Cuenta", data: "code"},
+                            { title: "Nombre Documento", data: "documento"},
+                            { title: "Concepto", data: "concepto"},
+                            { title: "Debito", data: "debito"},
+                            { title: "Credito", data: "credito"},
+                        ]
+                    } );
+                }
             }).fail(function() {
                 $("#tabla").hide();
                 table.destroy();
