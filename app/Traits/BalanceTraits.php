@@ -211,14 +211,14 @@ Class BalanceTraits
             //PADRES LVL 1
             $totD = 0;
             $totC = 0;
-            foreach ($result as $item){
-                if($item['padre_id'] == $first->id){
-                    $totD = $totD + $item['debito'];
-                    $totC = $totC + $item['credito'];
+            if (isset($result)) {
+                foreach ($result as $item) {
+                    if ($item['padre_id'] == $first->id) {
+                        $totD = $totD + $item['debito'];
+                        $totC = $totC + $item['credito'];
+                    }
                 }
-            }
-            $result[] = collect(['debito' => $totD, 'credito' => $totC, 'code' =>  $first->code,
-                'concepto' =>  $first->concepto, 'padre_id' =>  $first->padre_id, 'cuenta_id' => $first->id]);
+            }else $result[] = collect(['debito' => 0, 'credito' => 0, 'code' => $first->code, 'concepto' => $first->concepto, 'padre_id' => $first->padre_id, 'cuenta_id' => $first->id]);
         }
         $result[] = collect([ 'hijos' => $hijosResult]);
 
