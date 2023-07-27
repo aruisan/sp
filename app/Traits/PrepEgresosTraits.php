@@ -1043,10 +1043,6 @@ Class PrepEgresosTraits
                                         'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
                                 }
 
-                                if ($rubro->first()->id == 1125 and $depFont->dependencias->name == 'ADMINISTRACION CENTRAL') {
-                                    dd($presupuesto[count($presupuesto) - 1]);
-                                }
-
                                 unset($value);unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
                                 unset($valueOrdenPago);unset($valuePagos);unset($valueRubrosDisp);unset($rubrosCC);unset($valueRubrosAsign);unset($IDRegistros);
                             }
