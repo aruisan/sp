@@ -51,12 +51,10 @@ class feedPresupuesto extends Command
             $findSnap = PresupuestoSnap::where('vigencia_id', $vigens->id)->where('mes', $mesActual)
                 ->where('año', $añoActual)->first();
             if ($findSnap){
-                $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
-                foreach ($findSnapDataOld as $dataOld){
-                    $dataOld->delete();
-                }
+                $delete = true;
                 $idSnap = $findSnap->id;
             } else{
+                $delete = false;
                 $newSnap = new PresupuestoSnap();
                 $newSnap->vigencia_id = $vigens->id;
                 $newSnap->mes = $mesActual;
@@ -67,6 +65,12 @@ class feedPresupuesto extends Command
 
             $prepTrait = new PrepEgresosTraits();
             $presupuesto = $prepTrait->prepEgresos($vigens);
+
+            if ($delete){
+                $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
+                foreach ($findSnapDataOld as $dataOld) $dataOld->delete();
+            }
+
             foreach ($presupuesto as $data){
                 $newData = new PresupuestoSnapData();
                 $newData->pre_snap_id = $idSnap;
