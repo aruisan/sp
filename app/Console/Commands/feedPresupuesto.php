@@ -53,7 +53,7 @@ class feedPresupuesto extends Command
             if ($findSnap){
                 $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
                 foreach ($findSnapDataOld as $dataOld){
-                    $dataOld->delete();
+                    //$dataOld->delete();
                 }
                 $idSnap = $findSnap->id;
             } else{
