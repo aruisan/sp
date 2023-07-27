@@ -1005,7 +1005,9 @@ Class PrepEgresosTraits
                                 else $PDef = array_sum($value) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                                 $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
 
-                                if ($rubro->first()->id == 1125) dd($valueRubrosCCred, $rubrosCCMov, $depFont);
+                                if ($rubro->first()->id == 1125 and $depFont->dependencias->name == 'ADMINISTRACION CENTRAL') {
+                                    dd(array_sum($valueRubrosCCred), array_sum($value),$PDef, array_sum($valueRubrosAdd), $depFont, $rubro->first());
+                                }
 
                                 if ($PDef > 0){
                                     $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
