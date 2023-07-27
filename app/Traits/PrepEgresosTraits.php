@@ -1005,6 +1005,8 @@ Class PrepEgresosTraits
                                 else $PDef = array_sum($value) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                                 $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
 
+                                if ($rubro->first()->id == 1125) dd($valueRubrosCCred, $rubrosCCMov, $depFont);
+
                                 if ($PDef > 0){
                                     $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
 
@@ -1161,8 +1163,6 @@ Class PrepEgresosTraits
 
                                     if (count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
                                     else $valueRubrosCCred[] = 0;
-
-                                    if ($rubrosCCMov->sum('valor') == 369751000) dd($rubrosCCMov, $depFont);
                                 }
                             }
 
@@ -1373,7 +1373,6 @@ Class PrepEgresosTraits
                     'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '', 'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '',
                     'codProd' => '', 'codIndProd' => '', 'codProgMGA' => ''];
             } elseif(array_sum($valueRubrosCCred) > 0) {
-                dd($valueRubrosCCred, $rubrosCCMov, $depFont);
                 $presupuesto = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code, 'name' => $data->name, 'presupuesto_inicial' => array_sum($valueRubros),
                     'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
                     'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
