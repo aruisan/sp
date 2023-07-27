@@ -1044,7 +1044,7 @@ Class PrepEgresosTraits
                                 }
 
                                 if ($rubro->first()->id == 1125 and $depFont->dependencias->name == 'ADMINISTRACION CENTRAL') {
-                                    dd($presupuesto);
+                                    dd($presupuesto[count($presupuesto) - 1]);
                                 }
 
                                 unset($value);unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
