@@ -1161,6 +1161,8 @@ Class PrepEgresosTraits
 
                                     if (count($rubrosCCMov) > 0) $valueRubrosCCred[] = $rubrosCCMov->sum('valor');
                                     else $valueRubrosCCred[] = 0;
+
+                                    if ($rubrosCCMov->sum('valor') == 369751000) dd($rubrosCCMov, $depFont);
                                 }
                             }
 
