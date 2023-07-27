@@ -1371,7 +1371,7 @@ Class PrepEgresosTraits
                     'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => '', 'codActiv' => '', 'nameActiv' => '', 'codDep' => '', 'dep' => '', 'depRubID' => '', 'fuente' => '',
                     'codProd' => '', 'codIndProd' => '', 'codProgMGA' => ''];
             } elseif(array_sum($valueRubrosCCred) > 0) {
-                dd($valueRubrosCCred);
+                dd($valueRubrosCCred, $rubrosCCMov, $depFont);
                 $presupuesto = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code, 'name' => $data->name, 'presupuesto_inicial' => array_sum($valueRubros),
                     'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
                     'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
