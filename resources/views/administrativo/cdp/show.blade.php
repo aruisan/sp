@@ -784,7 +784,7 @@
                                                 <tr>
                                                     <th class="text-center">Cod.</th>
                                                     <th class="text-center">Nombre</th>
-                                                    <th class="text-center">Rubro</th>
+                                                    <th class="text-center">Rubro - Fuente</th>
                                                     <th class="text-center">Dinero Usado</th>
                                                 </tr>
                                                 </thead>
@@ -793,7 +793,10 @@
                                                     <tr>
                                                         <td>{{$item->actividad->cod_actividad}}</td>
                                                         <td>{{$item->actividad->actividad}}</td>
-                                                        <td>{{$item->actividad->rubro->cod}} - {{$item->actividad->rubro->name}}</td>
+                                                        <td>
+                                                            {{ $item->depRubroFont->fontRubro->rubro->cod }} - {{ $item->depRubroFont->fontRubro->rubro->name }} -
+                                                            {{ $item->depRubroFont->fontRubro->sourceFunding->code }} - {{ $item->depRubroFont->fontRubro->sourceFunding->description }}
+                                                        </td>
                                                         <td>$<?php echo number_format( $item->valor ,0) ?></td>
                                                     </tr>
                                                 @endforeach
