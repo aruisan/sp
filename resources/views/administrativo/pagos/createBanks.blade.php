@@ -44,7 +44,7 @@
                     <hr>
                     {!! method_field('PUT') !!}
                     {{ csrf_field() }}
-
+                    @php($embargo = false)
                     @if(isset($pago->orden_pago->registros))
                         <center><h2>Descuentos Municipales</h2></center>
                         <hr><br>
@@ -57,7 +57,6 @@
                                 <th class="text-center">%</th>
                                 <th class="text-center">Valor</th>
                                 </thead>
-                                @php($embargo = false)
                                 @foreach($pago->orden_pago->descuentos as $descuento)
                                     @if($descuento->cuenta_puc_id == 655) @php($embargo = true) @endif
                                     <tr>
