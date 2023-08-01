@@ -2,9 +2,12 @@
 namespace App\Traits;
 
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Hacienda\Presupuesto\PlantillaCuipoIngresos;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\Rubro;
+use Carbon\Carbon;
 
 Class PrepIngresosTraits
 {
@@ -92,6 +95,27 @@ Class PrepIngresosTraits
                                                             }
                                                         }
 
+                                                        if($rubro[0]->cod == '1.1.01.02.300.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                                        elseif ($rubro[0]->cod == '1.1.01.02.218') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                                        elseif ($rubro[0]->cod == '1.1.01.02.200.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+
+                                                        if (isset($OPDes)){
+                                                            foreach ($OPDes as $descuento){
+                                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigencia->vigencia){
+                                                                    if ($inicio != null) {
+                                                                        if (date('Y-m-d', strtotime($op->created_at)) <= $final and date('Y-m-d', strtotime($op->created_at)) >= $inicio) {
+                                                                            $descOPs[] = $descuento->valor;
+                                                                        }
+                                                                    }else $descOPs[] = $descuento->valor;
+                                                                }
+                                                            }
+                                                            if (isset($descOPs)) {
+                                                                $civ[] = array_sum($descOPs);
+                                                                unset($descOPs);
+                                                            }
+                                                        }
+
                                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                         if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
@@ -169,6 +193,27 @@ Class PrepIngresosTraits
                                                                     }
                                                                 }else $civ[] = $compI->debito;
                                                             }
+                                                        }
+                                                    }
+
+                                                    if($rubro[0]->cod == '1.1.01.02.300.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                                    elseif ($rubro[0]->cod == '1.1.01.02.218') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                                    elseif ($rubro[0]->cod == '1.1.01.02.200.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+
+                                                    if (isset($OPDes)){
+                                                        foreach ($OPDes as $descuento){
+                                                            $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                            if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigencia->vigencia){
+                                                                if ($inicio != null) {
+                                                                    if (date('Y-m-d', strtotime($op->created_at)) <= $final and date('Y-m-d', strtotime($op->created_at)) >= $inicio) {
+                                                                        $descOPs[] = $descuento->valor;
+                                                                    }
+                                                                }else $descOPs[] = $descuento->valor;
+                                                            }
+                                                        }
+                                                        if (isset($descOPs)) {
+                                                            $civ[] = array_sum($descOPs);
+                                                            unset($descOPs);
                                                         }
                                                     }
 
@@ -251,6 +296,27 @@ Class PrepIngresosTraits
                                                 }
                                             }
 
+                                            if($rubro[0]->cod == '1.1.01.02.300.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                            elseif ($rubro[0]->cod == '1.1.01.02.218') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                            elseif ($rubro[0]->cod == '1.1.01.02.200.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+
+                                            if (isset($OPDes)){
+                                                foreach ($OPDes as $descuento){
+                                                    $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                    if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigencia->vigencia){
+                                                        if ($inicio != null) {
+                                                            if (date('Y-m-d', strtotime($op->created_at)) <= $final and date('Y-m-d', strtotime($op->created_at)) >= $inicio) {
+                                                                $descOPs[] = $descuento->valor;
+                                                            }
+                                                        }else $descOPs[] = $descuento->valor;
+                                                    }
+                                                }
+                                                if (isset($descOPs)) {
+                                                    $civ[] = array_sum($descOPs);
+                                                    unset($descOPs);
+                                                }
+                                            }
+
                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                             if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
@@ -325,6 +391,27 @@ Class PrepIngresosTraits
                                                     }
                                                 }else $civ[] = $compI->debito;
                                             }
+                                        }
+                                    }
+
+                                    if($rubro[0]->cod == '1.1.01.02.300.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                    elseif ($rubro[0]->cod == '1.1.01.02.218') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                    elseif ($rubro[0]->cod == '1.1.01.02.200.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+
+                                    if (isset($OPDes)){
+                                        foreach ($OPDes as $descuento){
+                                            $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                            if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigencia->vigencia){
+                                                if ($inicio != null) {
+                                                    if (date('Y-m-d', strtotime($op->created_at)) <= $final and date('Y-m-d', strtotime($op->created_at)) >= $inicio) {
+                                                        $descOPs[] = $descuento->valor;
+                                                    }
+                                                }else $descOPs[] = $descuento->valor;
+                                            }
+                                        }
+                                        if (isset($descOPs)) {
+                                            $civ[] = array_sum($descOPs);
+                                            unset($descOPs);
                                         }
                                     }
 
@@ -465,6 +552,27 @@ Class PrepIngresosTraits
                                             if (isset($compIngValueArray)) $compIngValue = array_sum($compIngValueArray);
                                             else $compIngValue = 0;
                                         } else $compIngValue = $rubro[0]->fontsRubro[0]->compIng->sum('debito');
+                                    }
+
+                                    if($rubro[0]->cod == '1.1.01.02.300.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                    elseif ($rubro[0]->cod == '1.1.01.02.218') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                    elseif ($rubro[0]->cod == '1.1.01.02.200.01') $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+
+                                    if (isset($OPDes)){
+                                        foreach ($OPDes as $descuento){
+                                            $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                            if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigencia->vigencia){
+                                                if ($inicio != null) {
+                                                    if (date('Y-m-d', strtotime($op->created_at)) <= $final and date('Y-m-d', strtotime($op->created_at)) >= $inicio) {
+                                                        $descOPs[] = $descuento->valor;
+                                                    }
+                                                }else $descOPs[] = $descuento->valor;
+                                            }
+                                        }
+                                        if (isset($descOPs)) {
+                                            $civ[] = array_sum($descOPs);
+                                            unset($descOPs);
+                                        }
                                     }
 
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,

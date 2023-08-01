@@ -6,6 +6,7 @@ use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Traits\PrepEgresosTraits;
+use App\Traits\PrepIngresosTraits;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 
@@ -42,14 +43,14 @@ class feedPresupuesto extends Command
      */
     public function handle()
     {
+        //EGRESOS
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
-        $diaActual = Carbon::now()->day;
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
         if ($vigens){
             $findSnap = PresupuestoSnap::where('vigencia_id', $vigens->id)->where('mes', $mesActual)
-                ->where('año', $añoActual)->first();
+                ->where('año', $añoActual)->where('tipo','EGRESOS')->first();
             if ($findSnap){
                 $delete = true;
                 $idSnap = $findSnap->id;
@@ -59,6 +60,7 @@ class feedPresupuesto extends Command
                 $newSnap->vigencia_id = $vigens->id;
                 $newSnap->mes = $mesActual;
                 $newSnap->año = $añoActual;
+                $newSnap->tipo = 'EGRESOS';
                 $newSnap->save();
                 $idSnap = $newSnap->id;
             }
@@ -98,6 +100,57 @@ class feedPresupuesto extends Command
                 $newData->fuente = $data['fuente'];
                 $newData->cod_producto = $data['codProd'];
                 $newData->cod_indicador = $data['codIndProd'];
+                $newData->save();
+            }
+        }
+
+        //INGRESOS
+        $vigensING = Vigencia::where('vigencia', $añoActual)->where('tipo', 1)->where('estado', '0')->first();
+        if ($vigensING){
+            $findSnap = PresupuestoSnap::where('vigencia_id', $vigensING->id)->where('mes', $mesActual)
+                ->where('año', $añoActual)->where('tipo','INGRESOS')->first();
+            if ($findSnap){
+                $deleteIng = true;
+                $idSnap = $findSnap->id;
+            } else{
+                $deleteIng = false;
+                $newSnap = new PresupuestoSnap();
+                $newSnap->vigencia_id = $vigensING->id;
+                $newSnap->mes = $mesActual;
+                $newSnap->año = $añoActual;
+                $newSnap->tipo = 'INGRESOS';
+                $newSnap->save();
+                $idSnap = $newSnap->id;
+            }
+
+            $prepTrait = new PrepIngresosTraits();
+            $presupuestoIng = $prepTrait->prepIngresos($vigensING);
+
+            if ($deleteIng){
+                $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
+                foreach ($findSnapDataOld as $dataOld) $dataOld->delete();
+            }
+
+            foreach ($presupuestoIng as $data){
+                $newData = new PresupuestoSnapData();
+                $newData->pre_snap_id = $idSnap;
+                $newData->rubro = $data['code'];
+                $newData->nombre = $data['name'];
+                $newData->p_inicial = $data['inicial'];
+                $newData->adicion = $data['adicion'];
+                $newData->reduccion = $data['reduccion'];
+                $newData->credito = $data['anulados'];
+                $newData->ccredito = $data['definitivo'];
+                $newData->p_def = $data['recaudado'];
+                $newData->cdps = $data['porRecaudar'];
+                $newData->rps = 0;
+                $newData->saldo_disp = 0;
+                $newData->saldo_cdps = 0;
+                $newData->ops = 0;
+                $newData->pagos = 0;
+                $newData->cuentas_pagar = 0;
+                $newData->reservas = 0;
+                if ($data['cod_fuente'] != '') $newData->fuente = $data['cod_fuente'].' - '.$data['name_fuente'];
                 $newData->save();
             }
         }
