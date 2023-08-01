@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Hacienda\Presupuesto;
 use App\bpinVigencias;
 use App\Http\Controllers\Administrativo\Tesoreria\PacController;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
 use App\Model\Administrativo\ComprobanteIngresos\CIRubros;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
@@ -115,6 +116,44 @@ class PresupuestoController extends Controller
                                                                 if (count($font->compIng) > 0) $civ[] = $font->compIng->sum('debito');
                                                             }
 
+                                                            if($rubro[0]->cod == '1.1.01.02.300.01'){
+                                                                $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                                                foreach ($OPDes as $descuento){
+                                                                    $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                                    if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                                        $descOPs[] = $descuento->valor;
+                                                                    }
+                                                                }
+                                                                if (isset($descOPs)) {
+                                                                    $civ[] = array_sum($descOPs);
+                                                                    unset($descOPs);
+                                                                }
+                                                            } elseif ($rubro[0]->cod == '1.1.01.02.218'){
+                                                                $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                                                foreach ($OPDes as $descuento){
+                                                                    $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                                    if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                                        $descOPs[] = $descuento->valor;
+                                                                    }
+                                                                }
+                                                                if (isset($descOPs)) {
+                                                                    $civ[] = array_sum($descOPs);
+                                                                    unset($descOPs);
+                                                                }
+                                                            } elseif ($rubro[0]->cod == '1.1.01.02.200.01'){
+                                                                $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+                                                                foreach ($OPDes as $descuento){
+                                                                    $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                                    if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                                        $descOPs[] = $descuento->valor;
+                                                                    }
+                                                                }
+                                                                if (isset($descOPs)) {
+                                                                    $civ[] = array_sum($descOPs);
+                                                                    unset($descOPs);
+                                                                }
+                                                            }
+
                                                             if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                             if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
@@ -169,6 +208,44 @@ class PresupuestoController extends Controller
                                                             else $hijosReduccion[] = 0;
 
                                                             if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                                        }
+
+                                                        if($rubro[0]->cod == '1.1.01.02.300.01'){
+                                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                                            foreach ($OPDes as $descuento){
+                                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                                    $descOPs[] = $descuento->valor;
+                                                                }
+                                                            }
+                                                            if (isset($descOPs)) {
+                                                                $civ[] = array_sum($descOPs);
+                                                                unset($descOPs);
+                                                            }
+                                                        } elseif ($rubro[0]->cod == '1.1.01.02.218'){
+                                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                                            foreach ($OPDes as $descuento){
+                                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                                    $descOPs[] = $descuento->valor;
+                                                                }
+                                                            }
+                                                            if (isset($descOPs)) {
+                                                                $civ[] = array_sum($descOPs);
+                                                                unset($descOPs);
+                                                            }
+                                                        } elseif ($rubro[0]->cod == '1.1.01.02.200.01'){
+                                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+                                                            foreach ($OPDes as $descuento){
+                                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                                    $descOPs[] = $descuento->valor;
+                                                                }
+                                                            }
+                                                            if (isset($descOPs)) {
+                                                                $civ[] = array_sum($descOPs);
+                                                                unset($descOPs);
+                                                            }
                                                         }
 
                                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -226,6 +303,44 @@ class PresupuestoController extends Controller
                                                     if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
                                                 }
 
+                                                if($rubro[0]->cod == '1.1.01.02.300.01'){
+                                                    $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                                    foreach ($OPDes as $descuento){
+                                                        $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                        if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                            $descOPs[] = $descuento->valor;
+                                                        }
+                                                    }
+                                                    if (isset($descOPs)) {
+                                                        $civ[] = array_sum($descOPs);
+                                                        unset($descOPs);
+                                                    }
+                                                } elseif ($rubro[0]->cod == '1.1.01.02.218'){
+                                                    $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                                    foreach ($OPDes as $descuento){
+                                                        $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                        if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                            $descOPs[] = $descuento->valor;
+                                                        }
+                                                    }
+                                                    if (isset($descOPs)) {
+                                                        $civ[] = array_sum($descOPs);
+                                                        unset($descOPs);
+                                                    }
+                                                } elseif ($rubro[0]->cod == '1.1.01.02.200.01'){
+                                                    $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+                                                    foreach ($OPDes as $descuento){
+                                                        $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                        if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                            $descOPs[] = $descuento->valor;
+                                                        }
+                                                    }
+                                                    if (isset($descOPs)) {
+                                                        $civ[] = array_sum($descOPs);
+                                                        unset($descOPs);
+                                                    }
+                                                }
+
                                                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
                                                 if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
@@ -277,6 +392,44 @@ class PresupuestoController extends Controller
                                             else $hijosReduccion[] = 0;
 
                                             if (count($font->compIng) > 0) $civ[] =$font->compIng->sum('debito');
+                                        }
+
+                                        if($rubro[0]->cod == '1.1.01.02.300.01'){
+                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                            foreach ($OPDes as $descuento){
+                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                    $descOPs[] = $descuento->valor;
+                                                }
+                                            }
+                                            if (isset($descOPs)) {
+                                                $civ[] = array_sum($descOPs);
+                                                unset($descOPs);
+                                            }
+                                        } elseif ($rubro[0]->cod == '1.1.01.02.218'){
+                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                            foreach ($OPDes as $descuento){
+                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                    $descOPs[] = $descuento->valor;
+                                                }
+                                            }
+                                            if (isset($descOPs)) {
+                                                $civ[] = array_sum($descOPs);
+                                                unset($descOPs);
+                                            }
+                                        } elseif ($rubro[0]->cod == '1.1.01.02.200.01'){
+                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+                                            foreach ($OPDes as $descuento){
+                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                    $descOPs[] = $descuento->valor;
+                                                }
+                                            }
+                                            if (isset($descOPs)) {
+                                                $civ[] = array_sum($descOPs);
+                                                unset($descOPs);
+                                            }
                                         }
 
                                         if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
@@ -380,6 +533,44 @@ class PresupuestoController extends Controller
 
                                         $definitivo = $adicion - $reduccion + $rubro[0]->fontsRubro->sum('valor');
                                         if (count($rubro[0]->fontsRubro[0]->compIng) > 0) $compIngValue = $rubro[0]->fontsRubro[0]->compIng->sum('debito');
+
+                                        if($data->code == '1.1.01.02.300.01'){
+                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 2)->get();
+                                            foreach ($OPDes as $descuento){
+                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                    $descOPs[] = $descuento->valor;
+                                                }
+                                            }
+                                            if (isset($descOPs)) {
+                                                $compIngValue = $compIngValue + array_sum($descOPs);
+                                                unset($descOPs);
+                                            }
+                                        } elseif ($data->code == '1.1.01.02.218'){
+                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 3)->get();
+                                            foreach ($OPDes as $descuento){
+                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                    $descOPs[] = $descuento->valor;
+                                                }
+                                            }
+                                            if (isset($descOPs)) {
+                                                $compIngValue = $compIngValue + array_sum($descOPs);
+                                                unset($descOPs);
+                                            }
+                                        } elseif ($data->code == '1.1.01.02.200.01'){
+                                            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', 5)->get();
+                                            foreach ($OPDes as $descuento){
+                                                $op = OrdenPagos::find($descuento->orden_pagos_id);
+                                                if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigens->first()->vigencia){
+                                                    $descOPs[] = $descuento->valor;
+                                                }
+                                            }
+                                            if (isset($descOPs)) {
+                                                $compIngValue = $compIngValue + array_sum($descOPs);
+                                                unset($descOPs);
+                                            }
+                                        }
 
                                         $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
