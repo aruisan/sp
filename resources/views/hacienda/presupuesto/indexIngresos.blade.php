@@ -6,6 +6,7 @@
     @if($V != "Vacio")
         @include('modal.Informes.reporte')
     @endif
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="row inputCenter">
         <ul class="nav nav-pills">
             <li class="nav-item principal">
@@ -93,55 +94,39 @@
         <div class="tab-content" style="background-color: white">
             <div id="tabHome" class="tab-pane active"><br>
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered" align="100%" id="tabla_presupuesto1" style="text-align: center">
+                    <div class="text-center" id="cargando" style="display: none">
+                        <h4>Buscando informacion para cargar el presupuesto...</h4>
+                    </div>
+                    <div class="text-center" id="noFind" style="display: none">
+                        <h4>Se esta realizando la carga del presupuesto, intenta nuevamente en unos minutos por favor.</h4>
+                    </div>
+                    <div class="text-center" id="refresPrep" style="display: none">
+                        <h4>Se esta enviando la solicitud de actualización del presupuesto, un momento por favor....</h4>
+                    </div>
+                    <div class="text-center" id="refresPrepOK" style="display: none">
+                        <h4>Se envió la solicitud de actualización del presupuesto exitosamente, en unos minutos
+                            actualice la pagina para visualizar el estado actual del presupuesto.</h4>
+                    </div>
+                    <div class="text-center" id="infoPrep" style="display: none">
+                        <h4>{{ $fechaData }}</h4>
+                    </div>
+                    <table class="table table-hover table-bordered" align="100%" id="tabla" style="text-align: center">
                         <thead>
                         <tr>
                             <th class="text-center">Rubro</th>
                             <th class="text-center">Nombre</th>
-                            <th class="text-center">INICIAL</th>
+                            <th class="text-center">Inicial</th>
                             <th class="text-center">Adición</th>
                             <th class="text-center">Reducción</th>
                             <th class="text-center">Anulados</th>
-                            <th class="text-center">DEFINITIVO</th>
+                            <th class="text-center">Definitivo</th>
                             <th class="text-center">Total Recaudado</th>
                             <th class="text-center">Saldo Por Recaudar</th>
                             <th class="text-center">Fuente</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($prepIng as $rubro)
-                            <tr>
-                                @if($rubro['hijo'] == 1)
-                                    <td class="text-dark" style="vertical-align:middle;"><a href="{{ url('presupuesto/rubro/'.$rubro['id']) }}">{{ $rubro['code'] }}</a></td>
-                                @else
-                                    <td class="text-dark" style="vertical-align:middle;">{{ $rubro['code']}}</td>
-                                @endif
-                                    <td class="text-dark" style="vertical-align:middle;">{{ $rubro['name']}}</td>
-                                    <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['inicial'],0);?></td>
-                                    <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['adicion'],0);?></td>
-                                    <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['reduccion'],0);?></td>
-                                    <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['anulados'],0);?></td>
-                                    <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['definitivo'],0);?></td>
-                                    <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['recaudado'],0);?></td>
-                                    <td class="text-center text-dark" style="vertical-align:middle;">$ <?php echo number_format($rubro['porRecaudar'],0);?></td>
-                                    <td class="text-dark" style="vertical-align:middle;">{{$rubro['cod_fuente']}} {{$rubro['name_fuente']}}</td>
-                            </tr>
-                        @endforeach
                         </tbody>
-                        <tfoot>
-                        <tr>
-                            <th class="text-center">Rubro</th>
-                            <th class="text-center">Nombre</th>
-                            <th class="text-center">INICIAL</th>
-                            <th class="text-center">Adición</th>
-                            <th class="text-center">Reducción</th>
-                            <th class="text-center">Anulados</th>
-                            <th class="text-center">DEFINITIVO</th>
-                            <th class="text-center">Total Recaudado</th>
-                            <th class="text-center">Saldo Por Recaudar</th>
-                            <th class="text-center">Fuente</th>
-                        </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -279,6 +264,114 @@
 <!-- Datatables personalizadas buttons-->
 <script src="{{ asset('/js/datatableCustom.js') }}"></script>
 <script>
+
+    const vigencia_id = @json($V);
+    const prepSaved = @json($prepSaved);
+
+    window.onload = function () {
+        findPrep();
+    };
+
+    function findPrep(){
+        $("#cargando").show();
+        $("#noFind").hide();
+        $("#infoPrep").hide();
+        $("#refresPrepOK").hide();
+
+        var table = $('#tabla').DataTable();
+
+        $.ajax({
+            method: "POST",
+            url: "/presupuesto/getPrepSaved",
+            data: { "id": vigencia_id, "prepSaved": prepSaved,
+                "_token": $("meta[name='csrf-token']").attr("content"),
+            }
+        }).done(function(datos) {
+            $("#tabla").show();
+            table.destroy();
+            $("#infoPrep").show();
+            $("#cargando").hide();
+            $("#noFind").hide();
+
+            table = $('#tabla').DataTable( {
+                language: {
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast":"Último",
+                        "sNext":"Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "sProcessing":"Procesando...",
+                },
+                "pageLength": 15,
+                responsive: true,
+                "searching": true,
+                ordering: false,
+                "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
+                dom: 'Bfrtip',
+                buttons:[
+                    {
+                        extend:    'copyHtml5',
+                        text:      '<i class="fa fa-clone"></i> ',
+                        titleAttr: 'Copiar',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'excelHtml5',
+                        text:      '<i class="fa fa-file-excel-o"></i> ',
+                        titleAttr: 'Exportar a Excel',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'pdfHtml5',
+                        text:      '<i class="fa fa-file-pdf-o"></i> ',
+                        titleAttr: 'Exportar a PDF',
+                        message : 'SIEX-Providencia',
+                        header :true,
+                        orientation : 'landscape',
+                        pageSize: 'LEGAL',
+                        className: 'btn btn-primary',
+                    },
+                    {
+                        extend:    'print',
+                        text:      '<i class="fa fa-print"></i> ',
+                        titleAttr: 'Imprimir',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        text: '<i class="fa fa-refresh"  onclick="refreshPrep()"></i>',
+                        titleAttr: 'Actualizar Presupuesto',
+                        className: 'btn btn-primary'
+                    },
+                ],
+                data: datos,
+                columns: [
+                    { title: "Rubro", data: "rubroLink"},
+                    { title: "Nombre", data: "nombre"},
+                    { title: "Inicial", data: "p_inicial"},
+                    { title: "Adición", data: "adicion"},
+                    { title: "Reducción", data: "reduccion"},
+                    { title: "Anulados", data: "credito"},
+                    { title: "Definitivo", data: "ccredito"},
+                    { title: "Total Recaudado", data: "p_def"},
+                    { title: "Saldo Por Recaudar", data: "cdps"},
+                    { title: "Fuente", data: "fuente"},
+                ]
+            } );
+
+        }).fail(function() {
+            $("#tabla").hide();
+            table.destroy();
+            $("#cargando").hide();
+            $("#noFind").show();
+        });
+    }
 
     function getModalToMakeInforme(){
         $('#modalMakeInforme').modal('show');
