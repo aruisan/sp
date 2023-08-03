@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Impuestos\Pagos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Administrativo\Impuestos\Muellaje;
 use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Impuestos\IcaRetenedor;
@@ -358,7 +359,7 @@ class PagosController extends Controller
         $comprobante->persona_id = $pago->user_id;
         if ($pago->modulo == 'PREDIAL') $comprobante->concepto = "IMPUESTO PREDIAL ".$pago->fechaPago." #".$pago->id;
         elseif ($pago->modulo == 'ICA-Contribuyente') $comprobante->concepto = "IMPUESTO ICA CONTRIBUYENTE ".$pago->fechaPago." #".$pago->id;
-        elseif ($pago->modulo == 'ICA-AgenteRetenedor') $comprobante->concepto = "IMPUESTO ICA AGENTE RETENEDOR ".$pago->fechaPago." #".$pago->id;
+        elseif ($pago->modulo == 'MUELLAJE') $comprobante->concepto = "MUELLAJE ".$pago->fechaPago." #".$pago->id;
         $comprobante->save();
 
         //BANCO DEL COMPROBANTE CONTABLE
@@ -578,6 +579,29 @@ class PagosController extends Controller
             } else $comprobanteMov->debito = $ica->interesesMora;
             
             $comprobanteMov->save();
+        } elseif ($pago->modulo == 'MUELLAJE'){
+
+            $muellaje = Muellaje::find($pago->entity_id);
+
+            //PUCs DEL COMPROBANTE CONTABLE
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 1187;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $pago->valor;
+            $comprobanteMov->save();
+
+
+            //RUBROS DEL COMPROBANTE CONTABLE
+            //1.1.02.02.096	CONTRAPRESTACION DE LAS ZONAS DE USO PUBLICO - MUNICIPIOS PORTUARIOS MARITIMOS
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 868;
+            $comprobanteMov->debito = $pago->valor;
+            $comprobanteMov->save();
+
         }
 
         $pago->confirmed = "TRUE";
