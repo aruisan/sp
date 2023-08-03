@@ -156,8 +156,10 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @if($pago->estado == "Pagado" and $pago->confirmed == "FALSE" and $pago->modulo == "ICA-Contribuyente" and $pago->modulo == "PREDIAL")
-                                        <button onclick="confirmarPago('{{$pago->id}}','{{ \Carbon\Carbon::parse($pago->fechaPago)->format('Y-m-d') }}')" class="btn btn-sm btn-primary-impuestos">Confirmar Pago</button>
+                                    @if($pago->estado == "Pagado" and $pago->confirmed == "FALSE")
+                                        @if($pago->modulo == "ICA-Contribuyente" or $pago->modulo == "PREDIAL" or $pago->modulo == "MUELLAJE")
+                                            <button onclick="confirmarPago('{{$pago->id}}','{{ \Carbon\Carbon::parse($pago->fechaPago)->format('Y-m-d') }}')" class="btn btn-sm btn-primary-impuestos">Confirmar Pago</button>
+                                        @endif
                                     @elseif($pago->estado == "Pagado" and $pago->confirmed == "TRUE")
                                         CONFIRMADO
                                     @endif
