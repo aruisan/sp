@@ -82,6 +82,7 @@ class MuellajeController extends Controller
         $muellaje->tipo = $request->tipo;
         $muellaje->piesEslora = $request->piesEslora;
         $muellaje->tipoCarga = $request->tipoCarga;
+        $muellaje->exclusive = $request->exclusive;
         $muellaje->tonelajeCarga = $request->tonelajeCarga;
         $muellaje->tripulantes = $request->tripulantes;
         $muellaje->pasajeros = $request->pasajeros;
@@ -228,6 +229,7 @@ class MuellajeController extends Controller
         $muellaje->tipo = $request->tipo;
         $muellaje->piesEslora = $request->piesEslora;
         $muellaje->tipoCarga = $request->tipoCarga;
+        $muellaje->exclusive = $request->exclusive;
         $muellaje->tonelajeCarga = $request->tonelajeCarga;
         $muellaje->tripulantes = $request->tripulantes;
         $muellaje->pasajeros = $request->pasajeros;
