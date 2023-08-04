@@ -40,9 +40,11 @@
                                 </tr>
                                 <tr>
                                     <td>Tipo de Embarcación</td>
-                                    <td colspan="3">{{$muellaje->tipo}}</td>
+                                    <td>{{$muellaje->tipo}}</td>
                                     <td>Pies de Eslora</td>
                                     <td>{{$muellaje->piesEslora}}</td>
+                                    <td>Ruta exclusiva SAI-PVA-SAI</td>
+                                    <td>{{$muellaje->exclusive}}</td>
                                 </tr>
                                 <tr>
                                     <td>Tipo de Carga</td>

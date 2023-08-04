@@ -61,15 +61,15 @@
                                     <td><select class="form-control" id="bandera" name="bandera" onchange="changeFlag(this.value)">
                                             <option value="NACIONAL">NACIONAL</option>
                                             <option value="INTERNACIONAL">INTERNACIONAL</option>
-                                            <option value="NACIONAL ADZ-PVA-ADZ">NACIONAL ADZ-PVA-ADZ</option>
                                             <option value="EXCLUIDOS FUERZAS MILITARES">EXCLUIDOS FUERZAS MILITARES</option>
                                             <option value="EXCLUIDOS GOBIERNOS EXTRANJEROS">EXCLUIDOS GOBIERNOS EXTRANJEROS</option>
                                         </select>
                                     </td>
+
                                 </tr>
                                 <tr>
                                     <td>Tipo de Embarcación</td>
-                                    <td colspan="3">
+                                    <td>
                                         <select class="form-control" id="tipo" name="tipo" onchange="changeTipo(this.value)" required>
                                             <option>Seleccione el tipo de embarcación</option>
                                             <option value="0">Motonave, planchones, barcos de carga, pasajeros y similares.</option>
@@ -90,13 +90,13 @@
                                         </select>
                                         <select class="form-control" id="piesEsloraTipo1" onchange="changeTarifa(this.value)" name="piesEslora"  style="display: none">
                                             <option>Seleccione una opción</option>
-                                            <option value="Hasta 37 mts - 130 USD">Hasta 37 mts - 130 USD</option>
-                                            <option value="38 mts en adelante - 223.85 USD">38 mts en adelante - 223.85 USD</option>
+                                            <option value="Hasta 37 mts - 30.096 USD">Hasta 37 mts - 30.096 USD</option>
+                                            <option value="38 mts en adelante - 45.096 USD">38 mts en adelante - 45.096 USD</option>
                                         </select>
                                         <select class="form-control" id="piesEsloraTipo0NAC" onchange="changeTarifa(this.value)" name="piesEslora" style="display: none">
                                             <option>Seleccione una opción</option>
                                             <option value="Hasta 37 mts - 30.096 USD">Hasta 37 mts - 30.096 USD</option>
-                                            <option value="Hasta 138 mts - 50 mts - 45.096 USD">Hasta 138 mts - 50 mts - 45.096 USD</option>
+                                            <option value="Hasta 38 mts - 50 mts - 45.096 USD">Hasta 38 mts - 50 mts - 45.096 USD</option>
                                             <option value="Hasta 51 mts - 57 mts - 54.12 USD">Hasta 51 mts - 57 mts - 54.12 USD</option>
                                             <option value="Hasta 58 mts - 75 mts - 66.144 USD">Hasta 58 mts - 75 mts - 66.144 USD</option>
                                             <option value="Hasta 76 mts - 89 mts - 78.168 USD">Hasta 76 mts - 89 mts - 78.168 USD</option>
@@ -107,6 +107,12 @@
                                             <option>Seleccione una opción</option>
                                             <option value="Hasta 37 mts - 130 USD">Hasta 37 mts - 130 USD</option>
                                             <option value="38 mts en adelante - 223.85 USD">38 mts en adelante - 223.85 USD</option>
+                                        </select>
+                                    </td>
+                                    <td>Ruta exclusiva SAI-PVA-SAI</td>
+                                    <td><select class="form-control" id="exclusive" name="exclusive" onchange="changeExclusive(this.value)">
+                                            <option value="NO">NO</option>
+                                            <option value="SI">SI</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -247,6 +253,15 @@
                                         <input class="form-control" type="text" name="valorUSD" id="valorUSD" value="{{ $valorUSDToday }}">
                                     </td>
                                 </tr>
+                                <tr id="descuento" style="display: none">
+                                    <td colspan="4">
+                                        <div class="col-md-12 align-self-center">
+                                            <div class="alert alert-info text-center">
+                                                Cuenta con el 25% de descuento en la tarifa plena.
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td colspan="2"><h3>Valor a pagar</h3></td>
                                     <td colspan="2">
@@ -277,6 +292,7 @@
     <script>
 
         function changeDays(dias){
+            var exclusive = document.getElementById('exclusive').value;
             var tarifa = document.getElementById('tarifa').value;
             var horas = document.getElementById('numHoras').value;
             if(horas <= 2 && horas > 0){
@@ -288,8 +304,14 @@
 
                 var totPay = parseFloat(valHours) + parseFloat(valDays);
 
+                if(exclusive == 'SI') {
+                    $('#descuento').show();
+                    var multi = parseFloat(tarifa) * 75;
+                    totPay = parseFloat(multi) / 100;
+                } else $('#descuento').hide();
+
                 document.getElementById('valorPago').value = parseFloat(totPay);
-                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(parseFloat(totPay).toFixed(10));
 
             } else if(horas <= 6 && horas > 2){
                 var div = tarifa / 24;
@@ -299,20 +321,32 @@
 
                 var totPay = parseFloat(valHours) + parseFloat(valDays);
 
+                if(exclusive == 'SI') {
+                    $('#descuento').show();
+                    var multi = parseFloat(tarifa) * 75;
+                    totPay = parseFloat(multi) / 100;
+                } else $('#descuento').hide();
+
                 document.getElementById('valorPago').value = parseFloat(totPay);
-                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(parseFloat(totPay).toFixed(10));
 
             } else if(horas == 0){
 
                 var valDays = dias * tarifa;
 
-                document.getElementById('valorPago').value = parseFloat(valDays);
-                document.getElementById('valorPagoSpan').innerHTML = formatter.format(valDays);
+                if(exclusive == 'SI') {
+                    $('#descuento').show();
+                    var multi = parseFloat(tarifa) * 75;
+                    valDays = parseFloat(multi) / 100;
+                } else $('#descuento').hide();
 
+                document.getElementById('valorPago').value = parseFloat(valDays);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(parseFloat(valDays).toFixed(10));
             }
         }
 
         function changeHours(horas){
+            var exclusive = document.getElementById('exclusive').value;
             var tarifa = document.getElementById('tarifa').value;
             var dias = document.getElementById('numTotalDias').value;
             if(horas <= 2 && horas > 0){
@@ -324,8 +358,14 @@
 
                 var totPay = parseFloat(valHours) + parseFloat(valDays);
 
+                if(exclusive == 'SI') {
+                    $('#descuento').show();
+                    var multi = parseFloat(tarifa) * 75;
+                    totPay = parseFloat(multi) / 100;
+                } else $('#descuento').hide();
+
                 document.getElementById('valorPago').value = parseFloat(totPay);
-                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(parseFloat(totPay));
 
             } else if(horas <= 6 && horas > 2) {
                 var div = tarifa / 24;
@@ -335,18 +375,31 @@
 
                 var totPay = parseFloat(valHours) + parseFloat(valDays);
 
+                if(exclusive == 'SI') {
+                    $('#descuento').show();
+                    var multi = parseFloat(tarifa) * 75;
+                    totPay = parseFloat(multi) / 100;
+                } else $('#descuento').hide();
+
                 document.getElementById('valorPago').value = parseFloat(totPay);
-                document.getElementById('valorPagoSpan').innerHTML = formatter.format(totPay);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(parseFloat(totPay));
             }else if(horas == 0 ){
                 var valDays = dias * tarifa;
 
+                if(exclusive == 'SI') {
+                    $('#descuento').show();
+                    var multi = parseFloat(tarifa) * 75;
+                    valDays = parseFloat(multi) / 100;
+                } else $('#descuento').hide();
+
                 document.getElementById('valorPago').value = parseFloat(valDays);
-                document.getElementById('valorPagoSpan').innerHTML = formatter.format(valDays);
+                document.getElementById('valorPagoSpan').innerHTML = formatter.format(parseFloat(valDays));
             }else if(horas > 6){
                 toastr.warning('MAYOR A 6 HORAS, INGRESAR COMO DIA COMPLETO');
                 document.getElementById('numHoras').value = 0;
                 document.getElementById('valorPago').value = 0;
                 document.getElementById('valorPagoSpan').innerHTML = formatter.format(0);
+                document.getElementById('numTotalDias').value = 0;
             }
         }
 
@@ -384,7 +437,7 @@
             } else if(tarifa == "Hasta 37 mts - 30.096 USD"){
                 document.getElementById('tarifa').value = 30.096;
                 document.getElementById('tarifaSpan').innerHTML = '30.096 USD';
-            } else if(tarifa == "Hasta 138 mts - 50 mts - 45.096 USD"){
+            } else if(tarifa == "Hasta 38 mts - 50 mts - 45.096 USD"){
                 document.getElementById('tarifa').value = 45.096;
                 document.getElementById('tarifaSpan').innerHTML = '45.096 USD';
             } else if(tarifa == "Hasta 51 mts - 57 mts - 54.12 USD"){
@@ -414,11 +467,6 @@
                     $('#piesEsloraTipo1').hide();
                     $('#piesEsloraTipo2').hide();
                     $('#piesEsloraTipo0INT').hide();
-                }else if(bandera == "NACIONAL ADZ-PVA-ADZ"){
-                    $('#piesEsloraTipo0NAC').hide();
-                    $('#piesEsloraTipo1').hide();
-                    $('#piesEsloraTipo2').show();
-                    $('#piesEsloraTipo0INT').hide();
                 } else if(bandera == "INTERNACIONAL"){
                     $('#piesEsloraTipo0NAC').hide();
                     $('#piesEsloraTipo1').hide();
@@ -432,19 +480,37 @@
             }
         }
 
+        function changeExclusive(validate){
+            if(validate == 'SI'){
+                $('#descuento').show();
+            } else{
+                $('#descuento').hide();
+            }
+        }
+
         function changeFlag(flag){
             $('#piesEsloraTipo0NAC').hide();
             $('#piesEsloraTipo0INT').hide();
             $('#piesEsloraTipo1').hide();
-            if(flag == "NACIONAL"){
-            } else if(flag == "INTERNACIONAL"){
-            } else if(flag == "NACIONAL ADZ-PVA-ADZ"){
-            } else{
-                document.getElementById('valorPago').value = 0;
-                document.getElementById('valorPagoSpan').innerHTML = '0$';
 
-                document.getElementById('tarifa').value = 0;
-                document.getElementById('tarifaSpan').innerHTML = '0$';
+            document.getElementById('valorPago').value = 0;
+            document.getElementById('valorPagoSpan').innerHTML = '0$';
+
+            document.getElementById('tarifa').value = 0;
+            document.getElementById('tarifaSpan').innerHTML = '0$';
+
+            document.getElementById('numTotalDias').value = 0;
+            document.getElementById('numHoras').value = 0;
+
+            if(flag == "NACIONAL"){
+                $('#tipo').show();
+                $('#descuento').hide();
+            } else if(flag == "INTERNACIONAL"){
+                $('#tipo').show();
+                $('#descuento').hide();
+            } else{
+                $('#tipo').hide();
+                $('#descuento').hide();
             }
         }
 
