@@ -257,7 +257,8 @@
                   <li><a class="item-menu" href="#">Comparativo</a></li>
                   <li><a class="item-menu" href="{{route('balance.pre-prueba', '01')}}">Prueba</a></li>
                   <li><a class="item-menu" href="{{route('balance.terceros')}}">Terceros</a></li>
-                  <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
+                  {{--<li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>--}}
+                  <li><a class="item-menu" href="{{route('balance-general.pdf', [2023, 1, 'vista'])}}">General</a></li>
                   <li><a class="item-menu" href="#">Notas al Balance</a></li>
                   <li><a class="item-menu" href="#">Estado de Resultados</a></li>
                   <li><a class="item-menu" href="#">Estado al cambio del patrimonio</a></li>

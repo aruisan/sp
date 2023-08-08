@@ -11,6 +11,7 @@ class AlmacenComprobanteEgreso extends Model
 {
     protected $fillable = ['fecha', 'dependencia_id', 'responsable_id', 'owner_id', 'ccc', 'ccd', 'status', 'observacion'];
     protected $casts = [
+        'ccd' => 'array',
         'status' => 'array',
         'observacion' => 'array'
     ];
@@ -55,5 +56,9 @@ class AlmacenComprobanteEgreso extends Model
 
     public function getNombreAttribute(){
         return "Salida {$this->index}";
+    }
+
+    public function getArticuloTotalAttribute(){
+        return $this->salidas_pivot->sum('total');
     }
 }

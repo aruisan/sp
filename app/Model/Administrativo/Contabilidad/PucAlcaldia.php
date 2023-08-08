@@ -10,6 +10,12 @@ use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\CompContMov;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
+use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\AlmacenComprobanteEgreso;
 use App\ChipContabilidadData;
 use \Carbon\Carbon;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
@@ -17,12 +23,14 @@ use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\AlmacenArticulo;
 use Session;
 
+
+
 class PucAlcaldia extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
     protected $table = "puc_alcaldia";
-    protected $appends = ['almacen_puc_credito'];
+    protected $appends = ['almacen_puc_credito', 'level'];
 
     public function contabilidad_data(){
         return $this->hasOne(ChipContabilidadData::class, 'puc_id');
@@ -92,31 +100,260 @@ class PucAlcaldia extends Model implements Auditable
         return $this->hasMany(PagoBanks::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
     }
 
-    //comprobantes de ingreso son los de banco
     public function getComprobantesAttribute(){
         return ComprobanteIngresosMov::where('cuenta_banco', $this->id)->orwhere('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->get();
     }
 
-    public function getComprobantesMensualAttribute(){
-        //fecha de compriobante
-        $mes = Session::get(auth()->id().'-mes-informe-contable-mes');
-        $age = Carbon::today()->format('Y');
-        $inicio = $age."-".$mes."-01";
-        $dia_final = date("t", strtotime($inicio));
-        $final = $age."-".$mes."-".$dia_final;
-        return ComprobanteIngresosMov::where('cuenta_banco', $this->id)->whereBetween('fechaComp', [$inicio, $final])->orwhere('cuenta_puc_id', $this->id)->whereBetween('fechaComp', [$inicio, $final])->get();
+    public function almacen_entradas_debito($year, $month){
+        //return $this->almacen_items;
+        $items = collect();
+        if($this->almacen_items->count() > 0){
+            $items =  $this->almacen_items->filter(
+                function($ai)use($year, $month){ 
+                    return Carbon::parse($ai->comprobante_ingreso->fecha_factura)->month  == $month && Carbon::parse($ai->comprobante_ingreso->fecha_factura)->year  == $year;
+                })->map(function($a){
+                    return [
+                        'articulo' => $a->nombre_articulo,
+                        'cantidad' => $a->cantidad,
+                        'valor' => $a->valor_unitario,
+                        'total' => $a->total 
+                    ];
+                });
+        }
+            
+        return $items;
     }
 
-    //retefuente
+
+    public function almacen_entradas_credito($year, $month){
+        $ccds_id =  $this->almacen_pucs_debitos->pluck('id')->toArray();
+        $items = AlmacenArticulo::whereIn('ccd', $ccds_id)->get();
+        $articulos = collect();
+        //return $items;
+        if($items->count() > 0){
+            $articulos = $items->filter(
+                function($ai)use($year, $month){ 
+                    return Carbon::parse($ai->comprobante_ingreso->fecha_factura)->month  == $month && Carbon::parse($ai->comprobante_ingreso->fecha_factura)->year  == $year;
+                })->map(function($a){
+                    return [
+                        'articulo' => $a->nombre_articulo,
+                        'cantidad' => $a->cantidad,
+                        'valor' => $a->valor_unitario,
+                        'total' => $a->total 
+                    ];
+                });
+        }
+
+        return $articulos;
+    }
+
+    public function almacen_salidas_credito($year, $month){
+        $salidas = AlmacenComprobanteEgreso::where('ccc', $this->id)->get();
+        $articulos = collect();
+        if($salidas->count() > 0 ){
+            $salidas_ = $salidas->filter(function($s) use($year, $month){
+                return Carbon::parse($s->fecha)->month  == $month && Carbon::parse($s->fecha)->year  == $year;
+            });
+            foreach($salidas_ as $salida):
+                foreach($salida->salidas_pivot as $articulo_salida): 
+                    $articulos->push([
+                        'articulo' => $articulo_salida->articulo->nombre_articulo,
+                        'cantidad' => $articulo_salida->cantidad,
+                        'valor' => $articulo_salida->articulo->valor_unitario,
+                        'total' => $articulo_salida->total 
+                    ]);
+                endforeach;
+            endforeach; 
+
+            
+        }
+
+        return $articulos;
+    }
+
+    public function almacen_salidas_debito($year, $month){
+        //return $this->almacen_items;
+        $articulos = collect();
+        $salidas =  AlmacenComprobanteEgreso::whereMonth('fecha', $month)->whereYear('fecha', $year)->get()->filter(function($e){
+            return in_array($this->id, $e->ccd);
+        });
+
+        foreach($salidas as $salida): 
+            foreach($salida->salidas_pivot as $articulo_salida): 
+                if($articulo_salida->articulo->ccd == $this->id):
+                    $articulos->push([
+                        'articulo' => $articulo_salida->articulo->nombre_articulo,
+                        'cantidad' => $articulo_salida->cantidad,
+                        'valor' => $articulo_salida->articulo->valor_unitario,
+                        'total' => $articulo_salida->total 
+                    ]);
+                endif;
+            endforeach;
+        endforeach;
+        return $articulos;
+    }
+    
+
+    //retefuente 1
     public function retefuente_movimientos(){
         return $this->hasMany(CompContMov::class, 'cuenta_puc_id')->where('comp_cont_id', '>', 2);
     }
 
+    ////retencion en la fuente  1
     public function getRetefuenteMensualAttribute(){
-        return OrdenPagosDescuentos::where('cuenta_puc_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))
-                                    ->orwhere('retencion_fuente_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))
-                                    ->orwhere('desc_municipal_id', $this->id)->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'))->get();
+        $credito = 0;
+        $OPRets = RetencionFuente::where('codigo', $this->code)->get();
+        foreach ($OPRets as $retFuen){
+            $OPD = OrdenPagosDescuentos::where('retencion_fuente_id', $retFuen->id)->get();
+            foreach ($OPD as $descRet){
+                $OP = OrdenPagos::find($descRet->orden_pagos_id);
+                if ($OP){
+                    if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == 2023){
+                        if (Carbon::parse($OP->created_at)->month >=1 and 
+                        Carbon::parse($OP->created_at)->month <= 1){
+                                $credito += $descRet->valor;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return $credito;
+        
     }
+
+    ////descuento municipal 2
+    public function getDescuentoMunicipalMensualAttribute(){
+        $credito = 0;
+
+        $OPDescMunicipal = DescMunicipales::where('codigo', $this->code)->get();
+        foreach ($OPDescMunicipal as $OPDescMuni){
+            $OPD = OrdenPagosDescuentos::where('desc_municipal_id', $OPDescMuni->id)->get();
+            foreach ($OPD as $descRet){
+                $OP = OrdenPagos::find($descRet->orden_pagos_id);
+                if ($OP){
+                    if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == 2023){
+                        if (Carbon::parse($OP->created_at)->month >= 1  and
+                            Carbon::parse($OP->created_at)->month <= 1){
+                            $credito += $descRet->valor;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $credito;
+    }
+
+    ///descuentos 3
+    public function getDescuentoMensualAttribute(){
+        $credito = 0;
+
+        $OPD = OrdenPagosDescuentos::where('cuenta_puc_id', $this->id)->get();
+        foreach ($OPD as $descRet){
+            $OP = OrdenPagos::find($descRet->orden_pagos_id);
+            if ($OP){
+                if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == 2023){
+                    if (Carbon::parse($OP->created_at)->month >= 1 and
+                        Carbon::parse($OP->created_at)->month <= 1){
+                        $credito += $descRet->valor;
+                    }
+                }
+            }
+        }
+
+        return $credito;
+    }
+
+    //pagos puc 4
+    public function getPagosPucMensualAttribute(){
+        $credito = 0;
+        $debito = 0;
+
+        $OPD = OrdenPagosPuc::where('rubros_puc_id', $this->id)->get();
+            foreach ($OPD as $descRet){
+                $OP = OrdenPagos::find($descRet->orden_pago_id);
+                if ($OP){
+                    if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == 2023){
+                        if (Carbon::parse($OP->created_at)->month >= 1 and
+                        Carbon::parse($OP->created_at)->month <= 1){
+                            $credito += $descRet->valor_credito;
+                            $debito += $descRet->valor_debito;
+                        }
+                    }
+                }
+            }
+
+        return ['credito' => $credito, 'debito' => $debito];
+    }
+
+    ///poagos banck new 5
+    public function getPagosBankNewMensualAttribute(){
+        $credito = 0;
+        $debito = 0;
+
+        $PagosPUCs = PagoBanksNew::where('rubros_puc_id', $this->id)->get();
+        foreach ($PagosPUCs as $descRet){
+            $pago = Pagos::find($descRet->pagos_id);
+            if ($pago){
+                if ($pago->estado == "1" and Carbon::parse($pago->created_at)->year == 2023){
+                    if (Carbon::parse($pago->created_at)->month >= 1 and
+                    Carbon::parse($pago->created_at)->month <= 1){
+                        $credito += $descRet->credito;
+                        $debito += $descRet->debito;
+                    }
+                }
+            }
+        }
+
+        return ['credito' => $credito, 'debito' => $debito];
+    }
+
+    //comprobantes de ingreso son los de banco 6
+    public function getComprobantesPucMensualAttribute(){
+        $credito = 0;
+        $debito = 0;
+
+        $compContMovs = ComprobanteIngresosMov::where('cuenta_puc_id', $this->id)->get();
+        foreach ($compContMovs as $descRet){
+            $compCont = ComprobanteIngresos::find($descRet->comp_id);
+            if ($compCont){
+                if ($compCont->estado == "1" and Carbon::parse($compCont->created_at)->year == 2023){
+                    if (Carbon::parse($compCont->ff)->month >= 1 and
+                    Carbon::parse($compCont->ff)->month <= 1){
+                        $credito += $descRet->credito;
+                        $debito += $descRet->debito;
+                    }
+                }
+            }
+        }
+        return ['credito' => $credito, 'debito' => $debito];
+    }
+
+    public function getComprobantesBancoMensualAttribute(){
+        $credito = 0;
+        $debito = 0;
+
+        $compContMovs = ComprobanteIngresosMov::where('cuenta_banco', $this->id)->get();
+        foreach ($compContMovs as $descRet){
+            $compCont = ComprobanteIngresos::find($descRet->comp_id);
+            if ($compCont){
+                if ($compCont->estado == "1" and Carbon::parse($compCont->created_at)->year == 2023){
+                    if (Carbon::parse($compCont->ff)->month >= 1 and
+                    Carbon::parse($compCont->ff)->month <= 1){
+                        $credito += $descRet->credito;
+                        $debito += $descRet->debito;
+                    }
+                }
+            }
+        }
+        return ['credito' => $credito, 'debito' => $debito];
+    }
+
+
+
+
 
     //suma de otros pucs 
     public function getOtrosOrdenesPagoPucsAttribute(){
@@ -129,10 +366,6 @@ class PucAlcaldia extends Model implements Auditable
         endforeach;
         
         return $data;
-    }
-
-    public function pagos_bank_new_mensual(){
-        return $this->hasMany(PagoBanksNew::class, 'rubros_puc_id')->whereYear('created_at', Carbon::today()->format('Y'))->whereMonth('created_at', Session::get(auth()->id().'-mes-informe-contable-mes'));
     }
 
     public function getOtrosOrdenesPagoPucsMensualAttribute(){
@@ -183,10 +416,10 @@ class PucAlcaldia extends Model implements Auditable
 
     public function getDebCredTrimestreAttribute(){
         $trimestre = [1,4,7,10];
-        $age = Session::get(auth()->id().'-mes-informe-chip-age');
-        $mes_ = $trimestre[Session::get(auth()->id().'-mes-informe-chip-trimestre')];
-        $mes = $mes_ < 10 ? "0{$mes_}" : $mes_;
-        $mes_final = $mes_ < 10 ? "0".$mes_+2 : $mes_+2;
+        //$age = Session::get(auth()->id().'-mes-informe-chip-age');
+        //$mes_ = $trimestre[Session::get(auth()->id().'-mes-informe-chip-trimestre')];
+        //$mes = $mes_ < 10 ? "0{$mes_}" : $mes_;
+        //$mes_final = $mes_ < 10 ? "0".$mes_+2 : $mes_+2;
         //$age =  Carbon::today()->format('Y');
         $totCred = 0;
         $totDeb = 0;
@@ -265,9 +498,10 @@ class PucAlcaldia extends Model implements Auditable
         $totCred = 0;
         $totDeb = 0;
         $mes = Session::get(auth()->id().'-mes-informe-contable-mes',);
+        /*
         $inicio = "2023-{$mes}-01";
         $final = \Carbon\Carbon::createFromFormat('Y-m-d', $inicio)->addMonth()->format('Y-m-d');
-
+        */
         /*
         if($this->otros_ordenes_pago_pucs_mensual->count() > 0):
             $otros_pucs = $this->otros_ordenes_pago_pucs_mensual;
@@ -281,11 +515,25 @@ class PucAlcaldia extends Model implements Auditable
         endif;
         */
 
-        if($this->level == 5):
+        //if($this->level == 5):
+            $totCred += $this->retefuente_mensual; 
+            $totCred += $this->descuento_municipal_mensual; 
+            $totCred += $this->descuento_mensual; 
+            $totCred += $this->pagos_puc_mensual['credito']; 
+            $totDeb  += $this->pagos_puc_mensual['debito'];
+            $totCred += $this->pagos_bank_new_mensual['credito']; 
+            $totDeb  += $this->pagos_bank_new_mensual['debito'];
+            $totCred += $this->comprobantes_puc_mensual['credito']; 
+            $totDeb  += $this->comprobantes_puc_mensual['debito'];
+            $totCred += $this->comprobantes_banco_mensual['credito']; 
+            $totDeb  += $this->comprobantes_banco_mensual['debito'];
+                        /*
             if($this->almacen_items_mensual->count() > 0):
                 $totDeb += $this->almacen_items_mensual->sum('total');
             endif;
-            
+            */
+
+            /*
             if($this->pagos_bank_mensual->count() > 0):
                 $totCredAll = $this->pagos_bank_mensual->sum('valor');
                 $totCred += $this->pagos_bank_mensual->filter(function($p){ return $p->pago->estado == 1;})->sum('valor');
@@ -305,12 +553,12 @@ class PucAlcaldia extends Model implements Auditable
                 $totDeb += $this->orden_pagos_mensual->sum('valor_debito');
                 $totCred += $this->orden_pagos_mensual->sum('valor_credito');
             endif;
-/*
+
             if($this->retefuente_mensual->count() > 0):
                 $totCred += $this->retefuente_mensual->count() > 0 ? $this->retefuente_mensual->sum('valor') : 0;
             endif;
             */
-        endif;
+        //endif;
         
         return ['debito' => $totDeb, 'credito' => $totCred];
     }

@@ -2,7 +2,7 @@
 @extends('layouts.almacenPdf')
 @section('contenido')
 		<div class="row">
-			<center><h3>Comprobante de Salida de Almacen No. {{$egreso->index}}</h3></center>
+			<center><h3>{{is_null($egreso->puc_credito) ? "Borrador" : ""}} Comprobante de Salida de Almacen No. {{$egreso->index}} </h3></center>
 		</div>
 		<div style="border:1px solid black;">
 			<div style="width: 70%;   display: inline-block; margin-left: 3%">
@@ -112,6 +112,7 @@
 @stop
 
 @section('firma')
+        @if(!is_null($egreso->puc_credito))
         <div style="width:45%; display:inline-block;">
             _________________________<br>
             {{$egreso->responsable->nombre}}<br>
@@ -124,4 +125,5 @@
             ALMACENISTA GENERAL <br>
             .
         </div>
+        @endif
 @endsection

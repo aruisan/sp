@@ -74,12 +74,14 @@
                         <td class='text-center warning' style='width=200px;'>0</td>
                         <td class='text-center info' style='width=200px;'>${{number_format($puc->pagos_bank_mensual->filter(function($p){ return $p->pago->estado == 1;})->sum('valor'))}}</td>
                     </tr>
+                    {{--
                     <tr>
                         <td class='text-center' style='width=200px;'>Pagos bancarios nuevos (deivith)</td>
                         <td class='text-center warning' style='width=200px;'>${{number_format($puc->pagos_bank_new_mensual->sum('debito'))}}</td>
                         <td class='text-center warning' style='width=200px;'>${{number_format($puc->pagos_bank_new_mensual->sum('credito'))}}</td>
                         <td class='text-center info' style='width=200px;'>0</td>
                     </tr>
+                    --}}
                     <tr>
                         <td class='text-center' style='width=200px;'>Comprobantes</td>
                         <td class='text-center info' style='width=200px;'>${{number_format($puc->comprobantes_mensual->count() > 0 ?$puc->comprobantes_mensual->sum('debito') : 0)}}</td>
@@ -181,17 +183,9 @@
                     </tbody>
                 </table>
             </div>
+                {{--
             <div id="p_bank_n" class="tab-pane fade in active">
                 <h3>Pagos Bancarios</h3>
-                {{--
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td class="info">{{$puc->pagos_bank_new_mensual->count() > 0 ? $this->pagos_bank_new_mensual->sum('debito') : 0}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                --}}
 
                 <table class="table tabla">
                     <thead>
@@ -210,6 +204,7 @@
                     </tbody>
                 </table>
             </div>
+                --}}
             <div id="comprobantes" class="tab-pane fade">
                 <h3>Comprobantes</h3>
 
@@ -217,6 +212,7 @@
                     <thead>
                         <th>Debito</th>
                         <th>Credito</th>
+                        <th>Concepto</th>
                         <th>Fecha de Compra</th>
                         <th>Fecha</th>
                     </thead>
@@ -225,6 +221,7 @@
                         <tr class="info">
                             <td>{{number_format($comprobante->debito)}}</td>
                             <td>{{number_format($comprobante->credito)}}</td>
+                            <td>{{$comprobante->comprobante->concepto}}</td>
                             <td>{{$comprobante->fechaComp}}</td>
                             <td>{{$comprobante->created_at}}</td>
                         </tr>
@@ -405,6 +402,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            alert(1?+2+3)
           let tbl =  $('.tabla').DataTable({
                 language: {
                     "lengthMenu": "Mostrar _MENU_ registros",

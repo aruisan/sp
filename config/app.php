@@ -196,6 +196,7 @@ return [
         Scopdrag\LaravelGoogleChart\LaravelGoogleChartServiceProvider::class,
         //jwt
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
 
     ],
 
@@ -253,6 +254,7 @@ return [
         //Imagen
         'Image' => Intervention\Image\Facades\Image::class,
         'Instituto' => App\Helpers\InstitutoHelper::class,
+        'Fecha' => App\Helpers\FechaHelper::class,
 
         //barcodes
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,

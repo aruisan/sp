@@ -86,13 +86,21 @@
         const pucs = @json($pucs);
         const informe = @json($informe);
         const data_count = {{$informe->datos->count()}};
-        const porcentaje_pucs = (85/pucs.length)/2;
+        const porcentaje_pucs = (96/pucs.length)/2;
         let porcentaje_carga = 0;
         let contador = 0;
         let contador_inicial = 0;
+        let level = 5;
 
         $(document).ready(function() {
-            pucs.forEach(async p => {
+            generar_pucs();
+        })
+
+        const generar_pucs = () => {
+            let pucs_level = pucs.filter(p => p.level == level); 
+            contador_inicial = 0;
+            contador = 0;
+            pucs_level.forEach(async p => {
                 contador_inicial +=1;
                 cargar_porcentaje_actual();
                 let resp = await fetch(`/administrativo/contabilidad/blance-prueba/${informe.id}/${p.id}`)
@@ -105,10 +113,20 @@
 
                 console.log('final', [contador, data_count, contador_inicial]);
                 if(contador == contador_inicial){
-                    cargar_relaciones_data();
+                    if(level > 1){ 
+                        level -=1;
+                        generar_pucs();
+                    }else{
+                        $('#progress-bar').attr("style","width:100%").text(`100%`);
+
+                       // setTimeout(function(){
+                            window.location.href = "{{route('balance.prueba-informe', $informe)}}";
+                        //}, 2000);
+                    }
+
                 }
             })
-        })
+        }
 
         const cargar_porcentaje_actual = () => {
             porcentaje_carga += porcentaje_pucs;
@@ -117,19 +135,6 @@
             console.log('cargando', porcentaje);
         }
 
-        const cargar_relaciones_data = async () => {
-            let resp = await fetch(`/administrativo/contabilidad/blance-prueba-relaciones/${informe.id}`)
-            .then(response => response.json())
-            .then(data => data);
-
-            if(resp){
-                $('#progress-bar').attr("style","width:100%").text(`100%`);
-
-                setTimeout(function(){
-                    window.location.href = "{{route('balance.prueba-informe', $informe)}}";
-                }, 2000);
-            }
-        }
 
 
     </script>

@@ -1,6 +1,7 @@
 <?php
 
 Route::group([ 'middleware' => 'auth', 'prefix' => 'administrativo/contabilidad'] ,function(){
+    
     Route::get('/pac-informe/{tipo}', "\App\Http\Controllers\Administrativo\Tesoreria\PacController@informe_temporal")->name('pac.informe');
     Route::get('/blance-inicial/{mes}','Administrativo\Contabilidad\Balances\InicialController@index')->name('balance.inicial');
 
@@ -10,6 +11,9 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'administrativo/contabilidad'
     Route::get('/blance-prueba-informe/{informe}','Administrativo\Contabilidad\Balances\PruebaController@informe')->name('balance.prueba-informe');
     Route::get('/blance-prueba-nivel/{nivel}/{informe}','Administrativo\Contabilidad\Balances\PruebaController@informe_nivel')->name('balance.prueba-nivel');
     Route::get('/blance-prueba-reload-informe/{informe}','Administrativo\Contabilidad\Balances\PruebaController@reload_informe')->name('balance.prueba-informe-reload');
+    Route::get('/puc-data/{puc}','Administrativo\Contabilidad\Balances\PruebaController@puc_data')->name('balance.puc_data');
+
+    Route::get('/blance-general-pdf/{age}/{mes}/{tipo}','Administrativo\Contabilidad\Balances\GeneralController@pdf')->name('balance-general.pdf');
 
     Route::get('/chip-pre/{age}/{trimestre}','Administrativo\Contabilidad\Balances\ChipController@pre_informe')->name('chip.pre');
     Route::get('/chip/{informe}/{puc}','Administrativo\Contabilidad\Balances\ChipController@generar_informe')->name('chip.generar');

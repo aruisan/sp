@@ -40,19 +40,20 @@
             <table class="table" id="tabla">
                 <thead>
                     <tr>
-                        <th colspan="14" class="text-center"><b>Balance Prueba {{$meses[Session::get(auth()->id().'-mes-informe-contable-mes')]}}</b></th>
+                        <th colspan="15" class="text-center"><b>Balance Prueba {{$meses[Session::get(auth()->id().'-mes-informe-contable-mes')]}}</b></th>
                     </tr>
-                        {{--
                     <tr>
-                        <th colspan="2" class="text-center"><b></b></th>
+                        <th colspan="2" class="text-center"><b>Puc</b></th>
+                        <th colspan="2" class="text-center"><b>Balance Inicial</b></th>
                         <th colspan="2" class="text-center"><b>Balance Inicial</b></th>
                         <th colspan="2" class="text-center"><b>Balance Movimientos</b></th>
-                        <th colspan="2" class="text-center"><b>Balance Saldos</b></th>
-                        <th colspan="2" class="text-center"><b>Balance Inicial</b></th>
                         <th colspan="2" class="text-center"><b>Balance Movimientos</b></th>
                         <th colspan="2" class="text-center"><b>Balance Saldos</b></th>
+                        <th colspan="2" class="text-center"><b>Balance Saldos</b></th>
+                        @if(auth()->id() == 1)
+                        <th class="text-center">movimientos</th>
+                        @endif
                     </tr>
-                        --}}
                     <tr>
                         <th class="text-center">Codigo</th>
                         <th class="text-center">Concepto</th>
@@ -78,24 +79,28 @@
                 </thead>
                 <tbody>
                 @foreach($pucs as $puc)
+                            @php 
+                            $s_debito = $puc->naturaleza == "DEBITO" ? $puc->i_debito + $puc->m_debito + $puc->a_debito - $puc->m_credito + $puc->a_credito: 0;
+                            $s_credito = $puc->naturaleza == "CREDITO" ?  $puc->i_credito + $puc->m_credito + $puc->a_credito - $puc->m_debito + $puc->a_debito: 0;
+                            @endphp
                     <tr>
-                    <td class="text-left">{{is_null($puc->puc_alcaldia) ? "Se Elimino" : $puc->puc_alcaldia->code}}</td>
-                        <td class="text-center">{{is_null($puc->puc_alcaldia) ? "Se Elimino" : $puc->puc_alcaldia->concepto}}</td>
+                    <td class="text-left">{{is_null($puc->puc_alcaldia) ? "Se Elimino {$puc->id}" : $puc->puc_alcaldia->code}}</td>
+                        <td class="text-center">{{is_null($puc->puc_alcaldia) ? "Se Elimino {$puc->id}" : $puc->puc_alcaldia->concepto}}</td>
 
                         <td class="text-right" style="width=200px;">${{number_format($puc->i_debito  ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">${{number_format($puc->i_credito ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->i_debito}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->i_credito}}</td>
 
-                        <td class="text-right" style="width=200px;">${{number_format($puc->m_debito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">${{number_format($puc->m_credito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">{{$puc->m_debito}}</td>
-                        <td class="text-right" style="width=200px;">{{$puc->m_credito}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->m_debito + $puc->a_debito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->m_credito + $puc->a_credito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->m_debito + $puc->a_debito}}</td>
+                        <td class="text-right" style="width=200px;">{{$puc->m_credito + $puc->a_credito}}</td>
 
-                        <td class="text-right" style="width=200px;">${{number_format($puc->s_debito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">${{number_format($puc->s_credito, 0,",", ".")}}</td>
-                        <td class="text-right" style="width=200px;">{{$puc->s_debito}}</td>
-                        <td class="text-right" style="width=200px;">{{$puc->s_credito}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($s_debito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($s_credito, 0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">{{$s_debito}}</td>
+                        <td class="text-right" style="width=200px;">{{$s_credito}}</td>
                         @if(auth()->id() == 1)
                         <td class="text-right" style="width=200px;">
                             @if(!is_null($puc->puc_alcaldia) )
@@ -117,8 +122,8 @@
                         <td><b>{{$pucs->sum('i_debito')}}</b></td>
                         <td><b>{{$pucs->sum('i_credito')}}</b></td>
 
-                        <td><b>${{number_format($pucs->sum('m_debito')  ,0,",", ".")}}</b></td>
-                        <td><b>${{number_format($pucs->sum('m_credito')  ,0,",", ".")}}</b></td>
+                        <td><b>${{number_format($pucs->sum('m_debito') + $pucs->sum('a_debito')  ,0,",", ".")}}</b></td>
+                        <td><b>${{number_format($pucs->sum('m_credito') + $pucs->sum('a_credito')   ,0,",", ".")}}</b></td>
                         <td><b>{{$pucs->sum('m_debito')}}</b></td>
                         <td><b>{{$pucs->sum('m_credito')}}</b></td>
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Administrativo\Contabilidad\BalanceData;
+use App\Model\Administrativo\Contabilidad\Balances;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
@@ -334,7 +336,6 @@ class PruebaController extends Controller
     }
 
     public function pre_informe($mes){
-        
         Session::put(auth()->id().'-mes-informe-contable-mes', $mes);
         Session::put(auth()->id().'-mes-informe-contable-age', 2023);
         $fecha = "2023-{$mes}-01";
@@ -352,7 +353,7 @@ class PruebaController extends Controller
     }
 
     public function generar_informe(InformeContableMensual $informe, PucAlcaldia $puc){
-        $mes = Session::get(auth()->id().'-mes-informe-contable-mes');
+        $mes = intval(Session::get(auth()->id().'-mes-informe-contable-mes'));
         $mes_integer = intval($mes)-1;
         $mes_anterior = $mes_integer > 9 ? $mes_integer : "0{$mes_integer}";
         $fecha_anterior = "2023-{$mes_anterior}-01";
@@ -374,15 +375,39 @@ class PruebaController extends Controller
                 return "no se ha generado el mes anterior";
             }
             $puc_informe_contable_mensual_anterior = InformeContableMensualData::where('informe_contable_mensual_id', $informe_anterior->id)->where('puc_alcaldia_id', $puc->id)->first();
-
+            
             $i_debito = $puc_informe_contable_mensual_anterior->s_debito;
             $i_credito = $puc_informe_contable_mensual_anterior->s_credito;
         }
+        
+        $balance = Balances::where('mes', $mes)->where('año', 2023)->where('tipo', 'MENSUAL')->first();
+        $puc_balances = BalanceData::where('cuenta_puc_id', $puc->id)->where('balance_id', $balance->id)->get();
+        //$m_credito = $puc_balances->sum('credito') + array_sum(array_column($puc->almacen_salidas_credito(2023,$mes),'total')) +array_sum(array_column($puc->almacen_entradas_credito(2023,$mes),'total'));
+        //$m_debito = $puc_balances->sum('debito') + array_sum(array_column($puc->almacen_salidas_debito(2023,$mes), 'total')) +array_sum(array_column($puc->almacen_entradas_debito(2023,$mes), 'total'));
+        $m_credito = $puc_balances->sum('credito');
+        $m_debito = $puc_balances->sum('debito');
 
-        $m_credito = $puc->m_credito;
-        $m_debito = $puc->m_debito;
+        $a_credito = $puc->almacen_salidas_credito(2023,$mes)->sum('total') +$puc->almacen_entradas_credito(2023,$mes)->sum('total');
+        $a_debito = $puc->almacen_salidas_debito(2023,$mes)->sum('total') +$puc->almacen_entradas_debito(2023,$mes)->sum('total');
+        
         $s_debito = $puc->naturaleza == "DEBITO" ? $i_debito + $m_debito - $m_credito : 0;
         $s_credito = $puc->naturaleza == "CREDITO" ?  $i_credito + $m_credito - $m_debito : 0;
+/*
+        if($puc->hijos->count() > 0){
+            $hijos_ids = $puc->hijos->pluck('id')->toArray();
+            $hijos = InformeContableMensualData::whereIn('puc_alcaldia_id', $hijos_ids)->where('informe_contable_mensual_id', $informe->id)->get();
+            
+            $m_credito += $hijos->sum('m_credito');
+            $m_debito += $hijos->sum('m_debito');
+            $s_debito += $hijos->sum('s_debito');
+            $s_credito += $hijos->sum('s_credito');
+            $i_credito += $hijos->sum('i_credito');
+            $i_debito += $hijos->sum('i_debito');
+        }
+*/
+
+        
+        
         
         $puc_mensual->informe_contable_mensual_id = $informe->id;
         $puc_mensual->puc_alcaldia_id = $puc->id;
@@ -392,8 +417,23 @@ class PruebaController extends Controller
         $puc_mensual->i_debito = $i_debito;
         $puc_mensual->s_credito = $s_credito;
         $puc_mensual->s_debito = $s_debito;    
+        $puc_mensual->a_credito = $a_credito;
+        $puc_mensual->a_debito = $a_debito;  
         $puc_mensual->save();
         
+
+        if($puc_mensual->puc_alcaldia->hijos->count() > 0){
+            $pucs_mensuales = InformeContableMensualData::where('informe_contable_mensual_id', $informe->id)->whereIn('puc_alcaldia_id', $puc_mensual->puc_alcaldia->hijos->pluck('id')->toArray())->get();
+            foreach($pucs_mensuales as $hijo):
+                $hijo->padre_id = $puc_mensual->id;
+                $hijo->save();
+            endforeach;
+        }
+
+        $puc_mensual->a_credito = $puc_mensual->a_credito + $puc_mensual->hijos->sum('a_credito');
+        $puc_mensual->a_debito = $puc_mensual->a_debito + $puc_mensual->hijos->sum('a_debito');  
+        $puc_mensual->save();
+
 
         return response()->json($pucs_count == $informe->datos->count() ? TRUE : FALSE);
     }
@@ -410,12 +450,17 @@ class PruebaController extends Controller
             endif;
         endforeach;
 
-        $informe->finalizar = TRUE;
+        
         $informe->save();
         return response()->json(TRUE);
     }
 
     public function informe(InformeContableMensual $informe){
+        $fecha_array = explode('-', $informe->fecha);
+        Session::put(auth()->id().'-mes-informe-contable-mes', $fecha_array[1]);
+        Session::put(auth()->id().'-mes-informe-contable-age', $fecha_array[0]);
+        $informe->finalizar = TRUE;
+        $informe->save();
         $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
         Session::put(auth()->id().'-mes-informe-contable-nivel', 1);
         //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
@@ -431,6 +476,9 @@ class PruebaController extends Controller
     }
 
     public function informe_nivel($nivel, InformeContableMensual $informe){
+        //$puc = PucAlcaldia::find(1030);
+        //dd($puc->debito);
+
         //dd($nivel);
         Session::put(auth()->id().'-mes-informe-contable-nivel', $nivel);
         $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
@@ -444,5 +492,16 @@ class PruebaController extends Controller
         $diaActual = Carbon::now()->day;
 
         return view('administrativo.contabilidad.balances.prueba',compact('añoActual', 'mesActual', 'diaActual', 'pucs', 'meses', 'informe'));
+    }
+
+    public function puc_data(PucAlcaldia $puc){
+        dd(
+            $puc->almacen_salidas_debito(2023,6)
+            /*
+            $puc->almacen_salidas_credito(2023,3)
+            $puc->almacen_entradas_debito(2023,6)
+            $puc->almacen_entradas_credito(2023,3)
+        */ 
+        );
     }
 }

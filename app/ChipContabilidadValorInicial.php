@@ -25,6 +25,27 @@ class ChipContabilidadValorInicial extends Model
         return $this->belongsTo(ChipContabilidadValorInicial::class, 'padre_id');
     }
 
+    public function getMDebitoAttribute($value){
+        return $value+$this->a_debito;
+    }
+
+    public function getMCreditoAttribute($value){
+        return $value+$this->a_credito;
+    }
+
+    public function getSFinalAttribute($value){
+        return $this->puc_alcaldia->naturaleza == "DEBITO" ? $this->valor_inicial + $this->m_debito - $this->m_credito : $this->valor_inicial + $this->m_credito - $this->m_debito;
+    }
+
+    public function getCorrienteAttribute($value){
+        return $this->estado_corriente ? $this->s_final : 0;
+    }
+
+    public function getNoCorrienteAttribute($value){
+        return !$this->estado_corriente ? $this->s_final : 0;
+    }
+
+
     public function getFormatoHijosAttribute(){
         $grupo_puc = "";
         foreach($this->hijos->sortBy('puc_alcaldia.code') as $item):
