@@ -420,6 +420,7 @@ class PagosController extends Controller
                     $bank->rubros_puc_id = $request->banco[$i];
                     $bank->debito = 0;
                     $bank->credito = $request->val[$i];
+                    $bank->persona_id = $pago->persona_id;
                     $bank->created_at = $pago->created_at;
                     if ($request->terceroRetefuente and $i > 0 and $reteFValidate) $bank->persona_id = $request->terceroRetefuente[$i-1];
                     $bank->save();
