@@ -16,6 +16,10 @@
         .ocultar{
             display:none;
         }
+
+        .m-2{
+            margin:2px;
+        }
     </style>
 @stop
 
@@ -40,6 +44,7 @@
             <div class="btn-group row" id="btn_anterior_siguiente">
             </div>
             <br><br>
+            
             <form id="formulario" class="form-horizontal" method="post" action="{{route('nomina.update', $nomina->id)}}">
                 {{ csrf_field() }}
                 <input name="mes" id="input_mes" type="hidden">
@@ -75,7 +80,6 @@
         const pintar_empleados = () =>{
             console.log('empleados', empleados)
             empleados.forEach((e,index) => {
-
                 let descuentos = e.descuentos.map(d => `
                     <tr>
                         <td>
@@ -123,17 +127,22 @@
                             Descuentos
                             <button type="button" class="btn btn-primary" onclick="agregar_descuento(${index})">+</button>
                         </h3>
-                        <div  class="row"> 
-                            <table class="table">
-                                <thead>
-                                    <th>Tercero</th>
-                                    <th>Descuento</th>
-                                    <th>Valor</th>
-                                </thead>
-                                <tbody id="descuentos_${index}">
-                                    ${descuentos}
-                                </tbody>
-                            </table>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Descuentos Anteriores</div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <thead>
+                                        <th>Tercero</th>
+                                        <th>Descuento</th>
+                                        <th>Valor</th>
+                                        <th>Numero de Cuotas</th>
+                                    </thead>
+                                    <tbody id="descuentos_${index}">
+                                        ${descuentos}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                 </div>
                 `;
@@ -149,35 +158,35 @@
             $('#btn_anterior_siguiente').empty();
             if(contador > 1){
                 $('#btn_anterior_siguiente').append(
-                    `<button type="button" class="btn btn-primary" onclick="paginar(${0})">Primero</button>`
+                    `<button type="button" class="btn btn-primary m-2" onclick="paginar(${0})">Primero</button>`
                 );
             }
 
             if(contador > 0){
                 $('#btn_anterior_siguiente').append(
-                    `<button type="button" class="btn btn-primary" onclick="paginar(${parseInt(contador)-1})">Anterior</button>`
+                    `<button type="button" class="btn btn-primary m-2" onclick="paginar(${parseInt(contador)-1})">Anterior</button>`
                 );
             }
 
             if(contador+1 < empleados.length){
                 $('#btn_anterior_siguiente').append(
-                    `<button type="button" class="btn btn-primary" onclick="paginar(${parseInt(contador)+1})">Siguiente</button>`
+                    `<button type="button" class="btn btn-primary m-2" onclick="paginar(${parseInt(contador)+1})">Siguiente</button>`
                 );
             }
 
             if(contador+2 < empleados.length){
                 $('#btn_anterior_siguiente').append(
-                    `<button type="button" class="btn btn-primary" onclick="paginar(${empleados.length-1})">Ultimo</button>`
+                    `<button type="button" class="btn btn-primary m-2" onclick="paginar(${empleados.length-1})">Ultimo</button>`
                 );
             }
 
             $('#btn_anterior_siguiente').append(
-                `<button type="button" class="btn btn-primary" onclick="formulario_submit('guardar')">Guardar</button>`
+                `<button type="button" class="btn btn-primary m-2" onclick="formulario_submit('guardar')">Guardar</button>`
             );
             
             if(contador+1 == empleados.length){
                 $('#btn_anterior_siguiente').append(
-                    `<button type="button" class="btn btn-primary" onclick="formulario_submit('finalizar')">Finalizar</button>`
+                    `<button type="button" class="btn btn-primary m-2" onclick="formulario_submit('finalizar')">Finalizar</button>`
                 );
             }
         }
