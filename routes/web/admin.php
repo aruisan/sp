@@ -596,6 +596,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
     //TRASLADOS
     Route::get('presupuesto/traslados/{id}','Hacienda\Presupuesto\TrasladosController@index');
+    Route::post('presupuesto/traslados/{id}/findDepCred','Hacienda\Presupuesto\TrasladosController@depCred');
     Route::get('presupuesto/traslados/{id}/create','Hacienda\Presupuesto\TrasladosController@create');
 
     ////// RUTAS PLAN DE DESARROLLO
