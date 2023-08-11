@@ -8,7 +8,13 @@
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>Chip Contable</b></h4>
+                <h4>
+                @php 
+                    $mes = ($trimestre*3)+3;
+                    $fecha_final = date("t", strtotime("2023-{$mes}-01")) @endphp
+                    <b>Chip Contable Trimestre {{$trimestre+1}} del año {{$age}} (1 de {{$meses[($trimestre*3)]}} al {{$fecha_final}} de {{$meses[($trimestre*3)+2]}} del {{$age}})</b>
+                    <a class="btn btn-danger pull-right" href="{{route('chip.contable.actualizacion', [$age, $trimestre])}}"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+                </h4>
             </strong>
         </div>
         <div class="table-responsive">
@@ -44,7 +50,7 @@
 @stop
 
 @section('js')
-    <script>
+    <script> 
         $(document).ready(function() {
             let tbl =  $('#tabla').DataTable({
                 language: {

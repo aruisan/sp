@@ -32,7 +32,8 @@
             <input type="hidden" name="finalizar" id="finalizar" value="0">
             <input type="hidden" name="data_cobro_select" id="input_data_cobro_select">
             <input type="hidden" name="data_cobro_no_select" id="input_data_cobro_no_select">
-            <table class="table table-bordered table-hover" id="tabla">
+            @foreach([1] as $k => $v)
+            <table class="table table-bordered table-hover {{$k ? 'my-fixed-item' : ''}}" id="tabla" >
                 <thead>
                 <tr>
                     <th class="text-center" colspan="4">RESUMEN DE LA INFORMACION</th>
@@ -68,6 +69,7 @@
                 </tr>
                 </tbody>
             </table>
+            @endforeach
 
             <div class="text-center">
                 <table class="table table-bordered table-hover" id="tablaBank">
@@ -120,7 +122,7 @@
                             <td>$<?php echo number_format(0,0) ?></td>
                             <td>$<?php echo number_format(0,0) ?></td>
                             <td>$<?php echo number_format($item->valor,0) ?></td>
-                            <td><input type="checkbox" name="check_old[]" value="{{$item->id}}" checked onchange="checked_checke_cobrados(this, {{$item->valor}}, {{$item->id}})"></td>
+                            <td><input type="checkbox" name="check_old[]" value="{{$item->id}}" onchange="checked_checke_cobrados(this, {{$item->valor}}, {{$item->id}})"></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -174,10 +176,10 @@
         const data_cheque_mano = @json($result);
         const data_cheque_cobros = @json($comprobantes_old);
         let data_mano_select = @json($result);
-        let data_cobro_select = @json($comprobantes_old);
+        let data_cobro_select = [];
         data_mano_select.forEach((e,i) => { data_mano_select[i]['id'] = i});
         let data_mano_no_select = [];
-        let data_cobro_no_select = [];
+        let data_cobro_no_select = @json($comprobantes_old);
         let cheques_mano = {{$cheques_mano}};
         let cheques_cobrados = {{$comprobantes_old->sum('valor')}};
         let cheques_mano_libro = 0;
@@ -288,7 +290,7 @@
             if(data_cobro_select.length > 0){
                 data_cobro_select.forEach(e => {
                     console.log('e.valor', e.valor);
-            console.log('data_cobro_select', banco_credito_anterior);
+                console.log('data_cobro_select', banco_credito_anterior);
                     banco_credito_anterior += e.valor;
                 })
             }
@@ -357,7 +359,7 @@
                 data_cobro_no_select.splice(index_select, 1);
 
                 let cm_select_index = data_cheque_cobros.findIndex(e => e.id == id );
-                data_cobro_select.push(data_cheque_cobros[cm_select_id])
+                data_cobro_select.push(data_cheque_cobros[cm_select_index])
             }else{
                 restar_cheques_cobrados = restar_cheques_cobrados + value;
                 
@@ -451,4 +453,20 @@
             document.getElementById('subTotBancoSpan').innerHTML = formatter.format(parseInt(subTotBancoInicial) + parseInt(total));
         }
     </script>
+@stop
+@section('css')
+        <style>
+        .my-fixed-item {
+            position: fixed;
+            z-index:2000;
+            /*
+            min-height: 120px;
+            width: 252px;
+            */
+            text-align: center;
+            word-wrap: break-word;
+            background-color: white;
+        }
+        
+        </style>
 @stop

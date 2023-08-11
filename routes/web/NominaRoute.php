@@ -6,8 +6,12 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina'] ,function(){
     Route::post('/', "Nomina\NominaController@store")->name('nomina.store');
     Route::get('/edit/{nomina}', "Nomina\NominaController@edit")->name('nomina.edit');
     Route::post('/update/{nomina}', "Nomina\NominaController@update")->name('nomina.update');
+    Route::post('/update/empleado/{nomina}', "Nomina\NominaController@update_empleado")->name('nomina.update.empleado');
+    Route::post('/update/pensionado/{nomina}', "Nomina\NominaController@update_pensionado")->name('nomina.update.pensionado');
     Route::get('/show/{nomina}', "Nomina\NominaController@show")->name('nomina.show');
     Route::get('/empleados-cuentas/{nomina}', "Nomina\NominaController@cuentas_bancarias_usuarios")->name('nomina.empleados-cuentas');
+
+
 
     Route::get('/pdf/{nomina}', "Nomina\NominaController@pdf_nomina")->name('nomina.pdf');
     Route::get('/pdf-desprendibles/{nomina}', "Nomina\NominaController@pdf_desprendibles")->name('nomina.pdf-desprendibles');
@@ -59,11 +63,16 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-horas'] ,function(){
 
 
 Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-descuentos'] ,function(){
-    Route::get('/', "Nomina\DescuentosController@index")->name('nomina-descuentos.index');
-    Route::get('/crear', "Nomina\DescuentosController@create")->name('nomina-descuentos.create');
-    Route::post('/', "Nomina\DescuentosController@store")->name('nomina-descuentos.store');
+    Route::get('/list/{tipo}', "Nomina\DescuentosController@index")->name('nomina-descuentos.index');
+ //   Route::get('/crear', "Nomina\DescuentosController@create")->name('nomina-descuentos.create');
+ //   Route::post('/', "Nomina\DescuentosController@store")->name('nomina-descuentos.store');
     Route::get('/edit/{nomina}', "Nomina\DescuentosController@edit")->name('nomina-descuentos.edit');
     Route::post('/update/{nomina}', "Nomina\DescuentosController@update")->name('nomina-descuentos.update');
     Route::get('/{nomina}', "Nomina\DescuentosController@show")->name('nomina-descuentos.show');
     Route::get('/pdf/{nomina}', "Nomina\DescuentosController@pdf_nomina")->name('nomina-descuentos.pdf');
+});
+
+Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-prima'] ,function(){
+    Route::get('/listar/{tipo}', "Nomina\PrimaController@listar")->name('nomina-prima.index');
+    Route::get('/show/{nomina}', "Nomina\PrimaController@show")->name('nomina-prima.show');
 });

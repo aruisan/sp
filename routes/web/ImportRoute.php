@@ -28,4 +28,10 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'import'] ,function(){
 
     Route::get('/puc_corriente', "ImportEstadisticaPresupuestoController@create_puc_corriente");
     Route::post('/puc_corriente', "ImportEstadisticaPresupuestoController@import_puc_corriente")->name('import.puc_corriente');
+
+    Route::get('/empleados/sueldo', "ImportEstadisticaPresupuestoController@update_empleados_sueldo");
+    Route::post('/empleados/sueldo', "ImportEstadisticaPresupuestoController@import_empleados_sueldo")->name('import.empleado.sueldo');
+
+    Route::get('/empleados/retroactivo', "ImportEstadisticaPresupuestoController@update_empleados_retroactivo");
+    Route::post('/empleados/retroactivo', "ImportEstadisticaPresupuestoController@import_empleados_retroactivo")->name('import.empleado.retroactivo');
 });

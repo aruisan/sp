@@ -102,6 +102,11 @@ class Nomina extends Model
 
         return $data;
     }
+
+    public function getTienePrimaAttribute(){
+        $meses_prima  = ['Junio', 'Diciembre'];
+        return in_array($this->mes, $meses_prima);           
+    }
 }
 
 

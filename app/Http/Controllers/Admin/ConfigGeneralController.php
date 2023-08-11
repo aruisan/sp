@@ -8,7 +8,7 @@ use App\Model\Admin\ConfigGeneral;
 use App\Http\Controllers\Controller;
 use App\Traits\FileTraits;
 
-use Session;
+use Session,Artisan;
 
 class ConfigGeneralController extends Controller
 {
@@ -151,5 +151,14 @@ class ConfigGeneralController extends Controller
             Session::flash('error','No se detecta imagen');
             return redirect('/admin/configGeneral');
         }
+    }
+
+    public function bbdd_backup(){
+        \Storage::disk('local')->deleteDirectory('/alcaldia-providencia');
+        Artisan::call('backup:clean');
+        Artisan::call('backup:run', ['--only-db' => true]);
+        $archivos = \Storage::disk('local')->files('/alcaldia-providencia');
+        $path = storage_path("app/{$archivos[0]}");
+        return response()->download($path);
     }
 }

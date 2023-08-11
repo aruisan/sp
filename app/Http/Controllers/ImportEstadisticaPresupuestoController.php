@@ -222,4 +222,54 @@ class ImportEstadisticaPresupuestoController extends Controller
         endforeach;
         return response()->json(['encontrados'=> $encontrados, 'nuevos' => $nuevos]);
     }
+
+
+    public function update_empleados_sueldo(){
+        return view('import.empleados_sueldos');
+    }
+
+    public function import_empleados_sueldo(Request $request)
+    {
+        /*
+        foreach($request->data as $item):
+            $new_person = NominaEmpleado::where('num_dc', intval($item[0]))->first();
+            $new_person->salario = intval($item[1]);
+            $new_person->save();
+        endforeach;
+        */
+
+        foreach($request->data as $item):
+            $new_person = NominaEmpleado::where('num_dc', intval($item[0]))->first();
+            $new_person->v_prima = intval($item[1]);
+            $new_person->fecha_ingreso = $item[2];
+            $new_person->save();
+        endforeach;
+        return response()->json('listo');
+    }
+
+    
+    public function update_empleados_retroactivo(){
+        return view('import.empleados_retroactivo');
+    }
+
+    public function import_empleados_retroactivo(Request $request)
+    {
+        //return response()->json($request->all());
+        $si = collect();
+        $no = collect();
+        foreach($request->data as $item):
+            $empleado = NominaEmpleado::where('num_dc', intval($item[0]))->first();
+            if(!is_null($empleado)):
+                $nomina_empleado = NominaEmpleadoNomina::where('nomina_id', 62)->where('nomina_empleado_id', $empleado->id)->first();
+                $nomina_empleado->retroactivo = intval($item[1]);
+                $nomina_empleado->save();
+                $si->push($item[0]);
+            else:
+                $no->push($item[0]);
+            endif;
+
+        endforeach;
+
+        return response()->json(['si' => $si, 'no' => $no]);
+    }
 }

@@ -8,7 +8,7 @@ class NominaEmpleadoNomina extends Model
 {
     protected $fillable = [
         'nomina_empleado_id','dias_laborados','horas_extras','horas_extras_festivos', 'horas_extras_nocturnas', 'recargos_nocturnos','sueldo', 'bonificacion_direccion', 'bonificacion_servicios', 'bonificacion_recreacion',
-         'prima_antiguedad', 'nomina_id', 'tiene_eps'
+         'prima_antiguedad', 'nomina_id', 'tiene_eps', 'retroactivo'
     ];
 
     protected $appends = ['v_dias_laborados'];
@@ -76,17 +76,31 @@ class NominaEmpleadoNomina extends Model
         return  $this->round_up($this->sueldo * ($this->prima_antiguedad/100), 100);
     }
 
-    public function getVRetroactivoAttribute(){
-        return 0;
-    }
-
     public function getDevengadoAttribute(){
         return $this->round_up($this->TotalDevengado - $this->v_dias_laborados, 100);
     }
 
+    public function getPrimaAttribute(){
+        $meses_prima  = ['Junio', 'Diciembre'];
+        $valor = 0;
+        if(!is_null($this->empleado) && !is_null($this->nomina)){
+            /*
+            if(in_array($this->nomina->mes, $meses_prima) && $this->empleado->movimientos->count() > 0 && $this->nomina->tipo == 'empleado'){
+                $movimientos = $this->empleado->movimientos->filter(function($e){ return !is_null($e->nomina); });
+                $promedio_movimientos = $movimientos->sum('sueldo')/$movimientos->count();
+                $valor = ($promedio_movimientos * 180) / 360;
+            }
+            */
+            if(in_array($this->nomina->mes, $meses_prima)){
+                return $this->empleado->v_prima; 
+            }
+        }
+        return $this->round_up($valor, 100);           
+    }
+
     public function getVIbcAttribute(){
         return $this->nomina->tipo == 'pensionado' ? $this->sueldo : $this->v_dias_laborados + $this->v_horas_extras + $this->v_horas_extras_festivos + $this->v_horas_extras_nocturnas 
-        + $this->v_recargos_nocturnos + $this->v_bonificacion_servicios + $this->v_retroactivo + $this->v_prima_antiguedad;//810000
+        + $this->v_recargos_nocturnos + $this->v_bonificacion_servicios + $this->v_prima_antiguedad + $this->retroactivo;//810000
     }
 
 
@@ -227,6 +241,14 @@ class NominaEmpleadoNomina extends Model
             endif;
         endforeach;
         return $data;
+    }
+
+    public function getDescuentosTotalAttribute(){
+        return array_sum($this->descuento_x_entidad);
+    }
+
+    public function getDescuentosCantidadAttribute(){
+        return $this->descuentos->count();
     }
 
     public function round_up($v, $f){

@@ -10,12 +10,13 @@ use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 
 class InicialController extends Controller
 {
-    public function index(){
+    public function index($mes){
         $pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->get();
-        //dd($pucs);
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
+
+        //dd($pucs);
 
         return view('administrativo.contabilidad.balances.inicial',compact('añoActual', 'mesActual', 'diaActual', 'pucs'));
 

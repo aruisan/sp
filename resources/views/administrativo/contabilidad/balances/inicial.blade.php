@@ -11,6 +11,7 @@
                 <h4><b>Balance Inicial </b></h4>
             </strong>
         </div>
+        
         <div class="table-responsive">
             <br>
             <table class="table" id="tabla">

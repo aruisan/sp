@@ -13,12 +13,8 @@ class AlmacenComprobanteIngreso extends Model
         'fecha_factura',
         'contrato',
         'fecha_contrato',
-        'ccd',
-        'ccc',
         'owner_id',
-        'proovedor_id',
-        'ccc',
-        'ccd'
+        'proovedor_id'
 
     ];
 
@@ -31,5 +27,13 @@ class AlmacenComprobanteIngreso extends Model
 
     public function articulos() {
         return $this->hasMany(AlmacenArticulo::class, 'almacen_comprobante_ingreso_id');
+    }
+
+    public function getindexAttribute(){
+        return AlmacenComprobanteIngreso::where('id', '<=', $this->id)->get()->filter(function($i){return $i->articulos->count() > 0;})->count();
+    }
+
+    public function getNombreAttribute(){
+        return "Entrada {$this->index}";
     }
 }
