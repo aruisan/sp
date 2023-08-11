@@ -24,6 +24,11 @@
                         <form class="form-valide" action="{{url('/presupuesto/traslados')}}" method="POST" enctype="multipart/form-data">
                             <hr>
                             {{ csrf_field() }}
+                            <div class="text-center" id="cargando" style="display: none">
+                                <br>
+                                <h4>Cargando... Un momento por favor</h4>
+                                <br>
+                            </div>
                             <div class="row">
                                 <div class="col-md-12 align-self-center">
                                     <div class="form-group">
@@ -63,7 +68,7 @@
                                 </div>
                                 <div class="col-md-12 align-self-center" id="rubEgr">
                                     <div class="form-group">
-                                        <label class="col-lg-4 col-form-label text-right" for="fontRubEgr">Seleccione el Rubro a CONTRA ACREDITAR <span class="text-danger">*</span></label>
+                                        <label class="col-lg-4 col-form-label text-right" for="fontRubEgr">Seleccione el rubro que sera afectado <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
                                             <select name="fontRubEgr" id="fontRubEgr" class="form-control" required onchange="rubroEgr(this.value)">
                                                 <option value="0">Seleccione el Rubro de Egresos</option>
@@ -74,6 +79,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 align-self-center" id="dCC">
+                                    <div class="form-group text-center" id="formGrupCC"></div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 col-form-label text-right" id="labelDCC"></label>
+                                        <div class="col-lg-6" id="divInput"></div>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +106,7 @@
 @stop
 @section('js')
     <script>
-
+        var año = @json($año);
         function presupuesto(value)
         {
             $('#tipoCred').hide();
@@ -129,6 +141,38 @@
             } else{
                 $('#rubEgr').hide();
             }
+        }
+
+        function rubroEgr(value){
+            $("#cargando").show();
+            var tipoTras = document.getElementById('movEgr').value;
+
+            $.ajax({
+                method: "POST",
+                url: "/presupuesto/traslados/"+año+"/findDepCred",
+                data: { "id": value, "tipoTras": tipoTras, "año": año,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function(datos) {
+                if(datos == 'SIN SALDO') toastr.warning('EL RUBRO ESCOGIDO NO TIENE DINERO DISPONIBLE.');
+                else {
+                    if(tipoTras == '1'){
+                        var labelCC = document.getElementById('labelDCC');
+                        var divInput = document.getElementById('divInput');
+                        var formGrupCC = document.getElementById('formGrupCC');
+                        labelCC.innerHTML = 'Dinero a CONTRA ACREDITAR <span class="text-danger">*</span>'
+                        divInput.innerHTML = '<input type="number" class="form-control" name="dineroCC" id="dineroCC" value="'+datos+'"' +
+                            'max="'+datos+'" min="1">'
+                        formGrupCC.innerHTML = '<br><h4 class="text-center">SALDO ACTUAL: '+datos+'</h4><br>';
+                    }
+                    console.log(datos);
+                }
+
+                $("#cargando").hide();
+            }).fail(function() {
+                toastr.warning('SE PRESENTO UN ERROR AL CONSULTAR EL RUBRO.');
+                $("#cargando").hide();
+            });
         }
     </script>
 @stop

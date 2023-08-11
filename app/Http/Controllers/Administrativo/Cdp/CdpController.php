@@ -588,10 +588,21 @@ class CdpController extends Controller
 
             $fontRubro = FontsRubro::findOrFail($fuentes->fontsRubro->id);
             $fontRubro->valor_disp = $fontRubro->valor_disp - $fuentes->valor;
-            $fontRubro->save();
+
+            if ($fontRubro->valor_disp < 0){
+                Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en el rubro');
+                return redirect('/administrativo/cdp/' . $cdp->vigencia_id . '/' . $id);
+            }
 
             $depFont = DependenciaRubroFont::find($fuentes->fontsDep_id);
             $depFont->saldo = $depFont->saldo - $fuentes->valor;
+
+            if ($depFont->saldo < 0){
+                Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la dependencia');
+                return redirect('/administrativo/cdp/' . $cdp->vigencia_id . '/' . $id);
+            }
+
+            $fontRubro->save();
             $depFont->save();
         }
     }

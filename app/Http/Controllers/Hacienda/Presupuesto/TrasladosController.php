@@ -35,7 +35,7 @@ class TrasladosController extends Controller
                     foreach ($rub->fontsRubro as $fuente){
                         $dependencias = DependenciaRubroFont::where('rubro_font_id', $fuente->id)->get();
                         foreach ($dependencias as $dependencia){
-                            $rubrosEgresos[] = collect(['id' => $fuente->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                            $rubrosEgresos[] = collect(['id' => $dependencia->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
                                 $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description, 'dep' => $dependencia->dependencias]);
                         }
                     }
@@ -46,6 +46,18 @@ class TrasladosController extends Controller
 
         return view('hacienda.presupuesto.traslados.create', compact('año','presupuestos',
             'rubrosEgresos'));
+    }
+
+    public function depCred(Request $request){
+        $dependencia = DependenciaRubroFont::find($request->id);
+        if ($dependencia){
+            if ($request->tipoTras == 1 or $request->tipoTras == 3){
+                if ($dependencia->saldo > 0) return $dependencia->saldo;
+                else return "SIN SALDO";
+            } else {
+                dd($dependencia);
+            }
+        }
     }
 
 
