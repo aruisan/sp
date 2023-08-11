@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class NominaEmpleadoNomina extends Model
 {
     protected $fillable = [
-        'nomina_empleado_id','dias_laborados','horas_extras','horas_extras_festivos', 'horas_extras_nocturnas', 'recargos_nocturnos','sueldo', 'bonificacion_direccion', 'bonificacion_servicios', 'bonificacion_recreacion',
-         'prima_antiguedad', 'nomina_id', 'tiene_eps'
+        'nomina_empleado_id','dias_laborados','horas_extras','horas_extras_festivos', 'horas_extras_nocturnas', 'recargos_nocturnos',
+        'sueldo', 'bonificacion_direccion', 'bonificacion_servicios', 'bonificacion_recreacion','prima_antiguedad', 'nomina_id', 'tiene_eps'
     ];
 
     protected $appends = ['v_dias_laborados'];

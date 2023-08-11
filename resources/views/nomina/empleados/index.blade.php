@@ -27,7 +27,7 @@
 			<li><a class="item-menu" href="{{route('nomina.index', 'empleado')}}">Sueldo</a></li>
 			<li><a class="item-menu" href="{{route('nomina-vacaciones.index')}}">Vacaciones</a></li>
 			<li><a class="item-menu" href="{{route('nomina-horas.index')}}">Horas Extras</a></li>
-			<li><a class="item-menu" href="#">Descuentos</a></li>
+			<li><a class="item-menu" href="{{route('nomina-descuentos.index', 'empleado')}}">Descuentos</a></li>
 			<li><a class="item-menu" href="#">Prima Servicios</a></li>
 			<li><a class="item-menu" href="#">Prima Navidad</a></li>
 		</ul>
