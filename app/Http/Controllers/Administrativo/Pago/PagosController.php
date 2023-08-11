@@ -9,6 +9,7 @@ use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
+use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Pago\PagoRubros;
 use App\Model\Administrativo\Pago\PagoBanks;
@@ -370,11 +371,56 @@ class PagosController extends Controller
                     $tesoreriaRetefuentePago->save();
                 }
 
+                if ($pago->adultoMayor == '1' OR $pago->embargo == '1'){
+                    foreach ($pago->orden_pago->pucs as $pucOP){
+                        if ($pucOP->valor_credito > 0){
+                            $newPagoBank = new PagoBanksNew();
+                            $newPagoBank->pagos_id = $pago->id;
+                            $newPagoBank->rubros_puc_id = $pucOP->rubros_puc_id;
+                            $newPagoBank->debito = $pago->valor;
+                            $newPagoBank->credito = 0;
+                            $newPagoBank->persona_id = $pago->persona_id;
+                            $newPagoBank->created_at = $pago->created_at;
+                            $newPagoBank->save();
+                        }
+                    }
+                } elseif ($pago->reteFuente == '1'){
+                    //SI ES UN PAGO DE RETEFUENTE
+                    $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago_id)->first();
+                    foreach ($tesoreriaRetefuentePago->contas as $debPay){
+                        if ($debPay->debito > 0){
+                            $newPagoBank = new PagoBanksNew();
+                            $newPagoBank->pagos_id = $pago->id;
+                            $newPagoBank->rubros_puc_id = $debPay->cuenta_puc_id;
+                            $newPagoBank->debito = $debPay->debito;
+                            $newPagoBank->credito = 0;
+                            $newPagoBank->persona_id = $debPay->persona_id;
+                            $newPagoBank->created_at = $pago->created_at;
+                            $newPagoBank->save();
+                        }
+                    }
+                } else{
+                    foreach ($pago->orden_pago->pucs as $pucOP){
+                        if ($pucOP->valor_credito > 0){
+                            $newPagoBank = new PagoBanksNew();
+                            $newPagoBank->pagos_id = $pago->id;
+                            $newPagoBank->rubros_puc_id = $pucOP->rubros_puc_id;
+                            $newPagoBank->debito = $pucOP->valor_credito;
+                            $newPagoBank->credito = 0;
+                            $newPagoBank->persona_id = $pago->persona_id;
+                            $newPagoBank->created_at = $pago->created_at;
+                            $newPagoBank->save();
+                        }
+                    }
+                }
+
                 for($i=0;$i< count($request->banco); $i++){
-                    $bank = new PagoBanks();
+                    $bank = new PagoBanksNew();
                     $bank->pagos_id = $request->pago_id;
                     $bank->rubros_puc_id = $request->banco[$i];
-                    $bank->valor = $request->val[$i];
+                    $bank->debito = 0;
+                    $bank->credito = $request->val[$i];
+                    $bank->created_at = $pago->created_at;
                     if ($request->terceroRetefuente and $i > 0 and $reteFValidate) $bank->persona_id = $request->terceroRetefuente[$i-1];
                     $bank->save();
                 }
@@ -422,7 +468,7 @@ class PagosController extends Controller
     public function show($id)
     {
         $pago = Pagos::findOrFail($id);
-        $banks = PagoBanks::where('pagos_id', $pago->id)->get();
+        $banks = PagoBanksNew::where('pagos_id', $pago->id)->get();
         $ordenPago = OrdenPagos::findOrFail($pago->orden_pago_id);
 
         if (isset($pago->orden_pago->rubros[0]->cdps_registro)) $vigencia_id = $pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id;
@@ -463,7 +509,7 @@ class PagosController extends Controller
 
     public function delete($id, $vigencia){
 
-        $banks = PagoBanks::where('pagos_id', $id)->get();
+        $banks = PagoBanksNew::where('pagos_id', $id)->get();
         foreach ($banks as $bank) $bank->delete();
 
         $rubros = PagoRubros::where('pago_id', $id)->get();

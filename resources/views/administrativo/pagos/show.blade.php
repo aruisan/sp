@@ -130,7 +130,8 @@
                                         <th class="text-center">Codigo</th>
                                         <th class="text-center">Banco / Cuenta</th>
                                         <th class="text-center">Descripción</th>
-                                        <th class="text-center">Valor</th>
+                                        <th class="text-center">Debito</th>
+                                        <th class="text-center">Credito</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -149,12 +150,14 @@
                                                 @php( $date = strftime("%d of %B %Y", strtotime($pago->created_at)))
                                                 <td> Núm Cheque: {{$pago->num}} - Fecha: {{$date}}</td>
                                             @endif
-                                            <td>$<?php echo number_format($banks[$y]->valor,0);?></td>
+                                            <td>$<?php echo number_format($banks[$y]->debito,0);?></td>
+                                            <td>$<?php echo number_format($banks[$y]->credito,0);?></td>
                                         </tr>
                                     @endfor
                                     <tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
                                         <td colspan="3"><b>Total</b></td>
-                                        <td><b>$<?php echo number_format($banks->sum('valor'),0);?></b></td>
+                                        <td><b>$<?php echo number_format($banks->sum('debito'),0);?></b></td>
+                                        <td><b>$<?php echo number_format($banks->sum('credito'),0);?></b></td>
                                     </tr>
                                     </tbody>
                                 </table>
