@@ -15,6 +15,7 @@ use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Registro\CdpsRegistro;
 use App\Model\Administrativo\Registro\CdpsRegistroValor;
 use App\Model\Administrativo\Registro\Registro;
@@ -540,7 +541,7 @@ class RetencionFuenteController extends Controller
     public function showpago($id){
 
         $pago = TesoreriaRetefuentePago::find($id);
-        $banks = PagoBanks::where('pagos_id', $pago->comp_egreso_id)->get();
+        $banks = PagoBanksNew::where('pagos_id', $pago->comp_egreso_id)->get();
         $vigencia = Vigencia::find($pago->vigencia_id);
         $ordenPago = OrdenPagos::find($pago->orden_pago_id);
 

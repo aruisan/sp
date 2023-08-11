@@ -15,6 +15,7 @@ use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Registro\Registro;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
@@ -137,47 +138,13 @@ class InformeDocsController extends Controller
         foreach ($p as $data){
             if (isset($data->orden_pago->registros)){
                 if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $vigencia->id){
-                    $banks = PagoBanks::where('pagos_id', $data->id)->get();
-                    if (isset($codes)) unset($codes);
-                    if (isset($values)) unset($values);
-                    foreach ($data->orden_pago->pucs as $puc){
-                        if ($puc->valor_credito > 0){
-                            $codes[] = $puc->data_puc->code.' - '.$puc->data_puc->concepto;
-                            if ($data->adultoMayor == '1')  $values[] = $data->valor;
-                            else $values[] = $puc->valor_credito;
-                        }
-                    }
-                    if (isset($codes)) $data->cuentaOP = $codes;
-                    else $data->cuentaOP = [];
-                    if (isset($values)) {
-                        $data->credOP = $values;
-                        $data->totCredOP = array_sum($values);
-                    } else $data->totCredOP = 0;
-                    if (count($banks) == 0) dd($data, "FALLO");
-                    $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
+                    $data->banks = PagoBanksNew::where('pagos_id', $data->id)->get();
                     $pagos[] = collect(['info' => $data]);
                 }
             } else{
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago->id)->first();
                 if ($tesoreriaRetefuentePago->vigencia_id == $vigencia->id){
-                    $banks = PagoBanks::where('pagos_id', $data->id)->get();
-                    if (isset($codes)) unset($codes);
-                    if (isset($values)) unset($values);
-                    if (isset($personas)) unset($personas);
-                    foreach ($tesoreriaRetefuentePago->contas as  $contabilizacion){
-                        $codes[] = $contabilizacion->puc->code.' - '.$contabilizacion->puc->concepto;
-                        $personas[] = $contabilizacion->persona->num_dc.' - '.$contabilizacion->persona->nombre;
-                        $values[] = $contabilizacion->debito;
-                    }
-                    if (isset($codes)) $data->cuentaOP = $codes;
-                    else $data->cuentaOP = [];
-                    if (isset($values)) {
-                        $data->credOP = $values;
-                        $data->totCredOP = array_sum($values);
-                    } else $data->totCredOP = 0;
-                    if (isset($personas)) $data->perOP = $personas;
-                    if (count($banks) == 0) dd($data, "FALLO");
-                    $data->cuentaBanco = $banks[0]->data_puc->code.' - '.$banks[0]->data_puc->concepto;
+                    $data->banks = PagoBanksNew::where('pagos_id', $data->id)->get();
                     $pagos[] = collect(['info' => $data]);
                 }
             }

@@ -593,6 +593,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     /////RUTA DE ASIGNAR DINERO A LA DEPENDENCIA DEL RUBRO
     Route::post('presupuesto/rubro/dineroDependencia/{id}', 'Hacienda\Presupuesto\RubrosController@asignarDineroDep');
 
+    //TRASLADOS
+    Route::get('presupuesto/traslados/{id}','Hacienda\Presupuesto\TrasladosController@index');
+    Route::get('presupuesto/traslados/{id}/create','Hacienda\Presupuesto\TrasladosController@create');
 
     ////// RUTAS PLAN DE DESARROLLO
 	Route::resource('pdd','Planeacion\Pdd\PdesarrolloController');

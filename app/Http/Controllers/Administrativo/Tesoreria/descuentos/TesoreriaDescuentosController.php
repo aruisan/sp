@@ -10,6 +10,7 @@ use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentos;
 use App\Model\Administrativo\Tesoreria\descuentos\TesoreriaDescuentosDebitos;
@@ -83,7 +84,7 @@ class TesoreriaDescuentosController extends Controller
                                     else {
                                         foreach ($pagos as $pago){
                                             //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                            $bank = PagoBanks::where('pagos_id', $pago->id)->get();
+                                            $bank = PagoBanksNew::where('pagos_id', $pago->id)->get();
                                             if (count($bank) > 0){
                                                 if ($bank[0]->rubros_puc_id == $request->id){
 
@@ -118,7 +119,7 @@ class TesoreriaDescuentosController extends Controller
                                 if (count($pagos) > 0){
                                     foreach ($pagos as $pago) {
                                         //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                        $bank = PagoBanks::where('pagos_id', $pago->id)->get();
+                                        $bank = PagoBanksNew::where('pagos_id', $pago->id)->get();
                                         if (count($bank) > 0){
                                             if ($bank[0]->rubros_puc_id == $request->id){
                                                 if (isset($ordenPago->registros)){
@@ -180,13 +181,14 @@ class TesoreriaDescuentosController extends Controller
         $totCred = 0;
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
-        $pagoBanks = PagoBanks::where('rubros_puc_id', $rubroPUC->id)->get();
+        $pagoBanks = PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
                 if ($pagoBank->pago->estado == 1){
                     if (Carbon::parse($pagoBank->created_at)->format('Y') == Carbon::today()->format('Y')) {
                         if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
-                            $total = $total - $pagoBank->valor;
+                            $total = $total - $pagoBank->credito;
+                            $total = $total + $pagoBank->debito;
                             $pago = Pagos::find($pagoBank->pagos_id);
                             if (isset($pago->orden_pago->registros->persona)){
                                 $tercero = $pago->orden_pago->registros->persona->nombre;
@@ -195,13 +197,13 @@ class TesoreriaDescuentosController extends Controller
                                 $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
                                 $numIdent = 800197268;
                             }
-                            $totDeb = $totDeb + 0;
-                            $totCred = $totCred + $pagoBank->valor;
+                            $totDeb = $totDeb + $pagoBank->debito;
+                            $totCred = $totCred + $pagoBank->credito;
                             if ($pago->type_pay == "CHEQUE") $referencia = "Pago #".$pago->code." - # Cheque ".$pago->num;
                             else $referencia = "Pago #".$pago->code;
                             $result[] = collect(['fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
-                                'modulo' => $referencia, 'debito' => '$'.number_format(0,0),
-                                'credito' => '$'.number_format($pagoBank->valor,0), 'tercero' => $tercero,
+                                'modulo' => $referencia, 'debito' => '$'.number_format($pagoBank->debito,0),
+                                'credito' => '$'.number_format($pagoBank->credito,0), 'tercero' => $tercero,
                                 'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
                                 'total' => '$'.number_format($total,0), 'inicial' => $rubroPUC->saldo_inicial,
                                 'totDeb' => $totDeb, 'totCred' => $totCred,'pago_id' => $pagoBank->pagos_id, 'pago_estado' => $pago->estado]);
@@ -244,7 +246,7 @@ class TesoreriaDescuentosController extends Controller
                                     else {
                                         foreach ($pagos as $pago){
                                             //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                            $bank = PagoBanks::where('pagos_id', $pago->id)->get();
+                                            $bank = PagoBanksNew::where('pagos_id', $pago->id)->get();
                                             if (count($bank) > 0){
                                                 if ($bank[0]->rubros_puc_id == $request->cuentaPUC){
 
@@ -279,7 +281,7 @@ class TesoreriaDescuentosController extends Controller
                                 if (count($pagos) > 0){
                                     foreach ($pagos as $pago) {
                                         //SE DEBE VALIDAR SI UNA ORDEN DE PAGO TIENE 2 PAGOS SE MUESTRAN LOS DESCUENTOS DE LOS DOS PAGOS?
-                                        $bank = PagoBanks::where('pagos_id', $pago->id)->get();
+                                        $bank = PagoBanksNew::where('pagos_id', $pago->id)->get();
                                         if (count($bank) > 0){
                                             if ($bank[0]->rubros_puc_id == $request->cuentaPUC){
                                                 if (isset($ordenPago->registros)){

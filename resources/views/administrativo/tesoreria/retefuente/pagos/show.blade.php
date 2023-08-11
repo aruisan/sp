@@ -76,18 +76,20 @@
 					@endfor
 					@if($pago->egreso)
 						@for($y = 0; $y < count($banks); $y++)
-							<tr class="text-center">
-								<td>{{ $banks[$y]->data_puc->code }}</td>
-								<td>{{ $banks[$y]->data_puc->concepto }}</td>
-								<td>0$</td>
-								<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
-							</tr>
+							@if($banks[$y]->credito > 0)
+								<tr class="text-center">
+									<td>{{ $banks[$y]->data_puc->code }}</td>
+									<td>{{ $banks[$y]->data_puc->concepto }}</td>
+									<td>0$</td>
+									<td>$<?php echo number_format($banks[$y]->credito,0);?></td>
+								</tr>
+							@endif
 						@endfor
 					@endif
 					<tr class="text-center">
 						<td colspan="2"><b>SUMAS IGUALES</b></td>
 						<td><b>$ <?php echo number_format($pago->contas->sum('debito'),0);?></b></td>
-						<td><b>$ <?php echo number_format($banks->sum('valor'),0);?></b></td>
+						<td><b>$ <?php echo number_format($banks->sum('credito'),0);?></b></td>
 					</tr>
 					</tbody>
 				</table>
