@@ -8,7 +8,7 @@ use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
-use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
