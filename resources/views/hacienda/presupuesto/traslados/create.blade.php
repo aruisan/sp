@@ -5,17 +5,17 @@
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
-                <h4><b>NUEVO MOVIMIENTO {{ $año }}</b></h4>
+                <h4><b>NUEVO TRASLADO {{ $año }}</b></h4>
             </strong>
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills">
                 <li class="nav-item regresar">
-                    <a class="nav-link "  href="{{ url('/presupuesto/traslados/'.$año) }}">Volver a Traslados</a>
+                    <a class="nav-link "  href="{{ url('/presupuesto/traslados/'.$año) }}">Volver a Movimientos</a>
                 </li>
 
                 <li class="nav-item active">
-                    <a class="nav-link" href="#nuevo" >NUEVO MOVIMIENTO</a>
+                    <a class="nav-link" href="#nuevo" >NUEVO TRASLADO</a>
                 </li>
             </ul>
             <div class="tab-content">
@@ -30,7 +30,7 @@
                                 <br>
                             </div>
                             <div class="row">
-                                <div class="col-md-12 align-self-center">
+                                <div class="col-md-12 align-self-center" style="display: none">
                                     <div class="form-group">
                                         <select name="prep" id="prep" class="form-control" required onchange="presupuesto(this.value)">
                                             <option>Seleccione el presupuesto a realizar el traslado</option>
@@ -57,7 +57,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12 align-self-center" id="tipoCred" style="display: none">
+                                <div class="col-md-12 align-self-center" id="tipoCred">
                                     <div class="form-group">
                                         <select name="tipTras" id="tipTras" class="form-control" required onchange="tipoTraslado(this.value)">
                                             <option value="0">Seleccione el tipo de traslado a realizar</option>
@@ -88,11 +88,28 @@
                                         <div class="col-lg-6" id="divInput"></div>
                                     </div>
                                 </div>
+                                <div class="col-md-12 align-self-center" id="rubCredito" style="display: none">
+                                    <div class="form-group">
+                                        <br>
+                                        <label class="col-lg-4 col-form-label text-right" for="fontRubCred">Seleccione el rubro que recibira el credito <span class="text-danger">*</span></label>
+                                        <div class="col-lg-6">
+                                            <select name="fontRubCred" id="fontRubCred" class="form-control" required onchange="rubroCred(this.value)">
+                                                <option value="0">Seleccione el Rubro de Egresos</option>
+                                                @foreach($rubrosEgresos as $rubro)
+                                                    <option value="{{ $rubro['id'] }}">{{ $rubro['code'] }}
+                                                        {{ $rubro['nombre'] }} - {{ $rubro['fCode'] }} {{ $rubro['fName'] }}
+                                                        - {{ $rubro['dep']['name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <center>
-                                <div class="form-group row">
+                                <div class="form-group row" id="buttonMake" style="display: none">
                                     <div class="col-lg-12 ml-auto text-center">
-                                       <!--  <button type="submit" class="btn btn-primary">Guardar</button> -->
+                                        <br><br>
+                                       <button type="submit" class="btn btn-primary">Realizar Movimiento</button>
                                     </div>
                                 </div>
                             </center>
@@ -123,14 +140,15 @@
             }
         }
 
+        //tras-add-red
         function mov(value){
-            var tipo = document.getElementById('prep').value;
-            if(tipo == 0){
-                $('#tipoCred').show();
-            } else{
-                $('#tipoCred').hide();
-            }
-
+            var labelCC = document.getElementById('labelDCC');
+            var divInput = document.getElementById('divInput');
+            var formGrupCC = document.getElementById('formGrupCC');
+            labelCC.innerHTML = ''
+            divInput.innerHTML = ''
+            formGrupCC.innerHTML = '';
+            $('#tipoCred').show();
         }
 
         function tipoTraslado(value){
@@ -145,7 +163,7 @@
 
         function rubroEgr(value){
             $("#cargando").show();
-            var tipoTras = document.getElementById('movEgr').value;
+            var tipoTras = 1;
 
             $.ajax({
                 method: "POST",
@@ -164,8 +182,8 @@
                         divInput.innerHTML = '<input type="number" class="form-control" name="dineroCC" id="dineroCC" value="'+datos+'"' +
                             'max="'+datos+'" min="1">'
                         formGrupCC.innerHTML = '<br><h4 class="text-center">SALDO ACTUAL: '+datos+'</h4><br>';
+                        $('#rubCredito').show();
                     }
-                    console.log(datos);
                 }
 
                 $("#cargando").hide();
@@ -173,6 +191,11 @@
                 toastr.warning('SE PRESENTO UN ERROR AL CONSULTAR EL RUBRO.');
                 $("#cargando").hide();
             });
+        }
+
+        function rubroCred(value){
+            if(value != 0) $('#buttonMake').show();
+            else $('#buttonMake').hide();
         }
     </script>
 @stop

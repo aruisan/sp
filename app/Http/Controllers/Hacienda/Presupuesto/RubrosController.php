@@ -181,7 +181,8 @@ class RubrosController extends Controller
             foreach ($rubro->fontsRubro as $fr){
                 $RubrosMov = RubrosMov::where([['fonts_rubro_id','=',$fr->id],['valor','>','0']])->get();
                 foreach ($RubrosMov as $data2){
-                    $files[] = collect(['idResource' => $data2->resource_id , 'ruta' => $data2->Resource->ruta, 'mov' => $data2->movimiento]);
+                    $files[] = collect(['idResource' => $data2->resource_id , 'ruta' => $data2->Resource->ruta,
+                        'mov' => $data2->movimiento, 'fecha' => Carbon::parse($data2->created_at)->format('d-m-Y')]);
                 }
             }
             if (!isset($files)) $files = 0;
@@ -304,12 +305,20 @@ class RubrosController extends Controller
 
     public function findFont(Request $request){
         if ($request->tipo == "0"){
-            $rubrosMov = RubrosMov::where('dep_rubro_font_id', $request->id)->where('movimiento', $request->mov)->first();
-            if ($rubrosMov) return $rubrosMov;
+            $rubroMov = RubrosMov::where('dep_rubro_font_id', $request->id)->where('movimiento', $request->mov)->first();
+            if ($rubroMov) {
+                $rubrosMov = RubrosMov::where('fonts_rubro_id', $request->id)->where('movimiento', $request->mov)->get();
+                $rubroMov->valor = $rubrosMov->sum('valor');
+                return $rubroMov;
+            }
             else return ["valor"=> 0];
         } else {
-            $rubrosMov = RubrosMov::where('fonts_rubro_id', $request->id)->where('movimiento', $request->mov)->first();
-            if ($rubrosMov) return $rubrosMov;
+            $rubroMov = RubrosMov::where('fonts_rubro_id', $request->id)->where('movimiento', $request->mov)->first();
+            if ($rubroMov) {
+                $rubrosMov = RubrosMov::where('fonts_rubro_id', $request->id)->where('movimiento', $request->mov)->get();
+                $rubroMov->valor = $rubrosMov->sum('valor');
+                return $rubroMov;
+            }
             else return ["valor"=> 0];
         }
     }

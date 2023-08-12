@@ -16,7 +16,7 @@
             <a class="nav-link" data-toggle="pill" href="#tabHome"><i class="fa fa-home"></i></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/presupuesto/traslados/'.$año.'/create/') }}"><i class="fa fa-plus"></i> NUEVO MOVIMIENTO</a>
+            <a class="nav-link" href="{{ url('/presupuesto/traslados/'.$año.'/create/') }}"><i class="fa fa-plus"></i> NUEVO MOVIMIENTO EGRESOS</a>
         </li>
     </ul>
 

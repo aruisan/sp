@@ -35,6 +35,11 @@
                                 @endif
                             @endforeach
                         </select>
+                        <div class="text-center" id="cargando" style="display: none">
+                            <br>
+                            <h4>Cargando... Un momento por favor</h4>
+                            <br>
+                        </div>
                         <input type="hidden" name="DepFontID" id="DepFontID" value="0">
                         <input type="hidden" name="movRubroID" id="movRubroID" value="0">
                         <input type="hidden" name="tipoVigencia" id="tipoVigencia" value="{{ $vigens->tipo }}">
