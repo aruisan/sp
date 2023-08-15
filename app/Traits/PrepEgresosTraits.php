@@ -443,9 +443,9 @@ Class PrepEgresosTraits
                                             }
                                         }
                                     }
-                                } else $valueRubros[] = 0; $valueRubrosDisp[] = 0;
 
-                                if ($oldCode == '2.3.2.02.01') dd($valueRubros, $rubroOtherFind->first()->fontsRubro);
+                                    if ($oldCode == '2.3.2.02.01' and $fuenteRubro->valor == 522535289 ) dd($valueRubros, $fuenteRubro);
+                                } else $valueRubros[] = 0; $valueRubrosDisp[] = 0;
 
 
                                 if(count($rubroOtherFind->first()->rubrosMov) > 0){
