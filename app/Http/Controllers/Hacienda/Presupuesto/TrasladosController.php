@@ -83,8 +83,8 @@ class TrasladosController extends Controller
         //TRASLADO DE FUNCIONAMIENTO
         if ($request->tipTras == '2'){
             $depCC = DependenciaRubroFont::find($request->fontRubEgr);
-            if ($depCC->saldo <= $request->dineroCC){
-                if ($depCC->fontRubro->valor_disp <= $request->dineroCC){
+            if ($depCC->saldo >= $request->dineroCC){
+                if ($depCC->fontRubro->valor_disp >= $request->dineroCC){
 
                     //SE DESCUENTA EL DINERO A LA DEPENDENCIA
                     $depCC->saldo = $depCC->saldo - $request->dineroCC;
