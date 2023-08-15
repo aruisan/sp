@@ -307,8 +307,6 @@ Class PrepEgresosTraits
                     if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($valueRubros) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                     else $PDef = array_sum($valueRubros) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
 
-                    if ($data->code == '2.3.2.02.01') dd($valueRubros, $data);
-
                     //LLENADO DE PADRES
                     if (array_sum($valueRubros) > 0){
                         $presupuesto[] = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code,
@@ -445,6 +443,7 @@ Class PrepEgresosTraits
                                             }
                                         }
                                     }
+                                    if ($oldCode == '2.3.2.02.01') dd($valueRubros, $rubroOtherFind->first()->fontsRubro);
                                 } else $valueRubros[] = 0; $valueRubrosDisp[] = 0;
 
                                 if(count($rubroOtherFind->first()->rubrosMov) > 0){
@@ -656,8 +655,6 @@ Class PrepEgresosTraits
                         //PRESUPUESTO DEFINITIVO
                         if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($valueRubros) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                         else $PDef = array_sum($valueRubros) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
-
-                        if ($oldCode == '2.3.2.02.01') dd('PADRES PADRES',$valueRubros);
 
                         if ($PDef > 0){
 
@@ -1358,8 +1355,6 @@ Class PrepEgresosTraits
             //PRESUPUESTO DEFINITIVO
             if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($valueRubros) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
             else $PDef = array_sum($valueRubros) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
-
-            if ($data->code == '2.3.2.02.01') dd('LLLENADO',$valueRubros, $data);
 
             if ($PDef > 0){
                 $presupuesto = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code, 'name' => $data->name, 'presupuesto_inicial' => array_sum($valueRubros),
