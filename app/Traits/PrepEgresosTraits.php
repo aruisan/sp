@@ -443,8 +443,10 @@ Class PrepEgresosTraits
                                             }
                                         }
                                     }
-                                    if ($oldCode == '2.3.2.02.01') dd($valueRubros, $rubroOtherFind->first()->fontsRubro);
                                 } else $valueRubros[] = 0; $valueRubrosDisp[] = 0;
+
+                                if ($oldCode == '2.3.2.02.01') dd($valueRubros, $rubroOtherFind->first()->fontsRubro);
+
 
                                 if(count($rubroOtherFind->first()->rubrosMov) > 0){
                                     foreach ($rubroOtherFind->first()->rubrosMov as $mov){
