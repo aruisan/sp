@@ -70,7 +70,7 @@ Class PrepEgresosTraits
                     if (count($pagosDB) > 0) $valuePagos[] = $pagosDB->sum('valor');
                     else $valuePagos[] = 0;
 
-                    $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$data->code.".')");
+                    $otherRubs = DB::select("SELECT * from plantilla_cuipos_egresos where code REGEXP CONCAT('^','".$data->code.".')");
                     foreach ($otherRubs as $other) {
                         $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
                         if($rubroOtherFind->first()) {
@@ -176,7 +176,7 @@ Class PrepEgresosTraits
                 } else {
                     //LLENADO DE PADRES
 
-                    $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$data->code.".')");
+                    $otherRubs = DB::select("SELECT * from plantilla_cuipos_egresos where code REGEXP CONCAT('^','".$data->code.".')");
 
                     foreach ($otherRubs as $other) {
                         $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
@@ -307,6 +307,8 @@ Class PrepEgresosTraits
                     if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($valueRubros) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
                     else $PDef = array_sum($valueRubros) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
 
+                    if ($data->code == '2.3.2.02.01') dd($valueRubros, $data);
+
                     //LLENADO DE PADRES
                     if (array_sum($valueRubros) > 0){
                         $presupuesto[] = ['id_rubro' => 0 ,'id' => $data->id, 'cod' => $data->code,
@@ -395,7 +397,7 @@ Class PrepEgresosTraits
                         }
                     }
 
-                    $otherRubs = DB::select("SELECT * from plantilla_cuipos where code REGEXP CONCAT('^','".$oldCode.".')");
+                    $otherRubs = DB::select("SELECT * from plantilla_cuipos_egresos where code REGEXP CONCAT('^','".$oldCode.".')");
                     if($otherRubs and $oldCode != null) {
                         foreach ($otherRubs as $other) {
                             $rubroOtherFind = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $other->id)->get();
