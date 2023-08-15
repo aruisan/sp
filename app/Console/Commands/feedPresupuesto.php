@@ -6,7 +6,6 @@ use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Traits\PrepEgresosTraits;
-use App\Traits\PrepIngresosTraits;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 
