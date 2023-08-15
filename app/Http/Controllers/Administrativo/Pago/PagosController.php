@@ -362,7 +362,6 @@ class PagosController extends Controller
                 $pago->estado = "1";
                 $pago->ff_fin = today()->format("Y-m-d");
                 //$pago->ff_fin = "2023-06-30";
-                $pago->save();
 
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago_id)->first();
 
@@ -444,6 +443,7 @@ class PagosController extends Controller
 
                 $OP->saldo = $OP->saldo -  $valTotal;
                 $OP->save();
+                $pago->save();
 
                 Session::flash('success','El pago se ha finalizado exitosamente');
                 return redirect('/administrativo/pagos/show/'.$pago->id);
