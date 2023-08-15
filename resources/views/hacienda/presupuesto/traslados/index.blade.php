@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
-@section('titulo') Traslados @stop
+@section('titulo') Movimientos {{ $año }}@stop
 @section('content')
     @include('modal.objetoCDP')
     <div class="breadcrumb text-center">
         <strong>
-            <h4><b>Traslados {{ $año }}</b></h4>
+            <h4><b>Movimientos {{ $año }}</b></h4>
         </strong>
     </div>
     <ul class="nav nav-pills">
@@ -16,7 +16,7 @@
             <a class="nav-link" data-toggle="pill" href="#tabHome"><i class="fa fa-home"></i></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/presupuesto/traslados/'.$año.'/create/') }}"><i class="fa fa-plus"></i> NUEVO MOVIMIENTO EGRESOS</a>
+            <a class="nav-link" href="{{ url('/presupuesto/traslados/'.$año.'/create/') }}"><i class="fa fa-plus"></i> NUEVO TRASLADO</a>
         </li>
     </ul>
 
@@ -64,7 +64,7 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ url('presupuesto/traslados/'.$año.'/'.$traslado->id) }}" title="Ver Traslado" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ url('presupuesto/traslados/show/'.$traslado->id) }}" title="Ver Traslado" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
                             </tr>
                         @endforeach

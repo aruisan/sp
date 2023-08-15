@@ -597,7 +597,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     //TRASLADOS
     Route::get('presupuesto/traslados/{id}','Hacienda\Presupuesto\TrasladosController@index');
     Route::post('presupuesto/traslados/{id}/findDepCred','Hacienda\Presupuesto\TrasladosController@depCred');
+    Route::post('presupuesto/traslados/{id}/findActividadCred','Hacienda\Presupuesto\TrasladosController@actividadCred');
     Route::get('presupuesto/traslados/{id}/create','Hacienda\Presupuesto\TrasladosController@create');
+    Route::post('presupuesto/traslados','Hacienda\Presupuesto\TrasladosController@store');
+    Route::get('presupuesto/traslados/show/{id}','Hacienda\Presupuesto\TrasladosController@show');
 
     ////// RUTAS PLAN DE DESARROLLO
 	Route::resource('pdd','Planeacion\Pdd\PdesarrolloController');
