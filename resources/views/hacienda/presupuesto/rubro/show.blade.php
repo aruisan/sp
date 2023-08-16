@@ -75,7 +75,7 @@
                         <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
-                            <!-- <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li> -->
+                            <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li>
                         </ul>
                     </li>
                 @endif
@@ -473,7 +473,7 @@
                                     @elseif($file['mov'] == 2)
                                         <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Adición - {{ $file['fecha'] }}</a>
                                     @elseif($file['mov'] == 3)
-                                        <!-- <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Reducción - {{ $file['fecha'] }}</a> -->
+                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Reducción - {{ $file['fecha'] }}</a>
                                     @endif
                                 @endforeach
                             </div>
