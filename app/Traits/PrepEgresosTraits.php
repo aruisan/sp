@@ -596,7 +596,7 @@ Class PrepEgresosTraits
                             } else $valueRubros[] = 0;$valueCDPs[] = 0;$valueRegistros[] = 0;$valueOrdenPago[] = 0; $valuePagos[] = 0; $valueRubrosDisp[] = 0;
                         }
 
-                        //if ($oldCode == '2.3.2.02.01' ) dd($valueRubros, $otherRubs);
+                        if ($oldCode == '2.3.2.02.02' ) dd($valueRubros, $otherRubs);
 
 
                         if (!isset($valueRubrosAdd)) {
