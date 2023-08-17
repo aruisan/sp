@@ -312,10 +312,18 @@ class RubrosController extends Controller
                 return $rubroMov;
             }
             else return ["valor"=> 0];
-        } else {
+        } elseif($request->tipo == "1") {
             $rubroMov = RubrosMov::where('fonts_rubro_id', $request->id)->where('movimiento', $request->mov)->first();
             if ($rubroMov) {
                 $rubrosMov = RubrosMov::where('fonts_rubro_id', $request->id)->where('movimiento', $request->mov)->get();
+                $rubroMov->valor = $rubrosMov->sum('valor');
+                return $rubroMov;
+            }
+            else return ["valor"=> 0];
+        } else{
+            $rubroMov = RubrosMov::where('dep_rubro_font_id', $request->id)->where('movimiento', $request->mov)->first();
+            if ($rubroMov) {
+                $rubrosMov = RubrosMov::where('dep_rubro_font_id', $request->id)->where('movimiento', $request->mov)->get();
                 $rubroMov->valor = $rubrosMov->sum('valor');
                 return $rubroMov;
             }

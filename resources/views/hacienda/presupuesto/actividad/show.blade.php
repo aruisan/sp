@@ -1,7 +1,10 @@
 @extends('layouts.dashboard')
 @section('titulo') Información de la Actividad {{ $bpin->cod_actividad }} @stop
 @section('content')
+    @include('modal.adicionActividad')
+    @include('modal.reduccionActividad')
     @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
             <strong>
@@ -12,18 +15,11 @@
             <ul class="nav nav-pills">
                 <li class="nav-item regresar"><a class="nav-link" href="{{ url('/presupuesto/actividades/'.$vigencia->id) }}">Volver a Proyectos</a></li>
                 <li class="nav-item active"><a class="tituloTabs" data-toggle="tab" href="#info">Actividad {{ $bpin->cod_actividad }}</a></li>
-                <li class="hidden">
+                <li class="dropdown">
                     <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a>
-                        </li>
-                        <li>
-                            <a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a>
-                        </li>
-                        <li>
-                            <a data-toggle="modal" data-target="#credito" class="btn btn-drop  text-left">Credito</a>
-                        </li>
+                        <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
+                        <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li>
                     </ul>
                 </li>
             </ul>
@@ -211,5 +207,54 @@
             });
 
         } );
+
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
+
+        function findFontAdd(id, mov){
+            $("#cargando").show();
+            $.ajax({
+                method: "POST",
+                url: "/presupuesto/findFontDep/",
+                data: { "id": id, "mov": mov, "tipo": '2', "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(datos) {
+                document.getElementById("valueFont").innerHTML = formatter.format(datos["valor"]);
+                if(datos["valor"] != 0) document.getElementById("movRubroID").value = datos["id"];
+                else document.getElementById("movRubroID").value = 0;
+                $("#divValues").show();
+                $("#buttonEnviarAdd").show();
+                $("#cargando").hide();
+            }).fail(function() {
+                $("#divValues").hide();
+                $("#buttonEnviarAdd").hide();
+                $("#cargando").hide();
+                toastr.warning('OCURRIO UN ERROR AL REALIZAR LA BUSQUEDA DE LA FUENTE, INTENTE NUEVAMENTE POR FAVOR.');
+            });
+        }
+
+        function findFontRed(id, mov){
+            $("#cargandoRed").show();
+            $.ajax({
+                method: "POST",
+                url: "/presupuesto/findFontDep/",
+                data: { "id": id, "mov": mov, "tipo": '2', "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(datos) {
+                console.log(datos["valor"], datos);
+                document.getElementById("valueFontRed").innerHTML = formatter.format(datos["valor"]);
+                if(datos["valor"] != 0) document.getElementById("movRubroIDRed").value = datos["id"];
+                else document.getElementById("movRubroIDRed").value = 0;
+                $("#divValuesRed").show();
+                $("#buttonEnviarRed").show();
+                $("#cargandoRed").hide();
+            }).fail(function() {
+                $("#divValuesRed").hide();
+                $("#buttonEnviarRed").hide();
+                $("#cargandoRed").hide();
+                toastr.warning('OCURRIO UN ERROR AL REALIZAR LA BUSQUEDA DE LA FUENTE, INTENTE NUEVAMENTE POR FAVOR.');
+            });
+        }
     </script>
 @stop

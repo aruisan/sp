@@ -340,4 +340,84 @@ class RubrosMovController extends Controller
             return redirect()->action('Hacienda\Presupuesto\RubrosController@show', [$id]);
         }
     }
+
+
+    public function movimientoActividad(Request $request, $m, $id)
+    {
+        if ($m == 2){
+
+            if (intval($request->valorAdd) <= 0){
+                Session::flash('warning','El valor de la adición no puede ser menor o igual a 0');
+                return redirect()->back();
+            }
+
+            $depRubroFont = DependenciaRubroFont::find($request->fuenteDep);
+            $depRubroFont->saldo = $depRubroFont->saldo + intval($request->valorAdd);
+            $depRubroFont->save();
+
+            $bpinVig = bpinVigencias::where('bpin_id',$request->bpin_id)->where('dep_rubro_id', $request->fuenteDep)->first();
+            $bpinVig->saldo = $bpinVig->saldo + intval($request->valorAdd);
+            $bpinVig->save();
+
+            $rubroMov = new RubrosMov();
+            $rubroMov->valor = intval($request->valorAdd);
+            $rubroMov->fonts_rubro_id = $depRubroFont->rubro_font_id;
+            $rubroMov->font_vigencia_id = $request->vigencia_id;
+            $rubroMov->rubro_id = $depRubroFont->fontRubro->rubro_id;
+            $rubroMov->resource_id = 0;
+            $rubroMov->movimiento = '2';
+            $rubroMov->dep_rubro_font_id = $request->fuenteDep;
+            $rubroMov->save();
+
+            $file = new ResourceTraits;
+            $file->resourceMov($request->fileAdicion, 'public/AdicionyRed', $rubroMov->id);
+
+            Session::flash('success', 'La adición se realizo correctamente');
+            return redirect('presupuesto/actividad/'.$request->bpin_id.'/'.$request->vigencia_id);
+
+        } elseif ($m == 3){
+
+            if (intval($request->valorRed) <= 0){
+                Session::flash('warning','El valor de la reducción no puede ser menor o igual a 0');
+                return redirect()->back();
+            }
+
+            $depRubroFont = DependenciaRubroFont::find($request->fuenteDep);
+            $depRubroFont->saldo = $depRubroFont->saldo - intval($request->valorRed);
+
+            if (intval($depRubroFont->saldo) <= 0){
+                Session::flash('warning','El valor de la reducción no puede dejar un valor negativo de saldo a la dep');
+                return redirect()->back();
+            }
+
+            //SE DESCUENTA SI ESA FUENTE DE DEPENDENCIA ESTA ASIGNADA A UN BPIN
+            $bpinsVig = bpinVigencias::where('bpin_id',$request->bpin_id)->where('dep_rubro_id', $request->fuenteDep)->first();
+            $bpinsVig->saldo =  $bpinsVig->saldo - intval($request->valorRed);
+
+            if (intval($bpinsVig->saldo) <= 0){
+                Session::flash('warning','El valor de la reducción no puede dejar un valor negativo de saldo al bpin vigen');
+                return redirect()->back();
+            }
+
+            $depRubroFont->save();
+            $bpinsVig->save();
+
+            $rubroMov = new RubrosMov();
+            $rubroMov->valor = intval($request->valorRed);
+            $rubroMov->fonts_rubro_id = $depRubroFont->rubro_font_id;
+            $rubroMov->font_vigencia_id = $request->vigencia_id;
+            $rubroMov->rubro_id = $depRubroFont->fontRubro->rubro_id;
+            $rubroMov->resource_id = 0;
+            $rubroMov->movimiento = '3';
+            $rubroMov->dep_rubro_font_id = $request->fuenteDep;
+            $rubroMov->save();
+
+
+            $file = new ResourceTraits;
+            $file->resourceMov($request->fileReduccion, 'public/AdicionyRed', $rubroMov->id);
+
+            Session::flash('success', 'La reducción se realizo correctamente');
+            return redirect('presupuesto/actividad/'.$request->bpin_id.'/'.$request->vigencia_id);
+        }
+    }
 }

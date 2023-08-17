@@ -520,6 +520,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 	Route::post('presupuesto/findFontDep', 'Hacienda\Presupuesto\RubrosController@findFont');
 	Route::resource('presupuesto/rubro', 'Hacienda\Presupuesto\RubrosController');
     Route::put('presupuesto/rubro/m/{m}/{id}', 'Hacienda\Presupuesto\RubrosMovController@movimiento');
+    Route::put('presupuesto/actividad/m/{m}/{id}', 'Hacienda\Presupuesto\RubrosMovController@movimientoActividad');
 	Route::resource('presupuesto/FontRubro', 'Hacienda\Presupuesto\FontRubroController');
 	Route::resource('presupuesto/FontRubro/saldo', 'Hacienda\Presupuesto\FontRubroController@saldoFont');
         //ASIGNAR ACTIVIDAD AL PROYECTO
