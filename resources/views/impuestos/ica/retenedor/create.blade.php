@@ -305,10 +305,6 @@
         function validarFormulario(evento) {
             evento.preventDefault();
             var pagoTotal = document.getElementById('pagoTotal').value;
-            if(pagoTotal <= 0) {
-                alert('Debe tener un pago total superior a 0');
-                return;
-            }
             this.submit();
         }
 
