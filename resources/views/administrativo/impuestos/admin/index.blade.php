@@ -206,7 +206,11 @@
                                 <td class="text-center">{{ $rit->opciondeUso }}</td>
                                 <td class="text-center">
                                     @if($rit->rut_resource_id)
-                                        <a href="{{ Storage::url($rit->ResourceRUT->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @if($rit->ResourceRUT)
+                                            <a href="{{ Storage::url($rit->ResourceRUT->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @else
+                                            Revisar Archivo
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="text-center">
