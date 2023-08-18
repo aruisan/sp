@@ -215,7 +215,11 @@
                                 </td>
                                 <td class="text-center">
                                     @if($rit->cc_resource_id)
-                                        <a href="{{ Storage::url($rit->ResourceCC->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @if($rit->ResourceCC)
+                                            <a href="{{ Storage::url($rit->ResourceCC->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @else
+                                            Revisar Archivo
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="text-center"><a href="/impuestos/RIT/{{$rit->user->id}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a></td>
