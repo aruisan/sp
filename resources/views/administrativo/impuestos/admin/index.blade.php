@@ -110,9 +110,9 @@
                                 <td class="text-center"> {{ \Carbon\Carbon::parse($pago->fechaCreacion)->format('d-m-Y') }}</td>
                                 <td class="text-center">
                                     @if($pago->modulo == "MUELLAJE")
-                                        USD $<?php echo number_format($pago->valor,0) ?><br>
+                                        USD $<?php echo number_format($pago->detalleBarco->valorPago,2) ?><br>
                                         @if($pago->detalleBarco->valorDolar)
-                                            COP $<?php echo number_format($pago->valor * $pago->detalleBarco->valorDolar,0) ?>
+                                            COP $<?php echo number_format($pago->detalleBarco->valorPago * $pago->detalleBarco->valorDolar,2) ?>
                                        @endif
                                     @else
                                         $<?php echo number_format($pago->valor,0) ?>
@@ -206,12 +206,20 @@
                                 <td class="text-center">{{ $rit->opciondeUso }}</td>
                                 <td class="text-center">
                                     @if($rit->rut_resource_id)
-                                        <a href="{{ Storage::url($rit->ResourceRUT->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @if($rit->ResourceRUT)
+                                            <a href="{{ Storage::url($rit->ResourceRUT->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @else
+                                            Revisar Archivo
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     @if($rit->cc_resource_id)
-                                        <a href="{{ Storage::url($rit->ResourceCC->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @if($rit->ResourceCC)
+                                            <a href="{{ Storage::url($rit->ResourceCC->ruta) }}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a>
+                                        @else
+                                            Revisar Archivo
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="text-center"><a href="/impuestos/RIT/{{$rit->user->id}}" target="_blank" class="btn btn-sm btn-primary-impuestos"><i class="fa fa-file-pdf-o"></i></a></td>

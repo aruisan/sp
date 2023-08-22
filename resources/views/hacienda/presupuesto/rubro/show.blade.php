@@ -70,19 +70,22 @@
         @if(auth()->user()->dependencia->id == 15 or auth()->user()->dependencia->id == 1)
                 @include('modal.adicionRubro')
                 @include('modal.reduccionRubro')
-            <!--
-            <li class="dropdown">
-                <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
-                    <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li>
-                    @if($vigens->tipo != 1)
-                        @include('modal.creditoRubro')
-                        <li><a onclick="getModalCred()" class="btn btn-drop  text-left">Credito</a></li>
-                    @endif
-                </ul>
-            </li>
-            -->
+                @if($vigens->tipo == 1)
+                    <li class="dropdown">
+                        <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
+                            <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li>
+                        </ul>
+                    </li>
+                @else
+                    <li class="dropdown">
+                        <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
+                        </ul>
+                    </li>
+                @endif
         @endif
         @if( $rol != 2 )
             @include('modal.asignarDineroDep')
@@ -464,6 +467,30 @@
                     </div>
                 </div>
                 <div class="col-md-4 align-self-center">
+                    @if($files != 0)
+                        <center>
+                            <h3>Resoluciones del Rubro</h3>
+                        </center>
+                        <br>
+                        <div class="input-group">
+                            <div class="row text-center">
+                                @foreach($files as $file)
+                                    @if($file['mov'] == 1)
+                                        <!-- <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Credito y Contracredito - {{ $file['fecha'] }}</a> -->
+                                    @elseif($file['mov'] == 2)
+                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Adición - {{ $file['fecha'] }}</a>
+                                    @elseif($file['mov'] == 3)
+                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Reducción - {{ $file['fecha'] }}</a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <center>
+                            <br><br><br><br><br>
+                            <h3>El rubro no ha recibido ningun movimiento</h3>
+                        </center>
+                    @endif
                 </div>
             </div>
         </div>
@@ -481,6 +508,7 @@
         })
 
         function findFontAdd(id, mov){
+            $("#cargando").show();
             $.ajax({
                 method: "POST",
                 url: "/presupuesto/findFontDep/",
@@ -491,14 +519,17 @@
                 else document.getElementById("movRubroID").value = 0;
                 $("#divValues").show();
                 $("#buttonEnviarAdd").show();
+                $("#cargando").hide();
             }).fail(function() {
                 $("#divValues").hide();
                 $("#buttonEnviarAdd").hide();
+                $("#cargando").hide();
                 toastr.warning('OCURRIO UN ERROR AL REALIZAR LA BUSQUEDA DE LA FUENTE, INTENTE NUEVAMENTE POR FAVOR.');
             });
         }
 
         function findFontRed(id, mov){
+            $("#cargandoRed").show();
             $.ajax({
                 method: "POST",
                 url: "/presupuesto/findFontDep/",
@@ -510,9 +541,11 @@
                 else document.getElementById("movRubroIDRed").value = 0;
                 $("#divValuesRed").show();
                 $("#buttonEnviarRed").show();
+                $("#cargandoRed").hide();
             }).fail(function() {
                 $("#divValuesRed").hide();
                 $("#buttonEnviarRed").hide();
+                $("#cargandoRed").hide();
                 toastr.warning('OCURRIO UN ERROR AL REALIZAR LA BUSQUEDA DE LA FUENTE, INTENTE NUEVAMENTE POR FAVOR.');
             });
         }

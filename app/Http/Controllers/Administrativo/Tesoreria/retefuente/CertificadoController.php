@@ -36,6 +36,10 @@ class CertificadoController extends Controller
      */
     public function getCert(Request $request)
     {
+        if ($request->persona_id = 1257){
+            $pathtoFile = public_path().'/file_public/MOYA.pdf';
+            return response()->download($pathtoFile);
+        }
         $Descuentos = OrdenPagosDescuentos::where('valor','>',0)->get();
         $añoActual = Carbon::today()->year;
         $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();

@@ -56,6 +56,7 @@ class ActividadController extends Controller
         $vigencia = Vigencia::find($vigencia_id);
         $cdps = BpinCdpValor::where('cod_actividad', $bpin->cod_actividad)->get();
 
+
         return view('hacienda.presupuesto.actividad.show', compact('bpin','vigencia','cdps'));
     }
 

@@ -67,10 +67,10 @@
                                 <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fechaAtraque)->format('d-m-Y') }}</td>
                                 <td class="text-center">{{ \Carbon\Carbon::parse($atraque->fechaSalida)->format('d-m-Y') }}</td>
                                 <td class="text-center">
-                                    USD $<?php echo number_format($atraque->valorPago,0) ?>
+                                    USD $<?php echo number_format($atraque->valorPago,2) ?>
                                     @if($atraque->valorDolar)
                                         <br>
-                                        COP $<?php echo number_format($atraque->valorPago * $atraque->valorDolar,0) ?>
+                                        COP $<?php echo number_format($atraque->valorPago * $atraque->valorDolar,2) ?>
                                     @endif
                                 </td>
                                 <td class="text-center">
