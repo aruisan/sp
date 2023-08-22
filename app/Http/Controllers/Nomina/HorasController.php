@@ -14,7 +14,7 @@ class HorasController extends Controller
     private $view = "nomina.horas";
 
     public function index(){
-        $nominas = Nomina::where('tipo', 'empleado')->where('horas', '<>', 0)->get();
+        $nominas = Nomina::where('tipo', 'empleado')->where('horas', '<>', 0)->orderBy('id', 'desc')->get();
         //dd($nominas);
         return view("{$this->view}.index", compact('nominas'));
     }

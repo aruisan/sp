@@ -4,6 +4,7 @@ namespace App\Model\Administrativo\OrdenPago;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
 
 class OrdenPagosDescuentos extends Model implements Auditable
 {
@@ -19,5 +20,9 @@ class OrdenPagosDescuentos extends Model implements Auditable
 
     public function puc(){
         return $this->belongsTo('App\Model\Administrativo\Contabilidad\PucAlcaldia','cuenta_puc_id');
+    }
+
+    public function pago(){
+        return $this->belongsTo(OrdenPagos::class, 'orden_pagos_id');
     }
 }

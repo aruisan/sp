@@ -23,8 +23,11 @@ Tramite de cuentas|crear
                             <div class="col-md-6 col-xs-12">
                                 <div class="form-group" >
                                     <label>Beneficiario  </label>
-                                    <input type="hidden" name="beneficiario_id" value="{{old('beneficiario_id')}}" id="persona2_id">
-                                    <input type="text" name="beneficiario_num" value="{{old('beneficiario_num')}}" class="form-control @error('beneficiario_num') is-invalid @enderror" readonly placeholder="Número de Identificación" onclick="openModalRelacionarParticipantes('persona2_id','persona2_cc', 'persona2_name', 'persona2_tipo')" id="persona2_cc">
+                                    <select name="beneficiario_id">
+                                        @foreach($personas as $persona)
+                                            <option value="{{$persona->id}}">{{$persona->nombre}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xs-12">

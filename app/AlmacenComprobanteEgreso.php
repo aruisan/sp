@@ -5,13 +5,23 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Persona;
 use App\Model\Admin\Dependencia;
+use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 
 class AlmacenComprobanteEgreso extends Model
 {
-    protected $fillable = ['fecha', 'dependencia_id', 'responsable_id', 'owner_id'];
+    protected $fillable = ['fecha', 'dependencia_id', 'responsable_id', 'owner_id', 'ccc', 'ccd', 'status', 'observacion'];
+    protected $casts = [
+        'ccd' => 'array',
+        'status' => 'array',
+        'observacion' => 'array'
+    ];
 
     public function dependencia(){
         return $this->belongsTo(Dependencia::class, 'dependencia_id');
+    }
+
+    public function puc_credito(){
+        return $this->belongsTo(PucAlcaldia::class, 'ccc');
     }
 
     public function responsable(){
@@ -23,14 +33,32 @@ class AlmacenComprobanteEgreso extends Model
     }
 
     public function salidas() {
-        return $this->belongsToMany(AlmacenArticulo::class, 'almacen_articulo_salidas')->withPivot('cantidad');
+        return $this->belongsToMany(AlmacenArticulo::class, 'almacen_articulo_salidas')->withPivot('cantidad', 'id');
     }
 
-    public function puc_ccd(){
-        return $this->belongsTo(PucAlcaldia::class, 'ccd');
+    public function setCcdAttribute($value)
+    {
+        $this->attributes['ccd'] = json_encode($value);
     }
 
-    public function puc_ccc(){
-        return $this->belongsTo(PucAlcaldia::class, 'ccc');
+    public function getHistoricoAttribute(){
+        return count($this->status) < 2 ? FALSE : TRUE;
+    }
+
+    public function getindexAttribute(){
+        $salidas = AlmacenComprobanteEgreso::where('id', '<=', $this->id)->get();
+        if($salidas->count() > 0){
+            return $salidas->filter(function($g){ return $g->salidas_pivot->count() > 0; })->count() > 0 
+            ? $salidas->filter(function($i){return $i->salidas_pivot->count() > 0;})->count()
+            :0;
+        }
+    }
+
+    public function getNombreAttribute(){
+        return "Salida {$this->index}";
+    }
+
+    public function getArticuloTotalAttribute(){
+        return $this->salidas_pivot->sum('total');
     }
 }

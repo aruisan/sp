@@ -89,12 +89,12 @@
                     e.v_horas_extras_festivos, 
                     e.v_horas_extras_nocturnas,
                     e.v_recargos_nocturnos,
-                    e.v_bonificacion_servicios, 
+                    e.v_bonificacion_servicios,
                     e.v_prima_antiguedad,
-                    e.retroactivo,
                     e.v_vacaciones,
                     e.v_prima_vacaciones,
                     e.v_ind,
+                    e.retroactivo,
                     e.total_devengado,
                     e.ibc,
                     e.eps,
@@ -114,7 +114,7 @@
                     e.descuentos[5],
                     e.descuentos[6],
                     e.descuentos[7],
-                    @if($nomina->id == 58)
+                    @if(in_array($nomina->id, [58,62]))
                     e.reintegro,
                     @endif
                     e.total_descuentos,
@@ -156,7 +156,6 @@
 
         $(document).ready(function(){
             fecha_principal();
-            
         });
 
         const fecha_principal = () => {
@@ -204,10 +203,10 @@
                     { title: 'H. Recargo Nocturno' },
                     { title: 'Bonificación Servicios' },
                     { title: 'Prima Antiguedad' },
-                    { title: 'Retroactivo' },
                     { title: 'Vacaciones' },
                     { title: 'Prima Vacaciones' },
                     { title: 'Indemnización' },
+                    { title: 'Retroactivo' },
                     { title: 'Devengado' },
                     { title: 'Ibc' },
                     { title: 'Entidad' },//salud
@@ -227,7 +226,7 @@
                     { title: 'Juzgado' },
                     { title: 'Coocasa' },
                     { title: 'Sindicato' },
-                    @if($nomina->id == 58)
+                    @if(in_array($nomina->id, [58,62]))
                     { title: 'Reintegro' },
                     @endif
                     { title: 'Descuentos' },

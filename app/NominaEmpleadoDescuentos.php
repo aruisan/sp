@@ -7,7 +7,7 @@ use App\Model\Persona;
 
 class NominaEmpleadoDescuentos extends Model
 {
-    protected $fillable = ['nombre', 'valor', 'nomina_empleado_nomina_id', 'tercero_id', 'padre_id', 'n_cuotas', 'valor_cuota'];
+    protected $fillable = ['nombre', 'valor', 'nomina_empleado_nomina_id', 'tercero_id', 'padre_id', 'n_cuotas', 'valor_total'];
     protected $appends = ['cop'];
 
     public function tercero(){
@@ -27,19 +27,11 @@ class NominaEmpleadoDescuentos extends Model
     //funciones
 
     public function getNCuotasFaltantesAttribute(){
-        if(is_null($this->padre)):
-            return $this->n_cuotas - $this->hijos->count()+1; 
-        else:
-            return $this->padre->n_cuotas_faltantes; 
-        endif;
+        return $this->n_cuotas - ($this->hijos->count()+1); 
     }
 
     public function getSaldoAttribute(){
-        if(is_null($this->padre)):
-            return $this->hijos->count() > 0 ? $this->valor_cuota - $this->hijos->sum('valor') : $this->valor_cuota - $this->valor;
-        else:
-            return $this->padre->saldo; 
-        endif;
+        return $this->n_cuotas > 1 ? $this->valor_total - ($this->hijos->sum('valor')+$this->valor) : $this->valor_total - $this->valor;
     }
 
     public function getValorCuotaSugeridaAttribute(){

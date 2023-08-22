@@ -15,6 +15,11 @@
 					<td>Orden de Pago No: {{$OrdenPago->code}}</td>
 					<td>Fecha Orden de Pago: <?=$dias[$fechaO->format('w')]." ".$fechaO->format('d')." ".$meses[$fechaO->format('n')-1]. " ".$fechaO->format('Y')?></td>
 				</tr>
+				@if($Pago->embargo == '1')
+					<tr class="text-center">
+						<td colspan="2">Tercero del Embargo: {{ $OrdenPago->persona->num_dc }} - {{ $OrdenPago->persona->nombre }} </td>
+					</tr>
+				@endif
 			</table>
 		</div>
 		<div class="br-black-1">
@@ -95,22 +100,24 @@
 				</thead>
 				<tbody>
 				@for($y = 0; $y < count($banks); $y++)
-					<tr class="text-center">
-						<td>{{ $banks[$y]->data_puc->code }}</td>
-						@if($Pago->id == 7087)
-							<td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
-						@else
-							<td>{{ $banks[$y]->data_puc->concepto }}</td>
-						@endif
-						@if($Pago->type_pay == "ACCOUNT")
-							@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
-							<td> Núm Cuenta: {{$Pago->num}} - Fecha: {{$date}}</td>
-						@elseif($Pago->type_pay == "CHEQUE")
-							@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
-							<td> Núm Cheque: {{$Pago->num}} - Fecha: {{$date}}</td>
-						@endif
-						<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
-					</tr>
+					@if($banks[$y]->credito > 0)
+						<tr class="text-center">
+							<td>{{ $banks[$y]->data_puc->code }}</td>
+							@if($Pago->id == 7087)
+								<td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
+							@else
+								<td>{{ $banks[$y]->data_puc->concepto }}</td>
+							@endif
+							@if($Pago->type_pay == "ACCOUNT")
+								@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
+								<td> Núm Cuenta: {{$Pago->num}} - Fecha: {{$date}}</td>
+							@elseif($Pago->type_pay == "CHEQUE")
+								@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
+								<td> Núm Cheque: {{$Pago->num}} - Fecha: {{$date}}</td>
+							@endif
+							<td>$<?php echo number_format($banks[$y]->credito,0);?></td>
+						</tr>
+					@endif
 				@endfor
 					<tr class="text-center" style="background-color: rgba(19,165,255,0.14)">
 						<td colspan="3"><b>Total</b></td>
@@ -182,36 +189,34 @@
 				</tr>
 				</thead>
 				<tbody>
-				@for($z = 0; $z < $OrdenPago->pucs->count(); $z++)
-					@if($OrdenPago->pucs[$z]->valor_credito > 0)
-						@php($totDeb[] = $OrdenPago->pucs[$z]->valor_credito )
-						<tr class="text-center">
-							<td>{{$OrdenPago->pucs[$z]->data_puc->code}}</td>
-							<td>{{$OrdenPago->pucs[$z]->data_puc->concepto}}</td>
-							<td>{{ $Pago->persona->num_dc }} {{ $Pago->persona->nombre }}</td>
-							<td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_credito,0);?></td>
-							<td>$0</td>
-						</tr>
-					@endif
-				@endfor
 				@for($y = 0; $y < count($banks); $y++)
-					@php($totCred[] = $banks[$y]->valor )
+					@php($totCred[] = $banks[$y]->credito )
+					@php($totDeb[] = $banks[$y]->debito )
 					<tr class="text-center">
 						<td>{{ $banks[$y]->data_puc->code }}</td>
-						@if($Pago->type_pay == "ACCOUNT")
-							@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
-							<td> Núm Cuenta: {{$Pago->num}} - Fecha: {{$date}}</td>
-						@elseif($Pago->type_pay == "CHEQUE")
-							@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
-							<td> Núm Cheque: {{$Pago->num}} - Fecha: {{$date}}</td>
-						@endif
-						@if($Pago->id == 7087)
-							<td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
-						@else
+						@if($banks[$y]->debito > 0)
 							<td>{{ $banks[$y]->data_puc->concepto }}</td>
+							@if($Pago->id == 7087)
+								<td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
+							@else
+								<td>{{ $Pago->persona->num_dc }} {{ $Pago->persona->nombre}}</td>
+							@endif
+						@else
+							@if($Pago->type_pay == "ACCOUNT")
+								@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
+								<td> Núm Cuenta: {{$Pago->num}} - Fecha: {{$date}}</td>
+							@elseif($Pago->type_pay == "CHEQUE")
+								@php( $date = strftime("%d of %B %Y", strtotime($Pago->created_at)))
+								<td> Núm Cheque: {{$Pago->num}} - Fecha: {{$date}}</td>
+							@endif
+							@if($Pago->id == 7087)
+								<td>Bco Agrario - Concejo Mpal Cta No. 381100000565</td>
+							@else
+								<td>{{ $banks[$y]->data_puc->concepto }}</td>
+							@endif
 						@endif
-						<td>0$</td>
-						<td>$<?php echo number_format($banks[$y]->valor,0);?></td>
+						<td>$<?php echo number_format($banks[$y]->debito,0);?></td>
+						<td>$<?php echo number_format($banks[$y]->credito,0);?></td>
 					</tr>
 				@endfor
 				<tr class="text-center" style="background-color: rgba(19,165,255,0.14)">

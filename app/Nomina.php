@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Nomina extends Model
 {
-    protected $fillable = ['salud', 'pension', 'riesgos', 'sena','icbf','caja_compensacion','cesantias','interes_cesantias','prima_navidad','vacaciones', 'mes', 'tipo', 'finalizado'];
+    protected $fillable = ['salud', 'pension', 'riesgos', 'sena','icbf','caja_compensacion','cesantias','interes_cesantias','prima_navidad','vacaciones', 'mes', 'tipo', 'finalizado', 'descuentos'];
 
     public function modalidades(){
         return hasMany(NominaModalidad::class, 'nomina_id');
@@ -101,6 +101,11 @@ class Nomina extends Model
 
 
         return $data;
+    }
+
+    public function getTienePrimaAttribute(){
+        $meses_prima  = ['Junio', 'Diciembre'];
+        return in_array($this->mes, $meses_prima);           
     }
 }
 

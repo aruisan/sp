@@ -99,6 +99,9 @@
                                 <td class="text-center">$<?php echo number_format($conciliacion->sumaIgualBank,0) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/tesoreria/bancos/conciliacion/'.$conciliacion->id.'/pdf') }}" target="_blank" title="Ver Conciliación Bancaria" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                    @if(auth()->id() == 1)
+                                        <a class="btn btn-primary" href="{{route('eliminar.conciliacion', $conciliacion->id)}}">Eliminar</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

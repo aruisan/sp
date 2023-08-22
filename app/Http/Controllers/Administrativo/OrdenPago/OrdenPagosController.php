@@ -8,7 +8,7 @@ use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
-use App\Model\Administrativo\Pago\PagoBanks;
+use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
@@ -238,7 +238,7 @@ class OrdenPagosController extends Controller
 
     public function liquidar(Request $request)
     {
-        if (count($request->PUC) > 2){
+        if (count($request->PUC) > 200){
             Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC. Por favor seleccionelas nuevamente. ');
             return back();
         }
@@ -561,89 +561,76 @@ class OrdenPagosController extends Controller
     public function pdf_CE($id)
     {
         $Pago = Pagos::findOrFail($id);
-        $banks = PagoBanks::where('pagos_id', $Pago->id)->get();
+        $banks = PagoBanksNew::where('pagos_id', $Pago->id)->get();
         $Egreso_id = $Pago->code;
         $OrdenPago = OrdenPagos::findOrFail($Pago->orden_pago_id);
         $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $OrdenPago->id)->where('valor','>',0)->get();
-        if ($OrdenPago->registros_id != null){
-            $R = Registro::findOrFail($OrdenPago->registros_id);
 
-            $all_rubros = Rubro::all();
-            foreach ($all_rubros as $rubro){
-                if ($rubro->fontsRubro->sum('valor_disp') != 0){
-                    $valFuente = FontsRubro::where('rubro_id', $rubro->id)->sum('valor_disp');
-                    $valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
-                    $rubros[] = collect(['id' => $rubro->id, 'name' => $rubro->name]);
-                }
+        $all_rubros = Rubro::all();
+        foreach ($all_rubros as $rubro){
+            if ($rubro->fontsRubro->sum('valor_disp') != 0){
+                $valFuente = FontsRubro::where('rubro_id', $rubro->id)->sum('valor_disp');
+                $valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
+                $rubros[] = collect(['id' => $rubro->id, 'name' => $rubro->name]);
             }
-
-            //codigo de rubros
-
-            $vigens = Vigencia::where('id', '>',0)->get();
-            foreach ($vigens as $vigen) {
-                $V = $vigen->id;
-            }
-            $vigencia_id = $V;
-
-            $conteoTraits = new ConteoTraits;
-
-            //NEW PRESUPUESTO
-            $plantilla = PlantillaCuipo::where('id', '>', 317)->get();
-            foreach ($plantilla as $data) {
-                $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
-                if ($data->id < '324') {
-                } elseif (count($rubro) > 0) {
-                    if($rubro[0]->fontsRubro and $rubro[0]->tipo == "Funcionamiento"){
-                        //SE VALIDA QUE EL RUBRO TENGA DINERO DISPONIBLE
-                        foreach ($rubro[0]->fontsRubro as $fuentes){
-                            foreach ($fuentes->dependenciaFont as $fontDep){
-                                if (auth()->user()->dependencia_id == $fontDep->dependencia_id) $valDisp[] = $fontDep->saldo;
-                            }
-                        }
-                        if (isset($valDisp) and array_sum($valDisp) > 0){
-                            $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
-                            unset($valDisp);
-                        }
-                    }
-                }
-            }
-
-            if (!isset($infoRubro)) $infoRubro = [];
-
-            $fecha = Carbon::createFromTimeString($Pago->created_at);
-            $fechaO = Carbon::createFromTimeString($OrdenPago->created_at);
-            $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-
-            $contadores = ConfigGeneral::where('tipo','CONTADOR')->get();
-
-            foreach ($contadores as $contador){
-                if ($contador->fecha_inicio <= $fecha){
-                    if ($contador->fecha_fin >= $fecha){
-                        $name_contador = $contador->nombres;
-                    }
-                }
-            }
-
-            if (!isset($name_contador)){
-                $name_contador = "POR DEFINIR";
-            }
-
-            $pdf = PDF::loadView('administrativo.ordenpagos.pdfCE', compact('OrdenPago','OrdenPagoDescuentos','R','infoRubro',
-                'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador','banks','Pago'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
-            return $pdf->stream();
-        } else{
-            $fecha = Carbon::createFromTimeString($Pago->created_at);
-            $fechaO = Carbon::createFromTimeString($OrdenPago->created_at);
-            $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-
-            $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $OrdenPago->id)->first();
-
-            $pdf = PDF::loadView('administrativo.ordenpagos.pdfCERF', compact('OrdenPago','OrdenPagoDescuentos', 'dias',
-                'meses', 'fecha','fechaO','Egreso_id','banks','tesoreriaRetefuentePago','Pago'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
-            return $pdf->stream();
         }
+
+        //codigo de rubros
+
+        $vigens = Vigencia::where('id', '>',0)->get();
+        foreach ($vigens as $vigen) {
+            $V = $vigen->id;
+        }
+        $vigencia_id = $V;
+
+        $conteoTraits = new ConteoTraits;
+
+        //NEW PRESUPUESTO
+        $plantilla = PlantillaCuipo::where('id', '>', 317)->get();
+        foreach ($plantilla as $data) {
+            $rubro = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $data->id)->get();
+            if ($data->id < '324') {
+            } elseif (count($rubro) > 0) {
+                if($rubro[0]->fontsRubro and $rubro[0]->tipo == "Funcionamiento"){
+                    //SE VALIDA QUE EL RUBRO TENGA DINERO DISPONIBLE
+                    foreach ($rubro[0]->fontsRubro as $fuentes){
+                        foreach ($fuentes->dependenciaFont as $fontDep){
+                            if (auth()->user()->dependencia_id == $fontDep->dependencia_id) $valDisp[] = $fontDep->saldo;
+                        }
+                    }
+                    if (isset($valDisp) and array_sum($valDisp) > 0){
+                        $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod];
+                        unset($valDisp);
+                    }
+                }
+            }
+        }
+
+        if (!isset($infoRubro)) $infoRubro = [];
+
+        $fecha = Carbon::createFromTimeString($Pago->created_at);
+        $fechaO = Carbon::createFromTimeString($OrdenPago->created_at);
+        $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+        $contadores = ConfigGeneral::where('tipo','CONTADOR')->get();
+
+        foreach ($contadores as $contador){
+            if ($contador->fecha_inicio <= $fecha){
+                if ($contador->fecha_fin >= $fecha){
+                    $name_contador = $contador->nombres;
+                }
+            }
+        }
+
+        if (!isset($name_contador)){
+            $name_contador = "POR DEFINIR";
+        }
+
+        $pdf = PDF::loadView('administrativo.ordenpagos.pdfCE', compact('OrdenPago','OrdenPagoDescuentos','infoRubro',
+            'dias', 'meses', 'fecha','fechaO','Egreso_id','name_contador','banks','Pago'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
+
     }
 
     public function embargos($id){

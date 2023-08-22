@@ -114,7 +114,7 @@ class ReportsController extends Controller
                     }
                 }
                 $lvl = $level;
-                return view('administrativo.contabilidad.informes.index', compact('nivel', 'niveles', 'fila', 'codes','data','lvl'));
+               
             } else {
                 Session::flash('error','Actualmente no existen rubros en el PUC. Se recomienda crearlos.');
                 return back();
@@ -124,6 +124,22 @@ class ReportsController extends Controller
             return back();
         }
 
+
+        $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
+        Session::put(auth()->id().'-mes-informe-contable-nivel', 1);
+        //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
+        $pucs = $informe->datos->filter(function($p){ return is_null($p->padre); })->sortBy('puc_alcaldia.code');
+
+        //dd($pucs->first()->hijos->map(function($e){ return $e->puc_alcaldia->code; }));
+        //dd($pucs);
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
+        $diaActual = Carbon::now()->day;
+
+        return view('administrativo.contabilidad.balances.prueba',compact('añoActual', 'mesActual', 'diaActual', 'pucs', 'meses', 'informe'));
+
+
+        return view('administrativo.contabilidad.informes.index', compact('nivel', 'niveles', 'fila', 'codes','data','lvl'));
     }
 
     public function rubros($id){

@@ -12,4 +12,8 @@ class CompCont extends Model implements Auditable
     public function tipo(){
         return $this->belongsTo('App\Model\Administrativo\Contabilidad\TipoComp','tipo_comp_id');
     }
+
+    public function comprobante(){
+        return $this->belongsTo();
+    }
 }

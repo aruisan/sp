@@ -11,6 +11,7 @@ Auth::routes();
 //Route::get('/home', 'Cobro\HomeController@index')->name('home');
 
 Route::group([ 'middleware' => 'auth'] ,function(){
+    Route::get('bbdd_backup', 'Admin\ConfigGeneralController@bbdd_backup')->name('bbdd_backup');
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
 
 	Route::resource('predios', 'Cobro\PredioController');
@@ -204,7 +205,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::post('tesoreria/bancos/makeConciliacion','Administrativo\Tesoreria\BancosController@makeConciliacion');
         Route::resource('bancos','Administrativo\Tesoreria\BancosController');
         Route::post('tesoreria/bancos/conciliacion/guardar-ver','Administrativo\Tesoreria\BancosController@saveAndSeePdf')->name('conciliacion.guardar-ver');
-
+        Route::get('tesoreria/bancos/eliminar-conciliacion/{conciliacion}','Administrativo\Tesoreria\BancosController@eliminar_conciliacion')->name('eliminar.conciliacion');
             //DESCUENTOS
         Route::get('tesoreria/descuentos/{vigencia}','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@index');
         Route::get('tesoreria/descuentos/viewpago/{id}/view','Administrativo\Tesoreria\descuentos\TesoreriaDescuentosController@show');
@@ -388,7 +389,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
             //Informes
 
         Route::resource('contabilidad/informes','Administrativo\Contabilidad\ReportsController');
-        Route::get('contabilidad/informes/lvl/{id}','Administrativo\Contabilidad\ReportsController@lvl');
+        Route::get('contabilidad/informes/lvl/0','Administrativo\Contabilidad\ReportsController@lvl');
         Route::get('contabilidad/informes/rubros/{id}','Administrativo\Contabilidad\ReportsController@rubros');
 
         //Impuestos Predial
@@ -593,6 +594,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     /////RUTA DE ASIGNAR DINERO A LA DEPENDENCIA DEL RUBRO
     Route::post('presupuesto/rubro/dineroDependencia/{id}', 'Hacienda\Presupuesto\RubrosController@asignarDineroDep');
 
+    //TRASLADOS
+    Route::get('presupuesto/traslados/{id}','Hacienda\Presupuesto\TrasladosController@index');
+    Route::post('presupuesto/traslados/{id}/findDepCred','Hacienda\Presupuesto\TrasladosController@depCred');
+    Route::get('presupuesto/traslados/{id}/create','Hacienda\Presupuesto\TrasladosController@create');
 
     ////// RUTAS PLAN DE DESARROLLO
 	Route::resource('pdd','Planeacion\Pdd\PdesarrolloController');

@@ -14,7 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\Correspondencia;
 use App\Email;
-
+use App\Model\Persona;
 
 class TramiteCuentaController extends Controller
 {
@@ -25,7 +25,8 @@ class TramiteCuentaController extends Controller
     }
 
     public function create(){
-        return view('tramiteCuentas.create');
+        $personas = Persona::get();
+        return view('tramiteCuentas.create', compact('personas'));
     }
 
     public function store(Request $request){

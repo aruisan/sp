@@ -19,4 +19,8 @@ class RubrosMov extends Model implements Auditable
     public function ResourcesMov(){
         return $this->hasMany('App\Model\Hacienda\Presupuesto\ResourcesMov','mov_id','id');
     }
+
+    public function Vigencia(){
+        return $this->hasOne('App\Model\Hacienda\Presupuesto\Vigencia','id','font_vigencia_id');
+    }
 }

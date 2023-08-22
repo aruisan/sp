@@ -4,7 +4,10 @@
 /public/img/
 /public/storage
 /public/uploads
+/storage/*
 /storage/*.key
+/database/*.sql
+/public/backup
 /vendor
 /.idea
 /.vagrant

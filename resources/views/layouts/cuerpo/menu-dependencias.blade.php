@@ -1,6 +1,21 @@
 @include('modal.updateSoftware')
 
+
+@if(auth()->id() == 1 || auth()->user()->id == 984)
+<li >
+   <a class="btn btn-default btn-sm item-menu" href="{{ route('bbdd_backup') }}" title="Backup base de datos">
+   <i class="fa fa-hdd-o" aria-hidden="true"></i>
+   </a>
+</li>
+@endif
 @can('listar-empleados')
+@if(auth()->id() == 1 )
+<li >
+   <a class="btn btn-default btn-sm item-menu" href="{{ route('tramites-cuentas.index') }}">
+      Tramites Cuentas
+   </a>
+</li>
+@endif
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    NOMINA
@@ -135,7 +150,7 @@
       </a>
    </li>
 @endif
-@if(auth()->user()->id != 54)
+@if(auth()->user()->id != 54 && auth()->user()->id != 984)
    @if(auth()->user()->roles->first()->id != 7)
       @if(auth()->user()->roles->first()->id != 8 && auth()->user()->roles->first()->id != 9)
          <li >
@@ -168,7 +183,7 @@
 </li> --}}
   
 
-   @if(auth()->user()->roles->first()->id == 1)
+   @if(auth()->user()->validar_cargo('almacenista') || auth()->user()->validar_cargo('administrador') || auth()->user()->validar_cargo('Secretaria'))
       <li class="dropdown ">
          <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
          ALMACEN
@@ -176,10 +191,10 @@
          </a>
          <ul class="dropdown-menu">
             <li><a class="item-menu" tabindex="-1" href="{{route('almacen.inventario')}}">Inventorio</a></li>
-
-            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso')}}">Comprobante de Ingreso</a></li>
-
-            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso')}}">Comprobante de egresos</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.ingreso.index')}}">Comprobante de Entrada</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('almacen.comprobante.egreso.index')}}">Comprobante de Salidas</a></li>
+            <li><a class="item-menu" tabindex="-1" href="rt">Comprobante de Traslados</a></li>
+            <li><a class="item-menu" tabindex="-1" href="er">Comprobante de Bajas</a></li>
          </ul>
       {{--
          <ul class="dropdown-menu">
@@ -238,17 +253,22 @@
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Balances </a>
                <ul class="dropdown-menu">
-                  <li><a class="item-menu" href="{{route('balance.inicial')}}">Balance Inicial</a></li>
+                  <li><a class="item-menu" href="{{route('balance.inicial', '01')}}">Balance Inicial</a></li>
                   <li><a class="item-menu" href="#">Comparativo</a></li>
-                  <li><a class="item-menu" href="#">Por Niveles</a></li>
-                  <li><a class="item-menu" href="{{route('balance.prueba')}}">Prueba</a></li>
+                  <li><a class="item-menu" href="{{route('balance.pre-prueba', '01')}}">Prueba</a></li>
                   <li><a class="item-menu" href="{{route('balance.terceros')}}">Terceros</a></li>
-                  <li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>
+                  {{--<li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>--}}
+                  <li><a class="item-menu" href="{{route('balance-general.pdf', [2023, 1, 'vista'])}}">General</a></li>
+                  <li><a class="item-menu" href="#">Notas al Balance</a></li>
+                  <li><a class="item-menu" href="#">Estado de Resultados</a></li>
+                  <li><a class="item-menu" href="#">Estado al cambio del patrimonio</a></li>
+                  <li><a class="item-menu" href="#">Estado de FLujo de Caja</a></li>
                </ul>
             </li>
             <li class="dropdown-submenu">
                <a class="dropdown-item item-menu" >Informes Chip </a>
                <ul class="dropdown-menu">
+                  {{--
                   <li class="dropdown-submenu">
                      <a class="dropdown-item item-menu" >CHIP Contaduria Primer Trimestre</a>
                      <ul class="dropdown-menu">
@@ -256,6 +276,11 @@
                         <li><a class="item-menu" href="{{route('chip.contable.actualizacion')}}">Actualizacion Y reporte</a></li>
                      </ul>
                   </li>
+                  --}}
+
+
+                  <li><a class="item-menu" href="{{route('chip.pre', [2023, 0])}}">CHIP Contaduria Primer Trimestre</a></li>
+                  <li><a class="item-menu" href="{{route('chip.pre', [2023, 1])}}">CHIP Contaduria Segundo Trimestre</a></li>
                   <li><a class="item-menu" target="_blank" href="{{url('/administrativo/impuestos/admin/noPayUsers')}}">Deudores Morosos</a></li>
                   <li><a class="item-menu" href="#">Exogeno</a></li>
                   <li><a class="item-menu" href="#">Reciprocas</a></li>
@@ -409,8 +434,8 @@
                @endcan
             @endif
 
-            <li><a class="item-menu" tabindex="-1" href="{{route('personas.index')}}">Terceros</a></li>
                @if(auth()->user()->roles->first()->id == 1)
+            <li><a class="item-menu" tabindex="-1" href="{{route('personas.index')}}">Terceros</a></li>
                   <li><a class="item-menu" tabindex="-1" href="{{route('audits.index')}}">Logs</a></li>
                @endif
          </ul>
