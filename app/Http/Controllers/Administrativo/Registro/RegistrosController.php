@@ -481,7 +481,6 @@ class RegistrosController extends Controller
     }
 
     public function anular($id){
-        dd(auth()->id());
         $registro = Registro::findOrFail($id);
         foreach ($registro->cdpRegistroValor as $valCDPR){
             $valor = $valCDPR->valor;
