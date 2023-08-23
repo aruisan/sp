@@ -433,9 +433,8 @@
                <li><a class="item-menu" tabindex="-1" href="{{ route('modulos.index') }}">Gestión de Modulos</a></li>
                @endcan
             @endif
-
+               <li><a class="item-menu" tabindex="-1" href="{{route('personas.index')}}">Terceros</a></li>
                @if(auth()->user()->roles->first()->id == 1)
-            <li><a class="item-menu" tabindex="-1" href="{{route('personas.index')}}">Terceros</a></li>
                   <li><a class="item-menu" tabindex="-1" href="{{route('audits.index')}}">Logs</a></li>
                @endif
          </ul>

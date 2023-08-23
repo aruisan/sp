@@ -493,7 +493,7 @@ class RegistrosController extends Controller
             $registro->ff_jefe_e = today()->format("Y-m-d");
             $registro->saldo = 0;
             $registro->user_anulacion = auth()->id();
-            $registro->ff_anulacion = today()->format("Y-m-d H:i:s");
+            $registro->ff_anulacion = today();
             $registro->save();
 
             $cdp = Cdp::findOrFail($cdp_id);
