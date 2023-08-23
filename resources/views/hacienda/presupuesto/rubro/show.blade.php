@@ -2,34 +2,8 @@
 @section('titulo')
     Información del Rubro
 @stop
-@section('sidebar')
-{{--
-   <li> <a href="{{ url('/presupuesto') }}" class="btn btn-success"><i class="fa fa-money"></i><span class="hide-menu">&nbsp; Presupuesto</span></a></li>
-    <div class="card">
-
-    </div>
-    @if( $rol == 2)
-    <li class="dropdown">
-        <a class="dropdown-toggle btn btn btn-primary" data-toggle="dropdown">
-            ACCIONES
-            <i class="fa fa-caret-down"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-user">
-            <li>
-                <a data-toggle="modal" data-target="#adicion" class="btn btn-primary text-left">Adición</a>
-            </li>
-            <li>
-                <a data-toggle="modal" data-target="#reduccion" class="btn btn-primary text-left">Reducción</a>
-            </li>
-            <li>
-                <a data-toggle="modal" data-target="#credito" class="btn btn-primary text-left">Credito</a>
-            </li>
-        </ul>
-    </li>
-    @endif --}}
-@stop
+@section('sidebar')@stop
 @section('content')
-
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Detalles del Rubro: {{ $rubro->name }}</b></h4>
@@ -40,19 +14,14 @@
             <li class="nav-item">
                 <a class="nav-link regresar"  href="{{ url('/presupuestoIng/') }}">Volver a Presupuesto</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" data-toggle="pill" href="#datos"> Datos Básicos Rubro </a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link" data-toggle="pill" href="#fuentes"> Fuentes del Rubro </a>
-            </li>
-            <li class="nav-item ">
-                <a class="nav-link" data-toggle="pill" href="#movimientos"> Movimientos del Rubro </a>
-            </li>
         @else
             <li class="nav-item">
                 <a class="nav-link regresar"  href="{{ url('/presupuesto/') }}">Volver a Presupuesto</a>
             </li>
+            <li class="nav-item ">
+                <a class="nav-link" data-toggle="pill" href="#cdp"> CDP's del Rubro </a>
+            </li>
+        @endif
             <li class="nav-item active">
                 <a class="nav-link" data-toggle="pill" href="#datos"> Datos Básicos Rubro </a>
             </li>
@@ -60,32 +29,19 @@
                 <a class="nav-link" data-toggle="pill" href="#fuentes"> Fuentes del Rubro </a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" data-toggle="pill" href="#cdp"> CDP's del Rubro </a>
-            </li>
-            <li class="nav-item ">
                 <a class="nav-link" data-toggle="pill" href="#movimientos"> Movimientos del Rubro </a>
             </li>
-        @endif
 
         @if(auth()->user()->dependencia->id == 15 or auth()->user()->dependencia->id == 1)
-                @include('modal.adicionRubro')
-                @include('modal.reduccionRubro')
-                @if($vigens->tipo == 1)
-                    <li class="dropdown">
-                        <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
-                            <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li>
-                        </ul>
-                    </li>
-                @else
-                    <li class="dropdown">
-                        <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
-                        </ul>
-                    </li>
-                @endif
+            @include('modal.adicionRubro')
+            @include('modal.reduccionRubro')
+            <li class="dropdown">
+                <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
+                    <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li>
+                </ul>
+            </li>
         @endif
         @if( $rol != 2 )
             @include('modal.asignarDineroDep')
