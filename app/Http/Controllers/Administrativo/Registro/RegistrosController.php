@@ -567,6 +567,9 @@ class RegistrosController extends Controller
     }
 
     public function liberar($id){
+        Session::flash('error','Working in process');
+        return redirect('/administrativo/registros/show/'.$id);
+        
         $registro = Registro::findOrFail($id);
         if (count($registro->cdpRegistroValor) == 1){
             $registro->cdpRegistroValor->first()->valor = $registro->val_total - $registro->saldo;
