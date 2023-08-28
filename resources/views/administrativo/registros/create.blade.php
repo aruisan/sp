@@ -57,7 +57,7 @@
                                 <select name="cdp_id[]" id="cdps" class="form-control selectF" required onchange="ShowSelected()">
                                     <option>Seleccione el CDP</option>
                                     @foreach($cdps as $cdp)
-                                        @php($cdp = preg_replace("/[\r\n|\n|\r]+/", PHP_EOL, $cdp))
+                                        
                                         <option value="{{ $cdp['id'] }}">{{ $cdp['code'] }} - {{ $cdp['name'] }}</option>
                                     @endforeach
                                 </select>
