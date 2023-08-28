@@ -525,7 +525,6 @@ class RegistrosController extends Controller
         Session::flash('error','El Registro ha sido anulado');
         return redirect('/administrativo/registros/show/'.$id);
     }
-
     public function pdf($id, $vigen){
         $registro = Registro::findOrFail($id);
         $vigens = Vigencia::findOrFail($vigen);
@@ -565,6 +564,34 @@ class RegistrosController extends Controller
         $rp->objeto = $request->objeto;
         $rp->save();
         return $rp;
+    }
+
+    public function liberar($id){
+        Session::flash('error','Working in process');
+        return redirect('/administrativo/registros/show/'.$id);
+        
+        $registro = Registro::findOrFail($id);
+        if (count($registro->cdpRegistroValor) == 1){
+            $registro->cdpRegistroValor->first()->valor = $registro->val_total - $registro->saldo;
+            $registro->cdpRegistroValor->first()->saldo = 0;
+            $registro->cdpRegistroValor->first()->save();
+
+            $registro->cdpRegistroValor->first()->cdps->saldo = $registro->saldo;
+            $registro->cdpRegistroValor->first()->cdps->save();
+
+            $registro->valor = $registro->val_total - $registro->saldo;
+            $registro->saldo = 0;
+            $registro->save();
+
+
+            Session::flash('error','El Registro tiene varios CDPs asignados, debe retornarse el valor manualmente');
+            return redirect('/administrativo/registros/show/'.$id);
+
+
+        } else {
+            Session::flash('error','El Registro tiene varios CDPs asignados, debe retornarse el valor manualmente');
+            return redirect('/administrativo/registros/show/'.$id);
+        }
     }
 }
 

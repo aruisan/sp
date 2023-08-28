@@ -769,6 +769,15 @@
                         </div>
                     </form>
                 @endif
+                @if($registro->jefe_e == 3 and $registro->saldo > 0 and $registro->saldo != $registro->val_total and $rol == 1 and count($registro->cdpRegistroValor) == 1)
+                    <form action="{{url('/administrativo/registros/'.$registro->id.'/liberar')}}" method="POST" class="form">
+                        {{method_field('POST')}}
+                        {{ csrf_field() }}
+                        <div class="row text-center">
+                            <button class="btn btn-success text-center" type="submit" title="Liberar saldo del RP y actualizar valores">Liberar Saldo</button>
+                        </div>
+                    </form>
+                @endif
             </div>
             <div id="valor" class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2 tab-pane">
                 <br>

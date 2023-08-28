@@ -250,7 +250,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('registros/{id}/{fecha}/{valor}/{estado}/{valTot}/{rol}', 'Administrativo\Registro\RegistrosController@updateEstado');
         Route::post('registros/{id}/anular/', 'Administrativo\Registro\RegistrosController@anular');
         Route::put('registros/r/{id}/{rol}/{estado}/{vigencia}', 'Administrativo\Registro\RegistrosController@rechazar');
-        Route::post('registros/{id}/anular/', 'Administrativo\Registro\RegistrosController@anular');
+        Route::post('registros/{id}/liberar/', 'Administrativo\Registro\RegistrosController@liberar');
 
             //pdf registros
 		Route::get('/registro/pdf/{id}/{vigen}', 'Administrativo\Registro\RegistrosController@pdf')->name('registro-pdf');
