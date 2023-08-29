@@ -19,7 +19,7 @@
                     <a class="nav-item dropdown-toggle" data-toggle="dropdown" href="#">Acciones<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a data-toggle="modal" data-target="#adicion" class="btn btn-drop text-left">Adición</a></li>
-                        <!-- <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li> -->
+                        <li><a data-toggle="modal" data-target="#reduccion" class="btn btn-drop  text-left">Reducción</a></li>
                     </ul>
                 </li>
             </ul>
