@@ -94,7 +94,7 @@
                                 </td>
                                 <td><input type="number" id="base" name="base" disabled style="text-align:center"></td>
                                 <td>
-                                    <input type="number" id="valor" style="text-align:center" disabled>
+                                    <input type="number" id="valor" style="text-align:center" onchange="valueLlenar(this.value)">
                                     <input type="hidden" id="valor2" name="valor" value="">
                                 </td>
                             </tr>
@@ -229,6 +229,10 @@
                 @endif
             @endforeach
         };
+
+        function valueLlenar(valor){
+            document.getElementById('valor2').value = valor;
+        }
 
         function llenar(){
             var select = document.getElementById('reten');
