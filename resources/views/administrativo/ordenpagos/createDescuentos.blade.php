@@ -218,7 +218,7 @@
 @stop
 @section('js')
     <script>
-        var OPvalue = @json($ordenPago->valor)
+        const OPvalue = @json($ordenPago->valor)
         var Data = {
             @foreach($retenF as $key => $data)
                 @if($ordenPago->valor >= $data->base)
@@ -247,7 +247,7 @@
             var select = document.getElementById('reten');
             var opcion = select.value;
 
-            document.getElementById('valOP').value = OPvalue;
+            document.getElementById('valOP').value = parseInt(OPvalue);
             document.getElementById('percent').value = Data[opcion][0];
             document.getElementById('base').value = Data[opcion][1];
             document.getElementById('valor').value = Data[opcion][2];
