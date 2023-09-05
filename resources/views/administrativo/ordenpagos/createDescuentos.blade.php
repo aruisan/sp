@@ -244,10 +244,11 @@
         }
 
         function llenar(){
+            console.log(OPvalue)
             var select = document.getElementById('reten');
             var opcion = select.value;
 
-            document.getElementById('valOP').value = parseInt(OPvalue);
+            //document.getElementById('valOP').value = parseInt(OPvalue);
             document.getElementById('percent').value = Data[opcion][0];
             document.getElementById('base').value = Data[opcion][1];
             document.getElementById('valor').value = Data[opcion][2];
