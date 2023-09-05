@@ -247,7 +247,7 @@
             var select = document.getElementById('reten');
             var opcion = select.value;
 
-            document.getElementById('valOP').valur = OPvalue;
+            document.getElementById('valOP').value = OPvalue;
             document.getElementById('percent').value = Data[opcion][0];
             document.getElementById('base').value = Data[opcion][1];
             document.getElementById('valor').value = Data[opcion][2];
