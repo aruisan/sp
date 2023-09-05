@@ -90,7 +90,8 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td><input type="number" id="valOP" name="valOP" style="text-align:center" onchange="valueLlenar(this.value)"></td>
+                                <td><input type="number" id="valOP" name="valOP" style="text-align:center" onchange="valueLlenar(this.value)"
+                                    value="{{ $ordenPago->valor }}"></td>
                                 <td>
                                     <input type="number" id="percent" name="porcent" style="text-align:center" disabled>
                                 </td>
@@ -244,11 +245,9 @@
         }
 
         function llenar(){
-            //console.log(OPvalue)
             var select = document.getElementById('reten');
             var opcion = select.value;
 
-            //document.getElementById('valOP').value = parseInt(OPvalue);
             document.getElementById('percent').value = Data[opcion][0];
             document.getElementById('base').value = Data[opcion][1];
             document.getElementById('valor').value = Data[opcion][2];
