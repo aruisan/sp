@@ -244,7 +244,7 @@
         }
 
         function llenar(){
-            console.log(OPvalue)
+            //console.log(OPvalue)
             var select = document.getElementById('reten');
             var opcion = select.value;
 
