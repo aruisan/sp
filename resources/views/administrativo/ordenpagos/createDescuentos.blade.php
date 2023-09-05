@@ -55,6 +55,7 @@
                         <table class="table table-bordered" id="tabla">
                             <thead>
                             <th class="text-center">Concepto</th>
+                            <th class="text-center">Valor</th>
                             <th class="text-center">%</th>
                             <th class="text-center">Base</th>
                             <th class="text-center">Valor</th>
@@ -89,12 +90,13 @@
                                         @endforeach
                                     </select>
                                 </td>
+                                <td><input type="number" id="valOP" name="valOP" style="text-align:center" onchange="valueLlenar(this.value)"></td>
                                 <td>
                                     <input type="number" id="percent" name="porcent" style="text-align:center" disabled>
                                 </td>
-                                <td><input type="number" id="base" name="base" disabled style="text-align:center"></td>
+                                <td><input type="number" id="base" name="base" style="text-align:center"></td>
                                 <td>
-                                    <input type="number" id="valor" style="text-align:center" onchange="valueLlenar(this.value)">
+                                    <input type="number" id="valor" style="text-align:center" disabled>
                                     <input type="hidden" id="valor2" name="valor" value="">
                                 </td>
                             </tr>
@@ -231,7 +233,13 @@
         };
 
         function valueLlenar(valor){
-            document.getElementById('valor2').value = valor;
+
+            var percent = document.getElementById('percent').value;
+            var valueMul = valor * percent;
+            var tot = valueMul/100;
+
+            document.getElementById('valor').value = tot;
+            document.getElementById('valor2').value = tot;
         }
 
         function llenar(){
