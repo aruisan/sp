@@ -218,7 +218,7 @@
 @stop
 @section('js')
     <script>
-        const OPvalue = @json($ordenPago->valor)
+
         var Data = {
             @foreach($retenF as $key => $data)
                 @if($ordenPago->valor >= $data->base)
