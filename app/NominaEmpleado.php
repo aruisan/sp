@@ -30,11 +30,13 @@ class NominaEmpleado extends Model
         $descuentos = collect();
 
         foreach($this->movimientos as $movimiento):
-            foreach($movimientos->descuentos as $descuento):  
-                if($descuento->n_cuotas_faltantes > 0): 
-                    $descuentos->push($descuento);
-                endif;
-            endforeach;
+            if($movimiento->descuentos->count() > 0):
+                foreach($movimiento->descuentos as $descuento):  
+                    if($descuento->n_cuotas_faltantes > 0): 
+                        $descuentos->push($descuento);
+                    endif;
+                endforeach;
+            endif;
         endforeach;
         return $descuentos;
     }

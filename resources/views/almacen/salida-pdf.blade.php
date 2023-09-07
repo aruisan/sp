@@ -113,17 +113,17 @@
 
 @section('firma')
         @if(!is_null($egreso->puc_credito))
-        <div style="width:45%; display:inline-block;">
-            _________________________<br>
-            {{$egreso->responsable->nombre}}<br>
-            CC: {{$egreso->responsable->num_dc}} <br>
-            responsable
-        </div>
-        <div style="width:45%; display:inline-block;">
-            _________________________<br>
-            GUSTAVO FIGUEREDO <br>
-            ALMACENISTA GENERAL <br>
-            .
-        </div>
+            <div style="width:45%; display:inline-block;">
+                _________________________<br>
+                {{$egreso->responsable->nombre}}<br>
+                CC: {{$egreso->responsable->num_dc}} <br>
+                responsable
+            </div>
+            <div style="width:45%; display:inline-block;">
+                _________________________<br>
+                GUSTAVO FIGUEREDO <br>
+                ALMACENISTA GENERAL <br>
+                .
+            </div>
         @endif
 @endsection
