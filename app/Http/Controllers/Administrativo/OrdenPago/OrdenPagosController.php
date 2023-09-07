@@ -6,8 +6,10 @@ use App\Model\Admin\ConfigGeneral;
 use App\Model\Administrativo\Contabilidad\LevelPUC;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
+use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
+use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
@@ -397,7 +399,15 @@ class OrdenPagosController extends Controller
         $ordenPago = OrdenPagos::findOrFail($id);
         $vigenc = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
         $hijosPUC = PucAlcaldia::where('hijo', '1')->orderBy('code','ASC')->get();
-        return view('administrativo.ordenpagos.edit', compact('Registros','ordenPago', 'vigenc','hijosPUC'));
+        $retenF = RetencionFuente::all();
+        $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
+        $personas = Persona::all();
+        if ($ordenPago->iva > 0) $desMun = DescMunicipales::all();
+        else $desMun = DescMunicipales::where('id','!=','4')->get();
+
+        $pagos = Pagos::where('orden_pago_id', $id)->get();
+        return view('administrativo.ordenpagos.edit', compact('Registros','ordenPago',
+            'vigenc','hijosPUC', 'retenF', 'desMun','cuentas24','personas','pagos'));
     }
 
     /**
@@ -676,5 +686,21 @@ class OrdenPagosController extends Controller
 
         Session::flash('error','La orden de pago ha sido anulada');
         return redirect('/administrativo/ordenPagos/show/'.$id);
+    }
+
+    public function deleteRFFinished($id){
+        $retenF = OrdenPagosDescuentos::findOrFail($id);
+        $retenF->pago->saldo = $retenF->valor + $retenF->pago->saldo;
+        $retenF->pago->save();
+        $retenF->delete();
+        Session::flash('error','Descuento de la Retención de Fuente eliminado de la Orden de Pago');
+    }
+
+    public function deleteMFinished($id){
+        $municipal = OrdenPagosDescuentos::findOrFail($id);
+        $municipal->pago->saldo = $municipal->valor + $municipal->pago->saldo;
+        $municipal->pago->save();
+        $municipal->delete();
+        Session::flash('error','Descuento Municipal eliminado de la Orden de Pago');
     }
 }

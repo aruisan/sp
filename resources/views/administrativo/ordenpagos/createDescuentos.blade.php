@@ -90,14 +90,14 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td><input type="number" id="valOP" name="valOP" style="text-align:center" onchange="valueLlenar(this.value)"
+                                <td><input class="form-control" type="number" id="valOP" name="valOP" style="text-align:center" onchange="valueLlenar(this.value)"
                                     value="{{ $ordenPago->valor }}"></td>
                                 <td>
-                                    <input type="number" id="percent" name="porcent" style="text-align:center" disabled>
+                                    <input class="form-control" type="number" id="percent" name="porcent" style="text-align:center" disabled>
                                 </td>
-                                <td><input type="number" id="base" name="base" style="text-align:center"></td>
+                                <td><input class="form-control" type="number" id="base" name="base" style="text-align:center" disabled></td>
                                 <td>
-                                    <input type="number" id="valor" style="text-align:center" disabled>
+                                    <input class="form-control" type="number" id="valor" style="text-align:center" disabled>
                                     <input type="hidden" id="valor2" name="valor" value="">
                                 </td>
                             </tr>

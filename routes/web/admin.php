@@ -313,6 +313,10 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('tesoreria/ordenPagos/embargos/{id}','Administrativo\OrdenPago\OrdenPagosController@embargos')->name('op-embargos');
         Route::post('tesoreria/ordenPagos/embargos/getOP/find','Administrativo\OrdenPago\OrdenPagosController@getOPEmbargo');
         Route::post('tesoreria/ordenPagos/embargos/make','Administrativo\OrdenPago\OrdenPagosController@getEmbargo');
+        //EDITAR DESCUENTOS EN OP FINALIZADAS
+        Route::delete('ordenPagos/descuento/rf/{id}/finished','Administrativo\OrdenPago\OrdenPagosController@deleteRFFinished');
+        Route::delete('ordenPagos/descuento/m/{id}/finished','Administrativo\OrdenPago\OrdenPagosController@deleteMFinished');
+        Route::post('ordenPagos/descuento/finished/changeDesc', 'Administrativo\OrdenPago\OrdenPagosDescuentosController@storeFinished');
 
         //PAGOS
 

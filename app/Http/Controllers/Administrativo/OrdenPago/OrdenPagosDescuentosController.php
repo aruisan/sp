@@ -175,4 +175,78 @@ class OrdenPagosDescuentosController extends Controller
         Session::flash('error','Descuento eliminado correctamente de la orden de pago');
 
     }
+
+
+    /**
+     * Almacenar los nuevos descuentos a la orden de pago finalizada.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeFinished(Request $request)
+    {
+        $ordenPago_id = $request->ordenPago_id;
+
+        if ($request->retencion_fuente != "Selecciona un Concepto de Descuento"){
+            $retenFuente = RetencionFuente::findOrFail($request->retencion_fuente);
+            $valor = $request->valor;
+            $nombre = $retenFuente->concepto;
+            $porcentaje = $retenFuente->tarifa;
+            $base = $retenFuente->base;
+
+            $ordenPagoDes = new OrdenPagosDescuentos();
+            $ordenPagoDes->nombre = $nombre;
+            $ordenPagoDes->porcent = $porcentaje;
+            $ordenPagoDes->base = $base;
+            $ordenPagoDes->valor = $valor;
+            $ordenPagoDes->orden_pagos_id = $ordenPago_id;
+            $ordenPagoDes->retencion_fuente_id = $request->retencion_fuente;
+            $ordenPagoDes->save();
+
+            $ordenP = OrdenPagos::find($request->ordenPago_id);
+            $ordenP->saldo = $ordenP->saldo - $valor;
+            $ordenP->save();
+        }
+
+        if ($request->idDes != null){
+            for($i=0;$i< count($request->idDes); $i++){
+                $descMunicipales = DescMunicipales::findOrFail($request->idDes[$i]);
+                $descuento = new OrdenPagosDescuentos();
+                $descuento->nombre = $descMunicipales->concepto;
+                $descuento->base = 0;
+                $descuento->porcent = $descMunicipales->tarifa;
+                $descuento->valor = $request->valorMuni[$i];
+                $descuento->orden_pagos_id = $ordenPago_id;
+                $descuento->desc_municipal_id = $request->idDes[$i];
+                $descuento->save();
+
+                $ordenP = OrdenPagos::find($request->ordenPago_id);
+                $ordenP->saldo = $ordenP->saldo - $request->valorMuni[$i];
+                $ordenP->save();
+            }
+        }
+
+        //SE ALMACENAN LOS NUEVOS DESCUENTOS MUNICIPALES
+        if ($request->cuentaDesc != null){
+            for($x=0;$x< count($request->cuentaDesc); $x++){
+                $cuenta = PucAlcaldia::find($request->cuentaDesc[$x]);
+                $descuento = new OrdenPagosDescuentos();
+                $descuento->nombre = $cuenta->concepto;
+                $descuento->base = 0;
+                $descuento->porcent = 0;
+                $descuento->valor = $request->valorDesc[$x];
+                $descuento->orden_pagos_id = $ordenPago_id;
+                $descuento->cuenta_puc_id = $request->cuentaDesc[$x];
+                $descuento->persona_id = $request->tercero[$x];
+                $descuento->save();
+
+                $ordenP = OrdenPagos::find($request->ordenPago_id);
+                $ordenP->saldo = $ordenP->saldo - $request->valorDesc[$x];
+                $ordenP->save();
+            }
+        }
+
+        Session::flash('success','Los Descuentos se han Almacenado y Actualizado Exitosamente');
+        return redirect('/administrativo/ordenPagos/'.$ordenPago_id.'/edit');
+    }
 }
