@@ -91,19 +91,9 @@ Todos los tramites de cuentas
                                             @if($item->aprobadoresCuenta->count() > 6)
                                                 <td>{!!$item->aprobadoresCuenta[0]->estado_recibido!!}</td>
                                                 <td>{!!$item->aprobadoresCuenta[1]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[2]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[3]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[4]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[5]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[6]->estado_recibido!!}</td>
                                             @else
                                                 <td>{!!$item->aprobadoresCuenta[0]->estado_recibido!!}</td>
                                                 <td>Sin Asignar</td>
-                                                <td>{!!$item->aprobadoresCuenta[1]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[2]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[3]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[4]->estado_recibido!!}</td>
-                                                <td>{!!$item->aprobadoresCuenta[5]->estado_recibido!!}</td>
                                             @endif
                                         </tr>
                                      @endforeach 

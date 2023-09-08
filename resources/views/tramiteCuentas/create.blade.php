@@ -20,21 +20,15 @@ Tramite de cuentas|crear
                     <form action="{{route('tramites-cuentas.store')}}" method="POST">
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <div class="row">
-                            <div class="col-md-6 col-xs-12">
+                            <div class="col-md-12 col-xs-12">
                                 <div class="form-group" >
                                     <label>Beneficiario  </label>
-                                    <select name="beneficiario_id">
+                                    <select name="beneficiario_id" class="form-control select">
                                         @foreach($personas as $persona)
                                             <option value="{{$persona->id}}">{{$persona->nombre}}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-6 col-xs-12">
-                                <div class="form-group ">
-                                    <label>Nombre Beneficiario</label>
-                                    <input type="text" name="beneficiario_name" value="{{old('beneficiario_name')}}" class="form-control @error('beneficiario_name') is-invalid @enderror" readonly placeholder="Nombre" id="persona2_name">
-                                </div>  
                             </div>
                         </div>
                         <div class="row">
@@ -114,6 +108,7 @@ Tramite de cuentas|crear
 <script type="text/javascript">
     $(document).ready(function(){
         otros();
+        $('.select').select2();
     });
 
     $('#tipo_contrato').on('change', function(){

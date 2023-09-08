@@ -252,23 +252,6 @@
                             </div>
                         </div>
                         @endif
-                        <br><br><br>
-                        <h3 class="text-center">
-                            Descuentos
-                            <button type="button" class="btn btn-primary" onclick="agregar_descuento(${index})">+</button>
-                        </h3>
-                        <div  class="row"> 
-                            <table class="table">
-                                <thead>
-                                    <th>Tercero</th>
-                                    <th>Descuento</th>
-                                    <th>Valor</th>
-                                </thead>
-                                <tbody id="descuentos_${index}">
-                                    ${descuentos}
-                                </tbody>
-                            </table>
-                        </div>
                 </div>
                 `;
 
