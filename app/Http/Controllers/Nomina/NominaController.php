@@ -92,11 +92,11 @@ class NominaController extends Controller
                         foreach($movimiento->empleado->descuentos as $descuento):
                             $nomina_empleado->descuentos()->create([
                                 'nombre' => $descuento->nombre,
-                                'valor' =>  $descuento->valor_cuota_sugerida,
+                                'valor' =>  $descuento->valor,
                                 'tercero_id' => $descuento->tercero_id,
                                 'padre_id' => $descuento->id,
                                 'n_cuotas' => 1,
-                                'valor_total' => $descuento->valor_cuota_sugerida,
+                                'valor_total' => $descuento->valor,
                                 ]);
                         endforeach;
                     endif;

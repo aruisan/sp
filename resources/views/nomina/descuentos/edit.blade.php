@@ -97,13 +97,7 @@
                             <input value="${d.n_cuotas_faltantes}" class="form-control" readonly>
                         </td>
                         <td>
-                            <input value="${d.valor}" class="form-control" readonly>
-                        </td>
-                        <td>
-                            <input value="${d.saldo}" class="form-control" readonly>
-                        </td>
-                        <td>
-                            <input value="${d.valor_total}" class="form-control" readonly>
+                            <input value="${d.valor}" class="form-control">
                         </td>
                     </tr>
                 `);
@@ -130,12 +124,6 @@
                     </td>
                     <td>
                         <input  value="${d.valor}" class="form-control valor_pagar_${index} valor_pagar_${index}_${contador}" value="1" readonly>
-                    </td>
-                    <td>
-                        <input  value="${d.saldo}" class="form-control saldo_${index}_${contador}" value="0" readonly>
-                    </td>
-                    <td>
-                        <input value="${d.valor_total}" name="descuento_valor_${index}[]" class="form-control descuento_valor_${index} descuento_valor_${index}_${contador}" onchange="descuento_change(${index}, ${contador})" type="number" value="1" min="1" required>
                     </td>
                     <td><input type="button" class="borrar btn btn-danger" value="X" /></td></tr>
                 `});
@@ -183,8 +171,6 @@
                                         <th># cuotas</th>
                                         <th># cuotas Faltantes</th>
                                         <th>Valor a Pagar</th>
-                                        <th>Saldo</th>
-                                        <th>Valor del Prestamo</th>
                                     </thead>
                                     <tbody>
                                         ${descuentos}
@@ -202,8 +188,6 @@
                                         <th># cuotas</th>
                                         <th># cuotas Faltantes</th>
                                         <th>Valor a Pagar</th>
-                                        <th>Saldo</th>
-                                        <th>Valor del Prestamo</th>
                                     </thead>
                                     <tbody id="descuentos_${index}">
                                         ${descuentos_nuevos}
@@ -279,13 +263,7 @@
                         <input  class="form-control n_cuotas_faltantes_${index}_${contador}" value="0" readonly>
                     </td>
                     <td>
-                        <input  name="valor_pagar_${index}[]" class="form-control valor_pagar_${index} valor_pagar_${index}_${contador}" value="1" readonly>
-                    </td>
-                    <td>
-                        <input  class="form-control saldo_${index}_${contador}" value="0" readonly>
-                    </td>
-                    <td>
-                        <input name="descuento_valor_${index}[]" class="form-control descuento_valor_${index} descuento_valor_${index}_${contador}" onchange="descuento_change(${index}, ${contador})" type="number" value="1" min="1" required>
+                        <input  name="valor_pagar_${index}[]" class="form-control valor_pagar_${index} valor_pagar_${index}_${contador}" value="1">
                     </td>
                     <td><input type="button" class="borrar btn btn-danger" value="X" /></td>
                 </tr>
@@ -301,7 +279,6 @@
                     let empleado = [];
                     let descuentos_terceros = [];
                     let descuentos = [];
-                    let descuentos_valor = [];
                     let valor_pagar = [];
                     let cuotas = [];
 
@@ -318,10 +295,6 @@
                         descuentos.push($(this).val());
                     });
 
-                    $(`.descuento_valor_${index}`).each(function(v){
-                        descuentos_valor.push($(this).val());
-                    });
-
                     $(`.valor_pagar_${index}`).each(function(v){
                         valor_pagar.push($(this).val());
                     });
@@ -332,7 +305,6 @@
 
                     empleado.push(descuentos)
                     empleado.push(descuentos_terceros)
-                    empleado.push(descuentos_valor)
                     empleado.push(valor_pagar)
                     empleado.push(cuotas)
 
@@ -391,10 +363,10 @@
             console.log([cuotas, cuotas_faltantes, valor_total, valor_cuota, saldo]);
 
             $(`.n_cuotas_faltantes_${i}_${c}`).val(cuotas_faltantes);
+            /*
             $(`.valor_pagar_${i}_${c}`).val(valor_cuota);
             $(`.saldo_${i}_${c}`).val(saldo);
 
-            /*
             let descuentos = 0;
             $(`.descuento_valor_${i}`).each(function( index ) {
                 console.log('ddd', $(this).val())

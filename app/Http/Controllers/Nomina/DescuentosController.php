@@ -130,10 +130,8 @@ class DescuentosController extends Controller
                     $new_desc->tercero_id = intval($tercero);
                     $new_desc->nombre = $request->data[2][$y];
                     $new_desc->valor_total = intval($request->data[4][$y]);
-                    $new_desc->valor =  intval($request->data[5][$y]);
-                    $new_desc->n_cuotas =  intval($request->data[6][$y]);
-                    $new_desc->save();
-
+                    $new_desc->valor =  intval($request->data[4][$y]);
+                    $new_desc->n_cuotas =  intval($request->data[5][$y]);
                     $new_desc->save();
                 endforeach;
             endif;
