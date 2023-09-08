@@ -208,12 +208,6 @@
                                     <a class="nav-link" data-toggle="modal" data-target="#myModal">Nueva Actividad</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#menu1">Adición</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#menu2">Reducción</a>
-                                </li>
-                                <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#menu2">Decreto</a>
                                 </li>
                             </ul>

@@ -44,6 +44,7 @@
                                     </thead>
                                     <tbody>
                                     @foreach ($Registros as $key => $data)
+                                        @php($data['info']->objeto = preg_replace("/[\r\n|\n|\r]+/", " ", $data['info']->objeto))
                                         <tr onclick="ver('col{{$data['info']->id}}','Obj{{$data['info']->objeto}}','Name{{$data['info']->persona->nombre}}','Cc{{$data['info']->persona->num_dc}}','Sal{{$data['info']->saldo}}','Val{{$data['info']->valor}}','Iva{{$data['info']->iva}}','ValTo{{ $data['info']->val_total}}');" style="cursor:pointer">
                                             <td id="col{{$data['info']->id}}" class="text-center hidden">{{ $data['info']->id }}</td>
                                             <td class="text-center">{{ $data['info']->code }}</td>

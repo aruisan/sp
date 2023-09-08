@@ -75,13 +75,14 @@
    </ul>
 </li>
 @endcan
-
-@if(auth()->user()->roles->first()->id == 1)
+@if(auth()->user()->roles->first()->id == 1 || auth()->id() == 1055)
    <li >
       <a class="btn btn-default btn-sm item-menu" href="{{ route('coso.individuo.index') }}">
        COSO
       </a>
    </li>
+@endif
+@if(auth()->user()->roles->first()->id == 1)
    
          <li class="page-scroll ">
             <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
@@ -150,7 +151,7 @@
       </a>
    </li>
 @endif
-@if(auth()->user()->id != 54 && auth()->user()->id != 984)
+@if(auth()->user()->id != 54 && auth()->user()->id != 984 && auth()->user()->id != 1055)
    @if(auth()->user()->roles->first()->id != 7)
       @if(auth()->user()->roles->first()->id != 8 && auth()->user()->roles->first()->id != 9)
          <li >
@@ -433,9 +434,8 @@
                <li><a class="item-menu" tabindex="-1" href="{{ route('modulos.index') }}">Gestión de Modulos</a></li>
                @endcan
             @endif
-
+               <li><a class="item-menu" tabindex="-1" href="{{route('personas.index')}}">Terceros</a></li>
                @if(auth()->user()->roles->first()->id == 1)
-            <li><a class="item-menu" tabindex="-1" href="{{route('personas.index')}}">Terceros</a></li>
                   <li><a class="item-menu" tabindex="-1" href="{{route('audits.index')}}">Logs</a></li>
                @endif
          </ul>

@@ -78,7 +78,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="fontRubEgr">Seleccione el rubro que será afectado <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <select name="fontRubEgr" id="fontRubEgr" class="form-control" required onchange="rubroEgr(this.value)">
+                                            <select name="fontRubEgr" id="fontRubEgr" style="width: 100%" class="selectRubroCC" required onchange="rubroEgr(this.value)">
                                                 <option value="0">Seleccione el Rubro de Egresos</option>
                                                 @foreach($rubrosEgresos as $rubro)
                                                     <option value="{{ $rubro['id'] }}">{{ $rubro['code'] }}
@@ -93,7 +93,7 @@
                                     <div class="form-group">
                                         <label class="col-lg-4 col-form-label text-right" for="fontRubEgr">Seleccione la actividad que será afectada <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <select name="activCC" id="activCC" class="form-control" required onchange="actividadFind(this.value)">
+                                            <select name="activCC" id="activCC" style="width: 100%" class="selectActivCC" required onchange="actividadFind(this.value)">
                                                 <option value="0">Seleccione la actividad</option>
                                                 @foreach($bpins as $bpin)
                                                     <option value="{{ $bpin['id'] }}">{{ $bpin->bpin->cod_actividad }} - {{ $bpin->bpin->actividad }}
@@ -116,7 +116,7 @@
                                         <br>
                                         <label class="col-lg-4 col-form-label text-right" for="fontRubCred">Seleccione el rubro que recibira el credito <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <select name="fontRubCred" id="fontRubCred" class="form-control" required onchange="rubroCred(this.value)">
+                                            <select name="fontRubCred" id="fontRubCred" style="width: 100%" class="selectRubCred" required onchange="rubroCred(this.value)">
                                                 <option value="0">Seleccione el Rubro de Egresos</option>
                                                 @foreach($rubrosEgresosAll as $rubro)
                                                     <option value="{{ $rubro['id'] }}">{{ $rubro['code'] }}
@@ -132,7 +132,7 @@
                                         <br>
                                         <label class="col-lg-4 col-form-label text-right" for="fontRubCred">Seleccione la actividad que recibira el credito <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <select name="actividadCred" id="actividadCred" class="form-control" required onchange="rubroCred(this.value)">
+                                            <select name="actividadCred" id="actividadCred" style="width: 100%" class="selectActivCred" required onchange="rubroCred(this.value)">
                                                 <option value="0">Seleccione la Actividad</option>
                                                 @foreach($bpinsAll as $bpin)
                                                     <option value="{{ $bpin['id'] }}">{{ $bpin->bpin->cod_actividad }} - {{ $bpin->bpin->actividad }}
@@ -162,6 +162,12 @@
 @stop
 @section('js')
     <script>
+
+        $('.selectActivCC').select2();
+        $('.selectActivCred').select2();
+        $('.selectRubroCC').select2();
+        $('.selectRubCred').select2();
+
         var año = @json($año);
         function presupuesto(value)
         {

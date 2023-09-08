@@ -55,6 +55,7 @@
                         <table class="table table-bordered" id="tabla">
                             <thead>
                             <th class="text-center">Concepto</th>
+                            <th class="text-center">Valor</th>
                             <th class="text-center">%</th>
                             <th class="text-center">Base</th>
                             <th class="text-center">Valor</th>
@@ -89,12 +90,14 @@
                                         @endforeach
                                     </select>
                                 </td>
+                                <td><input class="form-control" type="number" id="valOP" name="valOP" style="text-align:center" onchange="valueLlenar(this.value)"
+                                    value="{{ $ordenPago->valor }}"></td>
                                 <td>
-                                    <input type="number" id="percent" name="porcent" style="text-align:center" disabled>
+                                    <input class="form-control" type="number" id="percent" name="porcent" style="text-align:center" disabled>
                                 </td>
-                                <td><input type="number" id="base" name="base" disabled style="text-align:center"></td>
+                                <td><input class="form-control" type="number" id="base" name="base" style="text-align:center" disabled></td>
                                 <td>
-                                    <input type="number" id="valor" style="text-align:center" disabled>
+                                    <input class="form-control" type="number" id="valor" style="text-align:center" disabled>
                                     <input type="hidden" id="valor2" name="valor" value="">
                                 </td>
                             </tr>
@@ -216,6 +219,7 @@
 @stop
 @section('js')
     <script>
+
         var Data = {
             @foreach($retenF as $key => $data)
                 @if($ordenPago->valor >= $data->base)
@@ -229,6 +233,16 @@
                 @endif
             @endforeach
         };
+
+        function valueLlenar(valor){
+
+            var percent = document.getElementById('percent').value;
+            var valueMul = valor * percent;
+            var tot = valueMul/100;
+
+            document.getElementById('valor').value = tot;
+            document.getElementById('valor2').value = tot;
+        }
 
         function llenar(){
             var select = document.getElementById('reten');

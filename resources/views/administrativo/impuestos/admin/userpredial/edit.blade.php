@@ -145,20 +145,20 @@
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="a2023">2023 <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" min="1" required name="a2023" id="a2023" style="text-align:center" value="{{ $user->a2023 }}">
+                                            <input type="number" class="form-control" min="0" required name="a2023" id="a2023" style="text-align:center" value="{{ $user->a2023 }}">
                                         </div>
                                     </div>
                                     <br>
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="a2021">2021 <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" min="1" required name="a2021" id="a2021" style="text-align:center" value="{{ $user->a2021 }}">
+                                            <input type="number" class="form-control" min="0" required name="a2021" id="a2021" style="text-align:center" value="{{ $user->a2021 }}">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="a2019">2019 <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" min="1" required name="a2019" id="a2019" style="text-align:center" value="{{ $user->a2019 }}">
+                                            <input type="number" class="form-control" min="0" required name="a2019" id="a2019" style="text-align:center" value="{{ $user->a2019 }}">
                                         </div>
                                     </div>
                                 </div>
@@ -166,20 +166,20 @@
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="a2022">2022 <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" min="1" required name="a2022" id="a2022" style="text-align:center" value="{{ $user->a2022 }}">
+                                            <input type="number" class="form-control" min="0" required name="a2022" id="a2022" style="text-align:center" value="{{ $user->a2022 }}">
                                         </div>
                                     </div>
                                     <br>
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="a2020">2020 <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" min="1" required name="a2020" id="a2020" style="text-align:center" value="{{ $user->a2020 }}">
+                                            <input type="number" class="form-control" min="0" required name="a2020" id="a2020" style="text-align:center" value="{{ $user->a2020 }}">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="a2018">2018 <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" min="1" required name="a2018" id="a2018" style="text-align:center" value="{{ $user->a2018 }}">
+                                            <input type="number" class="form-control" min="0" required name="a2018" id="a2018" style="text-align:center" value="{{ $user->a2018 }}">
                                         </div>
                                     </div>
                                 </div>
