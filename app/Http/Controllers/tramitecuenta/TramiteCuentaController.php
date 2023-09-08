@@ -5,6 +5,7 @@ namespace App\Http\Controllers\tramitecuenta;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\TramiteCuenta;
+use App\TramiteCuentaLog;
 use App\RequisitoChequeo;
 use App\ChequeoCuenta;
 use App\AprobadorUser;
@@ -119,11 +120,14 @@ class TramiteCuentaController extends Controller
     }
 
     public function aprobadoresCuenta($cuenta){
+        /*
         if($cuenta->tipo_contrato == 'Viaticos' || $cuenta->tipo_contrato == 'Nomina' || $cuenta->tipo_contrato == 'Pago de Servicios'){
             $aprobadores = AprobadorUser::where('grupo_aprobador_id', 1)->get();
         }else{
             $aprobadores = AprobadorUser::where('grupo_aprobador_id', 2)->get();
         }
+        */
+        $aprobadores = AprobadorUser::where('grupo_aprobador_id', 1)->get();
         foreach ($aprobadores as $value) {
             $create = new AprobadorCuenta;
             $create->aprobado_user_id = $value->id;

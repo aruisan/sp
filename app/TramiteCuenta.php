@@ -9,7 +9,7 @@ class TramiteCuenta extends Model
 
     //relaciones
     public function beneficiario(){
-        return $this->belongsTo('App\Model\Persona', 'beneficiario_id');
+        return $this->belongsTo(Persona::class, 'beneficiario_id');
     }
 
     public function logs(){
