@@ -99,6 +99,8 @@ class feedPresupuesto extends Command
                 $newData->fuente = $data['fuente'];
                 $newData->cod_producto = $data['codProd'];
                 $newData->cod_indicador = $data['codIndProd'];
+                $multi = intval($data['cdps']) * 100;
+                $newData->ejec = intval($multi) / intval($data['presupuesto_inicial']);
                 $newData->save();
             }
         }
