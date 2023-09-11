@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Model\Administrativo\Registro\Registro;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -48,7 +49,9 @@ class feedPresupuesto extends Command
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
 
-        dd($vigens);
+        $registros = Registro::where('secretaria_e', '3')->where('jefe_e','3')->orderBy('id', 'DESC')->get();;
+
+        dd($registros);
         if ($vigens){
             $findSnap = PresupuestoSnap::where('vigencia_id', $vigens->id)->where('mes', $mesActual)
                 ->where('año', $añoActual)->where('tipo','EGRESOS')->first();
