@@ -68,7 +68,7 @@ class OrdenPagosDescuentosController extends Controller
             $valor = $request->valor;
             $nombre = $retenFuente->concepto;
             $porcentaje = $retenFuente->tarifa;
-            $base = $retenFuente->base;
+            $base = $request->valOP;
 
             $ordenPagoDes = new OrdenPagosDescuentos();
             $ordenPagoDes->nombre = $nombre;

@@ -111,7 +111,13 @@
 						@elseif($PagosDesc->retencion_fuente_id != null)
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
 							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
-							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
+							<td>
+								@if($PagosDesc->retencion_fuente_id == 42)
+									$ <?php echo number_format($PagosDesc->base,0);?>
+								@else
+									$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?>
+								@endif
+							</td>
 							<td>{{ $PagosDesc->descuento_retencion->tarifa }}</td>
 						@else
 							<td>{{ $PagosDesc->puc->code}}</td>
