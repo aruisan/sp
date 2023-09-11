@@ -49,7 +49,10 @@ class feedPresupuesto extends Command
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
 
-        $registros = Registro::where('secretaria_e', '3')->where('jefe_e','3')->orderBy('id', 'DESC')->get();;
+        $registros = Registro::where('secretaria_e', '3')->where('jefe_e','3')->orderBy('id', 'DESC')->get();
+        foreach ($registros as $registro){
+            dd($registro, $registro->ordenPagos);
+        }
 
         dd($registros);
         if ($vigens){
