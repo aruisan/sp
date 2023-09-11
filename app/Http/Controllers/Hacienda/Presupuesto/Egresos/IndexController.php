@@ -5,28 +5,13 @@ namespace App\Http\Controllers\Hacienda\Presupuesto\Egresos;
 use App\bpinVigencias;
 use App\Http\Controllers\Controller;
 use App\BPin;
-use App\Model\Admin\DependenciaRubroFont;
-use App\Model\Administrativo\Cdp\BpinCdpValor;
-use App\Model\Administrativo\Cdp\Cdp;
-use App\Model\Administrativo\Cdp\RubrosCdpValor;
-use App\Model\Administrativo\OrdenPago\OrdenPagos;
-use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
-use App\Model\Administrativo\Pago\Pagos;
-use App\Model\Administrativo\Registro\CdpsRegistroValor;
-use App\Model\Administrativo\Registro\Registro;
-use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
-use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\Rubro;
-use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
-use App\Model\Hacienda\Presupuesto\SourceFunding;
-use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Session;
 
 class IndexController extends Controller

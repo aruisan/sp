@@ -47,6 +47,8 @@ class feedPresupuesto extends Command
         $mesActual = Carbon::now()->month;
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
+
+        dd($vigens);
         if ($vigens){
             $findSnap = PresupuestoSnap::where('vigencia_id', $vigens->id)->where('mes', $mesActual)
                 ->where('año', $añoActual)->where('tipo','EGRESOS')->first();
