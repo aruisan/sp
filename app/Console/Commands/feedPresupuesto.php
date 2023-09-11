@@ -52,7 +52,7 @@ class feedPresupuesto extends Command
         $registros = Registro::where('secretaria_e', '3')->where('jefe_e','3')->orderBy('id', 'DESC')->get();
         foreach ($registros as $registro){
             if ($registro->ordenPagos->count() > 0){
-                dd($registro, $registro->ordenPagos->where('estado','1'));
+                dd($registro, $registro->ordenPagos->where('estado','1')->sum('valor'));
             }
         }
 
