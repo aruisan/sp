@@ -52,11 +52,11 @@
     <tbody>
     @foreach($predial as $item)
         <tr>
-            <td>{{ $item->numCatastral}}</td>
-            <td>{{ $item->contribuyente}}</td>
-            <td>{{ $item->dir_predio}}</td>
-            <td>{{ $item->email}}</td>
-            <td>{{ $item->valorDeuda}}</td>
+            <td>{{ $item['numCatastral']}}</td>
+            <td>{{ $item['contribuyente']}}</td>
+            <td>{{ $item['dir_predio']}}</td>
+            <td>{{ $item['email']}}</td>
+            <td>{{ $item['valorDeuda']}}</td>
         </tr>
     @endforeach
     </tbody>
