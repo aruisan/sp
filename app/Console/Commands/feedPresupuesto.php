@@ -54,7 +54,7 @@ class feedPresupuesto extends Command
             if ($registro->ordenPagos->count() > 0){
                 $disp = $registro->valor - $registro->ordenPagos->where('estado','1')->sum('valor');
                 if ($disp != $registro->saldo){
-                    echo($registro->id.'saldo:'.$disp.'----');
+                    echo($registro->id.'---saldo:'.$disp.'----');
                 }
             }
         }
