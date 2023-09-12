@@ -53,13 +53,10 @@ class feedPresupuesto extends Command
         foreach ($registros as $registro){
             if ($registro->ordenPagos->count() > 0){
                 $disp = $registro->valor - $registro->ordenPagos->where('estado','1')->sum('valor');
-                if ($disp != $registro->saldo){
-                    echo($registro->id.'---saldo:'.$disp.'----');
-                }
+                if ($disp != $registro->saldo) //echo($registro->id.'---saldo:'.$disp.'----');
             }
         }
 
-        dd($registros);
         if ($vigens){
             $findSnap = PresupuestoSnap::where('vigencia_id', $vigens->id)->where('mes', $mesActual)
                 ->where('año', $añoActual)->where('tipo','EGRESOS')->first();
