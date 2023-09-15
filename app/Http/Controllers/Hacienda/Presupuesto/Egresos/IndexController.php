@@ -80,60 +80,34 @@ class IndexController extends Controller
 
     public function getPrepSaved(Request $request){
 
-        $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->get();
+        if (auth()->user()->dependencia_id == 5){
+            $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->where('name_dep','Concejo')->get();
+        } else $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->get();
+
         foreach ($prepSaved as $item){
-            if (auth()->user()->dependencia_id == 5 ){
-                if ($item->name_dep == "Concejo"){
-                    $rubro = Rubro::where('vigencia_id', $request->prepSaved['vigencia_id'])->where('cod', $item->rubro)->first();
-                    if ($rubro) $item->rubroLink = '<a href="presupuesto/rubro/'.$rubro->id.'">'.$item->rubro.'</a>';
-                    else $item->rubroLink = $item->rubro;
+            $rubro = Rubro::where('vigencia_id', $request->prepSaved['vigencia_id'])->where('cod', $item->rubro)->first();
+            if ($rubro) $item->rubroLink = '<a href="presupuesto/rubro/'.$rubro->id.'">'.$item->rubro.'</a>';
+            else $item->rubroLink = $item->rubro;
 
-                    if ($item->name_act != ""){
-                        $bpin = BPin::where('cod_actividad', $item->code_act)->first();
-                        if ($bpin) $item->code_act = '<a href="presupuesto/actividad/'.$bpin->id.'/'.$request->prepSaved['vigencia_id'].'">'.$item->code_act.'</a>';
-                    }
-
-                    $item->p_inicial = '$'.number_format($item->p_inicial, 0);
-                    $item->adicion = '$'.number_format($item->adicion, 0);
-                    $item->reduccion = '$'.number_format($item->reduccion, 0);
-                    $item->credito = '$'.number_format($item->credito, 0);
-                    $item->ccredito = '$'.number_format($item->ccredito, 0);
-                    $item->p_def = '$'.number_format($item->p_def, 0);
-                    $item->cdps = '$'.number_format($item->cdps, 0);
-                    $item->rps = '$'.number_format($item->rps, 0);
-                    $item->saldo_disp = '$'.number_format($item->saldo_disp, 0);
-                    $item->saldo_cdps = '$'.number_format($item->saldo_cdps, 0);
-                    $item->ops = '$'.number_format($item->ops, 0);
-                    $item->pagos = '$'.number_format($item->pagos, 0);
-                    $item->cuentas_pagar = '$'.number_format($item->cuentas_pagar, 0);
-                    $item->reservas = '$'.number_format($item->reservas, 0);
-                }
-
-            } else {
-                $rubro = Rubro::where('vigencia_id', $request->prepSaved['vigencia_id'])->where('cod', $item->rubro)->first();
-                if ($rubro) $item->rubroLink = '<a href="presupuesto/rubro/'.$rubro->id.'">'.$item->rubro.'</a>';
-                else $item->rubroLink = $item->rubro;
-
-                if ($item->name_act != ""){
-                    $bpin = BPin::where('cod_actividad', $item->code_act)->first();
-                    if ($bpin) $item->code_act = '<a href="presupuesto/actividad/'.$bpin->id.'/'.$request->prepSaved['vigencia_id'].'">'.$item->code_act.'</a>';
-                }
-
-                $item->p_inicial = '$'.number_format($item->p_inicial, 0);
-                $item->adicion = '$'.number_format($item->adicion, 0);
-                $item->reduccion = '$'.number_format($item->reduccion, 0);
-                $item->credito = '$'.number_format($item->credito, 0);
-                $item->ccredito = '$'.number_format($item->ccredito, 0);
-                $item->p_def = '$'.number_format($item->p_def, 0);
-                $item->cdps = '$'.number_format($item->cdps, 0);
-                $item->rps = '$'.number_format($item->rps, 0);
-                $item->saldo_disp = '$'.number_format($item->saldo_disp, 0);
-                $item->saldo_cdps = '$'.number_format($item->saldo_cdps, 0);
-                $item->ops = '$'.number_format($item->ops, 0);
-                $item->pagos = '$'.number_format($item->pagos, 0);
-                $item->cuentas_pagar = '$'.number_format($item->cuentas_pagar, 0);
-                $item->reservas = '$'.number_format($item->reservas, 0);
+            if ($item->name_act != ""){
+                $bpin = BPin::where('cod_actividad', $item->code_act)->first();
+                if ($bpin) $item->code_act = '<a href="presupuesto/actividad/'.$bpin->id.'/'.$request->prepSaved['vigencia_id'].'">'.$item->code_act.'</a>';
             }
+
+            $item->p_inicial = '$'.number_format($item->p_inicial, 0);
+            $item->adicion = '$'.number_format($item->adicion, 0);
+            $item->reduccion = '$'.number_format($item->reduccion, 0);
+            $item->credito = '$'.number_format($item->credito, 0);
+            $item->ccredito = '$'.number_format($item->ccredito, 0);
+            $item->p_def = '$'.number_format($item->p_def, 0);
+            $item->cdps = '$'.number_format($item->cdps, 0);
+            $item->rps = '$'.number_format($item->rps, 0);
+            $item->saldo_disp = '$'.number_format($item->saldo_disp, 0);
+            $item->saldo_cdps = '$'.number_format($item->saldo_cdps, 0);
+            $item->ops = '$'.number_format($item->ops, 0);
+            $item->pagos = '$'.number_format($item->pagos, 0);
+            $item->cuentas_pagar = '$'.number_format($item->cuentas_pagar, 0);
+            $item->reservas = '$'.number_format($item->reservas, 0);
         }
         return $prepSaved;
 
