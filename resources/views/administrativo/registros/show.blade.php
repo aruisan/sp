@@ -394,7 +394,7 @@
                                                                 <input type="hidden" name="rubros_cdp_id[]" value="{{ $cdpsRegistroData->id }}">
                                                                 @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
                                                                 <li style="list-style-type: none;">
-                                                                    Dinero Disponible del Rubro {{ $RCV->fontsRubro->rubro->name }} :
+                                                                    Dinero Disponible del Rubro {{ $RCV->fontsRubro->rubro->cod }} {{ $RCV->fontsRubro->rubro->name }} :
                                                                     $<?php echo number_format( $RCV->valor_disp,0) ?>
                                                                 </li>
                                                             </div>
