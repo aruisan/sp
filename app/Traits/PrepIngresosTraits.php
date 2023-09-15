@@ -472,6 +472,7 @@ Class PrepIngresosTraits
 
                         $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
+                        if ($data->code == '1.1.01.01.200') dd("SECOND",$data, $compIngValue);
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                             'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
@@ -518,7 +519,7 @@ Class PrepIngresosTraits
 
                                     if (isset($compIngValueArray)) $compIngValue = array_sum($compIngValueArray);
                                     else $compIngValue = 0;
-
+                                    if ($data->code == '1.1.01.01.200') dd("third",$data, $compIngValue);
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name,
                                         'inicial' => $font->valor, 'adicion' => $adicion, 'reduccion' => $reduccion, 'anulados' => 0,
                                         'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,'hijo' => $data->hijo,
@@ -575,7 +576,7 @@ Class PrepIngresosTraits
                                             unset($descOPs);
                                         }
                                     }
-
+                                    if ($data->code == '1.1.01.01.200') dd("FOURTH",$data, $compIngValue);
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
                                         'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
