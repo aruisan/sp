@@ -401,7 +401,7 @@
                                                         @endif
                                                         <div class="col-lg-6">
                                                             @if($registro->secretaria_e == "3")
-                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
+                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->cod }} {{ $RCV->fontsRubro->rubro->name }}:
                                                                 @if($cdpsRegistroData->cdpRegistroValor->count() != 0)
                                                                     @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
                                                                         @php($id_rubrosCdp = $cdpsRegistroData->id )
@@ -425,7 +425,7 @@
                                                                     <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$RCV->valor_disp}}" max="{{  $RCV->valor_disp }}" style="text-align: center">
                                                                 @endif
                                                             @elseif($RCV->valor_disp > 0)
-                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
+                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->cod }} {{ $RCV->fontsRubro->rubro->name }}:
                                                                 @if($cdpsRegistroData->cdpRegistroValor->count() != 0 )
                                                                     @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
                                                                         @php($id_rubrosCdp = $cdpsRegistroData->id )

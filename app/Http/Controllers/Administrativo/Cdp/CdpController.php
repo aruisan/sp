@@ -259,10 +259,18 @@ class CdpController extends Controller
         foreach ($roles as $role) $rol= $role->id;
         $cdp = Cdp::findOrFail($id);
         $all_rubros = Rubro::where('vigencia_id',$vigencia)->get();
+        $depRubroFont = DependenciaRubroFont::where('vigencia_id',$vigencia)->get();
+        foreach ($depRubroFont as $depRubF){
+            if ($depRubF->saldo > 0){
+                $valores[] = collect(['id_rubro' => $depRubF->fontRubro->rubro->id, 'name' =>  $depRubF->fontRubro->rubro->name,
+                    'dinero' => $depRubF->saldo, 'dependencia' => $depRubF->dependencia->name, 'code' => $depRubF->fontRubro->rubro->cod,
+                    'codeFont' => $depRubF->fontRubro->sourceFunding->code, 'font' => $depRubF->fontRubro->sourceFunding->description]);
+            }
+        }
         foreach ($all_rubros as $rubro){
             if ($rubro->fontsRubro->sum('valor_disp') != 0){
                 $valFuente = FontsRubro::where('rubro_id', $rubro->id)->sum('valor_disp');
-                $valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
+                //$valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
                 if ($rubro->tipo == "Funcionamiento") $rubros[] = collect(['id' => $rubro->id, 'name' => $rubro->name]);
             }
         }
