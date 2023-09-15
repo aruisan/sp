@@ -44,6 +44,7 @@ Class PrepIngresosTraits
                 else  $reducciones = RubrosMov::where('font_vigencia_id', $vigencia->id)->where('movimiento','3')->get();
 
                 $definitivo = $adiciones->sum('valor') - $reducciones->sum('valor') + $vigencia->presupuesto_inicial;
+                if ($data->code == '1.1.01.01.200') dd("FIRST",$data, $compIngValue);
                 $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $vigencia->presupuesto_inicial, 'adicion' => $adiciones->sum('valor'), 'reduccion' => $reducciones->sum('valor'),
                     'anulados' => 0, 'recaudado' => array_sum($totComIng) , 'porRecaudar' => $definitivo - array_sum($totComIng), 'definitivo' => $definitivo,
                     'hijo' => 0, 'cod_fuente' => '', 'name_fuente' => '']);
@@ -583,7 +584,7 @@ Class PrepIngresosTraits
                                 }
 
                             }
-                        } else {
+                            } else {
                             //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
                             foreach ($rubro as $rb){
                                 //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
@@ -630,6 +631,7 @@ Class PrepIngresosTraits
                                 elseif (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                 $sum[] = $rb->fontsRubro->sum('valor');
                                 $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
+                                if ($data->code == '1.1.01.01.200') dd($data, $compIngValue);
                                 $prepIng[] = collect(['id' => $rb->id, 'code' => $data->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                     'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
                                     'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rb->fontsRubro[0]->sourceFunding->description]);
