@@ -113,7 +113,7 @@ Class PrepIngresosTraits
                                                             }
                                                             if (isset($descOPs)) {
                                                                 $civ[] = array_sum($descOPs);
-                                                                if (array_sum($descOPs) == 996370884) dd("First",$descOPs);
+                                                                if (array_sum($descOPs) == 996370884) dd("First",$descOPs, $rubro[0]);
                                                                 unset($descOPs);
                                                             }
                                                         }
