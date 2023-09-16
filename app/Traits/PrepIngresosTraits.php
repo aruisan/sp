@@ -113,7 +113,7 @@ Class PrepIngresosTraits
                                                             }
                                                             if (isset($descOPs)) {
                                                                 $civ[] = array_sum($descOPs);
-                                                                if (array_sum($descOPs) == 996370884) dd("First",$descOPs, $rubro[0]);
+                                                                //if (array_sum($descOPs) == 996370884) dd("First",$descOPs, $rubro[0]);
                                                                 unset($descOPs);
                                                             }
                                                         }
@@ -122,6 +122,7 @@ Class PrepIngresosTraits
                                                         if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                         $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                        unset($OPDes);
 
                                                     } else {
                                                         foreach ($rubro as $rb){
@@ -215,7 +216,7 @@ Class PrepIngresosTraits
                                                         }
                                                         if (isset($descOPs)) {
                                                             $civ[] = array_sum($descOPs);
-                                                            if (array_sum($descOPs) == 996370884) dd("Second",$descOPs);
+                                                            //if (array_sum($descOPs) == 996370884) dd("Second",$descOPs);
                                                             unset($descOPs);
                                                         }
                                                     }
@@ -224,6 +225,7 @@ Class PrepIngresosTraits
                                                     if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                     $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                    unset($OPDes);
                                                 } else {
                                                     foreach ($rubro as $rb){
 
@@ -316,7 +318,7 @@ Class PrepIngresosTraits
                                                 }
                                                 if (isset($descOPs)) {
                                                     $civ[] = array_sum($descOPs);
-                                                    if (array_sum($descOPs) == 996370884) dd("third",$descOPs);
+                                                    //if (array_sum($descOPs) == 996370884) dd("third",$descOPs);
                                                     unset($descOPs);
                                                 }
                                             }
@@ -325,6 +327,7 @@ Class PrepIngresosTraits
                                             if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                             $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                            unset($OPDes);
                                         } else {
                                             foreach ($rubro as $rb){
                                                 //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
@@ -415,7 +418,7 @@ Class PrepIngresosTraits
                                         }
                                         if (isset($descOPs)) {
                                             $civ[] = array_sum($descOPs);
-                                            if (array_sum($descOPs) == 996370884) dd("fourth",$descOPs);
+                                            //if (array_sum($descOPs) == 996370884) dd("fourth",$descOPs);
                                             unset($descOPs);
                                         }
                                     }
@@ -425,6 +428,7 @@ Class PrepIngresosTraits
 
                                     // VALIDACION PARA EL VALOR INICIAL DE LOS RUBROS PADRES
                                     $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                    unset($OPDes);
                                 } else {
                                     foreach ($rubro as $rb){
                                         //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
@@ -577,7 +581,7 @@ Class PrepIngresosTraits
                                         }
                                         if (isset($descOPs)) {
                                             $civ[] = array_sum($descOPs);
-                                            if (array_sum($descOPs) == 996370884) dd("five",$descOPs);
+                                            //if (array_sum($descOPs) == 996370884) dd("five",$descOPs);
                                             unset($descOPs);
                                         }
                                     }
@@ -587,6 +591,7 @@ Class PrepIngresosTraits
                                         'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
 
                                     if (isset($compIngValueArray)) unset($compIngValueArray);
+                                    unset($OPDes);
                                 }
 
                             }
