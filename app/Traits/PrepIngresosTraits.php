@@ -113,6 +113,7 @@ Class PrepIngresosTraits
                                                             }
                                                             if (isset($descOPs)) {
                                                                 $civ[] = array_sum($descOPs);
+                                                                if (array_sum($descOPs) == 996370884) dd("First",$descOPs);
                                                                 unset($descOPs);
                                                             }
                                                         }
@@ -214,6 +215,7 @@ Class PrepIngresosTraits
                                                         }
                                                         if (isset($descOPs)) {
                                                             $civ[] = array_sum($descOPs);
+                                                            if (array_sum($descOPs) == 996370884) dd("Second",$descOPs);
                                                             unset($descOPs);
                                                         }
                                                     }
@@ -314,6 +316,7 @@ Class PrepIngresosTraits
                                                 }
                                                 if (isset($descOPs)) {
                                                     $civ[] = array_sum($descOPs);
+                                                    if (array_sum($descOPs) == 996370884) dd("third",$descOPs);
                                                     unset($descOPs);
                                                 }
                                             }
@@ -412,6 +415,7 @@ Class PrepIngresosTraits
                                         }
                                         if (isset($descOPs)) {
                                             $civ[] = array_sum($descOPs);
+                                            if (array_sum($descOPs) == 996370884) dd("fourth",$descOPs);
                                             unset($descOPs);
                                         }
                                     }
@@ -573,6 +577,7 @@ Class PrepIngresosTraits
                                         }
                                         if (isset($descOPs)) {
                                             $civ[] = array_sum($descOPs);
+                                            if (array_sum($descOPs) == 996370884) dd("five",$descOPs);
                                             unset($descOPs);
                                         }
                                     }
