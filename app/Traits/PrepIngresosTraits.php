@@ -472,7 +472,7 @@ Class PrepIngresosTraits
 
                         $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
-                        if ($data->code == '1.1.01.01.200') dd("SECOND",$data, $compIngValue);
+                        if ($data->code == '1.1.01.01.200') dd("SECOND", $compIngValue, $civ);
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                             'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
