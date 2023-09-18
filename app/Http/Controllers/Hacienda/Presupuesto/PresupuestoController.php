@@ -58,7 +58,7 @@ class PresupuestoController extends Controller
         } else {
             $V = $prepSaved->vigencia_id;
             $prepIng = PresupuestoSnapData::where('pre_snap_id', $prepSaved->id)->first();
-            $fechaData = Carbon::parse($prepIng->created_at)->subHours(5);
+            $fechaData = Carbon::parse($prepIng->created_at);
             $comprobanteIng = ComprobanteIngresos::where('vigencia_id',$prepSaved->vigencia_id)->where('estado','3')->get();
 
             //CODE CONTRACTUALES
