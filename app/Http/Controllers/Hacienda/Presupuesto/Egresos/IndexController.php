@@ -59,16 +59,14 @@ class IndexController extends Controller
         } else{
             $V = $prepSaved->vigencia_id;
             $dataPrepSaved = PresupuestoSnapData::where('pre_snap_id', $prepSaved->id)->first();
-            $fechaData = Carbon::parse($dataPrepSaved->created_at)->subHours(5);
+            $fechaData = Carbon::parse($dataPrepSaved->created_at);
             $codeCon = CodeContractuales::all();
 
             foreach ($bpins as $bpin){
                 $bpin['rubro'] = "No";
                 if (count($bpin->rubroFind) > 0) {
                     foreach ($bpin->rubroFind as $rub){
-                        if ($rub->vigencia_id == $V){
-                            $bpin['rubro'] = $rub->dep_rubro_id;
-                        }
+                        if ($rub->vigencia_id == $V) $bpin['rubro'] = $rub->dep_rubro_id;
                     }
                 }
             }
