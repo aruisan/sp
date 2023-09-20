@@ -482,7 +482,7 @@ Class PrepIngresosTraits
                         $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
                         if (!isset($descFromOPs)) $descFromOPs[] = 0;
-                        if ($data->code == '1.1.01.02.200') dd("SECOND", $compIngValue, $civ, $descFromOPs);
+                        //if ($data->code == '1.1.01.02.200') dd("SECOND", $compIngValue, $civ, $descFromOPs);
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                             'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
@@ -529,7 +529,7 @@ Class PrepIngresosTraits
 
                                     if (isset($compIngValueArray)) $compIngValue = array_sum($compIngValueArray);
                                     else $compIngValue = 0;
-                                    //if ($data->code == '1.1.01.02.200') dd("third",$data, $compIngValue, $compIngValueArray);
+                                    if ($data->code == '1.1.01.02.200.01') dd("THIRD",$data, $compIngValue, $compIngValueArray, $civ, array_sum($civ), $rubro[0]);
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name,
                                         'inicial' => $font->valor, 'adicion' => $adicion, 'reduccion' => $reduccion, 'anulados' => 0,
                                         'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,'hijo' => $data->hijo,
@@ -587,7 +587,7 @@ Class PrepIngresosTraits
                                             unset($descOPs);
                                         }
                                     }
-                                    //if ($data->code == '1.1.01.02.200') dd("FOURTH",$data, $compIngValue, $compIngValueArray);
+                                    if ($data->code == '1.1.01.02.200.01') dd("FOURTH",$data, $compIngValue, $compIngValueArray, $civ, array_sum($civ), $rubro[0]);
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
                                         'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
@@ -644,7 +644,7 @@ Class PrepIngresosTraits
                                 elseif (count($rb->compIng) > 0) $compIngValue = $rb->compIng->sum('valor');
                                 $sum[] = $rb->fontsRubro->sum('valor');
                                 $definitivo = $adicionesTot - $reduccionesTot + $rb->fontsRubro->sum('valor');
-                                //if ($data->code == '1.1.01.01.200') dd($data, $compIngValue);
+                                if ($data->code == '1.1.01.02.200.01') dd("FIVE",$data, $compIngValue, $compIngValueArray, $civ, array_sum($civ), $rubro[0]);
                                 $prepIng[] = collect(['id' => $rb->id, 'code' => $data->code, 'name' => $rb->name, 'inicial' => $rb->fontsRubro->sum('valor'), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                                     'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo  - $compIngValue, 'definitivo' => $definitivo,
                                     'hijo' => $data->hijo, 'cod_fuente' => $rb->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rb->fontsRubro[0]->sourceFunding->description]);
