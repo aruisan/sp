@@ -418,6 +418,7 @@ Class PrepIngresosTraits
                                         }
                                         if (isset($descOPs)) {
                                             $civ[] = array_sum($descOPs);
+                                            $descFromOPs[] = array_sum($descOPs);
                                             //if (array_sum($descOPs) == 996370884) dd("fourth",$descOPs);
                                             unset($descOPs);
                                         }
@@ -480,7 +481,8 @@ Class PrepIngresosTraits
 
                         $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
-                        if ($data->code == '1.1.01.02.200') dd("SECOND", $compIngValue, $civ, $prepIng);
+                        if (!isset($descFromOPs)) $descFromOPs[] = 0;
+                        if ($data->code == '1.1.01.02.200') dd("SECOND", $compIngValue, $civ, $prepIng, $descFromOPs);
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                             'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
