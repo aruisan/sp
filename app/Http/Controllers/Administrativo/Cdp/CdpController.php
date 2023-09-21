@@ -437,11 +437,12 @@ class CdpController extends Controller
                 foreach ($update->rubrosCdp as $data){
                     foreach ($data->rubros->fontsRubro as $fuentesRubro){
                         foreach($fuentesRubro->dependenciaFont as $dep){
-                            if($dep->dependencia_id == auth()->user()->dependencia_id){
-                                if ($dep->saldo < $data->rubrosCdpValor->first()->valor){
-                                    Session::flash('success','El CDP enviado tiene asignado un valor superior al
-                                    disponible en el rubro.');
-                                    return back();
+                            foreach ($data->rubrosCdpValor as $rubCDPValue){
+                                if($dep->id == $rubCDPValue->fontsDep_id){
+                                    if ($dep->saldo < $rubCDPValue->valor){
+                                        Session::flash('error','El CDP enviado tiene asignado un valor superior al disponible en el rubro.');
+                                        return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
+                                    }
                                 }
                             }
                         }
