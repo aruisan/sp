@@ -111,6 +111,13 @@
 			@endforeach
 		</h4>
 	</div>
+		<div style="margin-top: 10px; font-size: 17px;">
+			<center>
+				<img src="http://presupuesto.providenciaislas.com.co/img/firmas/JIM_ANDERSON_HENRY_BENT.png"  height="99"><br>
+				JIM ANDERSON HENRY BENT<br>
+				JEFE DE PRESUPUESTO
+			</center>
+		</div>
 
 @stop
 		
