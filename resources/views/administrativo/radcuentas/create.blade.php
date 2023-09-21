@@ -1,32 +1,50 @@
 @extends('layouts.dashboard')
-@section('titulo')
-    Radicación de Cuentas
-@stop
-@section('sidebar')
-    <li>
-        <a href="{{ url('/administrativo/radCuentas/'.$id) }}" class="btn btn-success">
-            <span class="hide-menu"><i class="fa fa-home"></i></span></a>
-    </li>
-@stop
+@section('titulo') Radicación de Cuentas @stop
+@section('sidebar')@stop
 @section('content')
     <div class="col-md-12 align-self-center">
-        <div class="row justify-content-center">
-            <br>
-            <center><h2 class="tituloOrden">Nueva Radicación de Cuenta</h2></center>
-            <div class="form-validation">
-                <form class="form-valide" action="{{url('/administrativo/radCuentas')}}" method="POST" enctype="multipart/form-data">
-                    <hr>
-                    {{ csrf_field() }}
-                    <div class="col-md-12 text-center">
-                        <div class="table-responsive">
-                            <div class="box">
-                                <div class="box-header">
-                                    <h3 class="box-title">Seleccione el registro correspondiente:</h3>
-                                </div><!-- /.box-header -->
-                                <div class="box-body">
-                            @if(count($registros) >= 1)
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <div class="breadcrumb text-center"><strong><h4><b>NUEVA RADICACIÓN DE CUENTA</b></h4></strong></div>
+        <div class="col-lg-12">
+            <ul class="nav nav-pills">
+                <li class="nav-item regresar">
+                    <a class="nav-link "  href="{{ url('/administrativo/radCuentas/'.$id) }}"><i class="fa fa-home"></i></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#nuevo" >NUEVA RADICACIÓN</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="form-validation">
+                    <form class="form-valide" action="{{url('/administrativo/radCuentas')}}" method="POST" enctype="multipart/form-data">
+                        <hr>
+                        {{ csrf_field() }}
+                        <div class="text-center" id="cargando" style="display: none">
+                            <h4>Buscando informacion del tercero...</h4>
+                        </div>
+                        <div class="text-center" id="cargandoRP" style="display: none">
+                            <h4>Buscando informacion del registro...</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 align-self-center" id="FindTercero">
+                                <div class="form-group">
+                                    <label class="col-lg-12 col-form-label text-center" for="persona_id">Seleccione el tercero: <span class="text-danger">*</span></label>
+                                    <div class="col-lg-12 text-center">
+                                        <select class="select-tercero" name="persona_id" onchange="changeTer(this.value)">
+                                            <option value="0">Seleccione el tercero</option>
+                                            @foreach($personas as $persona)
+                                                <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-center" id="tableRPs" style="display: none; background-color: white">
+                            <h5><b>De click al registro a radicar.</b></h5>
+                            <div class="col-md-12 align-self-center">
                                 <br>
-                                <table class="display" width="100%" id="tabla_Registros">
+                                <table class="display" id="tabla_Registros">
                                     <thead>
                                     <tr>
                                         <th class="text-center hidden"><i class="fa fa-hashtag"></i></th>
@@ -42,204 +60,168 @@
                                         <th class="text-center hidden">ValorTot</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    @foreach ($registros as $key => $data)
-                                        @php($data->objeto = preg_replace("/[\r\n|\n|\r]+/", " ", $data->objeto))
-                                        <tr onclick="ver('col{{$data->id}}','Obj{{$data->objeto}}','Name{{$data->persona->nombre}}','Cc{{$data->persona->num_dc}}','Sal{{$data->saldo}}','Val{{$data->valor}}','Iva{{$data->iva}}','ValTo{{ $data->val_total}}');" style="cursor:pointer">
-                                            <td id="col{{$data->id}}" class="text-center hidden">{{ $data->id }}</td>
-                                            <td class="text-center">{{ $data->code }}</td>
-                                            <td id="Obj{{$data->objeto}}" class="text-center">{{ $data->objeto }}</td>
-                                            <td id="Name{{$data->persona->nombre}}" class="text-center">{{ $data->persona->nombre }}</td>
-                                            <td id="Cc{{$data->persona->num_dc}}" class="text-center">{{ $data->persona->num_dc }}</td>
-                                            <td class="text-center">$<?php echo number_format($data->val_total,0) ?></td>
-                                            <td class="text-center">$<?php echo number_format($data->saldo,0) ?></td>
-                                            <td id="Sal{{$data->saldo}}" class="text-center hidden">{{ $data->saldo }}</td>
-                                            <td id="Val{{$data->valor}}" class="text-center hidden">{{ $data->valor }}</td>
-                                            <td id="Iva{{$data->iva}}" class="text-center hidden">{{ $data->iva }}</td>
-                                            <td id="ValTo{{$data->val_total}}" class="text-center hidden">{{ $data->val_total}}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
+                                    <tbody id="cuerpoRPs"></tbody>
                                 </table>
-
-                            @else
-                                <br>
-                                <div class="alert alert-danger">
-                                    <center>
-                                        No hay Registros.
-                                        <a href="{{ url('administrativo/registros/create/'.$id) }}" class="btn btn-success btn-block">Crear Registro</a>
-                                    </center>
-                                </div>
-                            @endif
-
-                               </div><!-- /.box-body -->
-                             </div><!-- /.box -->
-
-
-                          </div>
+                            </div>
                         </div>
-
-                    <div class="col-md-12 " style="display: none; background-color: white" id="form" name="form">
                         <br>
-                      <div class="row">
-                        
-                        <div class="col-md-5 formularioRegistro">
-                            <br>
-                            <h2 class="text-center  formularioRegistoTitulo">Registro</h2>
-                            <hr>
-                                <div class="row">
-                                    
-                                    <div class="col-md-3 ">
-                                        <h4 class="formularioRegistoLabel"><b>Objeto:</b></h4>
-                                    </div>
+                        <div class="col-md-12 " style="background-color: white" id="formRP" name="formRP">
+                            <table id="TABLA1" class="table text-center table-bordered">
+                                <tbody>
+                                <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">1. IDENTIFICACIÓN DEL CONTRATO</th></tr>
+                                <tr>
+                                    <td colspan="3">
+                                        Interventor:
+                                        <select class="select-interventor" name="interventor_id">
+                                            @foreach($personas as $persona)
+                                                <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Tipo De Contrato: <b><span id="tipoConSel"></span></b>
+                                        <select name="tipo_contrato" class="form-control">
+                                            <option value="0">CAMBIAR EL TIPO DE CONTRATO</option>
+                                            <option value="3">3 - DE OBRA PUBLICA</option>
+                                            <option value="4">4 - DE CONSULTORIA</option>
+                                            <option value="5">5 - DE INTERVENTORIA</option>
+                                            <option value="6">6 - DE SUMINISTRO</option>
+                                            <option value="10">10 - DE PRESTACION DE SERVICIOS</option>
+                                            <option value="11">11 - DE ENCARGO FIDUCIARIO Y FIDUCIA PUBLICA</option>
+                                            <option value="12">12 - ALQUILER O ARRENDAMIENTO</option>
+                                            <option value="13">13 - DE CONCESION</option>
+                                            <option value="20">20 - DEUDA PUBLICA</option>
+                                            <option value="21">21 - CONVENIO INTERADMINISTRATIVO</option>
+                                            <option value="22">22 - OTROS NO ESPECIFICADOS ANTERIORMENTE</option>
+                                        </select>
+                                    </td>
+                                    <td>Modalidad de Seleccion: <b><span id="modSel"></span></b>
+                                        <select name="mod_seleccion" class="form-control">
+                                            <option>CAMBIAR LA MODALIDAD</option>
+                                            <option value="0">NO APLICA</option>
+                                            <option value="1">1 - LICITACION PUBLICA</option>
+                                            <option value="2">2 - CONCURSO DE MERITOS</option>
+                                            <option value="3">3 - SELECCION ABREVIADA</option>
+                                            <option value="4">4 - CONTRATACION DIRECTA</option>
+                                            <option value="8">8 - CUANTIA MINIMA</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Contrato No. <b><span id="contNum"></span></b></td>
+                                    <td>Fecha Contrato. <b><span id="fechaCont"></span></b>
+                                        <input type="date" name="fecha_cont" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr><td colspan="3">Objeto Contrato: <b><span id="objetoContrato"></span></b></td></tr>
+                                <tr>
 
-                                    <div class="col-md-9">
-                                        <textarea type="text" style="text-align: center" class="form-control formularioRegistoLabel" name="Objeto" id="Objeto" columns="20" rows="7" disabled></textarea>
-                                    </div>
-
-                                </div>
-
-
-                            <div class="row">
-                            <br>
-                                <div class="col-md-3 ">
-                                    <h4 class="formularioRegistoLabel"><b>Tercero:</b></h4>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" style="text-align: center" class="form-control formularioRegistoLabel" name="Name" id="Name" disabled>
-                                    <input type="hidden" name="vigencia" id="vigencia" value="{{ $id }}">
-                                </div>
-
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <h4 class="formularioRegistoLabel"><b>NIT/CED:</b></h4>
-                                </div>
-
-                                <div class="col-md-9">
-                                    <input type="number" style="text-align: center" 
-                                    class="form-control formularioRegistoLabel" name="CC" id="CC" disabled>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-7 ">
-                                    <h4 class="formularioRegistoLabel"><b>Valor Registro:</b></h4>
-                                </div>
-
-                                <div class="col-md-5">
-                                    <input type="number" style="text-align: center" class="form-control formularioRegistoLabel" name="ValRegistro" id="ValRegistro" disabled>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-                                    <div class="col-md-7 ">
-                                        <h4 class="formularioRegistoLabel"><b>IVA:</b></h4>
-                                    </div>
-                                 
-                                    <div class="col-md-5">
-                                        <input type="number" style="text-align: center" class="form-control formularioRegistroLabel" name="iva" id="iva" disabled>
-                                    </div>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-md-7 ">
-                                    <h4 class="formularioRegistoLabel"><b>Valor Total del Registro:</b></h4>
-                                </div>
-                               
-                                <div class="col-md-5">
-                                    <input type="number" style="text-align: center" class="form-control formularioRegistoLabel" name="Val" id="Val" disabled>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-md-7 ">
-                                    <h4 class="formularioRegistoLabel"><b>Saldo del Registro:</b></h4>
-                                </div>
-                                
-                                <div class="col-md-5">
-                                    <input type="number" style="text-align: center" class="form-control formularioRegistoLabel" name="ValS" id="ValS" disabled>
-                                </div>
-                            </div>
-
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        
-                  
-
-                        <div class="col-md-2"><div class="row"><br></div></div>
-
-                        <div class="col-md-5 formularioOrden">
-                            <br>
-                            <h2 class="text-center formularioOrdenTitulo">Orden de Pago</h2>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <h4 class="formularioOrdenLabel"><b>Fecha:</b></h4>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="date" name="fecha" style="text-align: center" class="form-control formularioOrdenLabel" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" disabled>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <h4 class="formularioOrdenLabel"><b>Concepto:</b></h4>
-                                </div>
-                                <div class="col-md-9">
-                                    <textarea type="text" class="form-control formularioOrdenLabel" id="concepto" name="concepto" rows="5" required></textarea>
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <h4 class="formularioOrdenLabel"><b>Valor Orden de Pago sin IVA:</b></h4>
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValOP" id="ValOP" required onchange="sumar()">
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-7 ">
-                                    <h4 class="formularioOrdenLabel"><b>Valor IVA:</b></h4>
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValIOP" id="ValIOP" required onchange="sumar()">
-                                </div>
-                                </div>
-
-                                <div class="row">
-                                <div class="col-md-7">
-                                    <h4 class="formularioOrdenLabel"><b>Valor Total Orden de Pago:</b></h4>
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" name="ValTOP" id="ValTOP" required>
-                                </div>
+                        <div class="form-group row" id="buttonSend" style="display: none; background-color: white">
+                            <div class="col-lg-12 ml-auto text-center">
+                                <button type="submit" class="btn btn-primary">Generar Radicación</button>
                             </div>
                         </div>
-                      </div>
-                        <input type="hidden" class="form-control" name="estado" value="0">
-                        <div class="form-group row">
-                            <div class="col-lg-12 ml-auto text-right">
-                            <br>
-                                <button type="submit" class="btn btn-primary">Guardar</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    @stop
+@stop
 @section('js')
     <script type="text/javascript">
+        const vigencia_id = @json($id);
+        $('.select-tercero').select2();
+        $('.select-interventor').select2();
+
+        function changeTer(id){
+            if(id == '0') toastr.warning('DEBE SELECCIONAR UN TERCERO DE LA LISTA.');
+            else {
+                $("#cargando").show();
+                $("#FindTercero").hide()
+                $("#buttonSend").hide()
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/radCuentas/findDataPer",
+                    data: { "idPer": id, "vigencia_id": vigencia_id, "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(data) {
+                    console.log(data);
+
+                    if (data['history'].length > 0){
+
+                    }
+
+                    if (data.registros.length > 0){
+                        $("#tabla_Registros").show();
+                        $("#tableRPs").show();
+                        var table = $('#tabla_Registros').DataTable();
+                        table.destroy();
+
+                        table = $('#tabla_Registros').DataTable( {
+                            language: {
+                                "lengthMenu": "Mostrar _MENU_ registros",
+                                "zeroRecords": "No se encontraron resultados",
+                                "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                                "sSearch": "Buscar:",
+                                "oPaginate": {
+                                    "sFirst": "Primero",
+                                    "sLast":"Último",
+                                    "sNext":"Siguiente",
+                                    "sPrevious": "Anterior"
+                                },
+                                "sProcessing":"Procesando...",
+                            },
+                            //para usar los botones
+                            "pageLength": 5,
+                            responsive: "true",
+                            dom: 'Bfrtilp',
+                            buttons:[
+                                {
+                                    extend:    'excelHtml5',
+                                    text:      '<i class="fa fa-file-excel-o"></i> ',
+                                    titleAttr: 'Exportar a Excel',
+                                    className: 'btn btn-primary'
+                                },
+                            ]
+                        } );
+
+                        $("#cuerpoRPs").html("");
+                        for(var i=0; i<data.registros.length; i++){
+                            data.registros[i].objeto = data.registros[i].objeto.replace(/[\r\n|\n|\r]+/,' ');
+                            var tr = `<tr class="text-center" onclick="getRP(`+data.registros[i].id+`)" style="cursor:pointer">
+                              <td>`+data.registros[i].code+`</td>
+                              <td>`+data.registros[i].objeto+`</td>
+                              <td>`+data.registros[i].persona.nombre+`</td>
+                              <td>`+data.registros[i].persona.num_dc+`</td>
+                              <td>`+formatter.format(data.registros[i].val_total)+`</td>
+                              <td>`+formatter.format(data.registros[i].saldo)+`</td>
+                            </tr>`;
+                            $("#cuerpoRPs").append(tr)
+                        }
+                    }
+
+                    $("#cargando").hide();
+                    $("#FindTercero").show();
+                }).fail(function() {
+                    $("#cargando").hide();
+                    $("#FindTercero").show();
+                    toastr.warning('OCURRIO UN ERROR AL BUSCAR LA INFORMACION DEL TERCERO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+                });
+            }
+        }
+
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        })
+
         $('#tabla_Registros').DataTable( {
              language: {
 			  "lengthMenu": "Mostrar _MENU_ registros",
@@ -259,40 +241,15 @@
 	  //para usar los botones   
       "pageLength": 5,
       responsive: "true",
-	  dom: 'Bfrtilp',       
-	  buttons:[ 
-			  {
-			  extend:    'copyHtml5',
-			  text:      '<i class="fa fa-clone"></i> ',
-			  titleAttr: 'Copiar',
-			  className: 'btn btn-primary'
-		  },
+	  dom: 'Bfrtilp',
+	  buttons:[
 		  {
 			  extend:    'excelHtml5',
 			  text:      '<i class="fa fa-file-excel-o"></i> ',
 			  titleAttr: 'Exportar a Excel',
-			  className: 'btn btn-success'
+			  className: 'btn btn-primary'
 		  },
-		  {
-			  extend:    'pdfHtml5',
-			  text:      '<i class="fa fa-file-pdf-o"></i> ',
-			  titleAttr: 'Exportar a PDF',     
-			  message : 'SIEX',
-			  header :true,
-              	exportOptions: {
-				  columns: [ 0,1,2,3,4]
-					},
-			  pageSize: 'LEGAL',
-			  className: 'btn btn-danger',
-			   },
-		  {
-			  extend:    'print',
-			  text:      '<i class="fa fa-print"></i> ',
-			  titleAttr: 'Imprimir',
-			  className: 'btn btn-info'
-		  },
-	  ]	             
-
+	  ]
 		 });
 
         $(document).ready(function() {
@@ -314,6 +271,7 @@
         } );
 
         function ver(col, Obj, Name, CC, Val, ValTo, Iva, Sal){
+            console.log(col);
             content = document.getElementById(col);
             var Obj = document.getElementById(Obj);
             var Name = document.getElementById(Name);
@@ -348,12 +306,58 @@
         }
 
         function sumar() {
-
             var num1 = document.getElementById("ValOP").value;
             var num2 = document.getElementById("ValIOP").value;
 
             var resultado = parseInt(num1) + parseInt(num2);
             document.getElementById("ValTOP").value = resultado;
+        }
+
+        function getRP(registro_id){
+            $("#cargandoRP").show();
+            $("#FindTercero").hide()
+            $("#buttonSend").hide()
+            $('#tabla_Registros').hide()
+            $.ajax({
+                method: "POST",
+                url: "/administrativo/radCuentas/findRP",
+                data: { "idRP": registro_id, "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(data) {
+                console.log(data);
+
+                if(data.registro.tipo_contrato == 3) var tipoCont = "3 - DE OBRA PUBLICA";
+                else if(data.registro.tipo_contrato == 4) var tipoCont = "4 - DE CONSULTORIA";
+                else if(data.registro.tipo_contrato == 5) var tipoCont = "5 - DE INTERVENTORIA";
+                else if(data.registro.tipo_contrato == 6) var tipoCont = "6 - DE SUMINISTRO";
+                else if(data.registro.tipo_contrato == 10) var tipoCont = "10 - DE PRESTACION DE SERVICIOS";
+                else if(data.registro.tipo_contrato == 11) var tipoCont = "11 - DE ENCARGO FIDUCIARIO Y FIDUCIA PUBLICA";
+                else if(data.registro.tipo_contrato == 12) var tipoCont = "12 - ALQUILER O ARRENDAMIENTO";
+                else if(data.registro.tipo_contrato == 13) var tipoCont = "13 - DE CONCESION";
+                else if(data.registro.tipo_contrato == 20) var tipoCont = "20 - DEUDA PUBLICA";
+                else if(data.registro.tipo_contrato == 21) var tipoCont = "21 - CONVENIO INTERADMINISTRATIVO";
+                else if(data.registro.tipo_contrato == 22) var tipoCont = "22 - OTROS NO ESPECIFICADOS ANTERIORMENT";
+                document.getElementById('tipoConSel').innerHTML = tipoCont;
+
+                if(data.registro.mod_seleccion == 0) var tipoSel = "NO APLICA";
+                else if(data.registro.mod_seleccion == 1) var tipoSel = "1 - LICITACION PUBLICA";
+                else if(data.registro.mod_seleccion == 2) var tipoSel = "2 - CONCURSO DE MERITOS";
+                else if(data.registro.mod_seleccion == 3) var tipoSel = "3 - SELECCION ABREVIADA";
+                else if(data.registro.mod_seleccion == 4) var tipoSel = "4 - CONTRATACION DIRECTA";
+                else if(data.registro.mod_seleccion == 8) var tipoSel = "8 - CUANTIA MINIMA";
+                document.getElementById('modSel').innerHTML = tipoSel;
+                document.getElementById('contNum').innerHTML = data.registro.num_doc;
+                document.getElementById('fechaCont').innerHTML = data.registro.ff_doc;
+                document.getElementById('objetoContrato').innerHTML = data.registro.objeto;
+
+                $("#cargandoRP").hide();
+                $("#buttonSend").show();
+                $('#tabla_Registros').show()
+            }).fail(function() {
+                $("#cargandoRP").hide();
+                $("#buttonSend").show();
+                $('#tabla_Registros').show()
+                toastr.warning('OCURRIO UN ERROR AL BUSCAR LA INFORMACION DEL REGISTRO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+            });
         }
 
 

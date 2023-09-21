@@ -290,6 +290,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         //RADICACION DE CUENTAS
         Route::get('radCuentas/{id}','Administrativo\RadCuentas\RadCuentasController@index');
         Route::get('radCuentas/create/{id}','Administrativo\RadCuentas\RadCuentasController@create');
+        Route::post('radCuentas/findDataPer','Administrativo\RadCuentas\RadCuentasController@findDataPer');
+        Route::post('radCuentas/findRP','Administrativo\RadCuentas\RadCuentasController@findDataRP');
 
         //ORDENES DE PAGO
 

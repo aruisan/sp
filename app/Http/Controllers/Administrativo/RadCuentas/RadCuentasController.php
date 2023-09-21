@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Administrativo\RadCuentas;
 use App\Model\Administrativo\RadCuentas\RadCuentas;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Registro\Registro;
+use App\Model\Persona;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use PDF;
 
@@ -32,10 +34,25 @@ class RadCuentasController extends Controller
      */
     public function create($id)
     {
-        $registros = Registro::where('saldo','>',0)->where('tipo_contrato','!=',20)->where('tipo_contrato','!=',22)
-            ->where('jefe_e','3')->get();
+        $personas = Persona::all();
+        $user = Auth::user();
+        return view('administrativo.radcuentas.create', compact('id','personas','user'));
+    }
 
-        return view('administrativo.radcuentas.create', compact('registros','id'));
+    public function findDataPer(Request $request){
+        $historyRad = RadCuentas::where('persona_id', $request->idPer)->where('vigencia_id', $request->vigencia_id)->get();
+        $registros = Registro::where('saldo','>',0)->where('tipo_contrato','!=',20)->where('tipo_contrato','!=',22)
+            ->where('jefe_e','3')->where('persona_id', $request->idPer)->where('vigencia_id', $request->vigencia_id)
+            ->with('persona')->get();
+        $data = ['history' => $historyRad, 'registros' => $registros];
+        return $data;
+    }
+
+    public function findDataRP(Request $request){
+        $registro = Registro::where('id',$request->idRP)->with('persona')->first();
+        foreach ($registro->cdpRegistroValor as $cdpRegValue) $cdps[] = $cdpRegValue->cdps;
+
+        return ['registro' => $registro,'cdp' => $cdps];
     }
 
     /**
