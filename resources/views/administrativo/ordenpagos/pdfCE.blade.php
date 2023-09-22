@@ -17,7 +17,7 @@
 				</tr>
 				@if($Pago->embargo == '1')
 					<tr class="text-center">
-						<td colspan="2">Tercero del Embargo: {{ $OrdenPago->persona->num_dc }} - {{ $OrdenPago->persona->nombre }} </td>
+						<td colspan="2">Tercero del Embargo: {{ $OrdenPago->registros->persona->num_dc }} - {{ $OrdenPago->registros->persona->nombre }} </td>
 					</tr>
 				@endif
 			</table>
