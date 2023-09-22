@@ -210,6 +210,7 @@ class RegistrosController extends Controller
             $registro->mod_seleccion = $request->mod_seleccion;
             $registro->estado_ejec = $request->estado_ejec;
         }
+        $registro->vigencia_id = $request->vigencia;
         $registro->save();
 
         $fuenteRubroId = $request->fuente_id;
