@@ -110,13 +110,111 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">Contrato No. <b><span id="contNum"></span></b></td>
-                                    <td>Fecha Contrato. <b><span id="fechaCont"></span></b>
-                                        <input type="date" name="fecha_cont" class="form-control">
-                                    </td>
+                                    <td>Fecha Contrato. <input type="date" name="fecha_cont" id="fecha_cont" class="form-control"></td>
                                 </tr>
                                 <tr><td colspan="3">Objeto Contrato: <b><span id="objetoContrato"></span></b></td></tr>
+                                <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">CDPs</th></tr>
+                                <tr id="cdps"></tr>
+                                <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">Ordenes de Pago</th></tr>
+                                <tr id="ordenesPago"></tr>
+                                <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">Pagos</th></tr>
+                                <tr id="pagos"></tr>
                                 <tr>
-
+                                    <td colspan="2">Fecha de Inicio
+                                        <input type="date" class="form-control" name="fecha_inicio" required>
+                                    </td>
+                                    <td>Plazo Ejecucion Dias
+                                        <input type="number" min="0" class="form-control" name="plazo_ejecu_dias" value="0" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Prorroga en Dias
+                                        <input type="number" class="form-control" name="prorroga" min="0" value="0" required>
+                                    </td>
+                                    <td colspan="2">Fecha de Terminación
+                                        <input type="date" class="form-control" name="fecha_fin">
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">2. IDENTIFICACIÓN DEL BENEFICIARIO</th></tr>
+                                <tr>
+                                    <td colspan="2">CONTRATISTA o CESIONARIO:
+                                        <input type="text" class="form-control" name="contratista" id="contratista">
+                                    </td>
+                                    <td>CÉDULA O NIT:
+                                        <input type="number" class="form-control" name="cedula" id="cedula">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">RÉGIMEN TRIBUTARIO DIAN
+                                        <b><span id="regTrib"></span></b>
+                                        <select name="regimen_tributario" class="form-control">
+                                            <option >CAMBIAR EL REGIMEN TRIBUTARIO</option>
+                                            <option value="0">NO APLICA</option>
+                                            <option value="1">1 - LICITACION PUBLICA</option>
+                                            <option value="2">2 - CONCURSO DE MERITOS</option>
+                                            <option value="3">3 - SELECCION ABREVIADA</option>
+                                            <option value="4">4 - CONTRATACION DIRECTA</option>
+                                            <option value="8">8 - CUANTIA MINIMA</option>
+                                        </select>
+                                    </td>
+                                    <td>PORCENTAJE RETENCIÓN FUENTE
+                                        <input type="number" min="0" class="form-control" name="retefuente" id="retefuente">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">DIRECCIÓN CONTRATISTA O PROVEEDOR:
+                                        <input type="text" class="form-control" name="dir" id="dir">
+                                    </td>
+                                    <td>TELÉFONO FIJO
+                                        <input type="number" class="form-control" name="telFijo" id="telFijo">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">CORREO ELECTRÓNICO:
+                                        <input type="email" class="form-control" name="email" id="email">
+                                    </td>
+                                    <td>CELULAR:
+                                        <input type="number" class="form-control" name="cel" id="cel">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CUENTA BANCARIA:
+                                        <input type="number" class="form-control" name="cuentaBanc" id="cuentaBanc">
+                                    </td>
+                                    <td>ENTIDAD BANCARIA:
+                                        <b><span id="entidadBanc"></span></b>
+                                        <select name="banco" class="form-control">
+                                            <option value="0">CAMBIAR ENTIDAD BANCARIA</option>
+                                            <option value="BANCO DE BOGOTA">BANCO DE BOGOTA</option>
+                                            <option value="BANCO AGRARIO">BANCO AGRARIO</option>
+                                            <option value="BANCO DAVIVIENDA">BANCO DAVIVIENDA</option>
+                                            <option value="BANCO POPULAR">BANCO POPULAR</option>
+                                            <option value="BANCO BANCOLOMBIA">BANCO BANCOLOMBIA</option>
+                                            <option value="BANCO OCCIDENTE">BANCO OCCIDENTE</option>
+                                            <option value="BANCO AVVILLAS">BANCO AVVILLAS</option>
+                                            <option value="BANCO BBVA">BANCO BBVA</option>
+                                            <option value="BANCO CAJA SOCIAL">BANCO CAJA SOCIAL</option>
+                                            <option value="BANCO FALABELLA">BANCO FALABELLA</option>
+                                            <option value="BANCO SUDAMERIS">BANCO SUDAMERIS</option>
+                                            <option value="BANCO PICHINCHA">BANCO PICHINCHA</option>
+                                            <option value="BANCO CITIBANK">BANCO CITIBANK</option>
+                                            <option value="BANCO SANTANDER">BANCO SANTANDER</option>
+                                        </select>
+                                    </td>
+                                    <td>TIPO CUENTA:
+                                        <b><span id="tipoCuenta"></span></b>
+                                        <select name="tipo_cuenta" class="form-control">
+                                            <option >CAMBIAR EL TIPO DE CUENTA</option>
+                                            <option value="0">NO APLICA</option>
+                                            <option value="1">1 - LICITACION PUBLICA</option>
+                                            <option value="2">2 - CONCURSO DE MERITOS</option>
+                                            <option value="3">3 - SELECCION ABREVIADA</option>
+                                            <option value="4">4 - CONTRATACION DIRECTA</option>
+                                            <option value="8">8 - CUANTIA MINIMA</option>
+                                        </select>
+                                        <input type="hidden" name="registro_id" id="registro_id">
+                                        <input type="hidden" name="vigencia_id" id="vigencia_id" value="{{ $id }}">
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -315,15 +413,15 @@
 
         function getRP(registro_id){
             $("#cargandoRP").show();
-            $("#FindTercero").hide()
             $("#buttonSend").hide()
-            $('#tabla_Registros').hide()
             $.ajax({
                 method: "POST",
                 url: "/administrativo/radCuentas/findRP",
                 data: { "idRP": registro_id, "_token": $("meta[name='csrf-token']").attr("content")}
             }).done(function(data) {
                 console.log(data);
+
+                document.getElementById('registro_id').value = registro_id;
 
                 if(data.registro.tipo_contrato == 3) var tipoCont = "3 - DE OBRA PUBLICA";
                 else if(data.registro.tipo_contrato == 4) var tipoCont = "4 - DE CONSULTORIA";
@@ -346,16 +444,66 @@
                 else if(data.registro.mod_seleccion == 8) var tipoSel = "8 - CUANTIA MINIMA";
                 document.getElementById('modSel').innerHTML = tipoSel;
                 document.getElementById('contNum').innerHTML = data.registro.num_doc;
-                document.getElementById('fechaCont').innerHTML = data.registro.ff_doc;
+                document.getElementById('fecha_cont').value = data.registro.ff_doc;
                 document.getElementById('objetoContrato').innerHTML = data.registro.objeto;
+
+                $("#cdps").html("");
+                for(var i=0; i<data.cdps.length; i++){
+                    data.cdps[i].name = data.cdps[i].name.replace(/[\r\n|\n|\r]+/,' ');
+                    if (data.cdps[i].tipo == "Funcionamiento"){
+                        var tr = `<td>#`+data.cdps[i].code+` - `+data.cdps[i].name+`</td>
+                              <td>`+data.cdps[i].rubro.cod+` - `+data.cdps[i].rubro.name+`</td>
+                              <td>`+data.cdps[i].dep.name+`</td>`;
+                    } else {
+                        var tr = `<td>#`+data.cdps[i].code+` - `+data.cdps[i].name+`</td>
+                              <td>`+data.cdps[i].bpin.cod_actividad+` - `+data.cdps[i].bpin.actividad +` - `+data.cdps[i].rubro.cod+` - `+data.cdps[i].rubro.name+`</td>
+                              <td>`+data.cdps[i].dep.name+`</td>`;
+                    }
+
+                    $("#cdps").append(tr)
+                }
+
+                if(data.ops.length > 0){
+                    $("#ordenesPago").html("");
+                    for(var i=0; i<data.ops.length; i++){
+                        data.ops[i].nombre = data.ops[i].nombre.replace(/[\r\n|\n|\r]+/,' ');
+                        var tr = `<td>#`+data.ops[i].code+`</td>
+                          <td>`+data.ops[i].nombre+`</td>
+                          <td>Valor:`+formatter.format(data.ops[i].valor)+`</td>`;
+
+                        $("#ordenesPago").append(tr)
+
+                        if (data.pagos[i].length > 0){
+                            $("#pagos").html("");
+                            for(var y=0; y<data.pagos[i].length; y++){
+                                data.pagos[i][y].concepto = data.pagos[i][y].concepto.replace(/[\r\n|\n|\r]+/,' ');
+                                var tr = `<td>#`+data.pagos[i][y].code+`</td>
+                                          <td>`+data.pagos[i][y].concepto+`</td>
+                                          <td>Valor: `+formatter.format(data.pagos[i][y].valor)+`</td>`;
+                                $("#pagos").append(tr)
+                            }
+                        }
+                    }
+                }
+
+                document.getElementById('contratista').value = data.registro.persona.nombre;
+                document.getElementById('cedula').value = data.registro.persona.num_dc;
+                document.getElementById('regTrib').innerHTML = data.registro.persona.regimen;
+                document.getElementById('retefuente').value = data.registro.persona.reteFuente;
+                document.getElementById('dir').value = data.registro.persona.direccion;
+                document.getElementById('telFijo').value = data.registro.persona.telefono_fijo;
+                document.getElementById('email').value = data.registro.persona.email;
+                document.getElementById('cel').value = data.registro.persona.cel;
+                document.getElementById('cuentaBanc').value = data.registro.persona.numero_cuenta_bancaria;
+                document.getElementById('tipoCuenta').innerHTML = data.registro.persona.tipo_cuenta_bancaria;
+                document.getElementById('entidadBanc').innerHTML = data.registro.persona.banco_cuenta_bancaria;
+
 
                 $("#cargandoRP").hide();
                 $("#buttonSend").show();
-                $('#tabla_Registros').show()
             }).fail(function() {
                 $("#cargandoRP").hide();
                 $("#buttonSend").show();
-                $('#tabla_Registros').show()
                 toastr.warning('OCURRIO UN ERROR AL BUSCAR LA INFORMACION DEL REGISTRO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
             });
         }

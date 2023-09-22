@@ -36,14 +36,18 @@
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">Concepto</th>
+                            <th class="text-center">Persona</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Opciones</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($radCuentasPend as $radPend)
                             <tr class="text-center">
-                                <td>{{ $radPend['info']->code }}</td>
-                                <td>{{ $radPend['info']->nombre }}</td>
+                                <td>{{ $radPend->code }}</td>
+                                <td>{{ $radPend->persona->num_dc }} - {{ $radPend->persona->nombre }}</td>
+                                <td>{{ $radPend->created_at }}</td>
+                                <td><a href="{{ url('administrativo/radCuentas/'.$radPend->id.'/2') }}" class="btn-sm btn-info" title="Paso 2">2</a></td>
                             </tr>
                         @endforeach
                         </tbody>

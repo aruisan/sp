@@ -292,6 +292,8 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('radCuentas/create/{id}','Administrativo\RadCuentas\RadCuentasController@create');
         Route::post('radCuentas/findDataPer','Administrativo\RadCuentas\RadCuentasController@findDataPer');
         Route::post('radCuentas/findRP','Administrativo\RadCuentas\RadCuentasController@findDataRP');
+        Route::post('radCuentas','Administrativo\RadCuentas\RadCuentasController@radCuentasFirst');
+        Route::get('radCuentas/{id}/{step}','Administrativo\RadCuentas\RadCuentasController@pasos');
 
         //ORDENES DE PAGO
 
