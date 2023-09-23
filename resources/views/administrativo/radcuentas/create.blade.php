@@ -148,13 +148,10 @@
                                     <td colspan="2">RÉGIMEN TRIBUTARIO DIAN
                                         <b><span id="regTrib"></span></b>
                                         <select name="regimen_tributario" class="form-control">
-                                            <option >CAMBIAR EL REGIMEN TRIBUTARIO</option>
-                                            <option value="0">NO APLICA</option>
-                                            <option value="1">1 - LICITACION PUBLICA</option>
-                                            <option value="2">2 - CONCURSO DE MERITOS</option>
-                                            <option value="3">3 - SELECCION ABREVIADA</option>
-                                            <option value="4">4 - CONTRATACION DIRECTA</option>
-                                            <option value="8">8 - CUANTIA MINIMA</option>
+                                            <option>CAMBIAR EL REGIMEN TRIBUTARIO</option>
+                                            <option value="Ordinario">ORDINARIO</option>
+                                            <option value="Simple Tributacion">SIMPLE TRIBUTACIÓN</option>
+                                            <option value="Especial">ESPECIAL</option>
                                         </select>
                                     </td>
                                     <td>PORCENTAJE RETENCIÓN FUENTE
@@ -221,7 +218,7 @@
                         </div>
                         <div class="form-group row" id="buttonSend" style="display: none; background-color: white">
                             <div class="col-lg-12 ml-auto text-center">
-                                <button type="submit" class="btn btn-primary">Generar Radicación</button>
+                                <button type="submit" class="btn btn-primary">Generar Radicación y Continuar al Siguiente Paso</button>
                             </div>
                         </div>
                     </form>

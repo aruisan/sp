@@ -8,22 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 use Session;
 
-class RadCuentas extends Model implements Auditable
+class RadCuentasAdd extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
 
-    protected $table = 'rad_cuentas';
+    protected $table = 'rad_cuentas_add';
+
     public function registro()
     {
         return $this->hasOne('App\Model\Administrativo\Registro\Registro','id','registro_id');
     }
-    public function persona()
+
+    public function radicacion()
     {
-        return $this->hasOne('App\Model\Persona','id','persona_id');
-    }
-    public function pago()
-    {
-        return $this->hasOne('App\Model\Administrativo\RadCuentas\RadCuentasPago','rad_cuenta_id');
+        return $this->hasOne('App\Model\Administrativo\RadCuentas\RadCuentas','id','rad_cuenta_id');
     }
 }

@@ -177,6 +177,8 @@
                                     <option value="4">4 - DE CONSULTORIA</option>
                                     <option value="5">5 - DE INTERVENTORIA</option>
                                     <option value="6">6 - DE SUMINISTRO</option>
+                                    <option value="7">7 - TRANSPORTE PASAJEROS TERRESTRE, HOTEL Y RESTAURANTE</option>
+                                    <option value="8">8 - TRANSPORTE DE CARGA</option>
                                     <option value="10">10 - DE PRESTACION DE SERVICIOS</option>
                                     <option value="11">11 - DE ENCARGO FIDUCIARIO Y FIDUCIA PUBLICA</option>
                                     <option value="12">12 - ALQUILER O ARRENDAMIENTO</option>

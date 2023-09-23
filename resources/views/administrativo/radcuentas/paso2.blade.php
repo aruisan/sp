@@ -16,21 +16,20 @@
             </ul>
             <div class="tab-content">
                 <div class="form-validation">
-                    <form class="form-valide" action="{{url('/administrativo/radCuentas/paso/')}}" method="POST" enctype="multipart/form-data">
+                    <form class="form-valide" action="{{url('/administrativo/radCuentas/paso/2')}}" method="POST" enctype="multipart/form-data">
                         <hr>
                         {{ csrf_field() }}
                         <div class="text-center" id="cargando" style="display: none">
-                            <h4>Buscando informacion del tercero...</h4>
-                        </div>
-                        <div class="text-center" id="cargandoRP" style="display: none">
                             <h4>Buscando informacion del registro...</h4>
+                            <br>
                         </div>
+                        <input type="hidden" name="radicacion_id" value="{{ $radCuenta->id }}">
                         <div class="col-md-12 " style="background-color: white" id="formRP" name="formRP">
                             <table id="TABLA1" class="table text-center table-bordered">
                                 <tbody>
                                 <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">3. INFORMACIÓN FINANCIERA</th></tr>
                                 <tr>
-                                    <td>VALOR INICIAL DEL CONTRATO: $<?php echo number_format( $registro->val_total,0) ?></td>
+                                    <td>VALOR INICIAL DEL CONTRATO: $<?php echo number_format( $registro->saldo,0) ?></td>
                                     <td>
                                         @foreach($cdps as $cdp)
                                             CDP: #{{ $cdp->code }}
@@ -53,15 +52,15 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>ADICION AL CONTRATO</td>
-                                    <td>CDP</td>
-                                    <td>RP</td>
+                                <tr id="addContrato" style="display: none; background-color: white">
+                                    <td>ADICION AL CONTRATO: <span id="addCont"></span> </td>
+                                    <td><span id="addCDP"></span></td>
+                                    <td>RP #<span id="addRP"></span></td>
                                 </tr>
                                 <tr>
                                     <td>VALOR FINAL DEL CONTRATO
                                         <input type="hidden" name="valor_fin_cont" id="valor_fin_cont">
-                                        <span id="valorFinal">$<?php echo number_format( $registro->val_total,0) ?></span>
+                                        <span id="valorFinal">$<?php echo number_format( $registro->saldo,0) ?></span>
                                     </td>
                                     <td>NUMERO DE PAGOS
                                         <input type="number" name="num_pagos" id="num_pagos" min="0" value="0" class="form-control">
@@ -70,7 +69,6 @@
                                         VALOR PAGO MENSUAL
                                         <input type="number" name="val_pago_men" id="val_pago_men" min="0" value="0" class="form-control">
                                     </td>
-
                                 </tr>
                                 <tr>
                                     <td>
@@ -97,10 +95,70 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            @if(count($ordenesPago) > 0)
+                                <table id="tablaPagos" class="table text-center table-bordered table-responsive">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>Pago No.</th>
+                                        <th>Valor</th>
+                                        <th>Orden de Pago No.</th>
+                                        <th>Fecha Pago</th>
+                                        <th>Periodo de Pago</th>
+                                        <th>Factura No.</th>
+                                        <th>Planilla SSS.</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($ordenesPago as $index => $ordenPago)
+                                        <tr>
+                                            <td style="vertical-align: middle">{{$index + 1}}</td>
+                                            <td style="vertical-align: middle">$<?php echo number_format($ordenPago->valor,0) ?></td>
+                                            <td style="vertical-align: middle">{{$ordenPago->code}}</td>
+                                            <td style="vertical-align: middle">{{ \Carbon\Carbon::parse($ordenPago->created_at)->format('d-m-Y')}}</td>
+                                            <td>
+                                                <select name="periodoPago[]" class="form-control">
+                                                    <option @if($ordenPago->periodo == "NO") selected @endif value="NO">NO APLICA</option>
+                                                    <option @if($ordenPago->periodo == "ENE") selected @endif value="ENE">ENERO</option>
+                                                    <option @if($ordenPago->periodo == "FEB") selected @endif value="FEB">FEBRERO</option>
+                                                    <option @if($ordenPago->periodo == "MAR") selected @endif value="MAR">MARZO</option>
+                                                    <option @if($ordenPago->periodo == "ABR") selected @endif value="ABR">ABRIL</option>
+                                                    <option @if($ordenPago->periodo == "MAY") selected @endif value="MAY">MAYO</option>
+                                                    <option @if($ordenPago->periodo == "JUN") selected @endif value="JUN">JUNIO</option>
+                                                    <option @if($ordenPago->periodo == "JUL") selected @endif value="JUL">JULIO</option>
+                                                    <option @if($ordenPago->periodo == "AGO") selected @endif value="AGO">AGOSTO</option>
+                                                    <option @if($ordenPago->periodo == "SEP") selected @endif value="SEP">SEPTIEMBRE</option>
+                                                    <option @if($ordenPago->periodo == "OCT") selected @endif value="OCT">OCTUBRE</option>
+                                                    <option @if($ordenPago->periodo == "NOV") selected @endif value="NOV">NOVIEMBRE</option>
+                                                    <option @if($ordenPago->periodo == "DIC") selected @endif value="DIC">DICIEMBRE</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" class="form-control" name="factura[]" value="{{ $ordenPago->factura }}"></td>
+                                            <td>
+                                                <input type="text" class="form-control" name="planilla[]" value="{{ $ordenPago->planilla }}">
+                                                <input type="hidden" name="op_id[]" value="{{ $ordenPago->id }}">
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
+                            <div id="crud">
+                                <table id="tablaNewPagos" class="table table-bordered table-responsive">
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="5"><div class="text-center">
+                                                <button type="button" @click.prevent="nuevaFila" class="btn btn-sm btn-primary">AGREGAR ORDEN DE PAGO</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="form-group row" id="buttonSend" style="display: none; background-color: white">
+
+                        <div class="form-group row" id="buttonSend">
                             <div class="col-lg-12 ml-auto text-center">
-                                <button type="submit" class="btn btn-primary">Generar Radicación</button>
+                                <button type="submit" class="btn btn-primary">Registrar Información Financiera</button>
                             </div>
                         </div>
                     </form>
@@ -112,12 +170,85 @@
 @section('js')
     <script type="text/javascript">
         const vigencia_id = @json($vigencia_id);
+        const rp_rad = @json($registro);
         $('.select-rp').select2();
-        $('.select-interventor').select2();
 
         function addRP(rp_id){
-            console.log(rp_id);
+            $("#cargando").show();
+            $("#addContrato").hide();
+
+            if (rp_id == 0){
+                document.getElementById('valor_fin_cont').value = rp_rad.saldo;
+                document.getElementById('valorFinal').innerHTML = formatter.format(rp_rad.saldo);
+                $("#cargando").hide();
+            } else {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/radCuentas/findRP",
+                    data: { "idRP": rp_id, "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(data) {
+                    $("#addContrato").show();
+                    console.log(data);
+                    document.getElementById('addCont').innerHTML = formatter.format(data.registro.saldo);
+                    $("#addCDP").html("");
+                    for(var y=0; y<data.cdps.length; y++){
+                        var tr = `CDP #`+data.cdps[y].code+`<br>`;
+                        $("#addCDP").append(tr)
+                    }
+                    document.getElementById('addRP').innerHTML = data.registro.code;
+
+                    document.getElementById('valor_fin_cont').value = data.registro.saldo + rp_rad.saldo;
+                    document.getElementById('valorFinal').innerHTML = formatter.format(data.registro.saldo + rp_rad.saldo);
+
+                    $("#cargando").hide();
+                }).fail(function() {
+                    $("#cargando").hide();
+                    $("#addContrato").hide();
+                    toastr.warning('OCURRIO UN ERROR AL BUSCAR LA INFORMACION DEL TERCERO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+                });
+            }
         }
+
+        $(document).on('click', '.borrar', function (event) {
+            event.preventDefault();
+            $(this).closest('tr').remove();
+        });
+
+        new Vue({
+            el: '#crud',
+            methods:{
+                nuevaFila(){
+                    $('#tablaNewPagos tbody tr:last').after('<tr>\n' +
+                        '<td>Seleccione la orden de pago <br>' +
+                        '<select class="form-control" name="otherOP[]">\n' +
+                        '                                        @foreach($ordenesPagoAll as $ordenPagoAll)\n' +
+                        '                                            <option value="{{$ordenPagoAll->id}}">{{$ordenPagoAll->code}} - {{$ordenPagoAll->nombre}}</option>\n' +
+                        '                                        @endforeach\n' +
+                        '                                    </select></td>\n'+
+                        '<td>Periodo Pago<br>' +
+                        '<select class="form-control" name="periodoOtherOP[]">\n' +
+                        '  <option value="NO">NO APLICA</option>\n' +
+                        '  <option value="ENE">ENERO</option>\n' +
+                        '  <option value="FEB">FEBRERO</option>\n' +
+                        '  <option value="MAR">MARZO</option>\n' +
+                        '  <option value="ABR">ABRIL</option>\n' +
+                        '  <option value="MAY">MAYO</option>\n' +
+                        '  <option value="JUN">JUNIO</option>\n' +
+                        '  <option value="JUL">JULIO</option>\n' +
+                        '  <option value="AGO">AGOSTO</option>\n' +
+                        '  <option value="SEP">SEPTIEMBRE</option>\n' +
+                        '  <option value="OCT">OCTUBRE</option>\n' +
+                        '  <option value="NOV">NOVIEMBRE</option>\n' +
+                        '  <option value="DIC">DICIEMBRE</option>\n' +
+                        '  </select></td>\n'+
+                        '<td>Factura No<input type="text" class="form-control" name="facturaOtherOP[]"></td>\n'+
+                        '<td>Planilla SSS<input type="text" class="form-control" name="planillaOtherOP[]"></td>\n'+
+                        '<td style="vertical-align: middle" class="text-center"><button type="button" class="borrar btn-sm btn-danger">&nbsp;-&nbsp; </button></td>\n'+
+                        '</tr>\n');
+                    $('.other-OP').select2();
+                },
+            }
+        });
 
         const formatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
