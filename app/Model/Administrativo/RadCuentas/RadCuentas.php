@@ -26,4 +26,24 @@ class RadCuentas extends Model implements Auditable
     {
         return $this->hasOne('App\Model\Administrativo\RadCuentas\RadCuentasPago','rad_cuenta_id');
     }
+    public function interventor()
+    {
+        return $this->hasOne('App\Model\Persona','id','interventor_id');
+    }
+    public function supervisor()
+    {
+        return $this->hasOne('App\Model\Persona','id','supervisor_id');
+    }
+    public function elaborador()
+    {
+        return $this->hasOne('App\User','id','user_id');
+    }
+    public function adds()
+    {
+        return $this->hasMany('App\Model\Administrativo\RadCuentas\RadCuentasAdd','rad_cuenta_id');
+    }
+    public function anexos()
+    {
+        return $this->hasMany('App\Model\Administrativo\RadCuentas\RadCuentasAnex','rad_cuenta_id');
+    }
 }

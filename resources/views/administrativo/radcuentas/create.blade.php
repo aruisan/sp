@@ -65,7 +65,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="col-md-12 " style="background-color: white" id="formRP" name="formRP">
+                        <div class="col-md-12 " style="display: none; background-color: white" id="formRP" name="formRP">
                             <table id="TABLA1" class="table text-center table-bordered">
                                 <tbody>
                                 <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">1. IDENTIFICACIÓN DEL CONTRATO</th></tr>
@@ -73,6 +73,7 @@
                                     <td colspan="3">
                                         Interventor:
                                         <select class="select-interventor" name="interventor_id">
+                                            <option>NO POSEE</option>
                                             @foreach($personas as $persona)
                                                 <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
                                             @endforeach
@@ -87,6 +88,8 @@
                                             <option value="4">4 - DE CONSULTORIA</option>
                                             <option value="5">5 - DE INTERVENTORIA</option>
                                             <option value="6">6 - DE SUMINISTRO</option>
+                                            <option value="7">7 - TRANSPORTE PASAJEROS TERRESTRE, HOTEL Y RESTAURANTE</option>
+                                            <option value="8">8 - TRANSPORTE DE CARGA</option>
                                             <option value="10">10 - DE PRESTACION DE SERVICIOS</option>
                                             <option value="11">11 - DE ENCARGO FIDUCIARIO Y FIDUCIA PUBLICA</option>
                                             <option value="12">12 - ALQUILER O ARRENDAMIENTO</option>
@@ -113,12 +116,22 @@
                                     <td>Fecha Contrato. <input type="date" name="fecha_cont" id="fecha_cont" class="form-control"></td>
                                 </tr>
                                 <tr><td colspan="3">Objeto Contrato: <b><span id="objetoContrato"></span></b></td></tr>
+                                </tbody>
+                            </table>
+                            <table class="table text-center table-bordered">
                                 <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">CDPs</th></tr>
-                                <tr id="cdps"></tr>
+                                <tbody id="cdps"></tbody>
+                            </table>
+                            <table class="table text-center table-bordered">
                                 <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">Ordenes de Pago</th></tr>
-                                <tr id="ordenesPago"></tr>
+                                <tbody id="ordenesPago"></tbody>
+                            </table>
+                            <table class="table text-center table-bordered">
                                 <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">Pagos</th></tr>
-                                <tr id="pagos"></tr>
+                                <tbody id="pagos"></tbody>
+                            </table>
+                            <table class="table text-center table-bordered">
+                                <tbody>
                                 <tr>
                                     <td colspan="2">Fecha de Inicio
                                         <input type="date" class="form-control" name="fecha_inicio" required>
@@ -149,8 +162,8 @@
                                         <b><span id="regTrib"></span></b>
                                         <select name="regimen_tributario" class="form-control">
                                             <option>CAMBIAR EL REGIMEN TRIBUTARIO</option>
-                                            <option value="Ordinario">ORDINARIO</option>
-                                            <option value="Simple Tributacion">SIMPLE TRIBUTACIÓN</option>
+                                            <option value="ordinario">ORDINARIO</option>
+                                            <option value="simple tributacion">SIMPLE TRIBUTACIÓN</option>
                                             <option value="Especial">ESPECIAL</option>
                                         </select>
                                     </td>
@@ -202,12 +215,8 @@
                                         <b><span id="tipoCuenta"></span></b>
                                         <select name="tipo_cuenta" class="form-control">
                                             <option >CAMBIAR EL TIPO DE CUENTA</option>
-                                            <option value="0">NO APLICA</option>
-                                            <option value="1">1 - LICITACION PUBLICA</option>
-                                            <option value="2">2 - CONCURSO DE MERITOS</option>
-                                            <option value="3">3 - SELECCION ABREVIADA</option>
-                                            <option value="4">4 - CONTRATACION DIRECTA</option>
-                                            <option value="8">8 - CUANTIA MINIMA</option>
+                                            <option value="Ahorros">AHORROS</option>
+                                            <option value="Corriente">CORRIENTE</option>
                                         </select>
                                         <input type="hidden" name="registro_id" id="registro_id">
                                         <input type="hidden" name="vigencia_id" id="vigencia_id" value="{{ $id }}">
@@ -417,7 +426,6 @@
                 data: { "idRP": registro_id, "_token": $("meta[name='csrf-token']").attr("content")}
             }).done(function(data) {
                 console.log(data);
-
                 document.getElementById('registro_id').value = registro_id;
 
                 if(data.registro.tipo_contrato == 3) var tipoCont = "3 - DE OBRA PUBLICA";
@@ -448,13 +456,13 @@
                 for(var i=0; i<data.cdps.length; i++){
                     data.cdps[i].name = data.cdps[i].name.replace(/[\r\n|\n|\r]+/,' ');
                     if (data.cdps[i].tipo == "Funcionamiento"){
-                        var tr = `<td>#`+data.cdps[i].code+` - `+data.cdps[i].name+`</td>
+                        var tr = `<tr><td>#`+data.cdps[i].code+` - `+data.cdps[i].name+`</td>
                               <td>`+data.cdps[i].rubro.cod+` - `+data.cdps[i].rubro.name+`</td>
-                              <td>`+data.cdps[i].dep.name+`</td>`;
+                              <td>`+data.cdps[i].dep.name+`</td></tr>`;
                     } else {
-                        var tr = `<td>#`+data.cdps[i].code+` - `+data.cdps[i].name+`</td>
+                        var tr = `<tr><td>#`+data.cdps[i].code+` - `+data.cdps[i].name+`</td>
                               <td>`+data.cdps[i].bpin.cod_actividad+` - `+data.cdps[i].bpin.actividad +` - `+data.cdps[i].rubro.cod+` - `+data.cdps[i].rubro.name+`</td>
-                              <td>`+data.cdps[i].dep.name+`</td>`;
+                              <td>`+data.cdps[i].dep.name+`</td></tr>`;
                     }
 
                     $("#cdps").append(tr)
@@ -464,9 +472,9 @@
                     $("#ordenesPago").html("");
                     for(var i=0; i<data.ops.length; i++){
                         data.ops[i].nombre = data.ops[i].nombre.replace(/[\r\n|\n|\r]+/,' ');
-                        var tr = `<td>#`+data.ops[i].code+`</td>
+                        var tr = `<tr><td>#`+data.ops[i].code+`</td>
                           <td>`+data.ops[i].nombre+`</td>
-                          <td>Valor:`+formatter.format(data.ops[i].valor)+`</td>`;
+                          <td>Valor:`+formatter.format(data.ops[i].valor)+`</td></tr>`;
 
                         $("#ordenesPago").append(tr)
 
@@ -474,9 +482,9 @@
                             $("#pagos").html("");
                             for(var y=0; y<data.pagos[i].length; y++){
                                 data.pagos[i][y].concepto = data.pagos[i][y].concepto.replace(/[\r\n|\n|\r]+/,' ');
-                                var tr = `<td>#`+data.pagos[i][y].code+`</td>
+                                var tr = `<tr><td>#`+data.pagos[i][y].code+`</td>
                                           <td>`+data.pagos[i][y].concepto+`</td>
-                                          <td>Valor: `+formatter.format(data.pagos[i][y].valor)+`</td>`;
+                                          <td>Valor: `+formatter.format(data.pagos[i][y].valor)+`</td></tr>`;
                                 $("#pagos").append(tr)
                             }
                         }
@@ -495,7 +503,7 @@
                 document.getElementById('tipoCuenta').innerHTML = data.registro.persona.tipo_cuenta_bancaria;
                 document.getElementById('entidadBanc').innerHTML = data.registro.persona.banco_cuenta_bancaria;
 
-
+                $("#formRP").show();
                 $("#cargandoRP").hide();
                 $("#buttonSend").show();
             }).fail(function() {

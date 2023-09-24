@@ -296,6 +296,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('radCuentas/{id}/{step}','Administrativo\RadCuentas\RadCuentasController@pasos');
         Route::post('radCuentas/paso/{step}','Administrativo\RadCuentas\RadCuentasController@storeStep');
         Route::get('radCuentas/pdf/{id}/generate','Administrativo\RadCuentas\RadCuentasController@pdf');
+        Route::get('radCuentas/show/{id}/rev','Administrativo\RadCuentas\RadCuentasController@show');
+        Route::post('radCuentas/file/rev','Administrativo\RadCuentas\RadCuentasController@revAnexo');
+        Route::post('radCuentas/finalizar/{id}/send','Administrativo\RadCuentas\RadCuentasController@finalizar');
 
         //ORDENES DE PAGO
 

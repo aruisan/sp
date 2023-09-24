@@ -117,19 +117,19 @@
                                             <td style="vertical-align: middle">{{ \Carbon\Carbon::parse($ordenPago->created_at)->format('d-m-Y')}}</td>
                                             <td>
                                                 <select name="periodoPago[]" class="form-control">
-                                                    <option @if($ordenPago->periodo == "NO") selected @endif value="NO">NO APLICA</option>
-                                                    <option @if($ordenPago->periodo == "ENE") selected @endif value="ENE">ENERO</option>
-                                                    <option @if($ordenPago->periodo == "FEB") selected @endif value="FEB">FEBRERO</option>
-                                                    <option @if($ordenPago->periodo == "MAR") selected @endif value="MAR">MARZO</option>
-                                                    <option @if($ordenPago->periodo == "ABR") selected @endif value="ABR">ABRIL</option>
-                                                    <option @if($ordenPago->periodo == "MAY") selected @endif value="MAY">MAYO</option>
-                                                    <option @if($ordenPago->periodo == "JUN") selected @endif value="JUN">JUNIO</option>
-                                                    <option @if($ordenPago->periodo == "JUL") selected @endif value="JUL">JULIO</option>
-                                                    <option @if($ordenPago->periodo == "AGO") selected @endif value="AGO">AGOSTO</option>
-                                                    <option @if($ordenPago->periodo == "SEP") selected @endif value="SEP">SEPTIEMBRE</option>
-                                                    <option @if($ordenPago->periodo == "OCT") selected @endif value="OCT">OCTUBRE</option>
-                                                    <option @if($ordenPago->periodo == "NOV") selected @endif value="NOV">NOVIEMBRE</option>
-                                                    <option @if($ordenPago->periodo == "DIC") selected @endif value="DIC">DICIEMBRE</option>
+                                                    <option @if($ordenPago->periodo_pago == "NO") selected @endif value="NO">NO APLICA</option>
+                                                    <option @if($ordenPago->periodo_pago == "ENE") selected @endif value="ENE">ENERO</option>
+                                                    <option @if($ordenPago->periodo_pago == "FEB") selected @endif value="FEB">FEBRERO</option>
+                                                    <option @if($ordenPago->periodo_pago == "MAR") selected @endif value="MAR">MARZO</option>
+                                                    <option @if($ordenPago->periodo_pago == "ABR") selected @endif value="ABR">ABRIL</option>
+                                                    <option @if($ordenPago->periodo_pago == "MAY") selected @endif value="MAY">MAYO</option>
+                                                    <option @if($ordenPago->periodo_pago == "JUN") selected @endif value="JUN">JUNIO</option>
+                                                    <option @if($ordenPago->periodo_pago == "JUL") selected @endif value="JUL">JULIO</option>
+                                                    <option @if($ordenPago->periodo_pago == "AGO") selected @endif value="AGO">AGOSTO</option>
+                                                    <option @if($ordenPago->periodo_pago == "SEP") selected @endif value="SEP">SEPTIEMBRE</option>
+                                                    <option @if($ordenPago->periodo_pago == "OCT") selected @endif value="OCT">OCTUBRE</option>
+                                                    <option @if($ordenPago->periodo_pago == "NOV") selected @endif value="NOV">NOVIEMBRE</option>
+                                                    <option @if($ordenPago->periodo_pago == "DIC") selected @endif value="DIC">DICIEMBRE</option>
                                                 </select>
                                             </td>
                                             <td><input type="text" class="form-control" name="factura[]" value="{{ $ordenPago->factura }}"></td>

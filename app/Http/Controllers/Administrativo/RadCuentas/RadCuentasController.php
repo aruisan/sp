@@ -41,7 +41,129 @@ class RadCuentasController extends Controller
 
     public function pdf($id){
         $radCuenta = RadCuentas::find($id);
-        dd($id, $radCuenta);
+        foreach ($radCuenta->registro->cdpRegistroValor as $cdpRegValue) {
+            if ($cdpRegValue->cdps->tipo == "Inversion"){
+                $bpinsCdpVal = BpinCdpValor::where('cdp_id', $cdpRegValue->cdps->id)->get();
+                foreach ($bpinsCdpVal as $bpinCdp){
+                    $DepRubFont = DependenciaRubroFont::find($bpinCdp->dependencia_rubro_font_id);
+                    $cdpRegValue->cdps->bpin = BPin::where('cod_actividad', $bpinCdp->cod_actividad)->first();
+                    $cdpRegValue->cdps->fuente = $DepRubFont->fontRubro->sourceFunding;
+                    $cdpRegValue->cdps->dep = $DepRubFont->dependencia;
+                    $cdpRegValue->cdps->rubro = $DepRubFont->fontRubro->rubro;
+                    $cdps[] = $cdpRegValue->cdps;
+                }
+            } else{
+                $rubsCdpVal = RubrosCdpValor::where('cdp_id', $cdpRegValue->cdps->id)->get();
+                foreach ($rubsCdpVal as $rubCdp){
+                    $DepRubFont = DependenciaRubroFont::find($rubCdp->fontsDep_id);
+                    $cdpRegValue->cdps->fuente = $DepRubFont->fontRubro->sourceFunding;
+                    $cdpRegValue->cdps->dep = $DepRubFont->dependencia;
+                    $cdpRegValue->cdps->rubro = $DepRubFont->fontRubro->rubro;
+                    $cdps[] = $cdpRegValue->cdps;
+                }
+            }
+        }
+
+        $ordenesPago = OrdenPagos::where('registros_id', $radCuenta->registro->id)->get();
+        foreach ($ordenesPago as $ordenPago) $pagos[] = Pagos::where('orden_pago_id', $ordenPago->id)->get();
+        if (!isset($pagos)) $pagos = [];
+
+        //return view('administrativo.radcuentas.pdf', compact('radCuenta','cdps','ordenesPago','pagos'));
+        $pdf = PDF::loadView('administrativo.radcuentas.pdf', compact('radCuenta','cdps','ordenPago','pagos'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
+        return $pdf->stream();
+    }
+
+    public function revAnexo(Request $request){
+        $anexo = RadCuentasAnex::find($request->id_anex);
+        if ($request->estado == 1){
+            $anexo->estado = '1';
+            $anexo->observacion_rev = $request->observacion;
+        } else {
+            $anexo->estado = '2';
+            $anexo->motivo_rechazo = $request->observacion;
+        }
+        $anexo->fecha_revision = Carbon::today();
+        $anexo->revisor_user_id = Auth::user()->id;
+        $anexo->save();
+
+        Session::flash('success','La revision del anexo fue realizada exitosamente.');
+        return redirect('administrativo/radCuentas/show/'.$anexo->radicacion->id.'/rev');
+    }
+    public function finalizar(Request $request, $id){
+        $radCuenta = RadCuentas::find($id);
+        if ($radCuenta->registro->saldo < $radCuenta->valor_ini){
+            Session::flash('warning','El saldo del registro es menor al valor inicial del contrato.');
+            return back();
+        } else {
+            foreach ($radCuenta->adds as $add){
+                if ($add->registro->saldo < $add->valor ){
+                    Session::flash('warning','El saldo del registro de la adición es menor al solicitado.');
+                    return back();
+                }
+            }
+
+            if ($request->estadoRad == 1){
+                $radCuenta->saldo = $radCuenta->valor_fin;
+                $radCuenta->estado_rev = '1';
+                $radCuenta->ff_fin_rev = Carbon::today();
+                if ($request->supervisor_id != "NO APLICA") $radCuenta->supervisor_id = $request->supervisor_id;
+                $radCuenta->ob_rev = $request->ob_rev;
+                $radCuenta->save();
+
+                $radCuenta->registro->saldo = $radCuenta->registro->saldo - $radCuenta->valor_ini;
+                $radCuenta->registro->save();
+                foreach ($radCuenta->adds as $add) {
+                    $add->registro->saldo = $add->registro->saldo - $add->valor;
+                    $add->registro->save();
+                }
+            } else{
+                $radCuenta->estado_elabor = '0';
+                $radCuenta->estado_rev = '2';
+                $radCuenta->ff_fin_rev = Carbon::today();
+                $radCuenta->ff_rechazo_rev = Carbon::today();
+                if ($request->supervisor_id != "NO APLICA") $radCuenta->supervisor_id = $request->supervisor_id;
+                $radCuenta->ob_rev = $request->ob_rev;
+                $radCuenta->save();
+            }
+
+            Session::flash('success','La radicacion de cuenta ha sido procesada exitosamente.');
+            return redirect('/administrativo/radCuentas/'.$radCuenta->vigencia_id);
+        }
+    }
+    public function show($id){
+        $radCuenta = RadCuentas::find($id);
+        $personas = Persona::all();
+        $id = $radCuenta->vigencia_id;
+
+        foreach ($radCuenta->registro->cdpRegistroValor as $cdpRegValue) {
+            if ($cdpRegValue->cdps->tipo == "Inversion"){
+                $bpinsCdpVal = BpinCdpValor::where('cdp_id', $cdpRegValue->cdps->id)->get();
+                foreach ($bpinsCdpVal as $bpinCdp){
+                    $DepRubFont = DependenciaRubroFont::find($bpinCdp->dependencia_rubro_font_id);
+                    $cdpRegValue->cdps->bpin = BPin::where('cod_actividad', $bpinCdp->cod_actividad)->first();
+                    $cdpRegValue->cdps->fuente = $DepRubFont->fontRubro->sourceFunding;
+                    $cdpRegValue->cdps->dep = $DepRubFont->dependencia;
+                    $cdpRegValue->cdps->rubro = $DepRubFont->fontRubro->rubro;
+                    $cdps[] = $cdpRegValue->cdps;
+                }
+            } else{
+                $rubsCdpVal = RubrosCdpValor::where('cdp_id', $cdpRegValue->cdps->id)->get();
+                foreach ($rubsCdpVal as $rubCdp){
+                    $DepRubFont = DependenciaRubroFont::find($rubCdp->fontsDep_id);
+                    $cdpRegValue->cdps->fuente = $DepRubFont->fontRubro->sourceFunding;
+                    $cdpRegValue->cdps->dep = $DepRubFont->dependencia;
+                    $cdpRegValue->cdps->rubro = $DepRubFont->fontRubro->rubro;
+                    $cdps[] = $cdpRegValue->cdps;
+                }
+            }
+        }
+
+        $ordenesPago = OrdenPagos::where('registros_id', $radCuenta->registro->id)->get();
+        foreach ($ordenesPago as $ordenPago) $pagos[] = Pagos::where('orden_pago_id', $ordenPago->id)->get();
+        if (!isset($pagos)) $pagos = [];
+
+        return view('administrativo.radcuentas.show', compact('radCuenta','cdps','ordenesPago',
+            'pagos','id','personas'));
     }
 
     /**
@@ -90,7 +212,7 @@ class RadCuentasController extends Controller
             }
         }
 
-        $ordenesPago = OrdenPagos::where('registros_id', $registro->id)->get();
+        $ordenesPago = OrdenPagos::where('registros_id', $registro->id)->where('estado','1')->get();
         foreach ($ordenesPago as $ordenPago) $pagos[] = Pagos::where('orden_pago_id', $ordenPago->id)->get();
 
         if (!isset($pagos)) $pagos = [];
@@ -116,7 +238,7 @@ class RadCuentasController extends Controller
         $radCuenta->registro_id  = $request->registro_id;
         $radCuenta->user_id = Auth::user()->id;
         $radCuenta->vigencia_id = $request->vigencia_id;
-        $radCuenta->interventor_id = $request->interventor_id;
+        if ($radCuenta->interventor_id != "NO POSEE") $radCuenta->interventor_id = $request->interventor_id;
         $radCuenta->save();
 
         $radCuenta->code = $radCuenta->id;
