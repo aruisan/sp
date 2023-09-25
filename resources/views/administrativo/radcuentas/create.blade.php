@@ -254,6 +254,9 @@
                     data: { "idPer": id, "vigencia_id": vigencia_id, "_token": $("meta[name='csrf-token']").attr("content")}
                 }).done(function(data) {
                     console.log(data);
+                    if(data.registros.length === 0 || data.history.length === 0){
+                        toastr.warning('NO SE ENCUENTRAN REGISTROS PENDIENTES NI RADICACIONES PENDIENTES DE ESE TERCERO');
+                    }
 
                     if (data['history'].length > 0){
 
