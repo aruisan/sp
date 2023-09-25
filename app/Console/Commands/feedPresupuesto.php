@@ -87,7 +87,10 @@ class feedPresupuesto extends Command
                         $ejec = intval($multi) / intval($data['presupuesto_def']);
 
                         if ($proy == 0) $proy = $ejec;
-                        else $proy = ($proy + $ejec)/2;
+                        else {
+                            $sum = $proy + $ejec;
+                            $proy = $sum/2;
+                        }
                     }
                 }
             }
