@@ -494,7 +494,7 @@
                 document.getElementById('contratista').value = data.registro.persona.nombre;
                 document.getElementById('cedula').value = data.registro.persona.num_dc;
                 document.getElementById('regTrib').innerHTML = data.registro.persona.regimen;
-                document.getElementById('retefuente').value = data.registro.persona.reteFuente;
+                document.getElementById('retefuente').value = data.registro.persona.regimen_porcentaje;
                 document.getElementById('dir').value = data.registro.persona.direccion;
                 document.getElementById('telFijo').value = data.registro.persona.telefono_fijo;
                 document.getElementById('email').value = data.registro.persona.email;

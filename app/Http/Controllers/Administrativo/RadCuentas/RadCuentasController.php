@@ -255,6 +255,7 @@ class RadCuentasController extends Controller
         $persona->num_dc  = $request->cedula;
         if ($request->regimen_tributario != "CAMBIAR EL REGIMEN TRIBUTARIO") $persona->regimen  = $request->regimen_tributario;
         $persona->reteFuente  = $request->retefuente;
+        $persona->regimen_porcentaje  = $request->retefuente;
         $persona->direccion  = $request->dir;
         $persona->email   = $request->email;
         $persona->telefono  = $request->cel;
@@ -391,6 +392,10 @@ class RadCuentasController extends Controller
                 $radCuenta->pago->totalDesc = $request->totalDesc;
                 $radCuenta->pago->netoPago = $request->netoPago;
                 $radCuenta->pago->save();
+
+                $radCuenta->persona->regimen_porcentaje = $request->reteDIAN;
+                $radCuenta->persona->reteFuente = $request->reteDIAN;
+                $radCuenta->persona->save();
 
                 if (isset($request->embargo)){
                     foreach ($request->embargo as $embargo){
