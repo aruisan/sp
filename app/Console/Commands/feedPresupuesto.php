@@ -97,7 +97,7 @@ class feedPresupuesto extends Command
                 }
             }
 
-            dd($proy, $porcenEjec);
+            //dd($proy, $porcenEjec);
 
             if ($delete){
                 $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
