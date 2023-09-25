@@ -98,7 +98,18 @@ class feedPresupuesto extends Command
                 }
             }
 
-            dd($porcenEjec, $proyectos);
+            for ($i = 0; $i < count($porcenEjec); $i++) {
+                if (!isset($newProy)){
+                    $newProy[] = $proyectos[$i];
+                    $valNewProy[] = $porcenEjec[$i];
+                } else{
+                    if (($i = array_search($proyectos[$i], $newProy)) !== FALSE){
+                        dd($i, $newProy, $valNewProy, $proyectos[$i]);
+                    }
+                }
+            }
+
+            dd($newProy, $valNewProy);
 
             if ($delete){
                 $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
