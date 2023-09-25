@@ -79,6 +79,21 @@ class feedPresupuesto extends Command
             $prepTrait = new PrepEgresosTraits();
             $presupuesto = $prepTrait->prepEgresos($vigens);
 
+            $proy = 0;
+            foreach ($presupuesto as $data) {
+                if (intval($data['presupuesto_def']) > 0) {
+                    if (isset($data['codBpin'])) {
+                        $multi = intval($data['cdps']) * 100;
+                        $ejec = intval($multi) / intval($data['presupuesto_def']);
+
+                        if ($proy != 0) $proy = $ejec;
+                        else $proy = ($proy + $ejec)/2;
+                    }
+                }
+            }
+            
+            dd($proy);
+
             if ($delete){
                 $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
                 foreach ($findSnapDataOld as $dataOld) $dataOld->delete();
