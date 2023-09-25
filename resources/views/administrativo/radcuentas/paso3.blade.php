@@ -85,8 +85,8 @@
                                     <td>ARL
                                         <select name="arl" class="form-control">
                                             <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->arl == "NO") selected @endif value="NO">NO APLICA</option>
-                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->arl == "ENE") selected @endif value="ENE">ENERO</option>
-                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->arl == "FEB") selected @endif value="FEB">FEBRERO</option>
+                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->arl == "ARL POSITIVA") selected @endif value="ARL POSITIVA">ARL POSITIVA</option>
+                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->arl == "ARL SURA") selected @endif value="ARL SURA">ARL SURA</option>
                                         </select>
                                     </td>
                                     <td colspan="2">
@@ -98,8 +98,10 @@
                                     <td>Caja Compensación
                                         <select name="caja" class="form-control">
                                             <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->caja == "NO") selected @endif value="NO">NO APLICA</option>
-                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->caja == "ENE") selected @endif value="ENE">ENERO</option>
-                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->caja == "FEB") selected @endif value="FEB">FEBRERO</option>
+                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->caja == "CAJASAI") selected @endif value="CAJASAI">CAJASAI</option>
+                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->caja == "COLSUBSIDIO") selected @endif value="COLSUBSIDIO">COLSUBSIDIO</option>
+                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->caja == "COMFAMA") selected @endif value="COMFAMA">COMFAMA</option>
+                                            <option @if(isset($radCuenta->pago->id) and $radCuenta->pago->caja == "CAFAM") selected @endif value="CAFAM">CAFAM</option>
                                         </select>
                                     </td>
                                     <td colspan="2">
