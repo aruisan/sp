@@ -112,7 +112,7 @@ class feedPresupuesto extends Command
                 }
             }
 
-            dd($valNewProy, $newProy);
+            //dd($valNewProy, $newProy);
 
             if ($delete){
                 $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
