@@ -103,8 +103,11 @@ class feedPresupuesto extends Command
                     $newProy[] = $proyectos[$i];
                     $valNewProy[] = $porcenEjec[$i];
                 } else{
-                    if (($i = array_search($proyectos[$i], $newProy)) !== FALSE){
-                        dd($i, $newProy, $valNewProy, $proyectos[$i]);
+                    if (($find = array_search($proyectos[$i], $newProy)) !== FALSE){
+                        dd($find, $newProy, $valNewProy, $proyectos[$i], $porcenEjec[$i]);
+                    } else{
+                        $newProy[] = $proyectos[$i];
+                        $valNewProy[] = $porcenEjec[$i];
                     }
                 }
             }
