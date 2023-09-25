@@ -85,12 +85,13 @@ class feedPresupuesto extends Command
                     if (isset($data['codBpin'])) {
                         $multi = intval($data['cdps']) * 100;
                         $ejec = intval($multi) / intval($data['presupuesto_def']);
-                        $porcenEjec[] = $ejec;
-
-                        if ($proy == 0) $proy = $ejec;
-                        else {
-                            $sum = $proy + $ejec;
-                            $proy = $sum/2;
+                        if ($ejec > 0){
+                            $porcenEjec[] = $ejec;
+                            if ($proy == 0) $proy = $ejec;
+                            else {
+                                $sum = $proy + $ejec;
+                                $proy = $sum/2;
+                            }
                         }
                     }
                 }
