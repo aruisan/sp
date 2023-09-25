@@ -86,12 +86,12 @@ class feedPresupuesto extends Command
                         $multi = intval($data['cdps']) * 100;
                         $ejec = intval($multi) / intval($data['presupuesto_def']);
 
-                        if ($proy != 0) $proy = $ejec;
+                        if ($proy == 0) $proy = $ejec;
                         else $proy = ($proy + $ejec)/2;
                     }
                 }
             }
-            
+
             dd($proy);
 
             if ($delete){
