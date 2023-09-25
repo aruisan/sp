@@ -87,6 +87,7 @@ class feedPresupuesto extends Command
                         $ejec = intval($multi) / intval($data['presupuesto_def']);
                         if ($ejec > 0){
                             $porcenEjec[] = $ejec;
+                            $proyectos[] = $data['codBpin'];
                             if ($proy == 0) $proy = $ejec;
                             else {
                                 $sum = $proy + $ejec;
@@ -97,7 +98,7 @@ class feedPresupuesto extends Command
                 }
             }
 
-            //dd($proy, $porcenEjec);
+            dd($porcenEjec, $proyectos);
 
             if ($delete){
                 $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
