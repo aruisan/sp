@@ -82,7 +82,7 @@ class feedPresupuesto extends Command
             $proy = 0;
             foreach ($presupuesto as $data) {
                 if (intval($data['presupuesto_def']) > 0) {
-                    if (isset($data['codBpin'])) {
+                    if ($data['codBpin'] != "") {
                         $multi = intval($data['cdps']) * 100;
                         $ejec = intval($multi) / intval($data['presupuesto_def']);
                         if ($ejec > 0){
