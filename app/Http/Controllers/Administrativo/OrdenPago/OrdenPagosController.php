@@ -27,6 +27,7 @@ use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Persona;
 use App\Traits\ConteoTraits;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Registro\Registro;
@@ -575,6 +576,8 @@ class OrdenPagosController extends Controller
         $Egreso_id = $Pago->code;
         $OrdenPago = OrdenPagos::findOrFail($Pago->orden_pago_id);
         $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $OrdenPago->id)->where('valor','>',0)->get();
+
+        if ($Pago->responsable_id) $Pago->responsable = User::find($Pago->responsable_id);
 
         $all_rubros = Rubro::all();
         foreach ($all_rubros as $rubro){
