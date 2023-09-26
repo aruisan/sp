@@ -489,6 +489,7 @@ class OrdenPagosController extends Controller
     public function pdf_OP($id)
     {
         $OrdenPago = OrdenPagos::findOrFail($id);
+        $OrdenPago->responsable = User::find($OrdenPago->user_id);
 
         if (isset($OrdenPago->registros->cdpsRegistro)) {
             $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $id)->where('valor', '>', 0)->get();
