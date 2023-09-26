@@ -197,7 +197,7 @@
                             </tr>
                         </table>
                         <br>
-                        <input type="hidden" class="form-control" name="referenciaPago" id="referenciaPago" placeholder="REFERENCIA DEL PAGO">
+                        <input type="text" class="form-control" name="referenciaPago" id="referenciaPago" placeholder="REFERENCIA DEL PAGO">
                         <br><br>
                         <center>
                             <button type="button" v-on:click.prevent="nuevoBanco" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Agregar Otro Banco</button>
