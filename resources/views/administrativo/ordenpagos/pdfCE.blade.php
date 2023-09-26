@@ -239,8 +239,7 @@
 			<div class="table-responsive br-black-1">
 				<table class="table-bordered" style="width: 100%">
 					<tr class="text-center">
-						<td>Elaborado por:</td>
-						<td>{{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</td>
+						<td>Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</td>
 					</tr>
 				</table>
 			</div>
