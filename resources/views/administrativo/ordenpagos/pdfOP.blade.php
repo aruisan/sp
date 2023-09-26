@@ -245,9 +245,7 @@
 				</tbody>
 			</table>
 			@if($OrdenPago->responsable)
-				<div class="text-center">
-					<h5 style="font-size: 10px">Elaborado por: {{ $OrdenPago->responsable->name }} - {{ $OrdenPago->responsable->email }}</h5>
-				</div>
+				<h5 style="font-size: 10px" class="text-center">Elaborado por: {{ $OrdenPago->responsable->name }} - {{ $OrdenPago->responsable->email }}</h5>
 			@endif
 		</div>
 	</div>
