@@ -236,12 +236,8 @@
 			</table>
 		</div>
 		@if($Pago->responsable)
-			<div class="table-responsive br-black-1">
-				<table class="table-bordered" style="width: 100%">
-					<tr class="text-center">
-						<td>Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</td>
-					</tr>
-				</table>
+			<div class="text-center">
+				<h4>Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</h4>
 			</div>
 		@endif
 	</div>
