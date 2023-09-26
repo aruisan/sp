@@ -234,12 +234,10 @@
 				</tr>
 				</tbody>
 			</table>
+			@if($Pago->responsable)
+				<h5 style="font-size: 10px" class="text-center">Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</h5>
+			@endif
 		</div>
-		@if($Pago->responsable)
-			<div class="text-center">
-				<h5 style="font-size: 10px">Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</h5>
-			</div>
-		@endif
 	</div>
 	<div style="font-size: 10px;">
 		<div class="col-md-12 align-self-center">
