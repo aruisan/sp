@@ -237,7 +237,7 @@
 		</div>
 		@if($Pago->responsable)
 			<div class="text-center">
-				<h4>Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</h4>
+				<h5>Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</h5>
 			</div>
 		@endif
 	</div>
