@@ -24,9 +24,12 @@
                                 <tr style="background-color: #6c0e03; color: white">
                                     <td colspan="3">I. IDENTIFICACIÓN DEL CONTRATO</td>
                                 </tr>
-                                <tr>
-                                    <td colspan="3">NOMBRE INTERVENTOR SI POSEE	<b>{{ $radCuenta->interventor->num_dc }} - {{ $radCuenta->interventor->nombre }} </td>
-                                </tr>
+                                @if($radCuenta->interventor)
+                                    <tr>
+                                        <td colspan="3">NOMBRE INTERVENTOR:
+                                            <b>{{ $radCuenta->interventor->num_dc }} - {{ $radCuenta->interventor->nombre }} </td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <td colspan="2">Tipo De Contrato: <b>
                                             @if($radCuenta->registro->tipo_contrato == '3') DE OBRA PUBLICA
@@ -297,6 +300,22 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <tr>
+                                    <td>CDP</td>
+                                    <td>
+                                        @foreach($cdps as $cdp)
+                                            <a href="{{ url('administrativo/cdp/pdf/'.$cdp->id.'/'.$radCuenta->vigencia_id) }}" target="_blank" title="File" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                        @endforeach
+                                    </td>
+                                    <td colspan="5"></td>
+                                </tr>
+                                <tr>
+                                    <td>CRP</td>
+                                    <td>
+                                        <a href="{{ url('administrativo/registro/pdf/'.$radCuenta->registro->id.'/'.$radCuenta->vigencia_id) }}" target="_blank" title="Ver Archivo" class="btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                    </td>
+                                    <td colspan="5"></td>
+                                </tr>
                                 @foreach($radCuenta->anexos as $anexo)
                                     <tr>
                                         <td>{{ $anexo->anexo }}</td>
@@ -316,8 +335,10 @@
                                         <td>{{ $anexo->observacion_rev }}</td>
                                         <td>{{ $anexo->motivo_rechazo }}</td>
                                         <td>
-                                            @if($anexo->estado == '0')
-                                                <a onclick="revFile({{$anexo->id}})" class="btn btn-sm btn-primary">REVISAR</a>
+                                            @if($radCuenta->estado_rev == '0')
+                                                @if($anexo->estado == '0')
+                                                    <a onclick="revFile({{$anexo->id}})" class="btn btn-sm btn-primary">REVISAR</a>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>
@@ -337,13 +358,19 @@
                                         <td>FECHA DE ESTA AUTORIZACION DE PAGO</td>
                                         <td> <b>{{ \Carbon\Carbon::parse($radCuenta->ff_fin_rev)->format('d-m-Y') }}</b></td>
                                     </tr>
-                                    <tr>
-                                        <td>NOMBRE INTERVENTOR</td>
-                                        <td><b>{{$radCuenta->interventor->nombre}}</b></td>
-                                    </tr>
+                                    @if($radCuenta->interventor)
+                                        <tr>
+                                            <td>NOMBRE INTERVENTOR</td>
+                                            <td><b>{{$radCuenta->interventor->nombre}}</b></td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <td>NOMBRE SUPERVISOR</td>
-                                        <td><b>{{$radCuenta->supervisor->nombre}}</b></td>
+                                        <td>
+                                            @if($radCuenta->supervisor)
+                                                <b>{{$radCuenta->supervisor->nombre}}</b>
+                                            @endif
+                                        </td>
                                     </tr>
                                 </table>
                             @else

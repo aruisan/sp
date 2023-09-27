@@ -46,4 +46,8 @@ class RadCuentas extends Model implements Auditable
     {
         return $this->hasMany('App\Model\Administrativo\RadCuentas\RadCuentasAnex','rad_cuenta_id');
     }
+    public function ops()
+    {
+        return $this->hasMany('App\Model\Administrativo\RadCuentas\RadCuentasOp','rad_cuenta_id');
+    }
 }

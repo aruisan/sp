@@ -10,9 +10,17 @@
                 <li class="nav-item regresar">
                     <a class="nav-link "  href="{{ url('/administrativo/radCuentas/'.$vigencia_id) }}"><i class="fa fa-home"></i></a>
                 </li>
+                <li class="nav-item regresar">
+                    <a class="nav-link "  href="{{ url('/administrativo/radCuentas/'.$radCuenta->id.'/2') }}"><i class="fa fa-arrow-left"></i> PASO 2</a>
+                </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#nuevo" >RADICACIÓN - PASO 3</a>
                 </li>
+                @if(count($radCuenta->anexos) > 0)
+                    <li class="nav-item">
+                        <a class="nav-link"  href="{{ url('/administrativo/radCuentas/'.$radCuenta->id.'/4') }}"><i class="fa fa-arrow-right"></i> PASO 4</a>
+                    </li>
+                @endif
             </ul>
             <div class="tab-content">
                 <div class="form-validation" id="crud">
@@ -307,6 +315,15 @@
                                             </td>
                                         </tr>
                                     @endif
+                                    @if(count($radCuenta->pago->descuentos) > 0)
+                                        @foreach($radCuenta->pago->descuentos as $descuento)
+                                            <tr>
+                                                <td>{{ $descuento->type }}</td>
+                                                <td>Valor: $<?php echo number_format( $descuento->valor,0) ?></td>
+                                                <td><a onclick="deleteDesc({{ $descuento->id }})" class="btn-sm btn-danger"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 @else
                                     @php($hasPago = 0)
                                     @php($valueDIAN = 0)
@@ -322,11 +339,21 @@
                                 <table id="tablaTotales" class="table text-center table-bordered">
                                     <tbody>
                                     <tr>
-                                        <td>TOTAL DESCUENTOS: <b><span id="totalDescSpan"></span></b>
-                                            <input type="hidden" name="totalDesc" id="totalDesc">
+                                        <td>TOTAL DESCUENTOS: <b><span id="totalDescSpan">
+                                                    @if($radCuenta->pago->totalDesc > 0)
+                                                        $<?php echo number_format( $radCuenta->pago->totalDesc,0) ?>
+                                                    @endif
+                                                </span></b>
+                                            <input type="hidden" name="totalDesc" id="totalDesc"
+                                                   @if($radCuenta->pago->totalDesc > 0) value="{{$radCuenta->pago->totalDesc}}" @endif>
                                         </td>
-                                        <td>NETO A PAGAR: <b><span id="netoPagoSpan"></span></b>
-                                            <input type="hidden" name="netoPago" id="netoPago">
+                                        <td>NETO A PAGAR: <b><span id="netoPagoSpan">
+                                                    @if($radCuenta->pago->netoPago > 0)
+                                                        $<?php echo number_format( $radCuenta->pago->netoPago,0) ?>
+                                                    @endif
+                                                </span></b>
+                                            <input type="hidden" name="netoPago" id="netoPago"
+                                                   @if($radCuenta->pago->netoPago > 0) value="{{$radCuenta->pago->netoPago}}" @endif>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -343,6 +370,9 @@
                         <br>
                         <div class="form-group row" id="buttonSend">
                             <div class="col-lg-12 ml-auto text-center">
+                                @if(isset($radCuenta->pago->id) and count($radCuenta->anexos) == 0)
+                                    <a onclick="deletePago({{ $radCuenta->id }})" class="btn btn-primary">Eliminar Datos del Pago</a>
+                                @endif
                                 <button type="submit" class="btn btn-primary">Registrar Datos Para el Pago</button>
                             </div>
                         </div>
@@ -357,6 +387,42 @@
         const vigencia_id = @json($vigencia_id);
         const radCuentaPago = @json($hasPago);
         const variable = @json($radCuenta->pago['valor_pago']);
+
+        function deletePago(id){
+            var opcion = confirm("Esta seguro de querer eliminar los datos para el pago?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/radCuentas/delete/PAGO",
+                    data: { "idRad": id, "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(data) {
+                    if (data == 200){
+                        toastr.warning('DATOS DEL PAGO ELIMINADO. RECARGANDO PAGINA...');
+                        location.reload();
+                    }
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL INTENTAR ELIMINAR LOS DATOS DEL PAGO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+                });
+            }
+        }
+
+        function deleteDesc(id){
+            var opcion = confirm("Esta seguro de querer eliminar el descuento?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/radCuentas/delete/DESCUENTO",
+                    data: { "idDesc": id, "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(data) {
+                    if (data == 200){
+                        toastr.warning('DESCUENTO ELIMINADO. RECARGANDO PAGINA...');
+                        location.reload();
+                    }
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL INTENTAR ELIMINAR EL DESCUENTO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+                });
+            }
+        }
 
         if(radCuentaPago === 1){
             const reteDian = @json(($valueDIAN * $radCuenta->pago['valor_pago']) / 100);

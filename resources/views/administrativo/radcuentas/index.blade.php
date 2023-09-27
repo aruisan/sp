@@ -36,7 +36,11 @@
                                 <td>{{ $radPend->code }}</td>
                                 <td>{{ $radPend->persona->num_dc }} - {{ $radPend->persona->nombre }}</td>
                                 <td>{{ $radPend->created_at }}</td>
-                                <td><a href="{{ url('administrativo/radCuentas/'.$radPend->id.'/2') }}" class="btn-sm btn-info" title="Paso 2">2</a></td>
+                                <td>
+                                    <a href="{{ url('administrativo/radCuentas/'.$radPend->id.'/2') }}" class="btn btn-sm btn-primary" title="Paso 2">2</a>
+                                    <a href="{{ url('administrativo/radCuentas/'.$radPend->id.'/3') }}" class="btn btn-sm btn-primary" title="Paso 3">3</a>
+                                    <a href="{{ url('administrativo/radCuentas/'.$radPend->id.'/4') }}" class="btn btn-sm btn-primary" title="Paso 4">4</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -107,7 +111,10 @@
                                 <td>{{ $radicacion->code }}</td>
                                 <td>{{ $radicacion->persona->num_dc }} - {{ $radicacion->persona->nombre }}</td>
                                 <td>{{ $radicacion->created_at }}</td>
-                                <td><a href="{{ url('administrativo/radCuentas/'.$radicacion->id.'/2') }}" class="btn-sm btn-info" title="Paso 2">2</a></td>
+                                <td>
+                                    <a href="{{ url('administrativo/radCuentas/pdf/'.$radicacion->id.'/generate') }}" target="_blank" class="btn btn-sm btn-primary" title="Archivo"><i class="fa fa-file-pdf-o"></i></a>
+                                    <a href="{{ url('administrativo/radCuentas/show/'.$radicacion->id.'/rev') }}" class="btn btn-sm btn-primary" title="Archivo"><i class="fa fa-eye"></i></a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

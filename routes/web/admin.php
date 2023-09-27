@@ -299,6 +299,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::get('radCuentas/show/{id}/rev','Administrativo\RadCuentas\RadCuentasController@show');
         Route::post('radCuentas/file/rev','Administrativo\RadCuentas\RadCuentasController@revAnexo');
         Route::post('radCuentas/finalizar/{id}/send','Administrativo\RadCuentas\RadCuentasController@finalizar');
+        Route::post('radCuentas/delete/{module}','Administrativo\RadCuentas\RadCuentasController@deleteData');
 
         //ORDENES DE PAGO
 

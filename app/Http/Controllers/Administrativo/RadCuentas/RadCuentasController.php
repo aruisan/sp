@@ -12,6 +12,7 @@ use App\Model\Administrativo\RadCuentas\RadCuentas;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\RadCuentas\RadCuentasAdd;
 use App\Model\Administrativo\RadCuentas\RadCuentasAnex;
+use App\Model\Administrativo\RadCuentas\RadCuentasOp;
 use App\Model\Administrativo\RadCuentas\RadCuentasPago;
 use App\Model\Administrativo\RadCuentas\RadCuentasPagoDesc;
 use App\Model\Administrativo\Registro\Registro;
@@ -32,7 +33,7 @@ class RadCuentasController extends Controller
      */
     public function index($id)
     {
-        $radCuentasHist = RadCuentas::where('vigencia_id', $id)->where('estado_rev','!=','0')->get();
+        $radCuentasHist = RadCuentas::where('vigencia_id', $id)->where('estado_rev','!=','0')->where('estado_elabor','1')->get();
         $radCuentasProceso = RadCuentas::where('vigencia_id', $id)->where('estado_elabor','1')->where('estado_rev','0')->get();
         $radCuentasPend = RadCuentas::where('vigencia_id', $id)->where('estado_elabor','0')->get();
 
@@ -109,6 +110,14 @@ class RadCuentasController extends Controller
                 if ($request->supervisor_id != "NO APLICA") $radCuenta->supervisor_id = $request->supervisor_id;
                 $radCuenta->ob_rev = $request->ob_rev;
                 $radCuenta->save();
+
+                foreach ($radCuenta->anexos as $anexo){
+                    $anexo->estado = '1';
+                    $anexo->motivo_rechazo = null;
+                    $anexo->observacion_rev = null;
+                    $anexo->fecha_revision = Carbon::today();
+                    $anexo->save();
+                }
 
                 $radCuenta->registro->saldo = $radCuenta->registro->saldo - $radCuenta->valor_ini;
                 $radCuenta->registro->save();
@@ -306,8 +315,32 @@ class RadCuentasController extends Controller
             if ($radCuenta->pago == null) $radCuenta->pago = ['valor_pago' => 0];
             return view('administrativo.radcuentas.paso3', compact('vigencia_id','radCuenta'));
         } elseif($paso == 4) {
+            $registro = Registro::where('id',$radCuenta->registro_id )->with('persona')->first();
             $vigencia_id = $radCuenta->vigencia_id;
-            return view('administrativo.radcuentas.paso4', compact('vigencia_id','radCuenta'));
+            foreach ($registro->cdpRegistroValor as $cdpRegValue) {
+                if ($cdpRegValue->cdps->tipo == "Inversion"){
+                    $bpinsCdpVal = BpinCdpValor::where('cdp_id', $cdpRegValue->cdps->id)->get();
+                    foreach ($bpinsCdpVal as $bpinCdp){
+                        $DepRubFont = DependenciaRubroFont::find($bpinCdp->dependencia_rubro_font_id);
+                        $cdpRegValue->cdps->bpin = BPin::where('cod_actividad', $bpinCdp->cod_actividad)->first();
+                        $cdpRegValue->cdps->fuente = $DepRubFont->fontRubro->sourceFunding;
+                        $cdpRegValue->cdps->dep = $DepRubFont->dependencia;
+                        $cdpRegValue->cdps->rubro = $DepRubFont->fontRubro->rubro;
+                        $cdps[] = $cdpRegValue->cdps;
+                    }
+                } else{
+                    $rubsCdpVal = RubrosCdpValor::where('cdp_id', $cdpRegValue->cdps->id)->get();
+                    foreach ($rubsCdpVal as $rubCdp){
+                        $DepRubFont = DependenciaRubroFont::find($rubCdp->fontsDep_id);
+                        $cdpRegValue->cdps->fuente = $DepRubFont->fontRubro->sourceFunding;
+                        $cdpRegValue->cdps->dep = $DepRubFont->dependencia;
+                        $cdpRegValue->cdps->rubro = $DepRubFont->fontRubro->rubro;
+                        $cdps[] = $cdpRegValue->cdps;
+                    }
+                }
+            }
+            return view('administrativo.radcuentas.paso4', compact('vigencia_id','radCuenta',
+            'registro','cdps'));
         } else dd($radCuenta, $paso);
     }
 
@@ -349,10 +382,16 @@ class RadCuentasController extends Controller
                 $ordenPago->save();
             }
 
-            //FALTA REGISTRAR LAS OP AGREGADAS
+            //SE REGISTRAN LAS OP AGREGADAS
+            for($i = 0; $i < count($request->op_id); $i++){
+                $radCuentaOP = new RadCuentasOp();
+                $radCuentaOP->orden_pago_id = $request->op_id[$i];
+                $radCuentaOP->user_id = Auth::user()->id;
+                $radCuentaOP->rad_cuenta_id = $radCuenta->id;
+                $radCuentaOP->save();
+            }
 
             return redirect('administrativo/radCuentas/'.$radCuenta->id.'/3');
-
         } elseif($step == 3) {
 
             if (!$request->netoPago){
@@ -733,6 +772,47 @@ class RadCuentasController extends Controller
             return redirect('/administrativo/radCuentas/'.$radCuenta->vigencia_id);
 
         } else dd($request, $step);
+    }
+
+    function deleteData(Request $request, $modulo){
+        if ($modulo == "ANEXOS") {
+            $radCuenta = RadCuentas::find($request->idRad);
+            foreach ($radCuenta->anexos as $anexo) $anexo->delete();
+            return 200;
+        }elseif ($modulo == "DESCUENTO") {
+            $radCuentaPagoDesc = RadCuentasPagoDesc::find($request->idDesc);
+            $radCuentaPago = RadCuentasPago::find($radCuentaPagoDesc->rad_cuenta_pago_id);
+            $radCuentaPago->totalDesc = $radCuentaPago->totalDesc - $radCuentaPagoDesc->valor;
+            $radCuentaPago->netoPago = $radCuentaPago->netoPago + $radCuentaPagoDesc->valor;
+            $radCuentaPago->save();
+            $radCuentaPagoDesc->delete();
+            return 200;
+        }elseif ($modulo == "PAGO"){
+            $radCuenta = RadCuentas::find($request->idRad);
+            $radCuenta->pago->delete();
+            return 200;
+        }elseif ($modulo == "OP") {
+            $radCuentaOp= RadCuentasOp::find($request->idOP);
+            $radCuentaOp->delete();
+            return 200;
+        }elseif ($modulo == "ADD") {
+            $radCuentaAdd= RadCuentasAdd::find($request->idADD);
+            $radCuentaAdd->radicacion->valor_fin =  $radCuentaAdd->radicacion->valor_fin - $radCuentaAdd->valor;
+            $radCuentaAdd->radicacion->save();
+            $radCuentaAdd->delete();
+            return 200;
+        }elseif ($modulo == "RADICACION"){
+            $radCuenta = RadCuentas::find($request->idRad);
+
+            //SE ELIMINAN LAS ADICIONES
+            foreach ($radCuenta->adds as $add) $add->delete();
+
+            //SE ELIMINAN LAS ORDENES DE PAGO ASIGNADAS
+            foreach ($radCuenta->ops as $op) $op->delete();
+
+            $radCuenta->delete();
+            return 200;
+        }
     }
 
 }

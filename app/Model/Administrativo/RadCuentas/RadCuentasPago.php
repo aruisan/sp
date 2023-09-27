@@ -15,4 +15,9 @@ class RadCuentasPago extends Model implements Auditable
 
     protected $table = 'rad_cuentas_pago';
 
+    public function descuentos()
+    {
+        return $this->hasMany('App\Model\Administrativo\RadCuentas\RadCuentasPagoDesc','rad_cuenta_pago_id','id');
+    }
+
 }

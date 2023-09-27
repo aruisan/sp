@@ -13,6 +13,11 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="#nuevo" >RADICACIÓN - PASO 2</a>
                 </li>
+                @if(isset($radCuenta->pago))
+                    <li class="nav-item">
+                        <a class="nav-link"  href="{{ url('/administrativo/radCuentas/'.$radCuenta->id.'/3') }}"><i class="fa fa-arrow-right"></i> PASO 3</a>
+                    </li>
+                @endif
             </ul>
             <div class="tab-content">
                 <div class="form-validation">
@@ -37,21 +42,31 @@
                                     </td>
                                     <td>RP: #{{$registro->code }}</td>
                                 </tr>
-                                <tr>
-                                    <td colspan="3">
-                                        <div class="form-group">
-                                            <label class="col-lg-12 col-form-label text-center" for="persona_id">Adicion al Contrato. Seleccione el Registro: </label>
-                                            <div class="col-lg-12 text-center">
-                                                <select class="select-rp" style="width: 100%" name="adicion_rp_id" onchange="addRP(this.value)">
-                                                    <option value="0">NO ADICIONAR</option>
-                                                    @foreach($allRPs as $rp)
-                                                        <option value="{{$rp->id}}">{{$rp->code}} - {{$rp->objeto}}</option>
-                                                    @endforeach
-                                                </select>
+                                @if(count($radCuenta->adds) == 0)
+                                    <tr>
+                                        <td colspan="3">
+                                            <div class="form-group">
+                                                <label class="col-lg-12 col-form-label text-center" for="persona_id">Adicion al Contrato. Seleccione el Registro: </label>
+                                                <div class="col-lg-12 text-center">
+                                                    <select class="select-rp" style="width: 100%" name="adicion_rp_id" onchange="addRP(this.value)">
+                                                        <option value="0">NO ADICIONAR</option>
+                                                        @foreach($allRPs as $rp)
+                                                            <option value="{{$rp->id}}">{{$rp->code}} - {{$rp->objeto}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                @else
+                                    @foreach($radCuenta->adds as $add)
+                                        <tr>
+                                            <td>ADICION AL CONTRATO: $<?php echo number_format( $add->valor,0) ?></td>
+                                            <td>RP #{{ $add->registro->code }}</td>
+                                            <td><a onclick="deleteAdd({{ $add->id }})" class="btn-sm btn-danger"><i class="fa fa-trash"></i></a></td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                                 <tr id="addContrato" style="display: none; background-color: white">
                                     <td>ADICION AL CONTRATO: <span id="addCont"></span> </td>
                                     <td><span id="addCDP"></span></td>
@@ -59,38 +74,44 @@
                                 </tr>
                                 <tr>
                                     <td>VALOR FINAL DEL CONTRATO
-                                        <input type="hidden" name="valor_fin_cont" id="valor_fin_cont">
-                                        <span id="valorFinal">$<?php echo number_format( $registro->saldo,0) ?></span>
+                                        <input type="hidden" name="valor_fin_cont" id="valor_fin_cont"  @if($radCuenta->valor_fin) value="{{$radCuenta->valor_fin}}" @endif>
+                                        <span id="valorFinal">
+                                            @if($radCuenta->valor_fin)
+                                                $<?php echo number_format( $radCuenta->valor_fin,0) ?>
+                                            @else
+                                                $<?php echo number_format( $registro->saldo,0) ?>
+                                            @endif
+                                        </span>
                                     </td>
                                     <td>NUMERO DE PAGOS
-                                        <input type="number" name="num_pagos" id="num_pagos" min="0" value="0" class="form-control">
+                                        <input type="number" name="num_pagos" id="num_pagos" min="0" @if($radCuenta->num_pagos) value="{{$radCuenta->num_pagos}}" @else value="0" @endif class="form-control">
                                     </td>
                                     <td>
                                         VALOR PAGO MENSUAL
-                                        <input type="number" name="val_pago_men" id="val_pago_men" min="0" value="0" class="form-control">
+                                        <input type="number" name="val_pago_men" id="val_pago_men" min="0" @if($radCuenta->valor_mensual) value="{{$radCuenta->valor_mensual}}" @else value="0" @endif class="form-control">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         INGRESO BASE RETENCIÓN
-                                        <input type="number" name="ing_base" id="ing_base" min="0" value="0" class="form-control">
+                                        <input type="number" name="ing_base" id="ing_base" min="0" @if($radCuenta->ing_retencion) value="{{$radCuenta->ing_retencion}}" @else value="0" @endif class="form-control">
                                     </td>
                                     <td>
                                         ANTICIPO
-                                        <input type="number" name="anticipo" id="anticipo" min="0" value="0" class="form-control">
+                                        <input type="number" name="anticipo" id="anticipo" min="0" @if($radCuenta->anticipo) value="{{$radCuenta->anticipo}}" @else value="0" @endif class="form-control">
                                     </td>
                                     <td>
                                         FECHA ANTICIPO
-                                        <input type="date" name="fecha_anticipo" id="fecha_anticipo" class="form-control">
+                                        <input type="date" name="fecha_anticipo" id="fecha_anticipo" @if($radCuenta->fecha_anticipo) value="{{$radCuenta->fecha_anticipo}}" @endif class="form-control">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">AMORTIZACIÓN ANTICIPO
-                                        <input type="number" name="amortizacion" id="amortizacion" min="0" value="0" class="form-control">
+                                        <input type="number" name="amortizacion" id="amortizacion" min="0" @if($radCuenta->amortizacion) value="{{$radCuenta->amortizacion}}" @else value="0" @endif class="form-control">
                                     </td>
                                     <td>
                                         FECHA
-                                        <input type="date" name="fecha_amorth" id="fecha_amorth" class="form-control">
+                                        <input type="date" name="fecha_amorth" id="fecha_amorth" @if($radCuenta->fecha_amort) value="{{$radCuenta->fecha_amort}}" @endif class="form-control">
                                     </td>
                                 </tr>
                                 </tbody>
@@ -151,6 +172,17 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    @if(count($radCuenta->ops) > 0)
+                                        @foreach($radCuenta->ops as $op)
+                                            <tr>
+                                                <td># {{ $op->ordenPago->code }} - {{ $op->ordenPago->nombre }}</td>
+                                                <td>Periodo: {{ $op->ordenPago->periodo_pago }}</td>
+                                                <td>Factura: {{ $op->ordenPago->factura }}</td>
+                                                <td>Planilla: {{ $op->ordenPago->planilla }}</td>
+                                                <td><a onclick="deleteOP({{ $op->id }})" class="btn-sm btn-danger"><i class="fa fa-trash"></i></a></td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -158,6 +190,9 @@
 
                         <div class="form-group row" id="buttonSend">
                             <div class="col-lg-12 ml-auto text-center">
+                                @if(!isset($radCuenta->pago))
+                                    <a onclick="deleteRad({{ $radCuenta->id }})" class="btn btn-primary">Eliminar Radicación</a>
+                                @endif
                                 <button type="submit" class="btn btn-primary">Registrar Información Financiera</button>
                             </div>
                         </div>
@@ -172,6 +207,60 @@
         const vigencia_id = @json($vigencia_id);
         const rp_rad = @json($registro);
         $('.select-rp').select2();
+
+        function deleteRad(id){
+            var opcion = confirm("Esta seguro de querer eliminar la radicación de cuenta?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/radCuentas/delete/RADICACION",
+                    data: { "idRad": id, "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(data) {
+                    if (data == 200){
+                        toastr.warning('RADICACION ELIMINADA. REDIRIGIENDO USUARIO...');
+                        window.location.href = "/administrativo/radCuentas/{{$vigencia_id}}";
+                    }
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL INTENTAR ELIMINAR LA RADICACION DE CUENTA. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+                });
+            }
+        }
+
+        function deleteOP(id){
+            var opcion = confirm("Esta seguro de querer eliminar la orden de pago?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/radCuentas/delete/OP",
+                    data: { "idOP": id, "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(data) {
+                    if (data == 200){
+                        toastr.warning('ORDEN DE PAGO ELIMINADA. RECARGANDO PAGINA...');
+                        location.reload();
+                    }
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL INTENTAR ELIMINAR LA ORDEN DE PAGO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+                });
+            }
+        }
+
+        function deleteAdd(id){
+            var opcion = confirm("Esta seguro de querer eliminar el registro adicionado?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/radCuentas/delete/ADD",
+                    data: { "idADD": id, "_token": $("meta[name='csrf-token']").attr("content")}
+                }).done(function(data) {
+                    if (data == 200){
+                        toastr.warning('REGISTRO ADICIONADO HA SIDO ELIMINADO. RECARGANDO PAGINA...');
+                        location.reload();
+                    }
+                }).fail(function() {
+                    toastr.warning('OCURRIO UN ERROR AL INTENTAR ELIMINAR EL REGISTRO ADICIONADO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+                });
+            }
+        }
 
         function addRP(rp_id){
             $("#cargando").show();

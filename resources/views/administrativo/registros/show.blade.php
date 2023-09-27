@@ -359,7 +359,7 @@
                                             <div class="col-lg-6">
                                                 <h4>
                                                     <b>CDP :
-                                                        <a href="{{ url('administrativo/cdp/'.$cdpsRegistroData->cdp->vigencia_id.'/'.$cdpsRegistroData->cdp->id) }}" title="Ver CDP">{{ $cdpsRegistroData->cdp->name }}</a>
+                                                        <a href="{{ url('administrativo/cdp/'.$cdpsRegistroData->cdp->vigencia_id.'/'.$cdpsRegistroData->cdp->id) }}" title="Ver CDP">#{{ $cdpsRegistroData->cdp->code }} - {{ $cdpsRegistroData->cdp->name }}</a>
                                                         </b>
                                                 </h4>
                                             </div>
