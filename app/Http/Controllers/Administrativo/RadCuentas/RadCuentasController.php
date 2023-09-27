@@ -247,7 +247,7 @@ class RadCuentasController extends Controller
         $radCuenta->registro_id  = $request->registro_id;
         $radCuenta->user_id = Auth::user()->id;
         $radCuenta->vigencia_id = $request->vigencia_id;
-        if ($radCuenta->interventor_id != "NO POSEE") $radCuenta->interventor_id = $request->interventor_id;
+        if ($request->interventor_id != "NO POSEE") $radCuenta->interventor_id = $request->interventor_id;
         $radCuenta->save();
 
         $radCuenta->code = $radCuenta->id;
