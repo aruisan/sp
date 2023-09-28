@@ -145,7 +145,7 @@
                                         <input type="number" class="form-control" name="prorroga" min="0" value="0" required>
                                     </td>
                                     <td colspan="2">Fecha de Terminación
-                                        <input type="date" class="form-control" name="fecha_fin">
+                                        <input type="date" class="form-control" name="fecha_fin" required>
                                     </td>
                                 </tr>
                                 <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">2. IDENTIFICACIÓN DEL BENEFICIARIO</th></tr>
