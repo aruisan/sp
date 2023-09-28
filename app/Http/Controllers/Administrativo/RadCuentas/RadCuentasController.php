@@ -266,7 +266,7 @@ class RadCuentasController extends Controller
         $persona->reteFuente  = $request->retefuente;
         $persona->regimen_porcentaje  = $request->retefuente;
         $persona->direccion  = $request->dir;
-        $persona->email   = $request->email;
+        if ($request->email != $persona->email) $persona->email = $request->email;
         $persona->telefono  = $request->cel;
         $persona->direccion  = $request->dir;
         $persona->telefono_fijo  = $request->telFijo;
