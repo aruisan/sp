@@ -40,18 +40,31 @@
                                             <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $OrdenPago->nombre }}">
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label text-right col-md-4" for="valor">Registro:</label>
-                                        <div class="col-lg-6">
-                                            <input type="text" disabled class="form-control" style="text-align:center" name="valor" value="#{{$OrdenPago->registros->code}} - {{ $OrdenPago->registros->objeto }}">
+                                    @if($OrdenPago->rad_cuenta_id != 0)
+                                        <div class="form-group">
+                                            <label class="control-label text-right col-md-4" for="valor">Radicación de Cuenta:</label>
+                                            <div class="col-lg-6">
+                                                <input type="text" disabled class="form-control" style="text-align:center" name="valor" value="#{{$OrdenPago->radCuenta->code}} - {{ $OrdenPago->radCuenta->registro->objeto }}">
+                                            </div>
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="form-group">
+                                            <label class="control-label text-right col-md-4" for="valor">Registro:</label>
+                                            <div class="col-lg-6">
+                                                <input type="text" disabled class="form-control" style="text-align:center" name="valor" value="#{{$OrdenPago->registros->code}} - {{ $OrdenPago->registros->objeto }}">
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="col-md-6 align-self-center">
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="nombre">Tercero:</label>
                                         <div class="col-lg-6">
-                                            <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $OrdenPago->registros->persona->nombre }}">
+                                            @if($OrdenPago->rad_cuenta_id != 0)
+                                                <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $OrdenPago->radCuenta->persona->nombre }}">
+                                            @else
+                                                <input type="text" disabled class="form-control" name="name" style="text-align:center" value="{{ $OrdenPago->registros->persona->nombre }}">
+                                           @endif
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -199,8 +212,13 @@
                                                     @else
                                                         <td></td>
                                                     @endif
-                                                    <td>{{ $OrdenPago->registros->objeto }}</td>
-                                                    <td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+                                                    @if($OrdenPago->rad_cuenta_id != 0)
+                                                        <td>{{ $OrdenPago->radCuenta->registro->objeto }}</td>
+                                                        <td>$ <?php echo number_format($OrdenPago->radCuenta->valor_fin,0);?></td>
+                                                    @else
+                                                        <td>{{ $OrdenPago->registros->objeto }}</td>
+                                                        <td>$ <?php echo number_format($OrdenPago->registros->valor,0);?></td>
+                                                    @endif
                                                 </tr>
                                             @endif
 
@@ -231,7 +249,11 @@
                                         <tr class="text-center">
                                             <td>{{$OrdenPago->pucs[$z]->data_puc->code}}</td>
                                             <td>{{$OrdenPago->pucs[$z]->data_puc->concepto}}</td>
-                                            <td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
+                                            @if($OrdenPago->rad_cuenta_id != 0)
+                                                <td>{{ $OrdenPago->radCuenta->persona->num_dc }} {{ $OrdenPago->radCuenta->persona->nombre }}</td>
+                                            @else
+                                                <td>{{ $OrdenPago->registros->persona->num_dc }} {{ $OrdenPago->registros->persona->nombre }}</td>
+                                            @endif
                                             <td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_debito,0);?></td>
                                             <td>$<?php echo number_format($OrdenPago->pucs[$z]->valor_credito,0);?></td>
                                         </tr>

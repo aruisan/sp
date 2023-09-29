@@ -294,8 +294,10 @@ class PagosController extends Controller
                 }
             }
 
+            $allPUCS = PucAlcaldia::where('hijo','1')->orderBy('code','ASC')->get();
+
             return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC',
-            'cuentas', 'personas', 'vigencia_id','cuentasBanc'));
+            'cuentas', 'personas', 'vigencia_id','cuentasBanc','allPUCS'));
         } else {
             Session::flash('warning','El pago no ha recibido la asignación del monto, por favor realizarla');
             return redirect('administrativo/pagos/asignacion/'.$pago->id);
@@ -444,6 +446,17 @@ class PagosController extends Controller
                 $OP->saldo = $OP->saldo -  $valTotal;
                 $OP->save();
                 $pago->save();
+
+                if ($request->pucAdd != 0){
+                    $bankPUC = new PagoBanksNew();
+                    $bankPUC->pagos_id = $request->pago_id;
+                    $bankPUC->rubros_puc_id = $request->pucAdd;
+                    $bankPUC->debito = $request->debPUC;
+                    $bankPUC->credito = $request->credPUC;
+                    $bankPUC->persona_id = $request->persona_id_PUC;
+                    $bankPUC->created_at = $pago->created_at;
+                    $bankPUC->save();
+                }
 
                 Session::flash('success','El pago se ha finalizado exitosamente');
                 return redirect('/administrativo/pagos/show/'.$pago->id);

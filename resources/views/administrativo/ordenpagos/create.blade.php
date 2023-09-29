@@ -71,60 +71,67 @@
                                     </center>
                                 </div>
                             @endif
-
-                               </div><!-- /.box-body -->
-                             </div><!-- /.box -->
-
-
-                          </div>
-                        </div>
-
-                    <div class="col-md-12 " style="display: none; background-color: white" id="form" name="form">
-                        <br>
-                      <div class="row">
-                        
-                        <div class="col-md-5 formularioRegistro">
-                            <br>
-                            <h2 class="text-center  formularioRegistoTitulo">Registro</h2>
-                            <hr>
-                                <div class="row">
-                                    
-                                    <div class="col-md-3 ">
-                                        <h4 class="formularioRegistoLabel"><b>Objeto:</b></h4>
+                                    @if(count($radCuentas) > 0)
+                                    <br>
+                                    <div class="box">
+                                        <div class="box-header"><h3 class="box-title">Seleccione la radicación de cuenta:</h3></div>
+                                        <div class="box-body"><br>
+                                            <table class="display" width="100%" id="tabla_Radicacion">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center"><i class="fa fa-hashtag"></i></th>
+                                                    <th class="text-center">Objeto</th>
+                                                    <th class="text-center">Tercero</th>
+                                                    <th class="text-center">NIT/CED</th>
+                                                    <th class="text-center">Valor Total</th>
+                                                    <th class="text-center">Saldo Disponible</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                @foreach ($radCuentas as $key => $radicacion)
+                                                    @php($radicacion->registro->objeto = preg_replace("/[\r\n|\n|\r]+/", " ", $radicacion->registro->objeto))
+                                                    <tr onclick="findRadicacion({{ $radicacion }});" style="cursor:pointer">
+                                                        <td class="text-center">{{ $radicacion->code }}</td>
+                                                        <td class="text-center">{{ $radicacion->registro->objeto }}</td>
+                                                        <td class="text-center">{{ $radicacion->persona->nombre }}</td>
+                                                        <td class="text-center">{{ $radicacion->persona->num_dc }}</td>
+                                                        <td class="text-center">{{ $radicacion->valor_fin }}</td>
+                                                        <td class="text-center">{{ $radicacion->saldo }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-
-                                    <div class="col-md-9">
-                                        <textarea type="text" style="text-align: center" class="form-control formularioRegistoLabel" name="Objeto" id="Objeto" columns="20" rows="7" disabled></textarea>
-                                    </div>
-
+                                    @endif
                                 </div>
-
-
-                            <div class="row">
-                            <br>
-                                <div class="col-md-3 ">
-                                    <h4 class="formularioRegistoLabel"><b>Tercero:</b></h4>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" style="text-align: center" class="form-control formularioRegistoLabel" name="Name" id="Name" disabled>
-                                    <input type="hidden" name="vigencia" id="vigencia" value="{{ $id }}">
-                                </div>
-
                             </div>
-
-
+                            <div class="col-md-12 " style="display: none; background-color: white" id="form" name="form"><br>
+                                <div class="row">
+                                    <div class="col-md-5 formularioRegistro"><br>
+                                        <h2 class="text-center  formularioRegistoTitulo">Registro</h2><hr>
+                                        <div class="row">
+                                            <div class="col-md-3 "><h4 class="formularioRegistoLabel"><b>Objeto:</b></h4></div>
+                                            <div class="col-md-9">
+                                                <textarea type="text" style="text-align: center" class="form-control formularioRegistoLabel" name="Objeto" id="Objeto" columns="20" rows="7" disabled></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row"><br>
+                                            <div class="col-md-3 "><h4 class="formularioRegistoLabel"><b>Tercero:</b></h4></div>
+                                            <div class="col-md-9">
+                                                <input type="text" style="text-align: center" class="form-control formularioRegistoLabel" name="Name" id="Name" disabled>
+                                                <input type="hidden" name="vigencia" id="vigencia" value="{{ $id }}">
+                                            </div>
+                                        </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <h4 class="formularioRegistoLabel"><b>NIT/CED:</b></h4>
                                 </div>
-
                                 <div class="col-md-9">
                                     <input type="number" style="text-align: center" 
                                     class="form-control formularioRegistoLabel" name="CC" id="CC" disabled>
                                 </div>
-
                             </div>
-
                             <div class="row">
                                 <div class="col-md-7 ">
                                     <h4 class="formularioRegistoLabel"><b>Valor Registro:</b></h4>
@@ -134,19 +141,14 @@
                                     <input type="number" style="text-align: center" class="form-control formularioRegistoLabel" name="ValRegistro" id="ValRegistro" disabled>
                                 </div>
                             </div>
-
-
                             <div class="row">
                                     <div class="col-md-7 ">
                                         <h4 class="formularioRegistoLabel"><b>IVA:</b></h4>
                                     </div>
-                                 
                                     <div class="col-md-5">
                                         <input type="number" style="text-align: center" class="form-control formularioRegistroLabel" name="iva" id="iva" disabled>
                                     </div>
                             </div>
-
-
                             <div class="row">
                                 <div class="col-md-7 ">
                                     <h4 class="formularioRegistoLabel"><b>Valor Total del Registro:</b></h4>
@@ -157,29 +159,20 @@
                                 </div>
                             </div>
 
-
                             <div class="row">
                                 <div class="col-md-7 ">
                                     <h4 class="formularioRegistoLabel"><b>Saldo del Registro:</b></h4>
                                 </div>
-                                
                                 <div class="col-md-5">
                                     <input type="number" style="text-align: center" class="form-control formularioRegistoLabel" name="ValS" id="ValS" disabled>
                                 </div>
                             </div>
-
                         </div>
-                        
-                  
-
                         <div class="col-md-2"><div class="row"><br></div></div>
-
                         <div class="col-md-5 formularioOrden">
                             <br>
                             <h2 class="text-center formularioOrdenTitulo">Orden de Pago</h2>
                             <hr>
-
-
                             <div class="row">
                                 <div class="col-md-6 ">
                                     <br>
@@ -189,7 +182,8 @@
                                 <br>
                                 <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" value="{{ $numOP + 1 }}" disabled name="num_OP">
                                 <input type="hidden"  class="form-control" name="next" value="{{ $numOP + 1 }}">
-                                <input type="hidden"  class="form-control" name="IdR" id="IdR">
+                                <input type="hidden"  class="form-control" name="IdR" id="IdR" value="0">
+                                <input type="hidden"  class="form-control" name="IdRadCuenta" id="IdRadCuenta">
                             </div>
                             </div>
 
@@ -249,6 +243,8 @@
                             </div>
                         </div>
                     </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -256,6 +252,25 @@
     @stop
 @section('js')
     <script type="text/javascript">
+
+        function findRadicacion(radicacion){
+            $("#IdR").val(0);
+            $("#form").show();
+            $("#ValS").val();
+            $("#Objeto").val(radicacion['registro']['objeto']);
+            $("#Name").val(radicacion['persona']['nombre']);
+            $("#CC").val(radicacion['persona']['num_dc']);
+            $("#Val").val(radicacion['registro']['saldo']);
+            $("#ValOP").val(radicacion['valor_fin']);
+            $("#ValRegistro").val(radicacion['registro']['val_total']);
+            $("#iva").val(radicacion['registro']['iva']);
+            $("#ValIOP").val(radicacion['registro']['iva']);
+            $("#IdRadCuenta").val(radicacion['id']);
+            $("#ValTOP").val(radicacion['registro']['saldo']);
+            $("#concepto").val(radicacion['registro']['objeto']);
+            document.getElementById("concepto").focus();
+        }
+
         $('#tabla_Registros').DataTable( {
              language: {
 			  "lengthMenu": "Mostrar _MENU_ registros",
@@ -287,39 +302,108 @@
 			  extend:    'excelHtml5',
 			  text:      '<i class="fa fa-file-excel-o"></i> ',
 			  titleAttr: 'Exportar a Excel',
-			  className: 'btn btn-success'
+			  className: 'btn btn-primary'
 		  },
 		  {
 			  extend:    'pdfHtml5',
 			  text:      '<i class="fa fa-file-pdf-o"></i> ',
-			  titleAttr: 'Exportar a PDF',     
+			  titleAttr: 'Exportar a PDF',
 			  message : 'SIEX',
 			  header :true,
               	exportOptions: {
 				  columns: [ 0,1,2,3,4]
 					},
 			  pageSize: 'LEGAL',
-			  className: 'btn btn-danger',
+			  className: 'btn btn-primary',
 			   },
 		  {
 			  extend:    'print',
 			  text:      '<i class="fa fa-print"></i> ',
 			  titleAttr: 'Imprimir',
-			  className: 'btn btn-info'
+			  className: 'btn btn-primary'
 		  },
 	  ]	             
 
 		 });
 
+
+        $('#tabla_Radicacion').DataTable( {
+            language: {
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "No se encontraron resultados",
+                "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast":"Último",
+                    "sNext":"Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "sProcessing":"Procesando...",
+            },
+            //para usar los botones
+            "pageLength": 5,
+            responsive: "true",
+            dom: 'Bfrtilp',
+            buttons:[
+                {
+                    extend:    'copyHtml5',
+                    text:      '<i class="fa fa-clone"></i> ',
+                    titleAttr: 'Copiar',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'excelHtml5',
+                    text:      '<i class="fa fa-file-excel-o"></i> ',
+                    titleAttr: 'Exportar a Excel',
+                    className: 'btn btn-primary'
+                },
+                {
+                    extend:    'pdfHtml5',
+                    text:      '<i class="fa fa-file-pdf-o"></i> ',
+                    titleAttr: 'Exportar a PDF',
+                    message : 'SIEX',
+                    header :true,
+                    exportOptions: {
+                        columns: [ 0,1,2,3,4]
+                    },
+                    pageSize: 'LEGAL',
+                    className: 'btn btn-primary',
+                },
+                {
+                    extend:    'print',
+                    text:      '<i class="fa fa-print"></i> ',
+                    titleAttr: 'Imprimir',
+                    className: 'btn btn-primary'
+                },
+            ]
+
+        });
+
         $(document).ready(function() {
             var table = $('#tabla_Registros').DataTable();
+            var tablaRad = $('#tabla_Radicacion').DataTable();
 
             $('#tabla_Registros tbody').on( 'click', 'tr', function () {
+                tablaRad.$('tr.selected').removeClass('selected');
                 if ( $(this).hasClass('selected') ) {
                     $(this).removeClass('selected');
                 }
                 else {
                     table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            } );
+
+            $('#tabla_Radicacion tbody').on( 'click', 'tr', function () {
+                table.$('tr.selected').removeClass('selected');
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    tablaRad.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
                 }
             } );

@@ -10,14 +10,23 @@
     <br>
     <div class="card">
         <br>
-        <center>
-            <h4><b>Estado Actual del Registro</b></h4>
-            <br>
-            Valor Registro: $<?php echo number_format($ordenPago->registros->valor,0) ?>
-            <br>
-            Valor Total(+IVA): $<?php echo number_format($ordenPago->registros->val_total,0) ?>
-            <br>
-        </center>
+        @if($ordenPago->rad_cuenta_id != 0)
+            <center>
+                <h4><b>Estado Actual de la Radicación de Cuenta</b></h4>
+                <br>
+                Valor Radicación: $<?php echo number_format($ordenPago->radCuenta->valor_fin,0) ?>
+                <br>
+            </center>
+        @else
+            <center>
+                <h4><b>Estado Actual del Registro</b></h4>
+                <br>
+                Valor Registro: $<?php echo number_format($ordenPago->registros->valor,0) ?>
+                <br>
+                Valor Total(+IVA): $<?php echo number_format($ordenPago->registros->val_total,0) ?>
+                <br>
+            </center>
+        @endif
         <br>
         <center>
             <h4><b>Valor Total de Descuentos</b></h4>
@@ -47,10 +56,18 @@
             <br>
             <div class="row">
                 <div class="col-md-6 text-center">
-                    Registro Seleccionado: {{ $ordenPago->registros->objeto }}
+                    @if($ordenPago->rad_cuenta_id != 0)
+                        Registro Seleccionado: {{ $ordenPago->radCuenta->registro->objeto }}
+                    @else
+                        Registro Seleccionado: {{ $ordenPago->registros->objeto }}
+                    @endif
                 </div>
                 <div class="col-md-6 text-center">
-                    Tercero: {{ $ordenPago->registros->persona->nombre }}
+                    @if($ordenPago->rad_cuenta_id != 0)
+                        Tercero: {{ $ordenPago->radCuenta->persona->nombre }}
+                    @else
+                        Tercero: {{ $ordenPago->registros->persona->nombre }}
+                    @endif
                 </div>
             </div>
             <br>
@@ -105,10 +122,10 @@
                                         </td>
                                     @endif
                                     <td class="text-center">
-                                        <input type="text" value="$ 0" style="text-align:center" disabled>
+                                        <input class="form-control" type="text" value="$ 0" style="text-align:center" disabled>
                                     </td>
                                     <td class="text-center">
-                                        <input type="text" value="$<?php echo number_format($ordenPagoDesc[$i]->valor,0) ?>" style="text-align:center" disabled>
+                                        <input class="form-control" type="text" value="$<?php echo number_format($ordenPagoDesc[$i]->valor,0) ?>" style="text-align:center" disabled>
                                     </td>
                                 </tr>
                             @endfor
@@ -142,10 +159,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" style="text-align:center" name="valorPucD[]" id="valorPucD[]" value="0" min="0" required>
+                                    <input class="form-control" type="number" style="text-align:center" name="valorPucD[]" id="valorPucD[]" value="0" min="0" required>
                                 </td>
                                 <td>
-                                    <input type="number" style="text-align:center" name="valorPucC[]" id="valorPucC[]" value="0" min="0" required>
+                                    <input class="form-control" type="number" style="text-align:center" name="valorPucC[]" id="valorPucC[]" value="0" min="0" required>
                                 </td>
                             </tr>
                             </tbody>
@@ -195,10 +212,10 @@
                         '                                    </select>\n' +
                         '                                </td>\n' +
                         '                                <td>\n' +
-                        '                                    <input type="number" style="text-align:center" name="valorPucD[]" id="valorPucD[]" value="0" min="0" required>\n' +
+                        '                                    <input class="form-control" type="number" style="text-align:center" name="valorPucD[]" id="valorPucD[]" value="0" min="0" required>\n' +
                         '                                </td>\n' +
                         '                                <td>\n' +
-                        '                                    <input type="number" style="text-align:center" name="valorPucC[]" id="valorPucC[]" value="0" min="0" required>\n' +
+                        '                                    <input class="form-control" type="number" style="text-align:center" name="valorPucC[]" id="valorPucC[]" value="0" min="0" required>\n' +
                         '                                </td>\n' +
                         '                            </tr>');
                 }
