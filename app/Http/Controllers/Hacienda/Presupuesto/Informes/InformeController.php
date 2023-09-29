@@ -30,6 +30,8 @@ use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Hacienda\Presupuesto\Register;
 use App\Model\Hacienda\Presupuesto\Level;
 use App\Model\Hacienda\Presupuesto\Rubro;
+use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
+use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\SourceFunding;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Support\Facades\DB;
@@ -2807,7 +2809,14 @@ class InformeController extends Controller
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
-        $presupuesto = $this->prepEgresos();
+
+        $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
+        $findSnap = PresupuestoSnap::where('vigencia_id', $vigencia->id)->where('mes', $mesActual)
+            ->where('año', $añoActual)->where('tipo','EGRESOS')->first();
+        if ($findSnap){
+            $presupuesto = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
+        } else dd("no se detecta presupuesto almacenado");
+
 
         return Excel::download(new InfPrepEgrExcExport($presupuesto),
             'Informe Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
