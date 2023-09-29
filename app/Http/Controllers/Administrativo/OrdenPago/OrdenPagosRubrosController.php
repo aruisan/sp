@@ -30,7 +30,6 @@ class OrdenPagosRubrosController extends Controller
 
             return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
         } else{
-            dd("RP");
             $cdps = CdpsRegistroValor::where('registro_id',$ordenPago->registros_id)->get();
 
             if (count($cdps) == 1){
