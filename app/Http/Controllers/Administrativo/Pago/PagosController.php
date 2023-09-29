@@ -453,7 +453,7 @@ class PagosController extends Controller
                     $bankPUC->rubros_puc_id = $request->pucAdd;
                     $bankPUC->debito = $request->debPUC;
                     $bankPUC->credito = $request->credPUC;
-                    $bankPUC->persona_id = $request->persona_id_PUC;
+                    $bankPUC->persona_id = $pago->persona_id;
                     $bankPUC->created_at = $pago->created_at;
                     $bankPUC->save();
                 }

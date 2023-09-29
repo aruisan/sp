@@ -188,11 +188,10 @@ class RadCuentasController extends Controller
     }
 
     public function findDataPer(Request $request){
-        $historyRad = RadCuentas::where('persona_id', $request->idPer)->where('vigencia_id', $request->vigencia_id)->get();
         $registros = Registro::where('saldo','>',0)->where('tipo_contrato','!=',20)->where('tipo_contrato','!=',22)
             ->where('jefe_e','3')->where('persona_id', $request->idPer)->where('vigencia_id', $request->vigencia_id)
             ->with('persona')->get();
-        $data = ['history' => $historyRad, 'registros' => $registros];
+        $data = ['registros' => $registros];
         return $data;
     }
 
@@ -224,9 +223,11 @@ class RadCuentasController extends Controller
         $ordenesPago = OrdenPagos::where('registros_id', $registro->id)->where('estado','1')->get();
         foreach ($ordenesPago as $ordenPago) $pagos[] = Pagos::where('orden_pago_id', $ordenPago->id)->get();
 
+        $radCuentas = RadCuentas::where('registro_id', $registro->id)->where('estado_rev','1')->get();
+
         if (!isset($pagos)) $pagos = [];
 
-        return ['registro' => $registro,'cdps' => $cdps, 'ops' => $ordenesPago, 'pagos' => $pagos];
+        return ['registro' => $registro,'cdps' => $cdps, 'ops' => $ordenesPago, 'pagos' => $pagos,'radCuentas' => $radCuentas];
     }
 
     /**

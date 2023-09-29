@@ -65,6 +65,20 @@
                             </div>
                         </div>
                         <br>
+                        <div class="row text-center" id="listRadicaciones" style="display: none; background-color: white">
+                            <div class="form-group">
+                                <label class="col-lg-12 col-form-label text-center" for="persona_id">Seleccione La Radicacion de Cuenta a Replicar: <span class="text-danger">*</span></label>
+                                <div class="col-lg-12 text-center">
+                                    <select class="select-radicacion" name="radHistory_id" onchange="changeRad(this.value)">
+                                        <option value="0">NO REEPLICAR RADICACIÓN</option>
+                                        @foreach($personas as $persona)
+                                            <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
                         <div class="col-md-12 " style="display: none; background-color: white" id="formRP" name="formRP">
                             <table id="TABLA1" class="table text-center table-bordered">
                                 <tbody>
@@ -258,10 +272,6 @@
                         if(data.history.length === 0){
                             toastr.warning('NO SE ENCUENTRAN REGISTROS PENDIENTES NI RADICACIONES PENDIENTES DE ESE TERCERO');
                         }
-                    }
-
-                    if (data['history'].length > 0){
-
                     }
 
                     if (data.registros.length > 0){

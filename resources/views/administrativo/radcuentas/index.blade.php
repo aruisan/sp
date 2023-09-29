@@ -110,7 +110,7 @@
                             <tr class="text-center">
                                 <td>{{ $radicacion->code }}</td>
                                 <td>{{ $radicacion->persona->num_dc }} - {{ $radicacion->persona->nombre }}</td>
-                                <td>{{ $radicacion->created_at }}</td>
+                                <td>{{ \Carbon\Carbon::parse($radicacion->created_at)->format('d-m-Y') }}</td>
                                 <td>
                                     <a href="{{ url('administrativo/radCuentas/pdf/'.$radicacion->id.'/generate') }}" target="_blank" class="btn btn-sm btn-primary" title="Archivo"><i class="fa fa-file-pdf-o"></i></a>
                                     <a href="{{ url('administrativo/radCuentas/show/'.$radicacion->id.'/rev') }}" class="btn btn-sm btn-primary" title="Archivo"><i class="fa fa-eye"></i></a>

@@ -205,7 +205,6 @@
                                 <th class="text-center">Cuenta PUC</th>
                                 <th class="text-center">Credito</th>
                                 <th class="text-center">Debito</th>
-                                <th class="text-center">Tercero</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -224,13 +223,6 @@
                                 </td>
                                 <td>
                                     <input type="number" required class="form-control" id="debPUC" name="debPUC" min="0" style="text-align:center" value="0">
-                                </td>
-                                <td>
-                                    <select class="select-tercero-puc" style="width: 80%" name="persona_id_PUC">
-                                        @foreach($personas as $persona)
-                                            <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
-                                        @endforeach
-                                    </select>
                                 </td>
                             </tr>
                         </table>
