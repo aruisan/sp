@@ -104,13 +104,14 @@
 
                 let descuentos_nuevos = e.descuentos.length == 0 ? [] 
                 :e.descuentos.filter(d => !d.is_padre && !d.old).map(d => {
+                    console.log('dd', d);
                     empleados[index].contador_descuentos +=1;
                     let contador = empleados[index].contador_descuentos;
                     return `
                     <tr>
                     <td width="280px">
                         <select name="descuento_tercero_${index}[]" class="form-control descuento_tercero_${index}">
-                            ${terceros.map(t => `<option value="${t.id}" ${t.id == d.tercero_id ? 'selected' : ''}>${t.nombre}</option>`)}
+                            ${terceros.map(t => `<option value="${t.id}" ${t.id == d.tercero.id ? 'selected' : ''}>${t.nombre}</option>`)}
                         </select>
                     </td>
                     <td>

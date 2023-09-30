@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Model\Administrativo\Registro\Registro;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -47,6 +48,17 @@ class feedPresupuesto extends Command
         $mesActual = Carbon::now()->month;
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
+
+        $registros = Registro::where('secretaria_e', '3')->where('jefe_e','3')->orderBy('id', 'DESC')->get();
+        foreach ($registros as $registro){
+            if ($registro->ordenPagos->count() > 0){
+                $disp = $registro->valor - $registro->ordenPagos->where('estado','1')->sum('valor');
+                if ($disp != $registro->saldo) {
+                    //echo($registro->id.'---saldo:'.$disp.'----');
+                }
+            }
+        }
+
         if ($vigens){
             $findSnap = PresupuestoSnap::where('vigencia_id', $vigens->id)->where('mes', $mesActual)
                 ->where('año', $añoActual)->where('tipo','EGRESOS')->first();
@@ -66,6 +78,41 @@ class feedPresupuesto extends Command
 
             $prepTrait = new PrepEgresosTraits();
             $presupuesto = $prepTrait->prepEgresos($vigens);
+
+            $proy = 0;
+            foreach ($presupuesto as $data) {
+                if (intval($data['presupuesto_def']) > 0) {
+                    if ($data['codBpin'] != "") {
+                        $multi = intval($data['cdps']) * 100;
+                        $ejec = intval($multi) / intval($data['presupuesto_def']);
+                        if ($ejec > 0){
+                            $porcenEjec[] = $ejec;
+                            $proyectos[] = $data['codBpin'];
+                            if ($proy == 0) $proy = $ejec;
+                            else {
+                                $sum = $proy + $ejec;
+                                $proy = $sum/2;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for ($i = 0; $i < count($porcenEjec); $i++) {
+                if (!isset($newProy)){
+                    $newProy[] = $proyectos[$i];
+                    $valNewProy[] = $porcenEjec[$i];
+                } else{
+                    if (($find = array_search($proyectos[$i], $newProy)) !== FALSE){
+                        $valNewProy[$find] = ($valNewProy[$find] + $porcenEjec[$i])/2;
+                    } else{
+                        $newProy[] = $proyectos[$i];
+                        $valNewProy[] = $porcenEjec[$i];
+                    }
+                }
+            }
+
+            //dd($valNewProy, $newProy);
 
             if ($delete){
                 $findSnapDataOld = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
@@ -99,6 +146,10 @@ class feedPresupuesto extends Command
                 $newData->fuente = $data['fuente'];
                 $newData->cod_producto = $data['codProd'];
                 $newData->cod_indicador = $data['codIndProd'];
+                if (intval($data['presupuesto_def']) > 0){
+                    $multi = intval($data['cdps']) * 100;
+                    $newData->ejec = intval($multi) / intval($data['presupuesto_def']);
+                }
                 $newData->save();
             }
         }

@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         //$schedule->command('update:OP')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));
         $schedule->command('feed:presupuesto')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));
+        //$schedule->command('feed:presupuestoIngresos')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));
         //$schedule->command('make:Balances')->everyMinute()->appendOutputTo(storage_path('logs/feedPresupuesto.log'));
     }
 

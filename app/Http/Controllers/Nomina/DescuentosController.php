@@ -9,6 +9,7 @@ use App\Nomina;
 use App\NominaEmpleadoNomina;
 use App\NominaEmpleadoDescuentos;
 use App\Model\Persona;
+use App\Helpers\FechaHelper;
 use Session, PDF;
 
 class DescuentosController extends Controller
@@ -181,6 +182,46 @@ class DescuentosController extends Controller
         //dd($movimientos[0]->v_vacaciones);
         $pdf = PDF::loadView("{$this->view}.pdf", compact('nomina', 'movimientos'))->setPaper('a4', 'landscape')->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
+    }
+
+    public function bancos_reportes(Nomina $nomina){
+        return view("{$this->view}.reporte-bancos", compact('nomina'));
+    }
+
+    public function pasar(Nomina $nomina_old){
+        if(1){
+            $nomina = Nomina::where('tipo', $nomina_old->tipo)->where('id', '>', $nomina_old->id)->first();
+            return view("{$this->view}.pasar-descuentos", compact('nomina_old', 'nomina'));
+        }else{
+            Session::flash('warning', 'Función desactivada, comunicarse con soporte.');
+            return back();
+        }
+    }
+
+    public function pasar_store(Nomina $nomina, Request $request){
+        
+        
+        $movimientos = NominaEmpleadoNomina::whereIn('nomina_empleado_id', $request->empleado_id)->where('nomina_id', $nomina->id)->get();
+        foreach($movimientos as $m):
+            $m->descuentos()->delete();
+        endforeach;
+        foreach($request->empleado_id as $k => $empleado_id): 
+
+            $movimiento = NominaEmpleadoNomina::where('nomina_empleado_id', $empleado_id)->where('nomina_id', $nomina->id)->first();
+            if(!is_null($movimiento)):
+                $desc = new NominaEmpleadoDescuentos;
+                $desc->nombre = $request->nombre[$k];
+                $desc->nomina_empleado_nomina_id = $movimiento->id;
+                $desc->tercero_id = $request->tercero_id[$k];
+                $desc->n_cuotas = $request->n_cuotas[$k];
+                $desc->valor = $request->valor[$k];
+                $desc->valor_total = $request->valor[$k];
+                $desc->save();
+            endif;
+        endforeach;
+
+        //Session::flash('success', 'se ha finalizado la nomina de vacaciones.');
+        return redirect()->route('nomina-descuentos.show', $nomina->id);
     }
 
 }

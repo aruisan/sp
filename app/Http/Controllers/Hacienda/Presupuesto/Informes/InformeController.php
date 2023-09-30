@@ -30,8 +30,11 @@ use App\Model\Administrativo\Cdp\Cdp;
 use App\Model\Hacienda\Presupuesto\Register;
 use App\Model\Hacienda\Presupuesto\Level;
 use App\Model\Hacienda\Presupuesto\Rubro;
+use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
+use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\SourceFunding;
 use App\Model\Hacienda\Presupuesto\Vigencia;
+use App\Traits\PrepEgresosTraits;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
@@ -2807,7 +2810,14 @@ class InformeController extends Controller
         $añoActual = Carbon::now()->year;
         $mesActual = Carbon::now()->month;
         $diaActual = Carbon::now()->day;
-        $presupuesto = $this->prepEgresos();
+
+        $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
+        $findSnap = PresupuestoSnap::where('vigencia_id', $vigencia->id)->where('mes', $mesActual)
+            ->where('año', $añoActual)->where('tipo','EGRESOS')->first();
+        if ($findSnap){
+            $presupuesto = PresupuestoSnapData::where('pre_snap_id', $findSnap->id)->get();
+        } else dd("no se detecta presupuesto almacenado");
+
 
         return Excel::download(new InfPrepEgrExcExport($presupuesto),
             'Informe Presupuesto de Egresos '.$añoActual.'-'.$mesActual.'-'.$diaActual.'.xlsx');
@@ -2815,7 +2825,11 @@ class InformeController extends Controller
 
     public function makeEgresosEjecucion(Request $request, $inicio, $final)
     {
-        $presupuesto = $this->prepEgresos($inicio, $final);
+        $prepTrait = new PrepEgresosTraits();
+        $vigens = Vigencia::where('vigencia', Carbon::parse($inicio)->year)->where('tipo', 0)->where('estado', '0')->first();
+        $presupuesto = $prepTrait->prepEgresos($vigens, $inicio, $final);
+
+        dd($presupuesto, $presupuesto[0]);
 
         return Excel::download(new InfPrepEgrExcExport($presupuesto),
             'Ejecucion Presupuesto de Egresos '.$inicio.'-'.$final.'.xlsx');

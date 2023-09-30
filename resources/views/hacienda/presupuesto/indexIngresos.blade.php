@@ -287,6 +287,7 @@
                 "_token": $("meta[name='csrf-token']").attr("content"),
             }
         }).done(function(datos) {
+            const fecha = new Date();
             $("#tabla").show();
             table.destroy();
             $("#infoPrep").show();
@@ -326,7 +327,8 @@
                         extend:    'excelHtml5',
                         text:      '<i class="fa fa-file-excel-o"></i> ',
                         titleAttr: 'Exportar a Excel',
-                        className: 'btn btn-primary'
+                        className: 'btn btn-primary',
+                        title: 'Presupuesto Ingresos '+fecha.getDate()+'-'+fecha.getMonth()+'-'+fecha.getFullYear()
                     },
                     {
                         extend:    'pdfHtml5',

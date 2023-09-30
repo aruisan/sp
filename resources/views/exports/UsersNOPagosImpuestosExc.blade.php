@@ -38,3 +38,26 @@
         @endforeach
     </tbody>
 </table>
+<table>
+    <thead>
+    <tr><th colspan="5">PREDIAL</th></tr>
+    <tr>
+        <th>NUMERO CATASTRAL</th>
+        <th>CONTRIBUYENTE</th>
+        <th>DIRECCION</th>
+        <th>CORREO</th>
+        <th>LIQUIDACION</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($predial as $item)
+        <tr>
+            <td>{{ $item['numCatastral']}}</td>
+            <td>{{ $item['contribuyente']}}</td>
+            <td>{{ $item['dir_predio']}}</td>
+            <td>{{ $item['email']}}</td>
+            <td>{{ $item['valorDeuda']}}</td>
+        </tr>
+    @endforeach
+    </tbody>
+</table>

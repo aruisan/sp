@@ -45,6 +45,11 @@ class OrdenPagos extends Model implements Auditable
         return $this->hasMany(Pagos::class,'orden_pago_id');
     }
 
+    public function radCuenta()
+    {
+        return $this->hasOne('App\Model\Administrativo\RadCuentas\RadCuentas','id','rad_cuenta_id');
+    }
+
     public function getSumaPagosAceptadosAttribute(){
         /*$inicio = "2023-01-01";
         $final = "2023-03-31";

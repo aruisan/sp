@@ -19,7 +19,7 @@
         <a class="nav-link" data-toggle="pill" href="{{route('nomina.empleados.create')}}">Nuevo Empleado</a>
     </li>
 </ul>
-<form class="container" method="POST">
+<form class="container" method="POST" >
     <div class="row">
         <div class="col-sm-3 col-md-4"></div>
         <div class="col-sm-6 col-md-4">

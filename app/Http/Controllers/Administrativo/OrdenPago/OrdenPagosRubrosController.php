@@ -20,45 +20,56 @@ class OrdenPagosRubrosController extends Controller
     public function create($id)
     {
         $ordenPago = OrdenPagos::findOrFail($id);
-        $cdps = CdpsRegistroValor::where('registro_id',$ordenPago->registros_id)->get();
+        if ($ordenPago->rad_cuenta_id != 0){
 
-        if (count($cdps) == 1){
-            if ($ordenPago->rubros->count() == 0){
-                $save = new OrdenPagosRubros();
-                $save->cdps_registro_valor_id = $cdps[0]->id;
-                $save->orden_pagos_id = $ordenPago->id;
-                $save->valor = $ordenPago->valor;
-                $save->saldo = $ordenPago->saldo;
-                $save->save();
+            $save = new OrdenPagosRubros();
+            $save->orden_pagos_id = $ordenPago->id;
+            $save->valor = $ordenPago->valor;
+            $save->saldo = $ordenPago->saldo;
+            $save->save();
 
-                return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
+            return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
+        } else{
+            $cdps = CdpsRegistroValor::where('registro_id',$ordenPago->registros_id)->get();
 
-            } else{
-                Session::flash('warning','La orden de pago ya tiene asignado el monto, debe realizar el proceso de asignar los descuentos. ');
-                return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
-            }
+            if (count($cdps) == 1){
+                if ($ordenPago->rubros->count() == 0){
+                    $save = new OrdenPagosRubros();
+                    $save->cdps_registro_valor_id = $cdps[0]->id;
+                    $save->orden_pagos_id = $ordenPago->id;
+                    $save->valor = $ordenPago->valor;
+                    $save->saldo = $ordenPago->saldo;
+                    $save->save();
+
+                    return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
+
+                } else{
+                    Session::flash('warning','La orden de pago ya tiene asignado el monto, debe realizar el proceso de asignar los descuentos. ');
+                    return redirect('/administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
+                }
 
 
-        } else {
-            foreach ($cdps as $cdp){
-                $valC[] = $cdp->valor;
-            }
-            $vOP = $ordenPago->valor - $ordenPago->iva;
-            foreach ($valC as $value){
-                if ($vOP == 0){
-                    $distri[] = 0;
-                }else {
-                    if ($vOP >= $value){
-                        $vOP = $vOP - $value;
-                        $distri[] = $value;
-                        $a[] = $vOP;
-                    } else {
-                        $distri[] = $vOP;
-                        $vOP = 0;
+            } else {
+                foreach ($cdps as $cdp){
+                    $valC[] = $cdp->valor;
+                }
+                $vOP = $ordenPago->valor - $ordenPago->iva;
+                foreach ($valC as $value){
+                    if ($vOP == 0){
+                        $distri[] = 0;
+                    }else {
+                        if ($vOP >= $value){
+                            $vOP = $vOP - $value;
+                            $distri[] = $value;
+                            $a[] = $vOP;
+                        } else {
+                            $distri[] = $vOP;
+                            $vOP = 0;
+                        }
                     }
                 }
+                return view('administrativo.ordenpagos.createRubros', compact('cdps','ordenPago','distri'));
             }
-            return view('administrativo.ordenpagos.createRubros', compact('cdps','ordenPago','distri'));
         }
     }
 

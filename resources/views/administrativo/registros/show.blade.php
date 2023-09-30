@@ -359,7 +359,7 @@
                                             <div class="col-lg-6">
                                                 <h4>
                                                     <b>CDP :
-                                                        <a href="{{ url('administrativo/cdp/'.$cdpsRegistroData->cdp->vigencia_id.'/'.$cdpsRegistroData->cdp->id) }}" title="Ver CDP">{{ $cdpsRegistroData->cdp->name }}</a>
+                                                        <a href="{{ url('administrativo/cdp/'.$cdpsRegistroData->cdp->vigencia_id.'/'.$cdpsRegistroData->cdp->id) }}" title="Ver CDP">#{{ $cdpsRegistroData->cdp->code }} - {{ $cdpsRegistroData->cdp->name }}</a>
                                                         </b>
                                                 </h4>
                                             </div>
@@ -394,14 +394,14 @@
                                                                 <input type="hidden" name="rubros_cdp_id[]" value="{{ $cdpsRegistroData->id }}">
                                                                 @php( $fechaActual = Carbon\Carbon::today()->Format('Y-m-d') )
                                                                 <li style="list-style-type: none;">
-                                                                    Dinero Disponible del Rubro {{ $RCV->fontsRubro->rubro->name }} :
+                                                                    Dinero Disponible del Rubro {{ $RCV->fontsRubro->rubro->cod }} {{ $RCV->fontsRubro->rubro->name }} :
                                                                     $<?php echo number_format( $RCV->valor_disp,0) ?>
                                                                 </li>
                                                             </div>
                                                         @endif
                                                         <div class="col-lg-6">
                                                             @if($registro->secretaria_e == "3")
-                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
+                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->cod }} {{ $RCV->fontsRubro->rubro->name }}:
                                                                 @if($cdpsRegistroData->cdpRegistroValor->count() != 0)
                                                                     @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
                                                                         @php($id_rubrosCdp = $cdpsRegistroData->id )
@@ -425,7 +425,7 @@
                                                                     <input type="number" required  name="valorFuenteUsar[]" class="form-group-sm" value="{{$RCV->valor_disp}}" max="{{  $RCV->valor_disp }}" style="text-align: center">
                                                                 @endif
                                                             @elseif($RCV->valor_disp > 0)
-                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->name }}:
+                                                                Valor Usado del Rubro {{ $RCV->fontsRubro->rubro->cod }} {{ $RCV->fontsRubro->rubro->name }}:
                                                                 @if($cdpsRegistroData->cdpRegistroValor->count() != 0 )
                                                                     @foreach($RCV->fontsRubro->cdpRegistrosValor as  $valoresRV)
                                                                         @php($id_rubrosCdp = $cdpsRegistroData->id )

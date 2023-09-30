@@ -17,7 +17,7 @@
 				</tr>
 				@if($Pago->embargo == '1')
 					<tr class="text-center">
-						<td colspan="2">Tercero del Embargo: {{ $OrdenPago->persona->num_dc }} - {{ $OrdenPago->persona->nombre }} </td>
+						<td colspan="2">Tercero del Embargo: {{ $OrdenPago->registros->persona->num_dc }} - {{ $OrdenPago->registros->persona->nombre }} </td>
 					</tr>
 				@endif
 			</table>
@@ -155,7 +155,15 @@
 						@elseif($PagosDesc->retencion_fuente_id != null)
 							<td>{{ $PagosDesc->descuento_retencion->codigo}}</td>
 							<td>{{ $PagosDesc->descuento_retencion->concepto }}</td>
-							<td>$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?></td>
+							<td>
+								$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?>
+								@if($PagosDesc->retencion_fuente_id == 42)
+									$ <?php echo number_format($PagosDesc->base,0);?>
+								@else
+									$ <?php echo number_format($OrdenPago->valor - $OrdenPago->iva,0);?>
+								@endif
+								
+							</td>
 							<td>{{ $PagosDesc->descuento_retencion->tarifa }}</td>
 						@else
 							<td>{{ $PagosDesc->puc->code}}</td>
@@ -226,6 +234,9 @@
 				</tr>
 				</tbody>
 			</table>
+			@if($Pago->responsable)
+				<h5 style="font-size: 10px" class="text-center">Elaborado por: {{ $Pago->responsable->name }} - {{ $Pago->responsable->email }}</h5>
+			@endif
 		</div>
 	</div>
 	<div style="font-size: 10px;">

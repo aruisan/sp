@@ -9,6 +9,7 @@
 </li>
 @endif
 @can('listar-empleados')
+{{--
 @if(auth()->id() == 1 )
 <li >
    <a class="btn btn-default btn-sm item-menu" href="{{ route('tramites-cuentas.index') }}">
@@ -16,6 +17,7 @@
    </a>
 </li>
 @endif
+--}}
 <li class="dropdown ">
    <a class="btn btn-default btn-sm dropdown-toggle item-menu" type="button" data-toggle="dropdown">
    NOMINA
@@ -246,7 +248,7 @@
                   <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/12') }}">2023</a></li>
                </ul>
             </li>
-            <li><a class="item-menu" tabindex="-1" href="#">Estado de Resultados</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('estado-resultado', [2023, 1, 'vista'])}}">Estado de Resultados</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Notas al Balance</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Estado al cambio del patrimonio</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Estado de FLujo de Caja</a></li>

@@ -96,29 +96,16 @@
                     </div>
                 </div>
                 <ul class="nav nav-pills">
-                    <li class="nav-item active">
-                        <a class="nav-link" data-toggle="pill" href="#tabHome" onclick="findPrep()"><i class="fa fa-home"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('administrativo/ordenPagos/'.$V) }}">Orden de Pago</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('administrativo/pagos/'.$V) }}">Pagos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#tab_proyectos" onclick="show_bpins()">Proyectos</a>
-                    </li>
+                    <li class="nav-item active"><a class="nav-link" data-toggle="pill" href="#tabHome" onclick="findPrep()"><i class="fa fa-home"></i></a></li>
+                    <li class="nav-item"><a class="nav-link" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/radCuentas/'.$V) }}">Radicación de Cuentas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/ordenPagos/'.$V) }}">Orden de Pago</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/pagos/'.$V) }}">Pagos</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tab_proyectos" onclick="show_bpins()">Proyectos</a></li>
                 </ul>
                 <hr>
-
                 <!-- TABLA DE PRESUPUESTO -->
-
                 <div class="tab-content" style="background-color: white">
                     <div id="tabHome" class="tab-pane active"><br>
                         <div class="table-responsive">
@@ -169,6 +156,7 @@
                                     <th class="text-center">Fuente</th>
                                     <th class="text-center">Código Producto</th>
                                     <th class="text-center">Código Indicador Producto</th>
+                                    <th class="text-center">% Ejecución</th>
                                 </thead>
                                 <tbody></tbody>
                             </table>
@@ -422,6 +410,7 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
+                const fecha = new Date();
                 $("#tabla").show();
                 table.destroy();
                 $("#infoPrep").show();
@@ -461,7 +450,8 @@
                                 extend:    'excelHtml5',
                                 text:      '<i class="fa fa-file-excel-o"></i> ',
                                 titleAttr: 'Exportar a Excel',
-                                className: 'btn btn-primary'
+                                className: 'btn btn-primary',
+                                title: 'Presupuesto Egresos '+fecha.getDate()+'-'+fecha.getMonth()+'-'+fecha.getFullYear()
                             },
                             {
                                 extend:    'pdfHtml5',
@@ -511,6 +501,7 @@
                             { title: "Fuente", data: "fuente"},
                             { title: "Código Producto", data: "cod_producto"},
                             { title: "Código Indicador Producto", data: "cod_indicador"},
+                            { title: "% Ejecución", data: "ejec"},
                         ]
                     } );
                 } else {

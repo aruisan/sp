@@ -526,6 +526,7 @@
 
                 //TASA AMBIENTAL
                 var tasaAmb = tot * 0.01;
+                console.log(tot, tasaAmb);
 
                 document.getElementById('tasaAmbientalSpan'+año).innerHTML = formatter.format(tasaAmb);
                 document.getElementById('tasaAmbiental'+año).value = parseInt(tasaAmb);

@@ -34,7 +34,7 @@ class RegistrosController extends Controller
     public function __construct()
     {
         $this->photos_path = public_path('uploads\Registros');
-        $this->fechaFija = '2023-08-14';
+        $this->fechaFija = '2023-08-23';
     }
  
     /**
@@ -210,6 +210,7 @@ class RegistrosController extends Controller
             $registro->mod_seleccion = $request->mod_seleccion;
             $registro->estado_ejec = $request->estado_ejec;
         }
+        $registro->vigencia_id = $request->vigencia;
         $registro->save();
 
         $fuenteRubroId = $request->fuente_id;

@@ -695,6 +695,7 @@
                                                 <table class="table table-borderless">
                                                     <thead>
                                                     <tr>
+                                                        <th class="text-center">Rubro - Fuente</th>
                                                         <th class="text-center">Cod.</th>
                                                         <th class="text-center">Nombre</th>
                                                         <th class="text-center">Dinero Usado</th>
@@ -703,6 +704,10 @@
                                                     <tbody>
                                                         @foreach($cdp->bpinsCdpValor as $item)
                                                             <tr>
+                                                                <td>
+                                                                    {{ $item->depRubroFont->fontRubro->rubro->cod }} - {{ $item->depRubroFont->fontRubro->rubro->name }} -
+                                                                    {{ $item->depRubroFont->fontRubro->sourceFunding->code }} - {{ $item->depRubroFont->fontRubro->sourceFunding->description }}
+                                                                </td>
                                                                 <td>{{$item->actividad->cod_actividad}}</td>
                                                                 <td>{{$item->actividad->actividad}}</td>
                                                                 <td>$<?php echo number_format( $item->valor ,0) ?></td>
@@ -899,20 +904,21 @@
                                 <tr>
                                     <th scope="col" class="text-center">Rubro</th>
                                     <th scope="col" class="text-center">Concepto</th>
+                                    <th scope="col" class="text-center">Dependencia</th>
+                                    <th scope="col" class="text-center">Fuente</th>
                                     <th scope="col" class="text-center">Dinero Disponible</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($valores as $valor)
-                                    @foreach($infoRubro as $info)
-                                        @if($valor['id_rubro'] == $info['id_rubro'])
-                                            <tr>
-                                                <td class="text-center">{{ $info['codigo'] }}</td>
-                                                <td class="text-center">{{ $valor['name'] }}</td>
-                                                <td class="text-center">$<?php echo number_format($valor['dinero'],0) ?></td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
+                                    <tr>
+                                        <td class="text-center">{{ $valor['code'] }}</td>
+                                        <td class="text-center">{{ $valor['name'] }}</td>
+                                        <td class="text-center">{{ $valor['dependencia'] }}</td>
+                                        <td class="text-center">{{ $valor['codeFont'] }} {{ $valor['font'] }}</td>
+                                        <td class="text-center">$<?php echo number_format($valor['dinero'],0) ?></td>
+                                    </tr>
+
                                 @endforeach
                                 </tbody>
                             </table>

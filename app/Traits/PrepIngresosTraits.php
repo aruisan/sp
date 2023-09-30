@@ -44,6 +44,7 @@ Class PrepIngresosTraits
                 else  $reducciones = RubrosMov::where('font_vigencia_id', $vigencia->id)->where('movimiento','3')->get();
 
                 $definitivo = $adiciones->sum('valor') - $reducciones->sum('valor') + $vigencia->presupuesto_inicial;
+                //if ($data->code == '1.1.01.02.200') dd("FIRST",$data, array_sum($totComIng), $totComIng);
                 $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $vigencia->presupuesto_inicial, 'adicion' => $adiciones->sum('valor'), 'reduccion' => $reducciones->sum('valor'),
                     'anulados' => 0, 'recaudado' => array_sum($totComIng) , 'porRecaudar' => $definitivo - array_sum($totComIng), 'definitivo' => $definitivo,
                     'hijo' => 0, 'cod_fuente' => '', 'name_fuente' => '']);
@@ -112,6 +113,7 @@ Class PrepIngresosTraits
                                                             }
                                                             if (isset($descOPs)) {
                                                                 $civ[] = array_sum($descOPs);
+                                                                //if (array_sum($descOPs) == 996370884) dd("First",$descOPs, $rubro[0]);
                                                                 unset($descOPs);
                                                             }
                                                         }
@@ -120,6 +122,7 @@ Class PrepIngresosTraits
                                                         if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                         $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                        unset($OPDes);
 
                                                     } else {
                                                         foreach ($rubro as $rb){
@@ -213,6 +216,7 @@ Class PrepIngresosTraits
                                                         }
                                                         if (isset($descOPs)) {
                                                             $civ[] = array_sum($descOPs);
+                                                            //if (array_sum($descOPs) == 996370884) dd("Second",$descOPs);
                                                             unset($descOPs);
                                                         }
                                                     }
@@ -221,6 +225,7 @@ Class PrepIngresosTraits
                                                     if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                                     $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                                    unset($OPDes);
                                                 } else {
                                                     foreach ($rubro as $rb){
 
@@ -313,6 +318,7 @@ Class PrepIngresosTraits
                                                 }
                                                 if (isset($descOPs)) {
                                                     $civ[] = array_sum($descOPs);
+                                                    //if (array_sum($descOPs) == 996370884) dd("third",$descOPs);
                                                     unset($descOPs);
                                                 }
                                             }
@@ -321,6 +327,7 @@ Class PrepIngresosTraits
                                             if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
 
                                             $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                            unset($OPDes);
                                         } else {
                                             foreach ($rubro as $rb){
                                                 //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
@@ -411,6 +418,8 @@ Class PrepIngresosTraits
                                         }
                                         if (isset($descOPs)) {
                                             $civ[] = array_sum($descOPs);
+                                            $descFromOPs[] = array_sum($descOPs);
+                                            //if (array_sum($descOPs) == 996370884) dd("fourth",$descOPs);
                                             unset($descOPs);
                                         }
                                     }
@@ -420,6 +429,7 @@ Class PrepIngresosTraits
 
                                     // VALIDACION PARA EL VALOR INICIAL DE LOS RUBROS PADRES
                                     $sum[] = $rubro[0]->fontsRubro->sum('valor');
+                                    unset($OPDes);
                                 } else {
                                     foreach ($rubro as $rb){
                                         //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO
@@ -471,6 +481,7 @@ Class PrepIngresosTraits
 
                         $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
+                        if (!isset($descFromOPs)) $descFromOPs[] = 0;
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
                             'hijo' => $data->hijo, 'cod_fuente' => '', 'name_fuente' => '']);
@@ -517,7 +528,6 @@ Class PrepIngresosTraits
 
                                     if (isset($compIngValueArray)) $compIngValue = array_sum($compIngValueArray);
                                     else $compIngValue = 0;
-
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name,
                                         'inicial' => $font->valor, 'adicion' => $adicion, 'reduccion' => $reduccion, 'anulados' => 0,
                                         'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,'hijo' => $data->hijo,
@@ -570,18 +580,21 @@ Class PrepIngresosTraits
                                             }
                                         }
                                         if (isset($descOPs)) {
-                                            $civ[] = array_sum($descOPs);
+                                            $compIngValue = $compIngValue + array_sum($descOPs);
                                             unset($descOPs);
                                         }
                                     }
-
+                                    //if ($data->code == '1.1.01.02.200.01') dd("FOURTH",$data, $compIngValue, $civ, array_sum($civ), $rubro[0]);
                                     $prepIng[] = collect(['id' => $rubro[0]->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => $rubro[0]->fontsRubro->sum('valor'), 'adicion' => $adicion, 'reduccion' => $reduccion,
                                         'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' =>  $definitivo,
                                         'hijo' => $data->hijo, 'cod_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->code, 'name_fuente' => $rubro[0]->fontsRubro[0]->sourceFunding->description]);
+
+                                    if (isset($compIngValueArray)) unset($compIngValueArray);
+                                    unset($OPDes);
                                 }
 
                             }
-                        } else {
+                            } else {
                             //MAS DE UN RUBRO ASIGNADO A LA MISMA PLANTILLA
                             foreach ($rubro as $rb){
                                 //SE LIMPIAN LAS VARIABLES PARA SU CORRESPONDIENTE LLENADO EN LIMPIO

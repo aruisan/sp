@@ -5,28 +5,13 @@ namespace App\Http\Controllers\Hacienda\Presupuesto\Egresos;
 use App\bpinVigencias;
 use App\Http\Controllers\Controller;
 use App\BPin;
-use App\Model\Admin\DependenciaRubroFont;
-use App\Model\Administrativo\Cdp\BpinCdpValor;
-use App\Model\Administrativo\Cdp\Cdp;
-use App\Model\Administrativo\Cdp\RubrosCdpValor;
-use App\Model\Administrativo\OrdenPago\OrdenPagos;
-use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
-use App\Model\Administrativo\Pago\Pagos;
-use App\Model\Administrativo\Registro\CdpsRegistroValor;
-use App\Model\Administrativo\Registro\Registro;
-use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
-use App\Model\Hacienda\Presupuesto\PlantillaCuipo;
 use App\Model\Hacienda\Presupuesto\Rubro;
-use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
-use App\Model\Hacienda\Presupuesto\SourceFunding;
-use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Session;
 
 class IndexController extends Controller
@@ -74,16 +59,14 @@ class IndexController extends Controller
         } else{
             $V = $prepSaved->vigencia_id;
             $dataPrepSaved = PresupuestoSnapData::where('pre_snap_id', $prepSaved->id)->first();
-            $fechaData = Carbon::parse($dataPrepSaved->created_at)->subHours(5);
+            $fechaData = Carbon::parse($dataPrepSaved->created_at);
             $codeCon = CodeContractuales::all();
 
             foreach ($bpins as $bpin){
                 $bpin['rubro'] = "No";
                 if (count($bpin->rubroFind) > 0) {
                     foreach ($bpin->rubroFind as $rub){
-                        if ($rub->vigencia_id == $V){
-                            $bpin['rubro'] = $rub->dep_rubro_id;
-                        }
+                        if ($rub->vigencia_id == $V) $bpin['rubro'] = $rub->dep_rubro_id;
                     }
                 }
             }
@@ -95,9 +78,11 @@ class IndexController extends Controller
 
     public function getPrepSaved(Request $request){
 
-        $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->get();
-        foreach ($prepSaved as $item){
+        if (auth()->user()->dependencia_id == 5){
+            $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->where('name_dep','Concejo')->get();
+        } else $prepSaved = PresupuestoSnapData::where('pre_snap_id', $request->prepSaved['id'])->get();
 
+        foreach ($prepSaved as $item){
             $rubro = Rubro::where('vigencia_id', $request->prepSaved['vigencia_id'])->where('cod', $item->rubro)->first();
             if ($rubro) $item->rubroLink = '<a href="presupuesto/rubro/'.$rubro->id.'">'.$item->rubro.'</a>';
             else $item->rubroLink = $item->rubro;

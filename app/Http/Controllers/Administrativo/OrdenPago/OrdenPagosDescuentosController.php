@@ -8,6 +8,7 @@ use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
 use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\RadCuentas\RadCuentas;
 use App\Model\Administrativo\Registro\Registro;
 use App\Model\Persona;
 use Illuminate\Http\Request;
@@ -36,12 +37,18 @@ class OrdenPagosDescuentosController extends Controller
     {
         $retenF = RetencionFuente::all();
         $ordenPago = OrdenPagos::findOrFail($id);
-        $vigencia = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+        if ($ordenPago->rad_cuenta_id != 0) {
+            $radCuenta = RadCuentas::find($ordenPago->rad_cuenta_id);
+            $vigencia = $radCuenta->vigencia_id;
+        }
+        else $vigencia = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+
         $cuentas24 = PucAlcaldia::where('id','>=',622)->where('id','<=',711)->where('hijo','1')->get();
         $personas = Persona::all();
         //VALIDACION PARA LOS REINTEGROS
-        $reintegros = ComprobanteIngresos::where('tipoCI', 'Reintegro')->where('persona_id',$ordenPago->registros->persona_id)
-            ->where('maked','0')->get();
+        if ($ordenPago->rad_cuenta_id != 0) $reintegros = ComprobanteIngresos::where('tipoCI', 'Reintegro')->where('persona_id',$radCuenta->persona->id)->where('maked','0')->get();
+        else $reintegros = ComprobanteIngresos::where('tipoCI', 'Reintegro')->where('persona_id',$ordenPago->registros->persona_id)->where('maked','0')->get();
+
         if ($ordenPago->rubros->count() == 0){
             Session::flash('warning',' Se debe realizar primero la asignación del monto antes de realizar los descuentos.');
             return redirect('administrativo/ordenPagos/monto/create/'.$ordenPago->id);
@@ -68,7 +75,7 @@ class OrdenPagosDescuentosController extends Controller
             $valor = $request->valor;
             $nombre = $retenFuente->concepto;
             $porcentaje = $retenFuente->tarifa;
-            $base = $retenFuente->base;
+            $base = $request->valOP;
 
             $ordenPagoDes = new OrdenPagosDescuentos();
             $ordenPagoDes->nombre = $nombre;

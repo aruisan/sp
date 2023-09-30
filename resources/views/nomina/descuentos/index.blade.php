@@ -57,6 +57,10 @@
 											<a href="{{route('nomina-descuentos.edit', $nomina->id)}}" class="btn btn-sm btn-primary" title="editar nomina de descuentos">
 												<i class="fa fa-pencil" aria-hidden="true"></i>
 											</a>
+										@else
+											<a href="{{route('nomina-descuentos.bancos_reportes', $nomina->id)}}" class="btn btn-sm btn-primary" title="Reporte a bancos" target="_blank">
+													<i class="fa fa-university" aria-hidden="true"></i>
+												</a>
 										@endif
 									</td>
 								</tr>

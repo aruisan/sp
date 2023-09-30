@@ -129,7 +129,7 @@
                     <br>
                     <div class="col-md-4 align-self-center">
                         <div class="form-group">
-                            <select class="form-control" id="form_pay" name="type_pay" onchange="var date= document.getElementById('fecha'); var cheque = document.getElementById('cheque'); var tarjeta = document.getElementById('tarjeta'); var bank = document.getElementById('table_bank'); if(this.value=='1'){ fecha.style.display='inline'; cheque.style.display='inline'; bank.style.display='inline'; tarjeta.style.display='none';}else if(this.value=='2'){ fecha.style.display='inline'; cheque.style.display='none'; bank.style.display='inline'; tarjeta.style.display='inline';}else{fecha.style.display='none'; bank.style.display='none'; cheque.style.display='none'; tarjeta.style.display='none'; }">
+                            <select class="form-control" id="form_pay" name="type_pay" onchange="var date= document.getElementById('fecha'); var cheque = document.getElementById('cheque'); var tarjeta = document.getElementById('tarjeta'); var bank = document.getElementById('table_bank'); if(this.value=='1'){ fecha.style.display='inline'; cheque.style.display='inline'; bank.style.display='inline'; tarjeta.style.display='none';}else if(this.value=='2'){ fecha.style.display='inline'; cheque.style.display='none'; bank.style.display='inline'; tarjeta.style.display='inline';}else{fecha.style.display='none'; bank.style.display='none'; cheque.style.display='none'; tarjeta.style.display='none'; }$('.select-puc').select2();$('.select-tercero-puc').select2();">
                                 <option value="0">Selecciona Forma de Pago</option>
                                 <option value="1">Cheque</option>
                                 <option value="2">Transferencia</option>
@@ -197,7 +197,36 @@
                             </tr>
                         </table>
                         <br>
-                        <input type="hidden" class="form-control" name="referenciaPago" id="referenciaPago" placeholder="REFERENCIA DEL PAGO">
+                        Si se requiere agregar una cuenta PUC se puede por esta seccion.
+                        <br>
+                        <table class="table table-bordered" id="banks">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Cuenta PUC</th>
+                                <th class="text-center">Credito</th>
+                                <th class="text-center">Debito</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tr>
+                                <td>
+                                    <select class="select-puc" name="pucAdd" required>
+                                        <option value="0">NO APLICA</option>
+                                        @foreach($allPUCS as $puc)
+                                            <option value="{{ $puc->id }}">{{ $puc->code }} - {{ $puc->concepto }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" required class="form-control" id="credPUC" name="credPUC" min="0" style="text-align:center" value="0">
+                                </td>
+                                <td>
+                                    <input type="number" required class="form-control" id="debPUC" name="debPUC" min="0" style="text-align:center" value="0">
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="text" class="form-control" name="referenciaPago" id="referenciaPago" placeholder="REFERENCIA DEL PAGO">
                         <br><br>
                         <center>
                             <button type="button" v-on:click.prevent="nuevoBanco" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp; Agregar Otro Banco</button>
@@ -212,6 +241,7 @@
 @stop
 @section('js')
     <script type="text/javascript">
+
 
         const guardar = () => {
             let select = $('#form_pay').val();

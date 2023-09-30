@@ -18,6 +18,7 @@ use App\Model\Administrativo\OrdenPago\OrdenPagosPayments;
 use App\Model\Administrativo\OrdenPago\OrdenPagosEgresos;
 use App\Model\Administrativo\Contabilidad\Puc;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
+use App\Model\Administrativo\RadCuentas\RadCuentas;
 use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
 use App\Model\Hacienda\Presupuesto\Level;
@@ -27,6 +28,7 @@ use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Model\Persona;
 use App\Traits\ConteoTraits;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Registro\Registro;
@@ -113,6 +115,8 @@ class OrdenPagosController extends Controller
         }else{
             $numOP = 0;
         }
+
+        $radCuentas = RadCuentas::where('estado_elabor','1')->where('estado_rev','1')->where('saldo','>',0)->where('vigencia_id', $id)->with('persona')->get();
         if (!isset($Registros)) {
             Session::flash('warning', 'No hay registros disponibles para crear la orden de pago, debe crear un nuevo registro. ');
             return redirect('/administrativo/ordenPagos/'.$id);
@@ -120,7 +124,7 @@ class OrdenPagosController extends Controller
             Session::flash('warning', 'No hay un PUC alamcenado en el software o finalizado, debe disponer de uno para poder realizar una orden de pago. ');
             return redirect('/administrativo/ordenPagos');
         }else{
-            return view('administrativo.ordenpagos.create', compact('Registros','numOP','id'));
+            return view('administrativo.ordenpagos.create', compact('Registros','numOP','id','radCuentas'));
         }
     }
 
@@ -132,57 +136,91 @@ class OrdenPagosController extends Controller
      */
     public function store(Request $request)
     {
-        $registro_id = Registro::findOrFail($request->IdR);
+        if ($request->IdR == 0){
+            //ORDEN DE PAGO DE RADICACION DE CUENTA
 
-        if ($request->ValTOP > $registro_id->saldo){
-            Session::flash('warning','El valor no puede ser superior al valor disponible del registro seleccionado: '.$registro_id->saldo.' Rectifique el valor de la orden de pago y el iva.');
-            return redirect('/administrativo/ordenPagos/create/'.$request->vigencia);
-        } else {
+            $radCuenta = RadCuentas::find($request->IdRadCuenta);
+            if ($radCuenta->saldo < $request->ValTOP){
+                Session::flash('warning','El valor no puede ser superior al valor disponible del radicación seleccionada: '.$radCuenta->saldo.' Rectifique el valor de la orden de pago y el iva.');
+                return redirect('/administrativo/ordenPagos/create/'.$request->vigencia);
+            } else {
+                $ordenPago = new OrdenPagos();
+                $ordenPago->nombre = trim(preg_replace('/\s+/', ' ', $request->concepto));
+                $ordenPago->valor = $request->ValTOP;
+                $ordenPago->saldo = $request->ValTOP;
+                $ordenPago->iva = $request->ValIOP;
+                $ordenPago->estado = $request->estado;
+                $ordenPago->rad_cuenta_id = $radCuenta->id;
+                $ordenPago->user_id = auth()->user()->id;
+                //$ordenPago->created_at = '2023-06-30 12:00:00';
+                $ordenPago->save();
 
-            $oP = OrdenPagos::orderBy('code','ASC')->get();
-            foreach ($oP as $data){
-                if (isset($data->registros->cdpsRegistro)) {
-                    if ($registro_id->cdpsRegistro[0]->cdp->vigencia_id == $data->registros->cdpsRegistro[0]->cdp->vigencia_id) {
-                        $ordenPago[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre]);
-                    }
-                } else $ordenPago[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN	']);
+                $ordenPago->code = $ordenPago->id;
+                $ordenPago->save();
+
+                Session::flash('success','La orden de pago se ha creado exitosamente');
+                return redirect('/administrativo/ordenPagos/monto/create/'.$ordenPago->id);
+
             }
-            if (isset($ordenPago)){
-                $last = array_last($ordenPago);
-                $numOP = $last['info']->code + 1;
-            }else $numOP = 0;
 
-            $findCodeOPs = OrdenPagos::where('code', $numOP)->get();
-            if (count($findCodeOPs) > 0 ){
-                $vigencia = Vigencia::find($request->vigencia);
-                foreach ($findCodeOPs as $find){
-                    if (Carbon::parse($find->created_at)->format('Y') == $vigencia->vigencia) $numOP = $numOP + 1 ;
+        } else{
+            //AL SER UNA ORDEN DE PAGO DE RP
+            $registro_id = Registro::findOrFail($request->IdR);
+
+            if ($request->ValTOP > $registro_id->saldo){
+                Session::flash('warning','El valor no puede ser superior al valor disponible del registro seleccionado: '.$registro_id->saldo.' Rectifique el valor de la orden de pago y el iva.');
+                return redirect('/administrativo/ordenPagos/create/'.$request->vigencia);
+            } else {
+
+                $oP = OrdenPagos::orderBy('code','ASC')->get();
+                foreach ($oP as $data){
+                    if (isset($data->registros->cdpsRegistro)) {
+                        if ($registro_id->cdpsRegistro[0]->cdp->vigencia_id == $data->registros->cdpsRegistro[0]->cdp->vigencia_id) {
+                            $ordenPago[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre]);
+                        }
+                    } else $ordenPago[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN	']);
                 }
+                if (isset($ordenPago)){
+                    $last = array_last($ordenPago);
+                    $numOP = $last['info']->code + 1;
+                }else $numOP = 0;
+
+                $findCodeOPs = OrdenPagos::where('code', $numOP)->get();
+                if (count($findCodeOPs) > 0 ){
+                    $vigencia = Vigencia::find($request->vigencia);
+                    foreach ($findCodeOPs as $find){
+                        if (Carbon::parse($find->created_at)->format('Y') == $vigencia->vigencia) $numOP = $numOP + 1 ;
+                    }
+                }
+
+                $ordenPago = new OrdenPagos();
+                $ordenPago->nombre = trim(preg_replace('/\s+/', ' ', $request->concepto));
+                $ordenPago->valor = $request->ValTOP;
+                $ordenPago->saldo = $request->ValTOP;
+                $ordenPago->iva = $request->ValIOP;
+                $ordenPago->estado = $request->estado;
+                $ordenPago->registros_id = $request->IdR;
+                $ordenPago->user_id = auth()->user()->id;
+                //$ordenPago->created_at = '2023-06-30 12:00:00';
+                $ordenPago->save();
+
+                $ordenPago->code = $ordenPago->id;
+                $ordenPago->save();
+
+                Session::flash('success','La orden de pago se ha creado exitosamente');
+                return redirect('/administrativo/ordenPagos/monto/create/'.$ordenPago->id);
             }
-
-            $ordenPago = new OrdenPagos();
-            $ordenPago->nombre = trim(preg_replace('/\s+/', ' ', $request->concepto));
-            $ordenPago->valor = $request->ValTOP;
-            $ordenPago->saldo = $request->ValTOP;
-            $ordenPago->iva = $request->ValIOP;
-            $ordenPago->estado = $request->estado;
-            $ordenPago->registros_id = $request->IdR;
-            $ordenPago->user_id = auth()->user()->id;
-            //$ordenPago->created_at = '2023-06-30 12:00:00';
-            $ordenPago->save();
-
-            $ordenPago->code = $ordenPago->id;
-            $ordenPago->save();
-
-            Session::flash('success','La orden de pago se ha creado exitosamente');
-            return redirect('/administrativo/ordenPagos/monto/create/'.$ordenPago->id);
         }
     }
 
     public function liquidacion($id)
     {
         $ordenPago = OrdenPagos::findOrfail($id);
-        $vigencia = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+        if ($ordenPago->rad_cuenta_id != 0) {
+            $radCuenta = RadCuentas::find($ordenPago->rad_cuenta_id);
+            $vigencia = $radCuenta->vigencia_id;
+        } else $vigencia = $ordenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+
         if ($ordenPago->descuentos->count() == 0){
             Session::flash('warning',' Se deben realizar primero los descuentos para poder hacer la contabilización de la orden de pago.');
             return redirect('administrativo/ordenPagos/descuento/create/'.$ordenPago->id);
@@ -229,7 +267,8 @@ class OrdenPagosController extends Controller
                 }
             }
             $ordenPagoDesc = OrdenPagosDescuentos::where('orden_pagos_id',$id)->get();
-            $registro = Registro::findOrFail($ordenPago->registros_id);
+            if ($ordenPago->rad_cuenta_id != 0) $registro = $radCuenta->registro;
+            else $registro = Registro::findOrFail($ordenPago->registros_id);
             $Pagos = OrdenPagos::where('estado','=',1);
             $SumPagos = $Pagos->sum('valor');
 
@@ -240,12 +279,12 @@ class OrdenPagosController extends Controller
 
     public function liquidar(Request $request)
     {
+
         if (count($request->PUC) > 200){
             Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC. Por favor seleccionelas nuevamente. ');
             return back();
         }
         $ordenPago = OrdenPagos::findOrFail($request->ordenPago_id);
-        $registro = Registro::findOrFail($ordenPago->registros_id);
         for ($i=0;$i< count($request->PUC); $i++){
             if ($request->PUC[$i] == "Selecciona un PUC"){
                 Session::flash('warning','Recuerde seleccionar un PUC antes de continuar');
@@ -255,12 +294,25 @@ class OrdenPagosController extends Controller
                 $totalCred = array_sum($request->valorPucC);
                 $totalDes = $ordenPago->descuentos->sum('valor');
                 if ( $totalCred + $totalDes == $totalDeb){
-                    $registro->saldo = $registro->saldo - $request->valorPucD[$i];
-                    if ($registro->saldo < 0){
-                        Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC y la Orden de Pago ya este finalizada. Revice la orden de pago '.$request->ordenPago_id);
-                        return redirect('/administrativo/ordenPagos/show/'.$request->ordenPago_id);
+
+                    if($ordenPago->rad_cuenta_id != 0){
+                        $ordenPago->radCuenta->saldo = $ordenPago->radCuenta->saldo - $request->valorPucD[$i];
+                        if ($ordenPago->radCuenta->saldo < 0){
+                            Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC y la Orden de Pago ya este finalizada. Revice la orden de pago '.$request->ordenPago_id);
+                            return redirect('/administrativo/ordenPagos/show/'.$request->ordenPago_id);
+                        }
+                        $ordenPago->radCuenta->save();
+
+                    } else {
+                        $registro = Registro::findOrFail($ordenPago->registros_id);
+                        $registro->saldo = $registro->saldo - $request->valorPucD[$i];
+                        if ($registro->saldo < 0){
+                            Session::flash('warning','Es posible que se hayan replicado las cuentas del PUC y la Orden de Pago ya este finalizada. Revice la orden de pago '.$request->ordenPago_id);
+                            return redirect('/administrativo/ordenPagos/show/'.$request->ordenPago_id);
+                        }
+                        $registro->save();
                     }
-                    $registro->save();
+
                     $oPP = new OrdenPagosPuc();
                     $oPP->rubros_puc_id = $request->PUC[$i];
                     $oPP->orden_pago_id = $request->ordenPago_id;
@@ -352,9 +404,15 @@ class OrdenPagosController extends Controller
     {
         $OrdenPago = OrdenPagos::findOrFail($id);
 
-        $vigenc = $OrdenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+        if ($OrdenPago->rad_cuenta_id != 0) {
+            $radCuenta = RadCuentas::find($OrdenPago->rad_cuenta_id);
+            $vigenc = $radCuenta->vigencia_id;
+            $R = $OrdenPago->radCuenta->registro;
+        } else {
+            $vigenc = $OrdenPago->registros->cdpsRegistro[0]->cdp->vigencia_id;
+            $R = Registro::findOrFail($OrdenPago->registros_id);
+        }
         $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $id)->get();
-        $R = Registro::findOrFail($OrdenPago->registros_id);
 
         $all_rubros = Rubro::where('vigencia_id', $vigenc);
         foreach ($all_rubros as $rubro){
@@ -488,6 +546,7 @@ class OrdenPagosController extends Controller
     public function pdf_OP($id)
     {
         $OrdenPago = OrdenPagos::findOrFail($id);
+        $OrdenPago->responsable = User::find($OrdenPago->user_id);
 
         if (isset($OrdenPago->registros->cdpsRegistro)) {
             $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $id)->where('valor', '>', 0)->get();
@@ -575,6 +634,8 @@ class OrdenPagosController extends Controller
         $Egreso_id = $Pago->code;
         $OrdenPago = OrdenPagos::findOrFail($Pago->orden_pago_id);
         $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $OrdenPago->id)->where('valor','>',0)->get();
+
+        if ($Pago->responsable_id) $Pago->responsable = User::find($Pago->responsable_id);
 
         $all_rubros = Rubro::all();
         foreach ($all_rubros as $rubro){

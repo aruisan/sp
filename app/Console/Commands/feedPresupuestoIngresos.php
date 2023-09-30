@@ -92,6 +92,10 @@ class feedPresupuestoIngresos extends Command
                 $newData->cuentas_pagar = 0;
                 $newData->reservas = 0;
                 if ($data['cod_fuente'] != '') $newData->fuente = $data['cod_fuente'].' - '.$data['name_fuente'];
+                if (intval($data['definitivo']) > 0){
+                    $multi = intval($data['recaudado']) * 100;
+                    $newData->ejec = intval($multi) / intval($data['definitivo']);
+                }
                 $newData->save();
             }
         }

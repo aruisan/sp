@@ -64,12 +64,16 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-horas'] ,function(){
 
 Route::group([ 'middleware' => 'auth', 'prefix' => 'nomina-descuentos'] ,function(){
     Route::get('/list/{tipo}', "Nomina\DescuentosController@index")->name('nomina-descuentos.index');
+
+    Route::get('/pasar/{nomina_old}', "Nomina\DescuentosController@pasar")->name('nomina-descuentos.pasar');
+    Route::post('/pasar/{nomina}', "Nomina\DescuentosController@pasar_store")->name('nomina-descuentos.pasar-store');
  //   Route::get('/crear', "Nomina\DescuentosController@create")->name('nomina-descuentos.create');
  //   Route::post('/', "Nomina\DescuentosController@store")->name('nomina-descuentos.store');
     Route::get('/edit/{nomina}', "Nomina\DescuentosController@edit")->name('nomina-descuentos.edit');
     Route::post('/update/{nomina}', "Nomina\DescuentosController@update")->name('nomina-descuentos.update');
     Route::get('/{nomina}', "Nomina\DescuentosController@show")->name('nomina-descuentos.show');
     Route::get('/pdf/{nomina}', "Nomina\DescuentosController@pdf_nomina")->name('nomina-descuentos.pdf');
+    Route::get('/bancos-reportes/{nomina}', "Nomina\DescuentosController@bancos_reportes")->name('nomina-descuentos.bancos_reportes');
 
     Route::post('/update/empleado/{nomina}', "Nomina\DescuentosController@update_empleado_pensionado")->name('nomina-descuentos.update.empleado');
 });

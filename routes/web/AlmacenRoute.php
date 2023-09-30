@@ -3,6 +3,8 @@
 Route::group([ 'middleware' => 'auth', 'prefix' => 'almacen'] ,function(){
     Route::get('/inventario', "Almacen\ArticuloController@index")->name('almacen.inventario');
     Route::get('/articulo/ajax/{articulo_code}', "Almacen\ArticuloController@articulo_ajax");
+    Route::get('/articulo/{articulo}/edit', "Almacen\ArticuloController@edit")->name('almacen.articulo.edit');
+    Route::put('/articulo/{articulo}', "Almacen\ArticuloController@update")->name('almacen.articulo.update');
 
     Route::get('/comprobante-ingresos', "Almacen\ComprobanteIngresoController@index")->name('almacen.comprobante.ingreso.index');
     Route::get('/comprobante-ingresos/create', "Almacen\ComprobanteIngresoController@create")->name('almacen.comprobante.ingreso.create');

@@ -38,7 +38,7 @@ class CdpController extends Controller
 
     public function __construct()
     {
-        $this->fechaFija = '2023-08-14';
+        $this->fechaFija = '2023-08-23';
     }
 
     /**
@@ -259,10 +259,18 @@ class CdpController extends Controller
         foreach ($roles as $role) $rol= $role->id;
         $cdp = Cdp::findOrFail($id);
         $all_rubros = Rubro::where('vigencia_id',$vigencia)->get();
+        $depRubroFont = DependenciaRubroFont::where('vigencia_id',$vigencia)->get();
+        foreach ($depRubroFont as $depRubF){
+            if ($depRubF->saldo > 0){
+                $valores[] = collect(['id_rubro' => $depRubF->fontRubro->rubro->id, 'name' =>  $depRubF->fontRubro->rubro->name,
+                    'dinero' => $depRubF->saldo, 'dependencia' => $depRubF->dependencia->name, 'code' => $depRubF->fontRubro->rubro->cod,
+                    'codeFont' => $depRubF->fontRubro->sourceFunding->code, 'font' => $depRubF->fontRubro->sourceFunding->description]);
+            }
+        }
         foreach ($all_rubros as $rubro){
             if ($rubro->fontsRubro->sum('valor_disp') != 0){
                 $valFuente = FontsRubro::where('rubro_id', $rubro->id)->sum('valor_disp');
-                $valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
+                //$valores[] = collect(['id_rubro' => $rubro->id, 'name' => $rubro->name, 'dinero' => $valFuente]);
                 if ($rubro->tipo == "Funcionamiento") $rubros[] = collect(['id' => $rubro->id, 'name' => $rubro->name]);
             }
         }
@@ -288,9 +296,17 @@ class CdpController extends Controller
                     foreach ($rubro[0]->fontsRubro as $fuentes){
                         foreach ($fuentes->dependenciaFont as $fontDep){
                             if ($fontDep->saldo > 0){
-                                $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod,
-                                    'depFont' => $fontDep->id, 'dependencia' => $fontDep->dependencias->name, 'codeFont' => $fuentes->sourceFunding->code,
-                                    'descriptionFont' => $fuentes->sourceFunding->description];
+                                if (auth()->user()->dependencia_id == 5){
+                                    if ($fontDep->dependencias->id == auth()->user()->dependencia_id){
+                                        $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod,
+                                            'depFont' => $fontDep->id, 'dependencia' => $fontDep->dependencias->name, 'codeFont' => $fuentes->sourceFunding->code,
+                                            'descriptionFont' => $fuentes->sourceFunding->description];
+                                    }
+                                } else{
+                                    $infoRubro[] = ['id_rubro' => $rubro->first()->id ,'id' => '', 'codigo' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'code' => $rubro[0]->cod,
+                                        'depFont' => $fontDep->id, 'dependencia' => $fontDep->dependencias->name, 'codeFont' => $fuentes->sourceFunding->code,
+                                        'descriptionFont' => $fuentes->sourceFunding->description];
+                                }
                             }
                         }
                     }
@@ -421,11 +437,12 @@ class CdpController extends Controller
                 foreach ($update->rubrosCdp as $data){
                     foreach ($data->rubros->fontsRubro as $fuentesRubro){
                         foreach($fuentesRubro->dependenciaFont as $dep){
-                            if($dep->dependencia_id == auth()->user()->dependencia_id){
-                                if ($dep->saldo < $data->rubrosCdpValor->first()->valor){
-                                    Session::flash('success','El CDP enviado tiene asignado un valor superior al
-                                    disponible en el rubro.');
-                                    return back();
+                            foreach ($data->rubrosCdpValor as $rubCDPValue){
+                                if($dep->id == $rubCDPValue->fontsDep_id){
+                                    if ($dep->saldo < $rubCDPValue->valor){
+                                        Session::flash('error','El CDP enviado tiene asignado un valor superior al disponible en el rubro.');
+                                        return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
+                                    }
                                 }
                             }
                         }
@@ -454,10 +471,12 @@ class CdpController extends Controller
                     foreach ($update->rubrosCdp as $data){
                         foreach ($data->rubros->fontsRubro as $fuentesRubro){
                             foreach($fuentesRubro->dependenciaFont as $dep){
-                                if($dep->dependencia_id == $update->dependencia_id){
-                                    if ($dep->saldo < $data->rubrosCdpValor->first()->valor){
-                                        Session::flash('error','El CDP enviado tiene asignado un valor superior al disponible en el rubro.');
-                                        return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
+                                foreach ($data->rubrosCdpValor as $rubCDPValue){
+                                    if($dep->id == $rubCDPValue->fontsDep_id){
+                                        if ($dep->saldo < $rubCDPValue->valor){
+                                            Session::flash('error','El CDP enviado tiene asignado un valor superior al disponible en el rubro.');
+                                            return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
+                                        }
                                     }
                                 }
                             }

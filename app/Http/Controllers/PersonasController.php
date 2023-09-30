@@ -50,22 +50,26 @@ class PersonasController extends Controller
         $persona = new Persona();
         $persona->nombre = $request->nombre;
         $persona->tipo_cc = $request->tipo_doc;
+        /*-
         if ($request->regimen_text == null){
             $persona->regimen = $request->regimen;
         } elseif($request->regimen == "Otro" and $request->regimen_text != null) {
             $persona->regimen = $request->regimen_text;
-        }
+        }*/
         $persona->num_dc = $request->num_dc;
         $persona->email = $request->email;
-        $persona->tipo = $request->tipo;
         $persona->direccion = $request->direccion;
         $persona->telefono = $request->telefono;
+        $persona->tipo = $request->tipo;
         $persona->ciudad = $request->ciudad;
-        if (isset($request->declarante)){
-            $persona->declarante = "1";
-        } else {
-            $persona->declarante = "2";
-        }
+        $persona->numero_cuenta_bancaria = $request->numero_cuenta_bancaria;
+        $persona->tipo_cuenta_bancaria = $request->tipo_cuenta_bancaria;
+        $persona->banco_cuenta_bancaria = $request->banco_cuenta_bancaria;
+        $persona->regimen = $request->regimen;
+        $persona->responsabilidad_renta = $request->responsabilidad_renta;
+        $persona->responsabilidad_iva = $request->responsabilidad_iva;
+        $persona->regimen_porcentaje = $request->regimen_porcentaje;
+        $persona->tipo = $request->tipo;
         $persona->save();
         //$persona = Persona::create($request->all());
         return redirect()->route('personas.index');
@@ -107,24 +111,26 @@ class PersonasController extends Controller
         $persona = Persona::findOrFail($id);
         $persona->nombre = $request->nombre;
         $persona->tipo_cc = $request->tipo_doc;
+        /*-
         if ($request->regimen_text == null){
             $persona->regimen = $request->regimen;
         } elseif($request->regimen == "Otro" and $request->regimen_text != null) {
             $persona->regimen = $request->regimen_text;
-        } else {
-            $persona->regimen = $request->regimen;
-        }
+        }*/
         $persona->num_dc = $request->num_dc;
         $persona->email = $request->email;
-        $persona->tipo = $request->tipo;
         $persona->direccion = $request->direccion;
         $persona->telefono = $request->telefono;
+        $persona->tipo_tercero = $request->tipo_tercero;
         $persona->ciudad = $request->ciudad;
-        if (isset($request->declarante)){
-            $persona->declarante = "1";
-        } else {
-            $persona->declarante = "2";
-        }
+        $persona->numero_cuenta_bancaria = $request->numero_cuenta_bancaria;
+        $persona->tipo_cuenta_bancaria = $request->tipo_cuenta_bancaria;
+        $persona->banco_cuenta_bancaria = $request->banco_cuenta_bancaria;
+        $persona->regimen = $request->regimen;
+        $persona->responsabilidad_renta = $request->responsabilidad_renta;
+        $persona->responsabilidad_iva = $request->responsabilidad_iva;
+        $persona->regimen_porcentaje = $request->regimen_porcentaje;
+        $persona->tipo = $request->tipo;
         $persona->save();
         //$persona = Persona::find($id)->update($request->all());
         return redirect()->route('personas.index');

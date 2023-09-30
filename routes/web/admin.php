@@ -237,25 +237,6 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::resource('salida','Administrativo\Almacen\SalidaController');
 
 
-
-        //Registros
-
-        Route::post('changeObject/rp/{id}/', 'Administrativo\Registro\RegistrosController@changeObject');
-        Route::get('registros/{id}', 'Administrativo\Registro\RegistrosController@index');
-        Route::get('registros/create/{id}', 'Administrativo\Registro\RegistrosController@create');
-        Route::get('registros/show/{id}', 'Administrativo\Registro\RegistrosController@show');
-        Route::resource('registros', 'Administrativo\Registro\RegistrosController');
-        Route::resource('cdpsRegistro','Administrativo\Registro\CdpsRegistroController');
-        Route::resource('cdpsRegistro/valor','Administrativo\Registro\CdpsRegistroValorController');
-        Route::get('registros/{id}/{fecha}/{valor}/{estado}/{valTot}/{rol}', 'Administrativo\Registro\RegistrosController@updateEstado');
-        Route::post('registros/{id}/anular/', 'Administrativo\Registro\RegistrosController@anular');
-        Route::put('registros/r/{id}/{rol}/{estado}/{vigencia}', 'Administrativo\Registro\RegistrosController@rechazar');
-        Route::post('registros/{id}/liberar/', 'Administrativo\Registro\RegistrosController@liberar');
-
-            //pdf registros
-		Route::get('/registro/pdf/{id}/{vigen}', 'Administrativo\Registro\RegistrosController@pdf')->name('registro-pdf');
-
-
         //CDP's
 
         Route::post('changeObject/cdp/{id}/', 'Administrativo\Cdp\CdpController@changeObject');
@@ -286,6 +267,39 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::resource('marcas-herretes', 'Administrativo\MarcaHerrete\MarcaHerreteController');
         Route::get('persona-find/{identificador}', 'Cobro\PersonasController@personaFind');
         Route::post('persona/find-create', 'Cobro\PersonasController@PersonafindCreate');
+
+
+        //Registros
+
+        Route::post('changeObject/rp/{id}/', 'Administrativo\Registro\RegistrosController@changeObject');
+        Route::get('registros/{id}', 'Administrativo\Registro\RegistrosController@index');
+        Route::get('registros/create/{id}', 'Administrativo\Registro\RegistrosController@create');
+        Route::get('registros/show/{id}', 'Administrativo\Registro\RegistrosController@show');
+        Route::resource('registros', 'Administrativo\Registro\RegistrosController');
+        Route::resource('cdpsRegistro','Administrativo\Registro\CdpsRegistroController');
+        Route::resource('cdpsRegistro/valor','Administrativo\Registro\CdpsRegistroValorController');
+        Route::get('registros/{id}/{fecha}/{valor}/{estado}/{valTot}/{rol}', 'Administrativo\Registro\RegistrosController@updateEstado');
+        Route::post('registros/{id}/anular/', 'Administrativo\Registro\RegistrosController@anular');
+        Route::put('registros/r/{id}/{rol}/{estado}/{vigencia}', 'Administrativo\Registro\RegistrosController@rechazar');
+        Route::post('registros/{id}/liberar/', 'Administrativo\Registro\RegistrosController@liberar');
+
+        //pdf registros
+        Route::get('/registro/pdf/{id}/{vigen}', 'Administrativo\Registro\RegistrosController@pdf')->name('registro-pdf');
+
+
+        //RADICACION DE CUENTAS
+        Route::get('radCuentas/{id}','Administrativo\RadCuentas\RadCuentasController@index');
+        Route::get('radCuentas/create/{id}','Administrativo\RadCuentas\RadCuentasController@create');
+        Route::post('radCuentas/findDataPer','Administrativo\RadCuentas\RadCuentasController@findDataPer');
+        Route::post('radCuentas/findRP','Administrativo\RadCuentas\RadCuentasController@findDataRP');
+        Route::post('radCuentas','Administrativo\RadCuentas\RadCuentasController@radCuentasFirst');
+        Route::get('radCuentas/{id}/{step}','Administrativo\RadCuentas\RadCuentasController@pasos');
+        Route::post('radCuentas/paso/{step}','Administrativo\RadCuentas\RadCuentasController@storeStep');
+        Route::get('radCuentas/pdf/{id}/generate','Administrativo\RadCuentas\RadCuentasController@pdf');
+        Route::get('radCuentas/show/{id}/rev','Administrativo\RadCuentas\RadCuentasController@show');
+        Route::post('radCuentas/file/rev','Administrativo\RadCuentas\RadCuentasController@revAnexo');
+        Route::post('radCuentas/finalizar/{id}/send','Administrativo\RadCuentas\RadCuentasController@finalizar');
+        Route::post('radCuentas/delete/{module}','Administrativo\RadCuentas\RadCuentasController@deleteData');
 
         //ORDENES DE PAGO
 

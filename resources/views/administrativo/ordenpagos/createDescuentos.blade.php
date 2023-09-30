@@ -12,17 +12,17 @@
         <br>
         <center>
             <h4><b>Orden de Pago</b></h4>
-            <br>
-            Valor Orden de Pago: $<?php echo number_format($ordenPago->valor - $ordenPago->iva,0) ?>
-            <br>
-            Valor IVA Orden de Pago: $<?php echo number_format($ordenPago->iva,0) ?>
-            <br>
-            Valor Total(+IVA): $<?php echo number_format($ordenPago->valor,0) ?>
+            <table class="table text-center table-responsive">
+                <tr>
+                    <td>Valor Orden de Pago: $<?php echo number_format($ordenPago->valor - $ordenPago->iva,0) ?></td>
+                    <td>Valor IVA Orden de Pago: $<?php echo number_format($ordenPago->iva,0) ?></td>
+                    <td>Valor Total(+IVA): $<?php echo number_format($ordenPago->valor,0) ?></td>
+                </tr>
+            </table>
         </center>
         <br>
         <center>
             <h4><b>Valor Total de Descuentos</b></h4>
-            <br>
             $<?php echo number_format($ordenPago->descuentos->sum('valor'),0) ?>
         </center>
         <br>
@@ -36,19 +36,78 @@
             <br>
             <div class="row">
                 <div class="col-md-6 text-center">
-                    Registro Seleccionado: {{ $ordenPago->registros->objeto }}
+                    @if($ordenPago->rad_cuenta_id != 0)
+                        Radicacion de Cuenta: #{{ $ordenPago->radCuenta->code }} - {{ $ordenPago->radCuenta->registro->objeto }}
+                    @else
+                        Registro Seleccionado: {{ $ordenPago->registros->objeto }}
+                    @endif
                 </div>
                 <div class="col-md-6 text-center">
-                    Tercero: {{ $ordenPago->registros->persona->nombre }}
+                    @if($ordenPago->rad_cuenta_id != 0)
+                        Tercero: {{ $ordenPago->radCuenta->persona->nombre }}
+                    @else
+                        Tercero: {{ $ordenPago->registros->persona->nombre }}
+                    @endif
                 </div>
             </div>
+            @if($ordenPago->rad_cuenta_id != 0)
+                <br>
+                <div class="table-responsive">
+                    <hr>
+                    <h2 class="text-center">Descuentos Sugeridos de la Radicación de Cuenta</h2>
+                    <br>
+                    <table class="table table-bordered">
+                        <thead>
+                        <th class="text-center">Descuento</th>
+                        <th class="text-center">Tarifa</th>
+                        <th class="text-center">Valor</th>
+                        </thead>
+                        <tbody>
+                        <tr class="text-center">
+                            <td>Retención en la fuente DIAN</td>
+                            <td>{{$ordenPago->radCuenta->pago->reteDIAN}}%</td>
+                            <td>$<?php echo number_format($ordenPago->radCuenta->pago->reteDIANValue,0) ?></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>Estampilla adulto mayor</td>
+                            <td>{{$ordenPago->radCuenta->pago->adulto}}%</td>
+                            <td>$<?php echo number_format($ordenPago->radCuenta->pago->adultoValue,0) ?></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>Sobretasa deportiva</td>
+                            <td>{{$ordenPago->radCuenta->pago->sobretasa}}%</td>
+                            <td>$<?php echo number_format($ordenPago->radCuenta->pago->sobretasaValue,0) ?></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>Estampilla Justicia</td>
+                            <td>{{$ordenPago->radCuenta->pago->estampilla}}%</td>
+                            <td>$<?php echo number_format($ordenPago->radCuenta->pago->estampillaValue,0) ?></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>Industria y comercio ICA excepto Educación</td>
+                            <td>{{$ordenPago->radCuenta->pago->ica}}x1000</td>
+                            <td>$<?php echo number_format($ordenPago->radCuenta->pago->icaValue,0) ?></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>Contribución contrato de Obra pública</td>
+                            <td>{{$ordenPago->radCuenta->pago->obraPub}}%</td>
+                            <td>$<?php echo number_format($ordenPago->radCuenta->pago->obraPubValue,0) ?></td>
+                        </tr>
+                        @foreach($ordenPago->radCuenta->pago->descuentos as $descuento)
+                            <tr class="text-center">
+                                <td colspan="2">{{$descuento->type}}</td>
+                                <td>$<?php echo number_format($descuento->valor,0) ?></td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
             <div class="form-validation">
                 <form class="form-valide" action="{{url('/administrativo/ordenPagos/descuento')}}" method="POST" enctype="multipart/form-data">
                     <hr>
-                    <br>
-                    <br>
                     <center><h2>Descuentos Retención en la Fuente</h2></center>
-                    <hr><br>
+                    <hr>
                     {{ csrf_field() }}
                     <input type="hidden" id="ordenPago_id" name="ordenPago_id" value="{{ $ordenPago->id }}">
                     <div class="table-responsive">
@@ -168,11 +227,11 @@
                             @endif
                             @foreach($ordenPago->descuentos as $desc)
                                 @if($desc->retencion_fuente_id == null)
-                                    <tr>
-                                        <td class="text-center"><b>{{ $desc->nombre }}</b></td>
-                                        <td class="text-center"><b>{{ $desc->porcent }}</b></td>
-                                        <td class="text-center"><b>$<?php echo number_format($desc->valor,0) ?></b></td>
-                                        <td class="text-center">
+                                    <tr class="text-center">
+                                        <td colspan="2"><b>{{ $desc->nombre }}</b></td>
+                                        <td><b>{{ $desc->porcent }}</b></td>
+                                        <td><b>$<?php echo number_format($desc->valor,0) ?></b></td>
+                                        <td>
                                             <button type="button" class="btn-sm btn-danger" v-on:click.prevent="eliminarDescM({{$desc->id}})" ><i class="fa fa-trash-o"></i></button>
                                         </td>
                                     </tr>
@@ -254,14 +313,32 @@
             document.getElementById('valor2').value = Data[opcion][2];
         }
 
-
         $(document).ready(function() {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": 3000,
+                "extendedTimeOut": 0,
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                "tapToDismiss": true
+            }
+
             $('#tabla').DataTable( {
                 responsive: true,
                 "searching": false,
                 "oLanguage": {"sZeroRecords": "", "sEmptyTable": ""}
             } );
-        } );
+
+        });
 
         //funcion para borrar una celda
         $(document).on('click', '.borrar', function (event) {
@@ -313,6 +390,7 @@
                 },
 
                 eliminarDescM: function(dato){
+                    toastr.warning('ELIMINANDO DESCUENTO MUNICIPAL.... ESPERE UN MOMENTO POR FAVOR.');
                     var urlVigencia = '/administrativo/ordenPagos/descuento/m/'+dato;
                     axios.delete(urlVigencia).then(response => {
                         location.reload();
