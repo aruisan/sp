@@ -137,7 +137,7 @@
                         </td>
                         <td><input type="text" class="form-control" value="${a.nombre_articulo}" readonly></td>
                         <td><input type="text" class="form-control" value="${a.referencia}" readonly></td>
-                        <td><input type="text" class="form-control" value="${a.stock}" readonly></td>
+                        <td><input type="text" class="form-control" value="${a.stock}" id="stock_${contador_articulo}" readonly></td>
                         <td><input type="number" class="form-control" name="cantidad[]" onchange="total(${contador_articulo})" id="cantidad_${contador_articulo}"  value="0" required></td>
                         <td><input type="text" class="form-control" value="${a.valor_unitario}" id="valor_${contador_articulo}" readonly></td>
                         <td><input type="text" class="form-control" id="total_${contador_articulo}" readonly></td>
@@ -165,9 +165,20 @@
         }
 
         const total = contador => {
-            let cant = $(`#cantidad_${contador}`).val();
-            let valor = $(`#valor_${contador}`).val();
-            $(`#total_${contador}`).val(parseInt(cant) * parseInt(valor));
+
+            let cant = parseInt($(`#cantidad_${contador}`).val());
+            let valor = parseInt($(`#valor_${contador}`).val());
+            let stock = parseInt($(`#stock_${contador}`).val());
+            console.log('ddf', [typeof cant, typeof stock])
+            if(cant < 0){
+                alert('la cantidad no puede ser negativa');
+                $(`#cantidad_${contador}`).val(0);
+            }else if(stock < cant){
+                alert(`stock: ${stock}, cantidad: ${cant}. la cantidad es mayor al stock.`);
+                $(`#cantidad_${contador}`).val(0);
+            }else{
+                $(`#total_${contador}`).val(parseInt(cant) * parseInt(valor));
+            }
         }
 
 

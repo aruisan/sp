@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\FechaHelper;
 
 class NominaEmpleadoNomina extends Model
 {
@@ -231,8 +232,8 @@ class NominaEmpleadoNomina extends Model
     }
 
     public function getDescuentoXEntidadAttribute(){
-        $entidad_nombre = ['Popular', 'Bogota', 'Agrario', 'Coosepark', 'Davivienda', 'Judicial', 'Coocasa', 'Sindicato'];
-        $entidad_id = [1940, 1854, 1855, 1858, 1856, 1866, 1859, 2129];
+        $entidad_nombre = FechaHelper::bancos_terceros()[0];
+        $entidad_id = FechaHelper::bancos_terceros()[1];
         $data = [0,0,0,0,0,0,0,0];
         foreach($this->descuentos as $descuento):
             if(in_array($descuento->tercero_id, $entidad_id)):

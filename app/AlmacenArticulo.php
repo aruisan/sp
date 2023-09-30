@@ -37,6 +37,10 @@ class AlmacenArticulo extends Model
         return $this->belongsTo(PucAlcaldia::class, 'ccd');
     }
 
+    public function getIndexAttribute(){
+        return Almacenarticulo::where('id', '<=', $this->id)->get()->count();
+    }
+
     public function fechas_depreciacion(){
         $hoy = \Carbon\Carbon::now();
         $fecha_final = $this->created_at->addYear($this->vida_util);

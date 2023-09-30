@@ -9,9 +9,21 @@ use App\AlmacenArticulo;
 class ArticuloController extends Controller
 {
     public function index(){
-        $articulos = AlmacenArticulo::get();
+        $articulos = AlmacenArticulo::paginate(10);
+
+        //dd($articulos);
         return view('almacen.inventario', compact('articulos'));
     }
+
+    public function edit(AlmacenArticulo $articulo){
+        return view('almacen.articulo-edit', compact('articulo'));
+    }
+
+    public function update(AlmacenArticulo $articulo, Request $request){
+        $articulo->update($request->all());
+        return redirect()->route('almacen.inventario');
+    }
+
 
     public function articulo_ajax($articulo_code){
         $articulo = AlmacenArticulo::where('codigo', $articulo_code)->first();

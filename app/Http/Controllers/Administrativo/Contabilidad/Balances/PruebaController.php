@@ -6,13 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
 use App\Model\Administrativo\Contabilidad\RubrosPuc;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
-use App\Model\Administrativo\Contabilidad\BalanceData;
-use App\Model\Administrativo\Contabilidad\Balances;
+use App\Model\Data\ExternoBalanceData as BalanceData;
+use App\Model\Data\ExternoBalance as Balances;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Session;
-use App\InformeContableMensual;
-use App\InformeContableMensualData;
+use App\Model\Data\InformeContable as InformeContableMensual;
+use App\Model\Data\InformeContableData as InformeContableMensualData;
+use App\Traits\BalanceTraits;
+
+
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
+use App\Model\Administrativo\OrdenPago\DescMunicipales\DescMunicipales;
+use App\Model\Administrativo\OrdenPago\OrdenPagosDescuentos;
+use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
+use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
+use App\Model\Administrativo\Pago\PagoBanksNew;
+use App\Model\Administrativo\OrdenPago\OrdenPagos;
+use App\Model\Administrativo\Pago\Pagos;
 
 class PruebaController extends Controller
 {
@@ -335,6 +347,108 @@ class PruebaController extends Controller
         return view('administrativo.contabilidad.balances.pre_prueba',compact('informe', 'pucs'));
     }
 
+
+    public function balanceTrim($mes1, $mes2){
+        $año = Carbon::today()->year;
+        if($mes1 == $mes2) $balance = Balances::where('año', $año)->where('tipo','MENSUAL')->where('mes',$mes1)->first();
+        else $balance = Balances::where('año', $año)->where('tipo','TRIMESTRAL')->where('mes',$mes1.'-'.$mes2)->first();
+
+        if($balance){
+            
+            $datSavedBalance = BalanceData::where('balance_id', $balance->id)->select('balances_data.fecha',
+                'puc_alcaldia.code', 'puc_alcaldia.concepto AS cuentaConcept', 'balances_data.documento', 'balances_data.concepto',
+                'balances_data.debito', 'balances_data.credito')
+                ->join('puc_alcaldia','balances_data.cuenta_puc_id','=','puc_alcaldia.id')->orderBy('puc_alcaldia.code','ASC')->get();
+            $datSavedBalance[] = collect(['fecha' => '', 'code' => '', 'documento' => 'TOTALES', 'concepto' => '',
+                'debito' => $balance->data[count($balance->data) - 1]['debito'],
+                'credito' => $balance->data[count($balance->data) - 1]['credito']]);
+
+            return $datSavedBalance;
+
+        } elseif($mes1 == $mes2){
+            $newBal = new Balances();
+            $newBal->año = $año;
+            if($mes1 == $mes2) {
+                $newBal->mes = $mes1;
+                $newBal->tipo = 'MENSUAL';
+            }else{
+                $newBal->mes = $mes1.'-'.$mes2;
+                $newBal->tipo = 'TRIMESTRAL';
+            }
+            $newBal->save();
+
+            $PUC = PucAlcaldia::where('padre_id',0)->get();
+            foreach ($PUC as $first) {
+                $cuentas[] = $first;
+                $lv2 = PucAlcaldia::where('padre_id', $first->id)->get();
+                foreach ($lv2 as $dato) {
+                    $cuentas[] = $dato;
+                    $lv3 = PucAlcaldia::where('padre_id', $dato->id)->get();
+                    foreach ($lv3 as $object) {
+                        $cuentas[] = $object;
+                        $lv4 = PucAlcaldia::where('padre_id', $object->id)->get();
+                        foreach ($lv4 as $lvlLast) {
+                            $cuentas[] = $lvlLast;
+                            $hijos = PucAlcaldia::where('padre_id', $lvlLast->id)->get();
+                            foreach ($hijos as $hijo) $cuentas[] = $hijo;
+                        }
+                    }
+                }
+            }
+
+            $balance = new BalanceTraits();
+            $data = $balance->balance($mes1, $mes2);
+
+            $deb = 0;
+            $cre = 0;
+            foreach ($cuentas as $cuenta) {
+                foreach ($data as $index => $padre) {
+                    if ($index == count($data) - 1) break;
+                    if ($cuenta['id'] == $padre['cuenta_id']) {
+                        $dataBalance = new BalanceData();
+                        $dataBalance->balance_id = $newBal->id;
+                        $dataBalance->cuenta_puc_id = $padre['cuenta_id'];
+                        $dataBalance->documento = $padre['concepto'];
+                        $dataBalance->debito = $padre['debito'];
+                        $dataBalance->credito = $padre['credito'];
+                        $dataBalance->save();
+
+                        if(strlen($padre['code']) == 1){
+                            $deb = $deb + $padre['debito'];
+                            $cre = $cre + $padre['credito'];
+                        }
+
+                        foreach ($data[count($data) - 1]['hijos'] as $hijo){
+                            if($padre['cuenta_id'] == $hijo['padre_id']){
+                                $dataBalanceHijo = new BalanceData();
+                                $dataBalanceHijo->balance_id = $newBal->id;
+                                $dataBalanceHijo->fecha = Carbon::parse($hijo['fecha'])->format('Y-m-d');
+                                $dataBalanceHijo->cuenta_puc_id = $hijo['cuenta'];
+                                $dataBalanceHijo->documento = $hijo['modulo'];
+                                $dataBalanceHijo->concepto = $hijo['concepto'];
+
+                                if ($hijo['debito'] > 0) $dataBalanceHijo->debito = $hijo['debito'];
+                                else $dataBalanceHijo->debito = 0;
+                                if ($hijo['credito'] > 0) $dataBalanceHijo->credito = $hijo['credito'];
+                                else $dataBalanceHijo->credito = 0;
+
+                                $dataBalanceHijo->save();
+                            }
+                        }
+                    }
+                }
+            }
+            $dataBalanceTot = new BalanceData();
+            $dataBalanceTot->balance_id = $newBal->id;
+            $dataBalanceTot->documento = 'TOTALES';
+            $dataBalanceTot->debito = $deb;
+            $dataBalanceTot->credito = $cre;
+            $dataBalanceTot->save();
+
+        } else return "NO";
+    }
+
+
     public function pre_informe($mes){
         Session::put(auth()->id().'-mes-informe-contable-mes', $mes);
         Session::put(auth()->id().'-mes-informe-contable-age', 2023);
@@ -376,8 +490,8 @@ class PruebaController extends Controller
             }
             $puc_informe_contable_mensual_anterior = InformeContableMensualData::where('informe_contable_mensual_id', $informe_anterior->id)->where('puc_alcaldia_id', $puc->id)->first();
             
-            $i_debito = $puc_informe_contable_mensual_anterior->s_debito;
-            $i_credito = $puc_informe_contable_mensual_anterior->s_credito;
+            $i_debito = is_null($puc_informe_contable_mensual_anterior) ? 0 :$puc_informe_contable_mensual_anterior->s_debito;
+            $i_credito = is_null($puc_informe_contable_mensual_anterior) ? 0 : $puc_informe_contable_mensual_anterior->s_credito;
         }
         
         $balance = Balances::where('mes', $mes)->where('año', 2023)->where('tipo', 'MENSUAL')->first();
@@ -461,7 +575,7 @@ class PruebaController extends Controller
         Session::put(auth()->id().'-mes-informe-contable-age', $fecha_array[0]);
         $informe->finalizar = TRUE;
         $informe->save();
-        $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
+        $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto', '09' => 'Septiembre'];
         Session::put(auth()->id().'-mes-informe-contable-nivel', 1);
         //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
         $pucs = $informe->datos->filter(function($p){ return is_null($p->padre); })->sortBy('puc_alcaldia.code');
@@ -481,7 +595,7 @@ class PruebaController extends Controller
 
         //dd($nivel);
         Session::put(auth()->id().'-mes-informe-contable-nivel', $nivel);
-        $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio'];
+        $meses = ['01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril', '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto', '09' => 'Septiembre'];
         //$pucs = PucAlcaldia::where('hijo','0')->where('padre_id',0)->take(3)->get();
         $pucs = $informe->datos->filter(function($p){ return is_null($p->padre); })->sortBy('puc_alcaldia.code');
 

@@ -19,6 +19,7 @@
                         <li><a href="{{route('balance.pre-prueba', '05')}}">Mayo</a></li>
                         <li><a href="{{route('balance.pre-prueba', '06')}}">Junio</a></li>
                         <li><a href="{{route('balance.pre-prueba', '07')}}">Julio</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '08')}}">Agosto</a></li>
                     </ul>
                 </div>
                 <div class="btn-group">
@@ -79,10 +80,10 @@
                 </thead>
                 <tbody>
                 @foreach($pucs as $puc)
-                            @php 
-                            $s_debito = $puc->naturaleza == "DEBITO" ? $puc->i_debito + $puc->m_debito + $puc->a_debito - $puc->m_credito + $puc->a_credito: 0;
-                            $s_credito = $puc->naturaleza == "CREDITO" ?  $puc->i_credito + $puc->m_credito + $puc->a_credito - $puc->m_debito + $puc->a_debito: 0;
-                            @endphp
+                    @php 
+                    $s_debito = $puc->puc_alcaldia->naturaleza == "DEBITO" ? $puc->i_debito + $puc->m_debito + $puc->a_debito - $puc->m_credito + $puc->a_credito: 0;
+                    $s_credito = $puc->puc_alcaldia->naturaleza == "CREDITO" ?  $puc->i_credito + $puc->m_credito + $puc->a_credito - $puc->m_debito + $puc->a_debito: 0;
+                    @endphp
                     <tr>
                     <td class="text-left">{{is_null($puc->puc_alcaldia) ? "Se Elimino {$puc->id}" : $puc->puc_alcaldia->code}}</td>
                         <td class="text-center">{{is_null($puc->puc_alcaldia) ? "Se Elimino {$puc->id}" : $puc->puc_alcaldia->concepto}}</td>

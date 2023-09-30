@@ -75,6 +75,7 @@ class EmpleadoController extends Controller
     }
 
     public function update(Request $request, NominaEmpleado $employee){
+        dd(6);
 
         $savedEmployeeAptoAdministrativeFile = $request->hasFile('employee_apto_administrative_file') 
                                              ? $this->uploadFile($request->employee_apto_administrative_file, 'empleados/'.$employee->id)

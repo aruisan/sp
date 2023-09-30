@@ -38,3 +38,7 @@
 	</div>
 @stop
 
+@section('js')
+    @include('personas.partials.js')
+@stop
+

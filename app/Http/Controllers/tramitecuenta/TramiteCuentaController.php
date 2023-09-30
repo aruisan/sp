@@ -16,12 +16,59 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\Correspondencia;
 use App\Email;
 use App\Model\Persona;
+use App\Model\Administrativo\Pago\Pagos;
+use App\Model\Administrativo\Tesoreria\retefuente\TesoreriaRetefuentePago;
 
 class TramiteCuentaController extends Controller
 {
     public function index(){
         //{{Carbon\Carbon::now()->format("H:i")}} el dia {{Carbon\Carbon::now()->isoFormat("LL")}}
         $tramiteCuentas = TramiteCuenta::all();
+/*
+        $pT = Pagos::where('estado', '0')->get();
+        foreach ($pT as $data){
+            if (isset($data->orden_pago->registros)) {
+                if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == 11) {
+                    $pagosTarea[] = collect(['info' => $data, 'cc' => $data->persona->num_dc, 'persona' => $data->persona->nombre]);
+                }
+            } else {
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago_id)->first();
+                if ($tesoreriaRetefuentePago){
+                    if ($tesoreriaRetefuentePago->vigencia_id == $id){
+                        $pagosTarea[] = collect(['info' => $data, 'cc' => 800197268, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN']);
+                    }
+                }
+            }
+        }
+       
+
+        $p = Pagos::where('estado','!=', '0')->get();
+        foreach ($p as $data){
+            if (isset($data->orden_pago->registros)){
+                if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == 11){
+                    $pagos[] = collect(['info' => $data]);
+                }
+            } else{
+                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago_id)->first();
+                if ($tesoreriaRetefuentePago){
+                    if ($tesoreriaRetefuentePago->vigencia_id == 11){
+                        $pagos[] = collect(['info' => $data]);
+                    }
+                }
+            }
+
+        }
+
+        dd($pagos[0]);
+        if (!isset($pagosTarea)){
+            $pagosTarea[] = null;
+            unset($pagosTarea[0]);
+        }
+        if (!isset($pagos)){
+            $pagos[] = null;
+            unset($pagos[0]);
+        }
+        */
         return view('tramiteCuentas.index', compact('tramiteCuentas'));
     }
 
@@ -137,9 +184,11 @@ class TramiteCuentaController extends Controller
     }
 
     public function pdf($id){
-        $tc = TramiteCuenta::find($id);
-        $pdf = PDF::loadView('tramiteCuentas.pdf', compact('tc'))->setOptions(['images' => true,'isRemoteEnabled' => true])->save('tramites_cuentas_No_'.$tc->id.'.pdf');
-            return $pdf->stream();
+       // $tc = TramiteCuenta::find($id);
+       $tc =collect();
+       $tc->id = $id;
+        $pdf = PDF::loadView('tramiteCuentas.pdf-tramites', compact('tc'))->setOptions(['images' => true,'isRemoteEnabled' => true])->save('tramites_cuentas_No_'.$tc->id.'.pdf');
+        return $pdf->stream();
     }
 
     public function arrayValidar($tipo_contrato){
