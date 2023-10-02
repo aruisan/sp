@@ -190,6 +190,7 @@ Todos los tramites de cuentas
     <script type="text/javascript" src="{{asset('js/relacionarParticipantes.js')}}"></script>
 
     <script>
+    
         $(document).ready(function() {
             $('#table_recibidos').DataTable( {
               order: [[ 0, "desc" ]],

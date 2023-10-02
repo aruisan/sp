@@ -10,16 +10,20 @@
             </div>
             <div class="row">
                 <h4>Ejecución de Ingresos___%</h4>
+                {{--
                 <img width="220" max-width="200" src="https://lh5.googleusercontent.com/LQ7i4lG1iAjRTbKfm6SWieCL9Iz06QgvKl3tJKWgUG7EqKwQr3pBKgoaUG6PFAH4jC5HOpF03N8S0He7oBtRoeaiNHGU2HXiuKkC5EXM6xZLyzrN7rR28jovUVGX3x6BpO4DauvU7jimQBDuBA" alt="">
+                --}}
             </div>
             <div class="row">
                 <h4>Ejecución de Gastos___%</h4>
+                {{--
                 <img width="220" max-width="200" src="https://lh5.googleusercontent.com/LQ7i4lG1iAjRTbKfm6SWieCL9Iz06QgvKl3tJKWgUG7EqKwQr3pBKgoaUG6PFAH4jC5HOpF03N8S0He7oBtRoeaiNHGU2HXiuKkC5EXM6xZLyzrN7rR28jovUVGX3x6BpO4DauvU7jimQBDuBA" alt="">
+                --}}
             </div>
         </div>
         <div class="col-sm-3">
             <div class="row">
-                <a href="{{route('estadistica.proyectos')}}"><h4>PROYECTOS</h4></a>
+                <a href="{{route('estadistica.proyectos.public')}}"><h4>PROYECTOS</h4></a>
             </div>
             <div class="row">
                 <p>Avance plan de desarrollo___%</p>
@@ -30,7 +34,9 @@
                 <p>Meta</p>
             </div>
             <div class="row">
+            {{--
                 <img width="220" max-width="200" src="https://lh5.googleusercontent.com/LQ7i4lG1iAjRTbKfm6SWieCL9Iz06QgvKl3tJKWgUG7EqKwQr3pBKgoaUG6PFAH4jC5HOpF03N8S0He7oBtRoeaiNHGU2HXiuKkC5EXM6xZLyzrN7rR28jovUVGX3x6BpO4DauvU7jimQBDuBA" alt="">
+            --}}
             </div>
         </div>
         <div class="col-sm-2">

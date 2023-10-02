@@ -3,6 +3,7 @@
 //Route::get('/estadistica-public', 'Estadistica\EstadisticaController@index')->name('estadistica.public');
 Route::group([ 'prefix' => 'estadistica'] ,function(){
     Route::get('/', 'Estadistica\EstadisticaController@index')->name('estadistica.index');
+    Route::get('/proyectos', 'Estadistica\EstadisticaController@proyectos')->name('estadistica.proyectos.public');
 });
 
 Route::group([ 'middleware' => 'auth', 'prefix' => 'estadistica'] ,function(){

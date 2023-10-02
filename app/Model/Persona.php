@@ -25,4 +25,17 @@ class Persona extends Model
     {
         return $this->hasOne('App\Model\Administrativo\Contabilidad\Puc');
     }
+
+
+    public function setTipoTerceroAttribute($value)
+    {
+        $atributos = ['Empleado', 'Contribuyente', 'Contratista', 'Especial'];
+        $this->attributes['tipo_tercero'] = $atributos[$value];
+    }
+
+    public function getTipoTerceroIndexAttribute()
+    {
+        $atributos = ['Empleado', 'Contribuyente', 'Contratista', 'Especial'];
+        return array_search($this->tipo_tercero ,$atributos); 
+    }
 }

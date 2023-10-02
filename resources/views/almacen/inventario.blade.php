@@ -13,11 +13,11 @@
             <br>
             <div class="table-responsive">
                 @if($articulos->count() > 0)
-                    <table class="table table-bordered" id="tabla_INV">
+                    <table class="table table-bordered" id="otabla_INV">
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">Nombre del Articulo</th>
+                            <th class="text-center">Nombre del Articulddo</th>
                             <th class="text-center">Codigo</th>
                             <th class="text-center">Marca</th>
                             <th class="text-center">Presentación</th>
@@ -44,7 +44,7 @@
                         <tbody>
                         @foreach($articulos as $key => $item)
                             <tr class="text-center">
-                                <td>{{ $key+1 }}</td>
+                                <td>{{ $item->index }}</td>
                                 <td>{{ $item->nombre_articulo}}</td>
                                 <td>{{ $item->codigo }}</td>
                                 <td>{{ $item->marca }}</td>
@@ -80,7 +80,7 @@
                                 <td>{{ $item->estado}}</td>
                                 <td>
                                     <a class="btn btn-success" href="{{route('almacen.articulo.mantenimiento', $item->id)}}" title="Mantenimientos"><i class="fa fa-cogs" aria-hidden="true"></i></a>
-                                    <a class="btn btn-success" href="{{route('almacen.edit', $item->id)}}" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a class="btn btn-success" href="{{route('almacen.articulo.edit', $item->id)}}" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -95,6 +95,7 @@
                     </div>
                 @endif
             </div>
+            {{ $articulos->links() }}
         </div>
         @stop
         @section('js')

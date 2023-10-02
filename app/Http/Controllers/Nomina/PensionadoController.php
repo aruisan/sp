@@ -54,8 +54,13 @@ class PensionadoController extends Controller
         $newEmployee->tipo = 'pensionado';
         $newEmployee->save();
 
-        $savedEmployeeAptoAdministrativeFile = $this->uploadFile($request->employee_apto_administrative_file, 'pensionadoss/'.$newEmployee->id);
-        $savedEployeeBankAccountCertificate =  $this->uploadFile($request->employee_bank_account_certificate, 'pensionadoss/'.$newEmployee->id);
+
+        $savedEmployeeAptoAdministrativeFile = $request->hasFile('employee_apto_administrative_file') 
+                                                ? $this->uploadFile($request->employee_apto_administrative_file, 'pensionadoss/'.$newEmployee->id)
+                                                :'';
+        $savedEployeeBankAccountCertificate =  $request->hasFile('employee_bank_account_certificate') 
+                                                ? $this->uploadFile($request->employee_bank_account_certificate, 'pensionadoss/'.$newEmployee->id)
+                                                :'';
 
 
         $newEmployee->apto_administrativo_archivo = $savedEmployeeAptoAdministrativeFile;

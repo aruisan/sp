@@ -18,3 +18,7 @@
     	</div>
     </div>
 @endsection
+
+@section('js')
+    @include('personas.partials.js')
+@stop
