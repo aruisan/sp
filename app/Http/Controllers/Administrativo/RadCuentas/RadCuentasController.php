@@ -223,11 +223,17 @@ class RadCuentasController extends Controller
         $ordenesPago = OrdenPagos::where('registros_id', $registro->id)->where('estado','1')->get();
         foreach ($ordenesPago as $ordenPago) $pagos[] = Pagos::where('orden_pago_id', $ordenPago->id)->get();
 
-        $radCuentas = RadCuentas::where('registro_id', $registro->id)->where('estado_rev','1')->get();
+        $radCuentas = RadCuentas::where('registro_id', $registro->id)->where('estado_rev','1')->with('registro')->get();
 
         if (!isset($pagos)) $pagos = [];
 
         return ['registro' => $registro,'cdps' => $cdps, 'ops' => $ordenesPago, 'pagos' => $pagos,'radCuentas' => $radCuentas];
+    }
+
+
+    public function findDataRadCuenta(Request $request){
+        $radCuenta = RadCuentas::find($request->idRC);
+        return $radCuenta;
     }
 
     /**
@@ -249,6 +255,7 @@ class RadCuentasController extends Controller
         $radCuenta->user_id = Auth::user()->id;
         $radCuenta->vigencia_id = $request->vigencia_id;
         if ($request->interventor_id != "NO POSEE") $radCuenta->interventor_id = $request->interventor_id;
+        if ($request->radHistory_id != 0) $radCuenta->rad_cuenta_anex_id = $request->radHistory_id;
         $radCuenta->save();
 
         $radCuenta->code = $radCuenta->id;
@@ -340,8 +347,12 @@ class RadCuentasController extends Controller
                     }
                 }
             }
+
+            if ($radCuenta->rad_cuenta_anex_id){
+                $radCuentaAnex = RadCuentas::find($radCuenta->rad_cuenta_anex_id);
+            } else $radCuentaAnex = [];
             return view('administrativo.radcuentas.paso4', compact('vigencia_id','radCuenta',
-            'registro','cdps'));
+            'registro','cdps','radCuentaAnex'));
         } else dd($radCuenta, $paso);
     }
 
@@ -463,305 +474,299 @@ class RadCuentasController extends Controller
             }
         } elseif($step == 4) {
 
-            if ($request->cdp){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->cdp, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CDP';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->cdpObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->crp){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->crp, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CRP';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->crpObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->CONTRATO){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->CONTRATO, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CONTRATO';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->CONTRATOObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->planInv){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->planInv, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'PLAN DE INVERSIÓN';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->planInvObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->actaIni){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->actaIni, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'ACTA DE INICIO';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->actaIniObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->POLIZA){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->POLIZA, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'POLIZA';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->POLIZAObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->aproPol){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->aproPol, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'APROBACION DE LA POLIZA';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->aproPolObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->cedula){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->cedula, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CEDULA';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->cedulaObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->oficioDian){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->oficioDian, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'OFICIO';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->oficioDianObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->infEjec){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->infEjec, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'INFORME';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->infEjecObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->certCump){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->certCump, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CERTIFICADO CUMPLIMIENTO';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->certCumpObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->actRec){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->actRec, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'ACTA RECIBO';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->actRecObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->actTerm){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->actTerm, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'ACTA TERMINACION';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->actTermObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->actLiquid){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->actLiquid, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'ACTA LIQUIDACION';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->actLiquidObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->actAutInt){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->actAutInt, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'ACTA INTERVENTOR';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->actAutIntObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->segSocParaf){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->segSocParaf, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'SEGURIDAD SOCIAL';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->segSocParafObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->cuentaCobroFact){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->cuentaCobroFact, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CUENTA COBRO';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->cuentaCobroFactObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->certBanc){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->certBanc, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CERTIFICACION BANCARIA';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->certBancObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->entradaAlmac){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->entradaAlmac, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'ENTRADA ALMACEN';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->entradaAlmacObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->RUT){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->RUT, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'RUT';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->RUTObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->pazySalvOff){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->pazySalvOff, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'PAZ Y SALVO OFICINA';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->pazySalvOffObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->pagoSena){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->pagoSena, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'PAGO SENA';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->pagoSenaObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->fotografias){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->fotografias, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'FOTOGRAFIAS';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->fotografiasObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->controlAssist){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->controlAssist, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'CONTROL ASISTENCA';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->controlAssistObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
-            }
-            if ($request->inscripRegTribut){
-                $file = new ResourceTraits;
-                $resource = $file->resource($request->inscripRegTribut, 'public/AnexosRadCuentas');
-                $anexo = new RadCuentasAnex();
-                $anexo->anexo = 'INCRIPCION REGIMEN';
-                $anexo->resource_id = $resource;
-                $anexo->observacion = $request->inscripRegTributObs;
-                $anexo->estado = '0';
-                $anexo->user_id = Auth::user()->id;
-                $anexo->rad_cuenta_id  = $radCuenta->id;
-                $anexo->save();
+            if ($radCuenta->rad_cuenta_anex_id){
+                $radCuentaAnex = RadCuentas::find($radCuenta->rad_cuenta_anex_id);
+                foreach ($radCuentaAnex->anexos as $anexoRad){
+                    $anexoNew = new RadCuentasAnex();
+                    $anexoNew->anexo = $anexoRad->anexo;
+                    $anexoNew->resource_id  = $anexoRad->resource_id ;
+                    $anexoNew->observacion = $anexoRad->observacion;
+                    $anexoNew->estado = $anexoRad->estado;
+                    $anexoNew->motivo_rechazo = $anexoRad->motivo_rechazo;
+                    $anexoNew->observacion_rev = $anexoRad->observacion_rev;
+                    $anexoNew->revisor_user_id = $anexoRad->revisor_user_id;
+                    $anexoNew->fecha_revision = $anexoRad->fecha_revision;
+                    $anexoNew->user_id  = $anexoRad->user_id ;
+                    $anexoNew->rad_cuenta_id  = $radCuenta->id;
+                    $anexoNew->save();
+                }
+            } else {
+                if ($request->CONTRATO){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->CONTRATO, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'CONTRATO';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->CONTRATOObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->planInv){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->planInv, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'PLAN DE INVERSIÓN';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->planInvObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->actaIni){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->actaIni, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'ACTA DE INICIO';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->actaIniObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->POLIZA){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->POLIZA, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'POLIZA';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->POLIZAObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->aproPol){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->aproPol, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'APROBACION DE LA POLIZA';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->aproPolObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->cedula){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->cedula, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'CEDULA';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->cedulaObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->oficioDian){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->oficioDian, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'OFICIO';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->oficioDianObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->infEjec){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->infEjec, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'INFORME';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->infEjecObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->certCump){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->certCump, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'CERTIFICADO CUMPLIMIENTO';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->certCumpObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->actRec){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->actRec, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'ACTA RECIBO';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->actRecObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->actTerm){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->actTerm, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'ACTA TERMINACION';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->actTermObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->actLiquid){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->actLiquid, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'ACTA LIQUIDACION';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->actLiquidObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->actAutInt){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->actAutInt, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'ACTA INTERVENTOR';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->actAutIntObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->segSocParaf){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->segSocParaf, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'SEGURIDAD SOCIAL';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->segSocParafObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->cuentaCobroFact){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->cuentaCobroFact, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'CUENTA COBRO';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->cuentaCobroFactObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->certBanc){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->certBanc, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'CERTIFICACION BANCARIA';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->certBancObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->entradaAlmac){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->entradaAlmac, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'ENTRADA ALMACEN';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->entradaAlmacObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->RUT){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->RUT, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'RUT';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->RUTObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->pazySalvOff){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->pazySalvOff, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'PAZ Y SALVO OFICINA';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->pazySalvOffObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->pagoSena){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->pagoSena, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'PAGO SENA';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->pagoSenaObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->fotografias){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->fotografias, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'FOTOGRAFIAS';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->fotografiasObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->controlAssist){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->controlAssist, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'CONTROL ASISTENCA';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->controlAssistObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
+                if ($request->inscripRegTribut){
+                    $file = new ResourceTraits;
+                    $resource = $file->resource($request->inscripRegTribut, 'public/AnexosRadCuentas');
+                    $anexo = new RadCuentasAnex();
+                    $anexo->anexo = 'INCRIPCION REGIMEN';
+                    $anexo->resource_id = $resource;
+                    $anexo->observacion = $request->inscripRegTributObs;
+                    $anexo->estado = '0';
+                    $anexo->user_id = Auth::user()->id;
+                    $anexo->rad_cuenta_id  = $radCuenta->id;
+                    $anexo->save();
+                }
             }
 
             $radCuenta->estado_elabor = '1';

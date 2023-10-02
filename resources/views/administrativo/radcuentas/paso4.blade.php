@@ -24,6 +24,9 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="radicacion_id" value="{{ $radCuenta->id }}">
                         <div class="col-md-12 " style="background-color: white" id="formRP" name="formRP">
+                            @if($radCuenta->rad_cuenta_anex_id)
+                                <h4 class="text-center">Al agregar una radicacion de cuenta ya elaborada en el proceso de creación, se muestran los anexos de dicha radicacion de cuenta. De esta manera el usuario no requiere cargar de nuevo todos los anexos.</h4>
+                            @endif
                             <table id="TABLA1" class="table text-center table-bordered">
                                 <thead>
                                 <tr style="background-color: #6c0e03; color: white"><th scope="row" colspan="3">4. ANEXOS</th></tr>
@@ -63,7 +66,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="CONTRATO" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CONTRATO")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="CONTRATO" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @else
+                                                <input type="file" required class="form-control" name="CONTRATO" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -77,7 +93,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="CONTRATOObs">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CONTRATO")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="CONTRATOObs">@endif
+                                            @else
+                                                <input type="text" class="form-control" name="CONTRATOObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -94,7 +121,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="actaIni" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA DE INICIO")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                    @if($show2)
+                                                        <input type="file" required class="form-control" name="actaIni" accept="application/pdf, .docx, .xlsx">
+                                                    @endif
+                                            @else
+                                                <input type="file" required class="form-control" name="actaIni" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -108,7 +148,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="actaIniObs">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CONTRATO")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="actaIniObs">@endif
+                                            @else
+                                                <input type="text" class="form-control" name="actaIniObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -125,7 +176,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="certBanc" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CERTIFICACION BANCARIA")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                        <input type="file" required class="form-control" name="certBanc" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @else
+                                                <input type="file" required class="form-control" name="certBanc" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -139,7 +203,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="certBancObs">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CERTIFICACION BANCARIA")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="certBancObs">@endif
+                                            @else
+                                                <input type="text" class="form-control" name="certBancObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -156,7 +231,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="entradaAlmac" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ENTRADA ALMACEN")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="entradaAlmac" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @else
+                                                <input type="file" required class="form-control" name="entradaAlmac" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -170,7 +258,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="entradaAlmacObs">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ENTRADA ALMACEN")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="entradaAlmacObs">@endif
+                                            @else
+                                                <input type="text" class="form-control" name="entradaAlmacObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -187,7 +286,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="RUT" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "RUT")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="RUT" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @else
+                                                <input type="file" required class="form-control" name="RUT" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -201,7 +313,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="RUTObs">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "RUT")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="RUTObs">@endif
+                                            @else
+                                                <input type="text" class="form-control" name="RUTObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -218,7 +341,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="cedula" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CEDULA")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="cedula" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @else
+                                                <input type="file" required class="form-control" name="cedula" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -232,7 +368,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="cedulaObs">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CEDULA")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="cedulaObs">@endif
+                                            @else
+                                                <input type="text" class="form-control" name="cedulaObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -249,7 +396,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="oficioDian" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "OFICIO")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="oficioDian" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @else
+                                                <input type="file" required class="form-control" name="oficioDian" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -263,7 +423,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="oficioDianObs">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "OFICIO")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="oficioDianObs">@endif
+                                            @else
+                                                <input type="text" class="form-control" name="oficioDianObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -280,12 +451,24 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="infEjec" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "INFORME")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="infEjec" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
-                                            <input type="file" class="form-control" name="infEjec" accept="application/pdf, .docx, .xlsx">
+                                            <input type="file" required class="form-control" name="infEjec" accept="application/pdf, .docx, .xlsx">
                                         @endif
                                     </td>
                                     <td>
+                                        @php($show = true)
                                         @if(count($radCuenta->anexos) > 0)
                                             @foreach($radCuenta->anexos as $anexo)
                                                 @if($anexo->anexo == "INFORME")
@@ -294,7 +477,20 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="infEjecObs">
+                                        @if($show)
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "INFORME")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)<input type="text" class="form-control" name="infEjecObs">@endif
+                                            @endif
+                                        @else
+                                            <input type="text" class="form-control" name="infEjecObs">
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -310,7 +506,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="certCump" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CERTIFICADO CUMPLIMIENTO")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="certCump" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
                                             <input type="file" class="form-control" name="certCump" accept="application/pdf, .docx, .xlsx">
                                         @endif
@@ -319,12 +526,19 @@
                                         @if(count($radCuenta->anexos) > 0)
                                             @foreach($radCuenta->anexos as $anexo)
                                                 @if($anexo->anexo == "CERTIFICADO CUMPLIMIENTO")
-                                                    @php($show = false)
                                                     {{ $anexo->observacion }}
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="certCumpObs">
+                                        @if($radCuenta->rad_cuenta_anex_id)
+                                            @foreach($radCuentaAnex->anexos as $anexo)
+                                                @if($anexo->anexo == "CERTIFICADO CUMPLIMIENTO")
+                                                    {{ $anexo->observacion }}
+                                                @endif
+                                            @endforeach
+                                        @else
+                                                <input type="text" class="form-control" name="certCumpObs">
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -340,7 +554,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="actRec" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA RECIBO")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="actRec" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
                                             <input type="file" class="form-control" name="actRec" accept="application/pdf, .docx, .xlsx">
                                         @endif
@@ -354,7 +579,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="actRecObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA RECIBO")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="actRecObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -370,7 +603,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="actTerm" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA TERMINACION")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="actTerm" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
                                             <input type="file" class="form-control" name="actTerm" accept="application/pdf, .docx, .xlsx">
                                         @endif
@@ -384,7 +628,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="actTermObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA TERMINACION")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="actTermObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -400,7 +652,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="actLiquid" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA LIQUIDACION")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="actLiquid" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
                                             <input type="file" class="form-control" name="actLiquid" accept="application/pdf, .docx, .xlsx">
                                         @endif
@@ -414,7 +677,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="actLiquidObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA LIQUIDACION")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="actLiquidObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -430,7 +701,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="actAutInt" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA INTERVENTOR")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="actAutInt" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
                                             <input type="file" class="form-control" name="actAutInt" accept="application/pdf, .docx, .xlsx">
                                         @endif
@@ -444,7 +726,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="actAutIntObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "ACTA INTERVENTOR")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="actAutIntObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -460,7 +750,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="segSocParaf" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "SEGURIDAD SOCIAL")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="segSocParaf" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
                                             <input type="file" class="form-control" name="segSocParaf" accept="application/pdf, .docx, .xlsx">
                                         @endif
@@ -474,7 +775,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="segSocParafObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "SEGURIDAD SOCIAL")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="segSocParafObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -490,7 +799,18 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" required class="form-control" name="cuentaCobroFact" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CUENTA COBRO")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" required class="form-control" name="cuentaCobroFact" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @endif
                                         @else
                                             <input type="file" class="form-control" name="cuentaCobroFact" accept="application/pdf, .docx, .xlsx">
                                         @endif
@@ -504,7 +824,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="cuentaCobroFactObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CUENTA COBRO")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @else
+                                                <input type="text" class="form-control" name="cuentaCobroFactObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -520,7 +848,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" class="form-control" name="POLIZA" accept="application/pdf, .docx, .xlsx">
+                                            @php($show2 = true)
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "POLIZA")
+                                                        @php($show2 = false)
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="file" class="form-control" name="POLIZA" accept="application/pdf, .docx, .xlsx">
+                                                @endif
+                                            @else
+                                                <input type="file" class="form-control" name="POLIZA" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -534,7 +875,20 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="POLIZAObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @php($show2 = true)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "POLIZA")
+                                                        @php($show2 = false)
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                                @if($show2)
+                                                    <input type="text" class="form-control" name="POLIZAObs">
+                                                @endif
+                                            @else
+                                                <input type="text" class="form-control" name="POLIZAObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -551,7 +905,15 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" class="form-control" name="aproPol" accept="application/pdf, .docx, .xlsx">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "APROBACION DE LA POLIZA")
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="file" class="form-control" name="aproPol" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -565,7 +927,15 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="aproPolObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "APROBACION DE LA POLIZA")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="aproPolObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -582,7 +952,15 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="file" class="form-control" name="pazySalvOff" accept="application/pdf, .docx, .xlsx">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "PAZ Y SALVO OFICINA")
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="file" class="form-control" name="pazySalvOff" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                         @endif
                                     </td>
                                     <td>
@@ -596,7 +974,15 @@
                                             @endforeach
                                         @endif
                                         @if($show)
-                                            <input type="text" class="form-control" name="pazySalvOffObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "PAZ Y SALVO OFICINA")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="pazySalvOffObs">
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -610,18 +996,34 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="file" class="form-control" name="planInv" accept="application/pdf, .docx, .xlsx">
+                                        @if($radCuenta->rad_cuenta_anex_id)
+                                            @foreach($radCuentaAnex->anexos as $anexo)
+                                                @if($anexo->anexo == "PLAN DE INVERSIÓN")
+                                                    <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                @endif
+                                            @endforeach
+                                            @else
+                                                <input type="file" class="form-control" name="planInv" accept="application/pdf, .docx, .xlsx">
+                                        @endif
                                     </td>
                                     <td>
                                         @if(count($radCuenta->anexos) > 0)
                                             @foreach($radCuenta->anexos as $anexo)
                                                 @if($anexo->anexo == "PLAN DE INVERSIÓN")
-                                                    @php($show = false)
                                                     {{ $anexo->observacion }}
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="planInvObs">
+                                        @if($radCuenta->rad_cuenta_anex_id)
+                                            @foreach($radCuentaAnex->anexos as $anexo)
+                                                @if($anexo->anexo == "PLAN DE INVERSIÓN")
+                                                    {{ $anexo->observacion }}
+                                                @endif
+                                            @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="planInvObs">
+
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -634,7 +1036,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="file" class="form-control" name="pagoSena" accept="application/pdf, .docx, .xlsx">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "PAGO SENA")
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="file" class="form-control" name="pagoSena" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                     </td>
                                     <td>
                                         @if(count($radCuenta->anexos) > 0)
@@ -644,7 +1054,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="pagoSenaObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "PAGO SENA")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="pagoSenaObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -657,7 +1075,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="file" class="form-control" name="fotografias" accept="application/pdf, .docx, .xlsx">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "FOTOGRAFIAS")
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="file" class="form-control" name="fotografias" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                     </td>
                                     <td>
                                         @if(count($radCuenta->anexos) > 0)
@@ -667,7 +1093,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="fotografiasObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "FOTOGRAFIAS")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="fotografiasObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -680,7 +1114,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="file" class="form-control" name="controlAssist" accept="application/pdf, .docx, .xlsx">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CONTROL ASISTENCA")
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="file" class="form-control" name="controlAssist" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                     </td>
                                     <td>
                                         @if(count($radCuenta->anexos) > 0)
@@ -690,7 +1132,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="controlAssistObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "CONTROL ASISTENCA")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="controlAssistObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 <tr>
@@ -703,7 +1153,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="file" class="form-control" name="inscripRegTribut" accept="application/pdf, .docx, .xlsx">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "INCRIPCION REGIMEN")
+                                                        <a href="{{Storage::url($anexo->file->ruta)}}" target="_blank" title="Ver" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i></a>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="file" class="form-control" name="inscripRegTribut" accept="application/pdf, .docx, .xlsx">
+                                            @endif
                                     </td>
                                     <td>
                                         @if(count($radCuenta->anexos) > 0)
@@ -713,7 +1171,15 @@
                                                 @endif
                                             @endforeach
                                         @endif
-                                        <input type="text" class="form-control" name="inscripRegTributObs">
+                                            @if($radCuenta->rad_cuenta_anex_id)
+                                                @foreach($radCuentaAnex->anexos as $anexo)
+                                                    @if($anexo->anexo == "INCRIPCION REGIMEN")
+                                                        {{ $anexo->observacion }}
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="text" class="form-control" name="inscripRegTributObs">
+                                            @endif
                                     </td>
                                 </tr>
                                 </tbody>

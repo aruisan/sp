@@ -458,12 +458,17 @@
                 document.getElementById('objetoContrato').innerHTML = data.registro.objeto;
 
                 if (data.radCuentas.length > 0){
-                    console.log(data.radCuentas);
                     $("#listRadicaciones").html("");
                     var dataRadC = `<div class="form-group"><label class="col-lg-12 col-form-label text-center" for="persona_id">Seleccione La Radicacion de Cuenta a Replicar: <span class="text-danger">*</span></label>
-                                    <div class="col-lg-12 text-center"><select class="form-control" name="radHistory_id" onchange="changeRad(this.value)">
-                                    <option value="0">NO REEPLICAR RADICACIÓN</option><option value="1">NO REEPLICAR RADICACIÓN</option></select></div></div>`;
-                    $("#listRadicaciones").append(dataRadC);
+                                    <div class="col-lg-12 text-center"><select class="form-control" name="radHistory_id" onchange="changeRad(this.value)"><option value="0">NO ASIGNAR</option>`;
+
+                    for(var x=0; x<data.radCuentas.length; x++){
+                        var dataRadC = dataRadC+`<option value="`+data.radCuentas[x].id+`"> #`+data.radCuentas[x].code+`-`+data.radCuentas[x].registro.objeto+`</option>`;
+                    }
+
+                    var selectShow = dataRadC+`</select></div></div>`;
+
+                    $("#listRadicaciones").append(selectShow);
                 }
 
                 $("#cdps").html("");
@@ -529,6 +534,24 @@
 
         function changeRad(rad_id){
             console.log(rad_id);
+
+            $("#cargandoRP").show();
+            $("#buttonSend").hide()
+            $.ajax({
+                method: "POST",
+                url: "/administrativo/radCuentas/findRadCuenta",
+                data: { "idRC": rad_id, "_token": $("meta[name='csrf-token']").attr("content")}
+            }).done(function(data) {
+                console.log(data);
+
+                $("#formRP").show();
+                $("#cargandoRP").hide();
+                $("#buttonSend").show();
+            }).fail(function() {
+                $("#cargandoRP").hide();
+                $("#buttonSend").show();
+                toastr.warning('OCURRIO UN ERROR AL BUSCAR LA INFORMACION DEL REGISTRO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
+            });
         }
 
 
