@@ -267,6 +267,9 @@
 
     const vigencia_id = @json($V);
     const prepSaved = @json($prepSaved);
+    const añoPrep = @json(\Carbon\Carbon::parse($fechaData)->year);
+    const mesPrep = @json(\Carbon\Carbon::parse($fechaData)->month);
+    const diaPrep = @json(\Carbon\Carbon::parse($fechaData)->day);
 
     window.onload = function () {
         findPrep();
@@ -287,7 +290,6 @@
                 "_token": $("meta[name='csrf-token']").attr("content"),
             }
         }).done(function(datos) {
-            const fecha = new Date();
             $("#tabla").show();
             table.destroy();
             $("#infoPrep").show();
@@ -328,7 +330,7 @@
                         text:      '<i class="fa fa-file-excel-o"></i> ',
                         titleAttr: 'Exportar a Excel',
                         className: 'btn btn-primary',
-                        title: 'Presupuesto Ingresos '+fecha.getDate()+'-'+fecha.getMonth()+'-'+fecha.getFullYear()
+                        title: 'Presupuesto Ingresos '+añoPrep+'-'+mesPrep+'-'+diaPrep
                     },
                     {
                         extend:    'pdfHtml5',
