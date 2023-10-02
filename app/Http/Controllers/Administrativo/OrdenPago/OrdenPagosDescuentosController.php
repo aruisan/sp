@@ -209,6 +209,10 @@ class OrdenPagosDescuentosController extends Controller
             $ordenPagoDes->orden_pagos_id = $ordenPago_id;
             $ordenPagoDes->retencion_fuente_id = $request->retencion_fuente;
             $ordenPagoDes->save();
+
+            $ordenP = OrdenPagos::find($request->ordenPago_id);
+            $ordenP->saldo = $ordenP->saldo - $valor;
+            $ordenP->save();
         }
 
         if ($request->idDes != null){
@@ -222,6 +226,10 @@ class OrdenPagosDescuentosController extends Controller
                 $descuento->orden_pagos_id = $ordenPago_id;
                 $descuento->desc_municipal_id = $request->idDes[$i];
                 $descuento->save();
+
+                $ordenP = OrdenPagos::find($request->ordenPago_id);
+                $ordenP->saldo = $ordenP->saldo - $request->valorMuni[$i];
+                $ordenP->save();
             }
         }
 
@@ -238,13 +246,22 @@ class OrdenPagosDescuentosController extends Controller
                 $descuento->cuenta_puc_id = $request->cuentaDesc[$x];
                 $descuento->persona_id = $request->tercero[$x];
                 $descuento->save();
+
+                $ordenP = OrdenPagos::find($request->ordenPago_id);
+                $ordenP->saldo = $ordenP->saldo - $request->valorDesc[$x];
+                $ordenP->save();
             }
         }
 
+        //SE ACTUALIZA EL VALOR CREDITO DE LA ORDEN DE PAGO CON LOS NUEVOS DESCUENTOS
         $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $ordenPago_id)->where('valor', '>', 0)->get();
         $ordenP = OrdenPagos::find($ordenPago_id);
-        $ordenP->saldo = $ordenP->valor - $OrdenPagoDescuentos->sum('valor');
-        $ordenP->save();
+        foreach ($ordenP->pucs as $puc){
+            if ($puc->valor_credito > 0){
+                $puc->valor_credito = $ordenP->valor - $OrdenPagoDescuentos->sum('valor');
+                $puc->save();
+            }
+        }
 
         Session::flash('success','Los Descuentos se han Almacenado y Actualizado Exitosamente');
         return redirect('/administrativo/ordenPagos/'.$ordenPago_id.'/edit');
