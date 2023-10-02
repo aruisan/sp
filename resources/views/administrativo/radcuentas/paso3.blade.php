@@ -119,7 +119,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="3">Valor a Pagar
-                                        <input type="number" class="form-control" name="valor_pago" @if(isset($radCuenta->pago->id)) value="{{$radCuenta->pago->valor_pago}}" @else value="{{$radCuenta->valor_fin}}" @endif>
+                                        <input type="number" class="form-control" name="valor_pago" @if(isset($radCuenta->pago->id)) value="{{$radCuenta->pago->valor_pago}}" @else value="{{$radCuenta->valor_ini}}" @endif>
                                     </td>
                                 </tr>
                                 @if(isset($radCuenta->pago->id))
