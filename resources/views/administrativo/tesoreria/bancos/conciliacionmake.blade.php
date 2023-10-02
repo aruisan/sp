@@ -20,7 +20,7 @@
     </ul>
     <div class="row" style="background-color: white">
         <br>
-        <form class="form-valide" action="{{url('/administrativo/tesoreria/bancos/conciliacion')}}" method="POST" enctype="multipart/form-data" id="prog">
+        <form class="form-valide" action="{{route('conciliacion.store', $conciliacion->id)}}" method="POST" enctype="multipart/form-data" id="prog">
             {{ csrf_field() }}
             <meta name="csrf-token" content="{{ csrf_token() }}">
             <input type="hidden" name="cuenta" id="cuenta" value="{{ $rubroPUC->id }}">
@@ -84,14 +84,17 @@
                     </tr>
                     </thead>
                     <tbody id="bodyTabla">
-                    @foreach($result as $index => $data)
+                    @foreach($conciliacion->cheques_mano as $index => $data)
                         <tr class="text-center">
-                            <td>{{$data['fecha']}}</td>
-                            <td>{{$data['referencia']}} - {{$data['CC']}} - {{$data['tercero']}} -- {{$data['numero']}}</td>
-                            <td>$<?php echo number_format($data['debito'],0) ?></td>
-                            <td>$<?php echo number_format($data['credito'],0) ?></td>
-                            <td>$<?php echo number_format($data['debito'] == 0 ? $data['credito'] : $data['debito'],0) ?></td>
-                            <td><input type="checkbox" name="check[]" value="{{ $index }}" checked onchange="checked_checke_mano(this, {{$data['debito'] == 0 ? 0 - $data['credito'] : $data['debito']}}, {{$index}})"></td>
+                            <td>{{$data->fecha}}</td>
+                            <td>{{$data->referencia}} - {{$data->CC}} - {{$data->tercero}} -- {{$data->numero}}</td>
+                            <td>$<?php echo number_format($data->debito,0) ?></td>
+                            <td>$<?php echo number_format($data->credito,0) ?></td>
+                            <td>$<?php echo number_format($data->debito == 0 ? $data->credito : $data->debito,0) ?></td>
+                            <td><input type="checkbox" name="check[]" value="{{ $data->id }}" 
+                                onchange="checked_checke_mano(this, {{$data['debito'] == 0 ? 0 - $data['credito'] : $data['debito']}}, {{$index}}, {{$data->id}})" 
+                                {{$data->aprobado == 'ON' ? 'checked' : ''}}>
+                            </td>
                         </tr>
                         @php $cheques_mano = $cheques_mano + ($data['debito'] == 0 ? 0 - $data['credito'] : $data['debito']) @endphp
                     @endforeach
@@ -115,14 +118,17 @@
                     </tr>
                     </thead>
                     <tbody id="bodyTabla">
-                    @foreach($comprobantes_old as $index => $item)
+                    @foreach($conciliacion->cuentas_temporales as $index => $item)
                         <tr class="text-center">
-                            <td>{{$item->fecha}}</td>
-                            <td>{{$item->referencia}} - {{$item->cc}} - {{$item->tercero}}</td>
+                            <td>{{$item->comprobante_ingreso_temporal->fecha}}</td>
+                            <td>{{$item->comprobante_ingreso_temporal->referencia}} - {{$item->comprobante_ingreso_temporal->cc}} - {{$item->comprobante_ingreso_temporal->tercero}}</td>
                             <td>$<?php echo number_format(0,0) ?></td>
                             <td>$<?php echo number_format(0,0) ?></td>
-                            <td>$<?php echo number_format($item->valor,0) ?></td>
-                            <td><input type="checkbox" name="check_old[]" value="{{$item->id}}" onchange="checked_checke_cobrados(this, {{$item->valor}}, {{$item->id}})"></td>
+                            <td>$<?php echo number_format($item->comprobante_ingreso_temporal->valor,0) ?></td>
+                            <td><input type="checkbox" name="check_old[]" value="{{$item->comprobante_ingreso_temporal->id}}" 
+                                    onchange="checked_checke_cobrados(this, {{$item->comprobante_ingreso_temporal->valor}}, {{$item->comprobante_ingreso_temporal->id}}, {{$item->id}})" 
+                                    {{$item->check ? 'checked' : ''}} >
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -167,26 +173,26 @@
             </div>
         </form>
     </div>
-    {{$totalLastMonth}}
+    {{--$totalLastMonth--}}
 @stop
 @section('js')
     <script>
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         let saldos_libros_i = {{$conciliacion->saldo_libros}};
-        const data_cheque_mano = @json($result);
-        const data_cheque_cobros = @json($comprobantes_old);
-        let data_mano_select = @json($result);
+        const data_cheque_mano = @json($conciliacion->cheques_mano);
+        const data_cheque_cobros = @json($conciliacion->cuentas_temporales->map(function($ct){ return $ct->comprobante_ingreso_temporal;}));
+        let data_mano_select = @json($conciliacion->cheques_mano->filter(function($cm){ return $cm->aprobado == 'ON';})->values());
         let data_cobro_select = [];
         data_mano_select.forEach((e,i) => { data_mano_select[i]['id'] = i});
-        let data_mano_no_select = [];
-        let data_cobro_no_select = @json($comprobantes_old);
+        let data_mano_no_select = @json($conciliacion->cheques_mano->filter(function($cm){ return $cm->aprobado == 'OFF';})->values());
+        let data_cobro_no_select = @json($conciliacion->cuentas_temporales->map(function($ct){ return $ct->comprobante_ingreso_temporal;}));
         let cheques_mano = {{$cheques_mano}};
-        let cheques_cobrados = {{$comprobantes_old->sum('valor')}};
+        let cheques_cobrados = {{$conciliacion->cuentas_temporales->sum('comprobante_ingreso_temporal.valor')}};
         let cheques_mano_libro = 0;
         let restar_cheques_mano = 0;
         let restar_cheques_cobrados = 0;
         let total_diferencia_siguiente_final = 0;
-        console.log('data0', data_cheque_mano);
+        console.log('data0', [data_mano_select, data_mano_no_select, data_cheque_mano]);
 
 
         
@@ -330,7 +336,8 @@
             //console.log('rr', [ (cheques_cobrados - restar_cheques_cobrados)-final_bancos+total_b+(cheques_mano-restar_cheques_mano),  (cheques_cobrados - restar_cheques_cobrados),final_bancos,total_b,(cheques_mano-restar_cheques_mano)]);
         }
 
-        const checked_checke_mano = (item, value, index) => {
+        const checked_checke_mano = (item, value, index, id) => {
+            
             if(item.checked){
                 restar_cheques_mano = restar_cheques_mano + value;
                 let index_select = data_mano_no_select.findIndex(e => e.id == index );
@@ -340,18 +347,23 @@
             }else{
                 restar_cheques_mano = restar_cheques_mano - value;
                 let cm_select = data_cheque_mano[index];
-                cm_select['id'] = index;
+                //cm_select['id'] = index;
                 data_mano_no_select.push(cm_select)
-                let index_select = data_mano_select.findIndex(e => e.id == index );
+                let index_select = data_mano_select.findIndex(e => e.id == id );
                 data_mano_select.splice(index_select, 1);
             }
             console.log('cm_select', data_mano_select);
             console.log('cm_select2', data_mano_no_select);
 
+            $.get(`/administrativo/tesoreria/bancos/conciliacion/cheques_mano/${id}`, function(data){
+                console.log('data-mano', data);
+            });
+
+
             diferencia_siguiente_final();
         }
 
-        const checked_checke_cobrados = (item, value, id) => {
+        const checked_checke_cobrados = (item, value, id, relacion_id) => {
             if(item.checked){
                 restar_cheques_cobrados = restar_cheques_cobrados - value;
 
@@ -372,6 +384,10 @@
 
             console.log('cm_select3', data_cobro_select);
             console.log('cm_select4', data_cobro_no_select);
+            $.get(`/administrativo/tesoreria/bancos/conciliacion/cheques_temporales/${relacion_id}`, function(data){
+                console.log('data-tempor', data);
+            });
+
             diferencia_siguiente_final();
         }
 

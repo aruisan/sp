@@ -195,11 +195,13 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
             //Bancos
         Route::get('tesoreria/bancos/libros','Administrativo\Tesoreria\BancosController@libros');
-        Route::get('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@conciliacion');
+        Route::get('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@conciliacion')->name('conciliacion.pre');
+        Route::get('tesoreria/bancos/conciliacion/cheques_mano/{cheque_mano}','Administrativo\Tesoreria\BancosController@cheque_mano_ajax');
+        Route::get('tesoreria/bancos/conciliacion/cheques_temporales/{cheque_temporal_conciliacion}','Administrativo\Tesoreria\BancosController@cheque_temporal_ajax');
         Route::get('tesoreria/bancos/conciliacion/{conciliacion_id}','Administrativo\Tesoreria\BancosController@conciliacion_pdf')->name('conciliacion.guardar.pdf');
         Route::get('tesoreria/bancos/conciliacion/{id}/pdf','Administrativo\Tesoreria\BancosController@pdf')->name('conciliacion.pdf');
         Route::get('tesoreria/bancos/libros','Administrativo\Tesoreria\BancosController@libros');
-        Route::post('tesoreria/bancos/conciliacion','Administrativo\Tesoreria\BancosController@saveConciliacion');
+        Route::post('tesoreria/bancos/conciliacion/{conciliacion}','Administrativo\Tesoreria\BancosController@saveConciliacion')->name('conciliacion.store');
         Route::post('tesoreria/bancos/movAccount','Administrativo\Tesoreria\BancosController@movAccount');
         Route::post('tesoreria/bancos/movAccountLibros','Administrativo\Tesoreria\BancosController@movAccountLibros');
         Route::post('tesoreria/bancos/makeConciliacion','Administrativo\Tesoreria\BancosController@makeConciliacion');

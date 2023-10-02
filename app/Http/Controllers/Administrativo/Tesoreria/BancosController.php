@@ -638,7 +638,7 @@ class BancosController extends Controller
             $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
             foreach ($lv2 as $cuenta) $result[] = $cuenta;
         }
-        $conciliaciones = ConciliacionBancaria::where('año', Carbon::today()->format('Y') )->get();
+        $conciliaciones = ConciliacionBancaria::where('año', Carbon::today()->format('Y') )->where('finalizar', 1)->get();
 
         return view('administrativo.tesoreria.bancos.conciliacion',compact('result','conciliaciones', 'conciliacion_id'));
     }
@@ -741,6 +741,7 @@ class BancosController extends Controller
 
     public function makeConciliacion(Request $request){
         $result = collect();
+        //1---------------------- paso llamar el puc seleccionado
         $rubroPUC = PucAlcaldia::find($request->cuentaPUC);
         $añoActual = Carbon::today()->format('Y');
         $mesFind = $request->mes;
@@ -750,12 +751,14 @@ class BancosController extends Controller
         $totCredAll = 0;
         $totBank = 0;
 
+        //2---------------------- validar si la conciliacionbancaria existe si no crearla
         $conciliacion = ConciliacionBancaria::where('año', $añoActual)->where('mes', $request->mes)->where('puc_id', $request->cuentaPUC)->first();
         if(is_null($conciliacion)){
             $conciliacion = new ConciliacionBancaria();
             $conciliacion->año = $añoActual;
             $conciliacion->mes = $request->mes;
             $conciliacion->puc_id = $request->cuentaPUC;
+            $conciliacion->responsable_id = auth()->user()->id;
         }
         $conciliacion->subTotBancoInicial = 0;
         $conciliacion->subTotBancoFinal = 0;
@@ -763,33 +766,32 @@ class BancosController extends Controller
         $conciliacion->partida_sin_conciliacion_bancos = 0;
         $conciliacion->finalizar = 0;
         $conciliacion->sumaIgualBank = 0;
-        $conciliacion->responsable_id = auth()->user()->id;
         $conciliacion->save();
 
+        /*
         if(!is_null($conciliacion)){
             if($conciliacion->cuentas_temporales->count() > 0){
                 $conciliacion->cuentas_temporales()->delete();
             }
         }
-
+        */
         $conciliaciones_anteriores = ConciliacionBancaria::where('puc_id', $rubroPUC->id)->get();
         $conciliacion_anterior = NULL;
         $total_cheque_mano = 0;
         $total_cheque_cobrados = 0;
-
         //dd([$conciliacion->conciliacion_anterior->saldo_libros, $conciliacion_anterior]);
 
         if($conciliaciones_anteriores->count() > 0):
-            
             foreach($conciliaciones_anteriores as $anterior):
                 $conciliacion_anterior = $anterior->mes == $mesFind-1 ? $anterior : $conciliacion_anterior; 
                 $total_cheque_mano += $anterior->mes < $mesFind && $anterior->cheques_mano->count() > 0 
-                                    ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
+                ? $anterior->cheques_mano->filter(function($c){ return $c->aprobado == "ON";})->sum('total') : 0;
                 $total_cheque_cobrados += $anterior->mes < $mesFind && $anterior->cuentas_temporales->count() > 0 
-                                        ? $anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
+                ? $anterior->cuentas_temporales->filter(function($e){ return $e->check;})->sum('comprobante_ingreso_temporal.valor') : 0 ;
             endforeach;
         endif;
-
+        /*
+        */
         //dd([$conciliaciones_anteriores[0]->cheques_mano, $total_cheque_mano, $total_cheque_cobrados]);
 
        // dd([$conciliaciones_anteriores[0]->mes, $request->mes]);
@@ -807,7 +809,14 @@ class BancosController extends Controller
             endif;
         endif;
     */
-
+        /*
+        if(TRUE):
+            */ 
+       // 
+       //$conciliacion->cheques_mano()->delete();
+       //dd($conciliacion->cheques_mano->count());
+    if($conciliacion->cheques_mano->count() == 0):
+        //dd('aca');
         if($request->mes >= 2) {
             $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);//2023-2-1
             $totalLastMonth = $newSaldo['total'];
@@ -817,7 +826,7 @@ class BancosController extends Controller
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->get();
         
-        if (count($pagoBanks) > 0){
+        if(count($pagoBanks) > 0){
             //dd($pagoBanks->map(function($e){return $e->pago;}));
             foreach ($pagoBanks as $pagoBank){
                 if ($pagoBank->pago->estado == 1){
@@ -897,18 +906,66 @@ class BancosController extends Controller
             }
         }
 
-        $periodo = \Carbon\Carbon::parse("01-{$mesFind}-{$añoActual}");
-        $periodo_inicial = $periodo->format('d-m-Y');
-        $periodo_final = $periodo->addMonth(1)->subDay(1)->format('d-m-Y');
+        //dd($result);
 
+        foreach ($result as $r) {
+            $fecha = Carbon::parse($r['fecha'])->format('Y-m-d');
+            $conciliacionCuentas = ConciliacionBancariaCuentas::where('conciliacion_id', $conciliacion->id)->where('fecha', $fecha)->first();
+            if(is_null($conciliacionCuentas)):
+                $conciliacionCuentas = new ConciliacionBancariaCuentas();
+                $conciliacionCuentas->conciliacion_id = $conciliacion->id;
+                $conciliacionCuentas->fecha = $fecha;
+                $conciliacionCuentas->referencia = $r['referencia']." - ".$r['CC']." - ".$r['tercero'];
+                $conciliacionCuentas->debito = $r['debito'];
+                $conciliacionCuentas->credito = $r['credito'];
+                $conciliacionCuentas->valor = $r['debito'] == 0 ? $r['credito'] : $r['debito'];
+                $conciliacionCuentas->aprobado = "ON";
+                $conciliacionCuentas->save();
+            endif;
+        }
+    endif;
+
+    //if(TRUE):
+    if($conciliacion->cuentas_temporales->count() == 0):
+        $comprobantes_ingreso_temporal = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get()->filter(function($e){ return !$e->check;});
+        foreach($comprobantes_ingreso_temporal as $cit):
+            $cit_conciliacion = ComprobanteIngresoTemporalConciliacion::where('conciliacion_id', $conciliacion->id)->where('comprobante_ingreso_temporal_id', $cit->id)->first();
+            if(is_null($cit_conciliacion)): 
+                $cit_conciliacion = new ComprobanteIngresoTemporalConciliacion();
+                $cit_conciliacion->conciliacion_id = $conciliacion->id;
+                $cit_conciliacion->comprobante_ingreso_temporal_id = $cit->id;
+                $cit_conciliacion->save();
+            endif;
+        endforeach;
+    endif;
+    
+    $periodo = \Carbon\Carbon::parse("01-{$mesFind}-{$añoActual}");
+    $periodo_inicial = $periodo->format('d-m-Y');
+    $periodo_final = $periodo->addMonth(1)->subDay(1)->format('d-m-Y');
+
+    //dd([$conciliacion, $conciliacion->cheques_mano, $conciliacion->cuentas_temporales]);
+        /*
+        */
         //dd($result);
         //dd($rubroPUC);
-        $comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get()->filter(function($e){ return !$e->check;})->values();
         //dd($comprobantes_old);
         //$comprobantes_old = ComprobanteIngresoTemporal::where('code', $rubroPUC->code)->get();
         return view('administrativo.tesoreria.bancos.conciliacionmake',compact('conciliacion', 'result', 'rubroPUC', 'conciliacion_anterior', 'total_cheque_mano', 'total_cheque_cobrados'
-            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','totalLastMonth', 'comprobantes_old','periodo_inicial','periodo_final'));
+            ,'añoActual','mesFind','totDeb','totCred', 'totCredAll','totBank','periodo_inicial','periodo_final'));
     }
+
+    public function cheque_mano_ajax(ConciliacionBancariaCuentas  $cheque_mano){
+        $cheque_mano->aprobado = $cheque_mano->aprobado == 'ON' ? 'OFF' : 'ON';
+        $cheque_mano->save();
+        return response()->json(TRUE);
+    }
+
+    public function cheque_temporal_ajax(ComprobanteIngresoTemporalConciliacion $cheque_temporal_conciliacion){
+        $cheque_temporal_conciliacion->check = $cheque_temporal_conciliacion->check ? 0 : 1;
+        $cheque_temporal_conciliacion->save();
+        return response()->json(TRUE);
+    }
+    
 
     public function saveAndSeePdf(Request $request){
         //return $request->cobros_select;
@@ -984,189 +1041,45 @@ class BancosController extends Controller
         return ['url' => route('conciliacion.pdf', $conciliacion->id)];
     }
 
-    public function saveConciliacion(Request $request){
-        
+    public function saveConciliacion(ConciliacionBancaria $conciliacion, Request $request){
+        $checks_ids = $request->check;
         //dd($request->all());
-        $conciliacion = ConciliacionBancaria::where('año', $request->año)->where('mes', $request->mes)->where('puc_id', $request->cuenta)->first();
-        if(is_null($conciliacion)){
-            $conciliacion = new ConciliacionBancaria();
-            $conciliacion->año = $request->año;
-            $conciliacion->mes = $request->mes;
-            $conciliacion->puc_id = $request->cuenta;
-        }
+        
         $conciliacion->subTotBancoInicial = $request->saldo_inicial;
         $conciliacion->subTotBancoFinal = $request->saldo_final;
         $conciliacion->partida_sin_conciliacion_libros = $request->partida_sin_conciliar_libros;
         $conciliacion->partida_sin_conciliacion_bancos = $request->partida_sin_conciliar_bancos;
         $conciliacion->finalizar = $request->finalizar;
         $conciliacion->sumaIgualBank = $request->sumaIgualBank;
-        $conciliacion->responsable_id = auth()->user()->id;
         $conciliacion->save();
 
-        $cobros_select = json_decode($request->data_cobro_select);
-        $cobros_no_select = json_decode($request->data_cobro_no_select);
-
-        //dd($cobros_select);
-        foreach($cobros_select as $cobro_s):
-            $conciliacion_cobro_s = ComprobanteIngresoTemporalConciliacion::where('conciliacion_id', $conciliacion->id)->where('comprobante_ingreso_temporal_id', $cobro_s->id)->first();
-            if(is_null($conciliacion_cobro_s)):
-                $conciliacion_cobro_s = new ComprobanteIngresoTemporalConciliacion;
-                $conciliacion_cobro_s->conciliacion_id = $conciliacion->id;
-                $conciliacion_cobro_s->comprobante_ingreso_temporal_id = $cobro_s->id;
-            endif;
-            $conciliacion_cobro_s->check = '1';
-            $conciliacion_cobro_s->save();
-        endforeach;
         
-        
-        foreach($cobros_no_select as $cobro_s):
-            $conciliacion_cobro_s = ComprobanteIngresoTemporalConciliacion::where('conciliacion_id', $conciliacion->id)->where('comprobante_ingreso_temporal_id', $cobro_s->id)->first();
-            if(is_null($conciliacion_cobro_s)):
-                $conciliacion_cobro_s = new ComprobanteIngresoTemporalConciliacion;
-                $conciliacion_cobro_s->conciliacion_id = $conciliacion->id;
-                $conciliacion_cobro_s->comprobante_ingreso_temporal_id = $cobro_s->id;
-            endif;
-            $conciliacion_cobro_s->check = '0';
-            $conciliacion_cobro_s->save();
-        endforeach;
-        
-        $result = collect();
-        $rubroPUC = PucAlcaldia::find($request->cuenta);
-        $añoActual = $request->año;
-        $total = $rubroPUC->saldo_inicial;
-        $totDeb = 0;
-        $totCred = 0;
-        $totCredAll = 0;
-        $totBank = 0;
-
-        if($request->mes >= 2) {
-            $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);
-            $total = $newSaldo['total'];
-        }
-
-        // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
-        $pagoBanks = PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->get();
-        if (count($pagoBanks) > 0){
-            foreach ($pagoBanks as $pagoBank){
-                if (Carbon::parse($pagoBank->created_at)->format('Y') == $añoActual) {
-                    if (Carbon::parse($pagoBank->created_at)->format('m') == $request->mes){
-                        $total = $total - $pagoBank->credito;
-                        $total = $total - $pagoBank->debito;
-                        $pago = Pagos::find($pagoBank->pagos_id);
-                        //dd($pago);
-                        if (isset($pago->orden_pago->registros->persona)){
-                            $tercero = $pago->orden_pago->registros->persona->nombre;
-                            $numIdent = $pago->orden_pago->registros->persona->num_dc;
-                        } else{
-                            $tercero = 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN';
-                            $numIdent = 800197268;
-                        }
-                        $totDeb = $totDeb + $pagoBank->debito;
-                        $totCredAll = $totCredAll + $pagoBank->credito;
-                        if ($pago->estado == 1) {
-                            $totCred = $totCred + $pagoBank->credito;
-                            $totBank = $totBank - $pagoBank->credito;
-                        }
-                        $tipo_pago = $pago->type_pay == "CHEQUE" ? 'cheque' : 'referencia';
-                        $result[] = collect(["numero" => "#{$tipo_pago} {$pago->num}", 'fecha' => Carbon::parse($pagoBank->created_at)->format('d-m-Y'),
-                            'modulo' => "Pago #{$pago->code}", 'debito' => $pagoBank->debito, 'credito' => $pagoBank->credito, 'tercero' => $tercero,
-                            'CC' => $numIdent, 'concepto' => $pago->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                            'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                            'referencia' => "Pago #{$pago->code}", 'pago_estado' => $pago->estado]);
-                    }
-                }
-            }
-        }
-
-        
-
-        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
-        $compsCont = ComprobanteIngresosMov::where('cuenta_banco', $rubroPUC->id)->orwhere('cuenta_puc_id', $rubroPUC->id)->get();
-        if (count($compsCont) > 0){
-            foreach ($compsCont as $compCont){
+        if($conciliacion->finalizar):
+            $cheques_mano = $conciliacion->cheques_mano->filter(function($cm)use($checks_ids){ return !in_array($cm->id, $checks_ids) ;});
+            foreach($cheques_mano as $che_mano):
+                $new = ComprobanteIngresoTemporal::where('code', $conciliacion->puc->code)->where('fecha', $che_mano->fecha)->where('referencia', $che_mano->referencia)->where('conciliacion_id', $conciliacion->id)
+                ->where('valor', $che_mano->valor)->where('tipo', 'tesoreria conciliacion bancaria cuentas')->first();
                 
-                if (Carbon::parse($compCont->fechaComp)->format('Y') == $añoActual) {
-                    if (Carbon::parse($compCont->fechaComp)->format('m') == $request->mes) {
-                        if ($compCont->comprobante->tipoCI == "Comprobante de Ingresos"){
-                            $user = User::find($compCont->comprobante->persona_id);
-                            $tercero = $user->name;
-                            $numIdent = $user->email;
-                        } else{
-                            $persona = Persona::find($compCont->comprobante->persona_id);
-                            $tercero = $persona->nombre;
-                            $numIdent = $persona->num_dc;
-                        }
-                        if ($compCont->cuenta_banco == $rubroPUC->id){
-                            $total = $total + $compCont->debito;
-                            $total = $total - $compCont->credito;
-                            $totDeb = $totDeb + $compCont->debito;
-                            $totCred = $totCred + $compCont->credito;
-                            $result[] = collect(["numero" => "", 'fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => $compCont->debito,
-                                'credito' => $compCont->credito, 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'referencia' => 'CC #'.$compCont->comprobante->id, 'pago_estado' => '1']);
-                        } else{
-                            $total = $total + $compCont->debito;
-                            $total = $total - $compCont->credito;
-                            $totDeb = $totDeb + $compCont->debito;
-                            $totCred = $totCred + $compCont->credito;
-                            $result[] = collect(["numero" => "", 'fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
-                                'modulo' => 'Comprobante Contable #'.$compCont->comprobante->code, 'debito' => $compCont->debito,
-                                'credito' => $compCont->credito, 'tercero' => $tercero, 'CC' => $numIdent,
-                                'concepto' => $compCont->comprobante->concepto, 'cuenta' => $rubroPUC->code.' - '.$rubroPUC->concepto,
-                                'total' => $total, 'inicial' => $rubroPUC->saldo_inicial, 'totDeb' => $totDeb, 'totCred' => $totCred,
-                                'referencia' => 'CC #'.$compCont->comprobante->id, 'pago_estado' => '1']);
-                        }
-                    }
-                }
-            }
-        }
-        ConciliacionBancariaCuentas::where('conciliacion_id', $conciliacion->id)->delete();
-        for ($i = 0; $i < count($result); $i++) {
-            $fecha = Carbon::parse($result[$i]['fecha'])->format('Y-m-d');
-
-            $conciliacionCuentas = new ConciliacionBancariaCuentas();
-            $conciliacionCuentas->conciliacion_id = $conciliacion->id;
-            $conciliacionCuentas->fecha = $fecha;
-            $conciliacionCuentas->referencia = $result[$i]['referencia']." - ".$result[$i]['CC']." - ".$result[$i]['tercero'];
-            $conciliacionCuentas->debito = $result[$i]['debito'];
-            $conciliacionCuentas->credito = $result[$i]['credito'];
-            $conciliacionCuentas->valor = $result[$i]['debito'] == 0 ? $result[$i]['credito'] : $result[$i]['debito'];
-
-            $find = array_search($i, $request->check);
-            if ($find === false):
-                $conciliacionCuentas->aprobado = "OFF";
-
-                $new = new ComprobanteIngresoTemporal;
-                $new->code = $rubroPUC->code;
-                $new->fecha = $fecha;
-                $new->referencia = $result[$i]['referencia']." - ".$result[$i]['CC']." - ".$result[$i]['tercero']." - ".$result[$i]['numero'];
-                $new->cc = $result[$i]['CC'];
-                $new->tercero = $result[$i]['tercero'];
-                $new->valor = $result[$i]['debito'] == 0 ? $result[$i]['credito'] : $result[$i]['debito'];
-                $new->concepto = $result[$i]['referencia']." - ".$result[$i]['CC']." - ".$result[$i]['tercero'];
-                $new->save();
-            else:
-                $conciliacionCuentas->aprobado = "ON";
-            endif;
-
-            $conciliacionCuentas->save();
-        }
-
-        if (isset($request->ref)){
-            for ($i = 0; $i < count($request->ref); $i++) {
-                $conciliacionCuentas = new ConciliacionBancariaCuentas();
-                $conciliacionCuentas->conciliacion_id = $conciliacion->id;
-                $conciliacionCuentas->referencia = $request->ref[$i];
-                $conciliacionCuentas->valor = $request->banco[$i];
-                $conciliacionCuentas->save();
-            }
-        }
-
+                if(is_null($new)):
+                    $new = new ComprobanteIngresoTemporal;
+                    $new->code = $conciliacion->puc->code;
+                    $new->cc = '';
+                    $new->tercero = '';
+                    $new->concepto = '';
+                    $new->fecha = $che_mano->fecha;
+                    $new->referencia = $che_mano->referencia;
+                    $new->conciliacion_id = $conciliacion->id;
+                    $new->valor = $che_mano->valor;
+                    $new->tipo = 'tesoreria conciliacion bancaria cuentas';
+                    $new->save();
+                endif;
+            endforeach;
+        endif;
+        
+        
         Session::flash('success','Se ha realizado la conciliación bancaria exitosamente.');
-        return redirect()->route('conciliacion.guardar.pdf', $conciliacion->id);
+        //dd($conciliacion);
+        return redirect()->route('conciliacion.pre');
     }
 
     public function pdf($id){
