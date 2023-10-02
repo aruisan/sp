@@ -257,11 +257,14 @@ class OrdenPagosDescuentosController extends Controller
         $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $ordenPago_id)->where('valor', '>', 0)->get();
         $ordenP = OrdenPagos::find($ordenPago_id);
         foreach ($ordenP->pucs as $puc){
-            if ($puc->valor_credito > 0){
+            if ($puc->valor_debito == 0){
                 $puc->valor_credito = $ordenP->valor - $OrdenPagoDescuentos->sum('valor');
                 $puc->save();
             }
         }
+
+        $ordenP->saldo = $ordenP->valor - $OrdenPagoDescuentos->sum('valor');
+        $ordenP->save();
 
         Session::flash('success','Los Descuentos se han Almacenado y Actualizado Exitosamente');
         return redirect('/administrativo/ordenPagos/'.$ordenPago_id.'/edit');

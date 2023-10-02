@@ -65,18 +65,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row text-center" id="listRadicaciones" style="display: none; background-color: white">
-                            <div class="form-group">
-                                <label class="col-lg-12 col-form-label text-center" for="persona_id">Seleccione La Radicacion de Cuenta a Replicar: <span class="text-danger">*</span></label>
-                                <div class="col-lg-12 text-center">
-                                    <select class="select-radicacion" name="radHistory_id" onchange="changeRad(this.value)">
-                                        <option value="0">NO REEPLICAR RADICACIÓN</option>
-                                        @foreach($personas as $persona)
-                                            <option value="{{$persona->id}}">{{$persona->num_dc}} - {{$persona->nombre}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="row text-center" id="listRadicaciones">
+
                         </div>
                         <br>
                         <div class="col-md-12 " style="display: none; background-color: white" id="formRP" name="formRP">
@@ -467,6 +457,15 @@
                 document.getElementById('fecha_cont').value = data.registro.ff_doc;
                 document.getElementById('objetoContrato').innerHTML = data.registro.objeto;
 
+                if (data.radCuentas.length > 0){
+                    console.log(data.radCuentas);
+                    $("#listRadicaciones").html("");
+                    var dataRadC = `<div class="form-group"><label class="col-lg-12 col-form-label text-center" for="persona_id">Seleccione La Radicacion de Cuenta a Replicar: <span class="text-danger">*</span></label>
+                                    <div class="col-lg-12 text-center"><select class="form-control" name="radHistory_id" onchange="changeRad(this.value)">
+                                    <option value="0">NO REEPLICAR RADICACIÓN</option><option value="1">NO REEPLICAR RADICACIÓN</option></select></div></div>`;
+                    $("#listRadicaciones").append(dataRadC);
+                }
+
                 $("#cdps").html("");
                 for(var i=0; i<data.cdps.length; i++){
                     data.cdps[i].name = data.cdps[i].name.replace(/[\r\n|\n|\r]+/,' ');
@@ -526,6 +525,10 @@
                 $("#buttonSend").show();
                 toastr.warning('OCURRIO UN ERROR AL BUSCAR LA INFORMACION DEL REGISTRO. INTENTE NUEVAMENTE EN UNOS MINUTOS POR FAVOR');
             });
+        }
+
+        function changeRad(rad_id){
+            console.log(rad_id);
         }
 
 

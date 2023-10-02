@@ -751,17 +751,41 @@ class OrdenPagosController extends Controller
 
     public function deleteRFFinished($id){
         $retenF = OrdenPagosDescuentos::findOrFail($id);
-        $retenF->pago->saldo = $retenF->valor + $retenF->pago->saldo;
-        $retenF->pago->save();
         $retenF->delete();
+
+        //SE ACTUALIZA EL VALOR CREDITO DE LA ORDEN DE PAGO CON LOS NUEVOS DESCUENTOS
+        $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $retenF->pago->id)->where('valor', '>', 0)->get();
+        $ordenP = OrdenPagos::find($retenF->pago->id);
+        foreach ($ordenP->pucs as $puc){
+            if ($puc->valor_debito == 0){
+                $puc->valor_credito = $ordenP->valor - $OrdenPagoDescuentos->sum('valor');
+                $puc->save();
+            }
+        }
+
+        $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $retenF->pago->id)->where('valor', '>', 0)->get();
+        $retenF->pago->saldo = $retenF->pago->valor - $OrdenPagoDescuentos->sum('valor');
+        $retenF->pago->save();
         Session::flash('error','Descuento de la Retención de Fuente eliminado de la Orden de Pago');
     }
 
     public function deleteMFinished($id){
         $municipal = OrdenPagosDescuentos::findOrFail($id);
-        $municipal->pago->saldo = $municipal->valor + $municipal->pago->saldo;
-        $municipal->pago->save();
         $municipal->delete();
+
+        //SE ACTUALIZA EL VALOR CREDITO DE LA ORDEN DE PAGO CON LOS NUEVOS DESCUENTOS
+        $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $municipal->pago->id)->where('valor', '>', 0)->get();
+        $ordenP = OrdenPagos::find($municipal->pago->id);
+        foreach ($ordenP->pucs as $puc){
+            if ($puc->valor_debito == 0){
+                $puc->valor_credito = $ordenP->valor - $OrdenPagoDescuentos->sum('valor');
+                $puc->save();
+            }
+        }
+
+        $OrdenPagoDescuentos = OrdenPagosDescuentos::where('orden_pagos_id', $municipal->pago->id)->where('valor', '>', 0)->get();
+        $municipal->pago->saldo = $municipal->pago->valor - $OrdenPagoDescuentos->sum('valor');
+        $municipal->pago->save();
         Session::flash('error','Descuento Municipal eliminado de la Orden de Pago');
     }
 }
