@@ -486,24 +486,7 @@ class CdpController extends Controller
                     foreach ($update->rubrosCdpValor as $fuentes) {
                         if ($fuentes->fontsRubro->valor_disp >= $fuentes->valor) {
                             $depFont = DependenciaRubroFont::find($fuentes->fontsDep_id);
-                            if ($depFont->saldo >= $fuentes->valor){
-                                $update->secretaria_e = $estado;
-                                if(auth()->user()->id == 39) {
-                                    $update->alcalde_e = $estado;
-                                    $update->ff_alcalde_e = $fecha;
-                                }
-                                $update->jefe_e = $estado;
-                                $update->ff_jefe_e = $fecha;
-                                $update->valor = $valor;
-                                $update->saldo = $valor;
-
-                                $this->actualizarValorRubro($id);
-
-                                $update->save();
-
-                                Session::flash('success', 'El CDP ha sido finalizado con exito');
-                                return redirect('/administrativo/cdp/' . $update->vigencia_id);
-                            } else{
+                            if ($depFont->saldo < $fuentes->valor){
                                 Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la dependencia.');
                                 return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                             }
@@ -512,6 +495,23 @@ class CdpController extends Controller
                             return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                         }
                     }
+
+                    $update->secretaria_e = $estado;
+                    if(auth()->user()->id == 39) {
+                        $update->alcalde_e = $estado;
+                        $update->ff_alcalde_e = $fecha;
+                    }
+                    $update->jefe_e = $estado;
+                    $update->ff_jefe_e = $fecha;
+                    $update->valor = $valor;
+                    $update->saldo = $valor;
+
+                    $this->actualizarValorRubro($id);
+
+                    $update->save();
+
+                    Session::flash('success', 'El CDP ha sido finalizado con exito');
+                    return redirect('/administrativo/cdp/' . $update->vigencia_id);
                 } else{
                     //VALIDACION DEL CDP CUANDO ES DE INVERSION
                     foreach ($update->bpinsCdpValor as $actividad) {
