@@ -526,7 +526,6 @@ class CdpController extends Controller
                                 Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la bpinVigencia');
                                 return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                             }
-                            $validateVig->save();
 
                             $depRubroFont = DependenciaRubroFont::find($validateVig->dep_rubro_id);
                             $depRubroFont->saldo = $depRubroFont->saldo - $actividad->valor;
@@ -534,6 +533,8 @@ class CdpController extends Controller
                                 Session::flash('error', 'El CDP no puede tener un valor superior al valor disponible en la dependenciaRubroFont');
                                 return redirect('/administrativo/cdp/' . $update->vigencia_id . '/' . $id);
                             }
+
+                            $validateVig->save();
                             $depRubroFont->save();
 
                         } else{
