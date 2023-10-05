@@ -484,7 +484,7 @@
             document.getElementById('tasaBomberil'+año).value = tasaBombTot;
 
             //DESCUENTO
-            var descuento = true;
+            var descuento = false;
             if(year != año){
                 var subTot =  tasaBombTot + tot;
             } else {
