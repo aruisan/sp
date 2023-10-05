@@ -483,11 +483,15 @@
             document.getElementById('tasaBomberilSpan'+año).innerHTML = formatter.format(tasaBombTot);
             document.getElementById('tasaBomberil'+año).value = tasaBombTot;
 
+            //DESCUENTO
+            var descuento = true;
             if(year != año){
                 var subTot =  tasaBombTot + tot;
             } else {
-                var suma = tasaBombTot + tot;
-                var subTot =  suma / 2;
+                if(descuento){
+                    var suma = tasaBombTot + tot;
+                    var subTot =  suma / 2;
+                } else var subTot =  tasaBombTot + tot;
             }
 
             document.getElementById('subTotalSpan'+año).innerHTML = formatter.format(subTot);
