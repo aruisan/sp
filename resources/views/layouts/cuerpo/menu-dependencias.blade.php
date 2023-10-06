@@ -443,6 +443,14 @@
          </ul>
       </li>
    @endif
+      @if(session()->has('old_personificado_id'))
+      <li >
+         <a href="{{route('personalizar.stop')}}" class="btn btn-default btn-sm item-menu"
+            title="volver a mi cuenta">
+            <i class="fa fa-user-times" aria-hidden="true"></i>
+         </a>
+      </li>
+      @endif
 <li class="dropdown messages-menu">
     @include('layouts.cuerpo.perfil')
 </li>

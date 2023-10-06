@@ -20,7 +20,6 @@
 								<th class="text-center">Nombre</th>
 								<th class="text-center">email</th>
 								<th class="text-center">activo</th>
-                                <th class="text-center">desconectar</th>
 							</tr>
 						</thead>
 
@@ -32,9 +31,6 @@
                                 </td>
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->active}}</td>
-                                <td>
-                                    <a href="{{route('personalizar.stop')}}">Desconectar</a>
-                                </td>
 							</tr>
 						@endforeach
 						</tbody>
