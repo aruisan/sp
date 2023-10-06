@@ -1,3 +1,5 @@
+
+
 <button class="btn btn-raised  dropdown-toggle item-perfil" type="button" data-toggle="dropdown">
     @if(Auth::user()->avatar == "public/avatar/default.png")
         <img class="img-circle-mn" src="{{ asset('/img/user.png') }}">
