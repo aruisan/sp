@@ -8,7 +8,7 @@ class FechaHelper {
         $meses_array = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         $age = date('Y');
         $rango = $year == $age ?  date('n') : 12;
-        return array_slice($meses_array, 0, $rango );
+        return $year <= $age ? array_slice($meses_array, 0, $rango ) : [];
     }
 
     public static function trimestres_actuales($year){

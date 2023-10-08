@@ -12,32 +12,43 @@ use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
 use App\Model\Administrativo\Pago\Pagos;
 use Carbon\Carbon;
+use Log;
 
 Class BalanceTraits
 {
     public function balance($mes1, $mes2 = null){
         $año = Carbon::today()->year;
         $count = PucAlcaldia::where('padre_id',0)->get();
+        $hijosResult = [];
+
+        //Log::info(21);
         foreach ($count as $first){
+            //Log::info(22);
             $result2[] = $first;
             $lv2 = PucAlcaldia::where('padre_id', $first->id )->get();
             foreach ($lv2 as $dato){
+                //Log::info(23);
                 $result2[] = $dato;
                 $lv3 = PucAlcaldia::where('padre_id', $dato->id )->get();
                 foreach ($lv3 as $object){
+                   // Log::info(24);
                     $result2[] = $object;
                     $lv4 = PucAlcaldia::where('padre_id', $object->id )->get();
                     foreach ($lv4 as $data){
+                      //  Log::info(25);
                         $result2[] = $data;
                         $hijos = PucAlcaldia::where('padre_id', $data->id )->get();
                         foreach ($hijos as $hijo){
+                          //  Log::info(26);
                             $result2[] = $hijo;
 
                             //DESC RETENCION EN LAS FUENTES
                             $OPRets = RetencionFuente::where('codigo', $hijo->code)->get();
                             foreach ($OPRets as $retFuen){
+                                //Log::info(27);
                                 $OPD = OrdenPagosDescuentos::where('retencion_fuente_id', $retFuen->id)->get();
                                 foreach ($OPD as $descRet){
+                                    //Log::info(28);
                                     $OP = OrdenPagos::find($descRet->orden_pagos_id);
                                     if ($OP){
                                         if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == $año ){
@@ -58,6 +69,7 @@ Class BalanceTraits
 
                             $OPDescMunicipal = DescMunicipales::where('codigo', $hijo->code)->get();
                             foreach ($OPDescMunicipal as $OPDescMuni){
+                               // Log::info(29);
                                 $OPD = OrdenPagosDescuentos::where('desc_municipal_id', $OPDescMuni->id)->get();
                                 foreach ($OPD as $descRet){
                                     $OP = OrdenPagos::find($descRet->orden_pagos_id);
@@ -79,6 +91,7 @@ Class BalanceTraits
 
                             $OPD = OrdenPagosDescuentos::where('cuenta_puc_id', $hijo->id)->get();
                             foreach ($OPD as $descRet){
+                               // Log::info(30);
                                 $OP = OrdenPagos::find($descRet->orden_pagos_id);
                                 if ($OP){
                                     if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == $año ){
@@ -97,6 +110,7 @@ Class BalanceTraits
 
                             $OPD = OrdenPagosPuc::where('rubros_puc_id', $hijo->id)->get();
                             foreach ($OPD as $descRet){
+                                //Log::info(31);
                                 $OP = OrdenPagos::find($descRet->orden_pago_id);
                                 if ($OP){
                                     if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == $año ){
@@ -115,6 +129,7 @@ Class BalanceTraits
 
                             $PagosPUCs = PagoBanksNew::where('rubros_puc_id', $hijo->id)->get();
                             foreach ($PagosPUCs as $descRet){
+                                //Log::info(32);
                                 $pago = Pagos::find($descRet->pagos_id);
                                 if ($pago){
                                     if ($pago->estado == "1" and Carbon::parse($pago->created_at)->year == $año ){
@@ -134,6 +149,7 @@ Class BalanceTraits
 
                             $compContMovs = ComprobanteIngresosMov::where('cuenta_puc_id', $hijo->id)->get();
                             foreach ($compContMovs as $descRet){
+                                //Log::info(33);
                                 $compCont = ComprobanteIngresos::find($descRet->comp_id);
                                 if ($compCont){
                                     if (Carbon::parse($compCont->ff)->year == $año ){
@@ -153,6 +169,7 @@ Class BalanceTraits
 
                             $compContMovsCuentaBanco = ComprobanteIngresosMov::where('cuenta_banco', $hijo->id)->get();
                             foreach ($compContMovsCuentaBanco as $compBanco){
+                                //Log::info(34);
                                 $compCont = ComprobanteIngresos::find($compBanco->comp_id);
                                 if ($compCont){
                                     if (Carbon::parse($compCont->ff)->year == $año ){
@@ -172,7 +189,9 @@ Class BalanceTraits
                         $totD = 0;
                         $totC = 0;
                         if (isset($hijosResult)){
+                           // Log::info(35);
                             foreach ($hijosResult as $item){
+                               // Log::info(36);
                                 if($item['padre_id'] == $data->id){
                                     $totD = $totD + $item['debito'];
                                     $totC = $totC + $item['credito'];
@@ -187,6 +206,7 @@ Class BalanceTraits
                     $totD = 0;
                     $totC = 0;
                     foreach ($result as $item){
+                        //Log::info(37);
                         if($item['padre_id'] == $object->id){
                             $totD = $totD + $item['debito'];
                             $totC = $totC + $item['credito'];
@@ -200,6 +220,7 @@ Class BalanceTraits
                 $totD = 0;
                 $totC = 0;
                 foreach ($result as $item){
+                   // Log::info(38);
                     if($item['padre_id'] == $dato->id){
                         $totD = $totD + $item['debito'];
                         $totC = $totC + $item['credito'];
@@ -212,6 +233,7 @@ Class BalanceTraits
             $totD = 0;
             $totC = 0;
             foreach ($result as $item) {
+                //Log::info(39);
                 if ($item['padre_id'] == $first->id) {
                     $totD = $totD + $item['debito'];
                     $totC = $totC + $item['credito'];

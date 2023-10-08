@@ -197,6 +197,7 @@ return [
         //jwt
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
+        App\Providers\DropboxServiceProvider::class,
 
     ],
 

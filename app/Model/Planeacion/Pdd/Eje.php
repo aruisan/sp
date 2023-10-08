@@ -9,6 +9,8 @@ class Eje extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
+	protected $fillable = ['name', 'pdd_id'];
+
     public function programas(){
 		return $this->hasMany('App\Model\Planeacion\Pdd\Programa', 'eje_id');
 	}

@@ -40,7 +40,16 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td><b>Sumas Iguales:</b></td>
+                        <td class="text-left"><b>Totales:</b></td>
+                        <td></td>
+                        <td class="text-right"><b>${{number_format($ingresos->s_final ,0,",", ".")}}</b></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left" colspan="2"><b>Resultado del ejercicio periodo</b></td>
+                        <td class="text-right"><b></b></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left"><b>Sumas Iguales:</b></td>
                         <td></td>
                         <td class="text-right"><b>${{number_format($ingresos->s_final ,0,",", ".")}}</b></td>
                     </tr>
@@ -54,6 +63,16 @@
                         <td></td>
                         <td></td>
                         <td class="text-right"><b>${{number_format($gastos->s_final,0,",", ".")}}</b></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right"><b>${{number_format($ingresos->s_final ,0,",", ".")}}</b></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right"><b>${{number_format($ingresos->s_final ,0,",", ".")}}</b></td>
                     </tr>
                 </tbody>
             </table>

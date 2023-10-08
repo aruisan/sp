@@ -9,14 +9,14 @@ use App\Model\Persona;
 use Illuminate\Http\Request;
 use App\Traits\ResourceTraits;
 use App\Http\Controllers\Controller;
-use App\Traits\GestionArchivosTraits;
+//use App\Traits\GestionArchivosTraits;
 use Illuminate\Support\Facades\Storage;
 use App\Model\Administrativo\GestionDocumental\Documents;
 
 class ArchivoController extends Controller
 {
 
-    use GestionArchivosTraits;
+   // use GestionArchivosTraits;
     private $rutaFile = 'public/Archivo';
     private $view = 'administrativo.gestiondocumental.archivo';
 

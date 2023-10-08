@@ -59,7 +59,20 @@
                 <tbody>
                     <tr>
                         <td>
-                            <div class="col-md-3"><b>Sumas Iguales:</b></div>
+                            <div class="col-md-3 text-left"><b>Totales:</b></div>
+                            <div class="col-md-6"><b></b></div>
+                            <div class="col-md-3 text-right"><b>${{number_format($ingresos->s_final,0,",", ".")}}</b></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="col-md-9 text-left" ><b>Resultado del ejercicio periodo</b></div>
+                            <div class="col-md-3 text-right"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="col-md-3 text-left"><b>Sumas Iguales:</b></div>
                             <div class="col-md-6"><b></b></div>
                             <div class="col-md-3 text-right"><b>${{number_format($ingresos->s_final,0,",", ".")}}</b></div>
                         </td>
@@ -74,6 +87,20 @@
                             <div class="col-md-3"></div>
                             <div class="col-md-6"></div>
                             <div class="col-md-3 text-right"><b>${{number_format($gastos->s_final,0,",", ".")}}</b></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="col-md-3"><b></b></div>
+                            <div class="col-md-6"><b></b></div>
+                            <div class="col-md-3 text-right"><b>${{number_format($ingresos->s_final,0,",", ".")}}</b></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="col-md-3"><b></b></div>
+                            <div class="col-md-6"><b></b></div>
+                            <div class="col-md-3 text-right"><b>${{number_format($ingresos->s_final,0,",", ".")}}</b></div>
                         </td>
                     </tr>
                 </tbody>
