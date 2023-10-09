@@ -9,6 +9,7 @@ use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
+use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -58,6 +59,7 @@ class IndexController extends Controller
                 'añoActual', 'mesActual','V','bpins'));
         } else{
             $V = $prepSaved->vigencia_id;
+            $vigencia = Vigencia::find($prepSaved->vigencia_id);
             $dataPrepSaved = PresupuestoSnapData::where('pre_snap_id', $prepSaved->id)->first();
             $fechaData = Carbon::parse($dataPrepSaved->created_at);
             $codeCon = CodeContractuales::all();
@@ -72,7 +74,8 @@ class IndexController extends Controller
             }
 
             return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
-                'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins','fechaData'));
+                'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins','fechaData',
+            'vigencia'));
         }
     }
 

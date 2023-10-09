@@ -16,7 +16,7 @@
             <a class="nav-link" data-toggle="pill" href="#tabHome"><i class="fa fa-home"></i></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/presupuesto/traslados/'.$año.'/create/') }}"><i class="fa fa-plus"></i> NUEVO TRASLADO</a>
+            <a class="nav-link hidden" href="{{ url('/presupuesto/traslados/'.$año.'/create/') }}"><i class="fa fa-plus"></i> NUEVO TRASLADO</a>
         </li>
     </ul>
 
@@ -41,7 +41,7 @@
                         @foreach($traslados as $index => $traslado)
                             <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
-                                <td class="text-center">{{ $traslado->created_at }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($traslado->created_at)->format('d-m-Y') }}</td>
                                 <td class="text-center">$<?php echo number_format($traslado->valor,0) ?></td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
