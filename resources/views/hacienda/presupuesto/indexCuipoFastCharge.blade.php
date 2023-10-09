@@ -124,8 +124,7 @@
                                 <h4>Se esta enviando la solicitud de actualización del presupuesto, un momento por favor....</h4>
                             </div>
                             <div class="text-center" id="refresPrepOK" style="display: none">
-                                <h4>Se envió la solicitud de actualización del presupuesto exitosamente, en unos minutos
-                                    actualice la pagina para visualizar el estado actual del presupuesto.</h4>
+                                <h4>Presupuesto actualizado exitosamente, actualice la pagina para visualizar el estado actual del presupuesto.</h4>
                             </div>
                             <div class="text-center" id="infoPrep" style="display: none">
                                 <h4>{{ $fechaData }}</h4>
@@ -390,7 +389,7 @@
                 $("#refresPrepOK").show();
                 $("#refresPrep").hide();
 
-                toastr.success('SOLICITUD DE ACTUALIZACIÓN DEL PRESUPUESTO ENVIADA EXITOSAMENTE. ESPERE UNOS MINUTOS POR FAVOR Y ACTUALICE LA PAGINA.');
+                toastr.success('PRESUPUESTO ACTUALIZADO EXITOSAMENTE. ACTUALICE LA PAGINA.');
             }).fail(function() {
                 $("#tabla").hide();
                 $("#cargando").hide();
