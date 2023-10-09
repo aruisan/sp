@@ -41,7 +41,7 @@
                         @foreach($traslados as $index => $traslado)
                             <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
-                                <td class="text-center">{{ \Carbon\Carbon::parse($traslado->created_at)->format('d-m-Y') }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($traslado->created_at)->format('Y-m-d') }}</td>
                                 <td class="text-center">$<?php echo number_format($traslado->valor,0) ?></td>
                                 <td class="text-center">
                                     <span class="badge badge-pill badge-danger">
