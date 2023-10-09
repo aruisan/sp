@@ -103,7 +103,11 @@
                     <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/ordenPagos/'.$V) }}">Orden de Pago</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/pagos/'.$V) }}">Pagos</a></li>
                     <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tab_proyectos" onclick="show_bpins()">Proyectos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('presupuesto/traslados/'.$vigencia->vigencia) }}">Movimientos</a></li>
+                    @if($rol == 3)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('presupuesto/traslados/'.$vigencia->vigencia) }}">Movimientos</a>
+                        </li>
+                    @endif
                 </ul>
                 <hr>
                 <!-- TABLA DE PRESUPUESTO -->

@@ -49,6 +49,7 @@ class IndexController extends Controller
         $lastDay = Carbon::now()->subDay()->toDateString();
         $actuallyDay = Carbon::now()->toDateString();
         $bpins = BPin::all();
+        $rol = auth()->user()->roles->first()->id;
 
 
         if (!$prepSaved) {
@@ -75,7 +76,7 @@ class IndexController extends Controller
 
             return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
                 'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins','fechaData',
-            'vigencia'));
+            'vigencia','rol'));
         }
     }
 
