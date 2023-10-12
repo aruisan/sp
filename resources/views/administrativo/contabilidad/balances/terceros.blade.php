@@ -19,7 +19,7 @@
                         <option value="6/6">Junio</option>
                         <option value="7/7">Julio</option>
                         <option value="8/8">Agosto</option>
-                        <option disabled value="9/9">Septiembre</option>
+                        <option value="9/9">Septiembre</option>
                         <option disabled value="10/10">Octubre</option>
                         <option disabled value="11/11">Noviembre</option>
                         <option disabled value="12/12">Diciembre</option>
