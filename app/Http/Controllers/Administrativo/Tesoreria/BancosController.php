@@ -336,6 +336,8 @@ class BancosController extends Controller
                                 $tercero = $persona->nombre;
                                 $numIdent = $persona->num_dc;
                             }
+                            $strData = substr($compCont->comprobante->concepto, 0,8);
+                            dd($strData, $compCont->comprobante->concepto);
                             if ($compCont->cuenta_banco == $rubroPUC->id) {
                                 $total = $total + $compCont->debito;
                                 $total = $total - $compCont->credito;
@@ -462,8 +464,7 @@ class BancosController extends Controller
                                     $tercero = $persona->nombre;
                                     $numIdent = $persona->num_dc;
                                 }
-                                $strData = substr($compCont->comprobante->concepto, 0,8);
-                                dd($strData, $compCont->comprobante->concepto);
+
                                 if ($compCont->cuenta_banco == $rubroPUC->id) {
                                     $total = $total + $compCont->debito;
                                     $total = $total - $compCont->credito;
