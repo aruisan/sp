@@ -51,6 +51,7 @@
             </thead>
             <tbody id="bodyTabla"></tbody>
         </table>
+        <br>
     </div>
 @stop
 
