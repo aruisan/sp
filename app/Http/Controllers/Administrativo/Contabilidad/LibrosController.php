@@ -69,7 +69,7 @@ class LibrosController extends Controller
                 ->join('puc_alcaldia','balances_data.cuenta_puc_id','=','puc_alcaldia.id')->orderBy('puc_alcaldia.code','ASC')->get();
             $datSavedBalance[] = collect(['fecha' => '', 'code' => '', 'documento' => 'TOTALES', 'concepto' => '',
                 'debito' => $balance->data[count($balance->data) - 1]['debito'],
-                'credito' => $balance->data[count($balance->data) - 1]['credito']]);
+                'credito' => $balance->data[count($balance->data) - 1]['credito'], 'tercero' => '']);
 
             return $datSavedBalance;
 
