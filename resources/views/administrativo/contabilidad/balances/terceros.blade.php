@@ -23,7 +23,7 @@
                         <option disabled value="10/10">Octubre</option>
                         <option disabled value="11/11">Noviembre</option>
                         <option disabled value="12/12">Diciembre</option>
-                        <option disabled value="1/3">Enero - Marzo</option>
+                        <option value="1/3">Enero - Marzo</option>
                         <option disabled value="1/6">Enero - Junio</option>
                         <option disabled value="1/9">Enero - Septiembre</option>
                         <option disabled value="1/12">Enero - Diciembre</option>
