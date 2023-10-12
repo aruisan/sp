@@ -14,6 +14,8 @@ use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\OrdenPago\RetencionFuente\RetencionFuente;
 use App\Model\Administrativo\Pago\PagoBanksNew;
 use App\Model\Administrativo\Pago\Pagos;
+use App\Model\Administrativo\RadCuentas\RadCuentas;
+use App\Model\Persona;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -91,17 +93,22 @@ class makeBigBalances extends Command
                                         if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == $año ){
                                             if (Carbon::parse($OP->created_at)->month >= $mes1 and
                                                 Carbon::parse($OP->created_at)->month <= $mes2){
+                                                if ($OP->rad_cuenta_id){
+                                                    $radCuenta = RadCuentas::find($OP->rad_cuenta_id);
+                                                    $tercero = $radCuenta->persona->num_dc.' - '.$radCuenta->persona->nombre;
+                                                } else $tercero = $OP->registros->persona->num_dc.' - '.$OP->registros->persona->nombre;
+
                                                 $hijosResult[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                                     'modulo' => 'Orden de Pago #'.$OP->code, 'debito' => 0,
                                                     'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                                     'cuenta' => $hijo->id, 'from' => 1,
-                                                    'padre_id' => $hijo->padre_id];
+                                                    'padre_id' => $hijo->padre_id, 'tercero' => $tercero];
                                             }
                                         }
                                     }
                                 }
-
                             }
+
                             //OP DESC MUNI
 
                             $OPDescMunicipal = DescMunicipales::where('codigo', $hijo->code)->get();
@@ -113,11 +120,16 @@ class makeBigBalances extends Command
                                         if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == $año ){
                                             if (Carbon::parse($OP->created_at)->month >= $mes1 and
                                                 Carbon::parse($OP->created_at)->month <= $mes2){
+                                                if ($OP->rad_cuenta_id){
+                                                    $radCuenta = RadCuentas::find($OP->rad_cuenta_id);
+                                                    $tercero = $radCuenta->persona->num_dc.' - '.$radCuenta->persona->nombre;
+                                                } else $tercero = $OP->registros->persona->num_dc.' - '.$OP->registros->persona->nombre;
+
                                                 $hijosResult[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                                     'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
                                                     'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                                     'cuenta' => $hijo->id, 'from' => 2,
-                                                    'padre_id' => $hijo->padre_id];
+                                                    'padre_id' => $hijo->padre_id, 'tercero' => $tercero];
                                             }
                                         }
                                     }
@@ -132,11 +144,17 @@ class makeBigBalances extends Command
                                     if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == $año ){
                                         if (Carbon::parse($OP->created_at)->month >= $mes1 and
                                             Carbon::parse($OP->created_at)->month <= $mes2){
+
+                                            if ($OP->rad_cuenta_id){
+                                                $radCuenta = RadCuentas::find($OP->rad_cuenta_id);
+                                                $tercero = $radCuenta->persona->num_dc.' - '.$radCuenta->persona->nombre;
+                                            } else $tercero = $OP->registros->persona->num_dc.' - '.$OP->registros->persona->nombre;
+
                                             $hijosResult[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                                 'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  0 ,
                                                 'credito' =>  $descRet->valor , 'concepto' => $OP->nombre,
                                                 'cuenta' => $hijo->id, 'from' => 3,
-                                                'padre_id' => $hijo->padre_id];
+                                                'padre_id' => $hijo->padre_id, 'tercero' => $tercero];
                                         }
                                     }
                                 }
@@ -150,11 +168,17 @@ class makeBigBalances extends Command
                                     if ($OP->estado == "1" and Carbon::parse($OP->created_at)->year == $año ){
                                         if (Carbon::parse($OP->created_at)->month >= $mes1 and
                                             Carbon::parse($OP->created_at)->month <= $mes2){
+
+                                            if ($OP->rad_cuenta_id){
+                                                $radCuenta = RadCuentas::find($OP->rad_cuenta_id);
+                                                $tercero = $radCuenta->persona->num_dc.' - '.$radCuenta->persona->nombre;
+                                            } else $tercero = $OP->registros->persona->num_dc.' - '.$OP->registros->persona->nombre;
+
                                             $hijosResult[] = ['fecha' => Carbon::parse($OP->created_at)->format('d-m-Y'),
                                                 'modulo' => 'Orden de Pago #'.$OP->code, 'debito' =>  $descRet->valor_debito ,
                                                 'credito' =>  $descRet->valor_credito , 'concepto' => $OP->nombre,
                                                 'cuenta' => $hijo->id, 'from' => 4,
-                                                'padre_id' => $hijo->padre_id];
+                                                'padre_id' => $hijo->padre_id, 'tercero' => $tercero];
                                         }
                                     }
                                 }
@@ -172,7 +196,8 @@ class makeBigBalances extends Command
                                                 'modulo' => 'Pago #'.$pago->code, 'debito' =>  $descRet->debito ,
                                                 'credito' =>  $descRet->credito , 'concepto' => $pago->concepto,
                                                 'cuenta' => $hijo->id, 'from' => 5,
-                                                'padre_id' => $hijo->padre_id];
+                                                'padre_id' => $hijo->padre_id,
+                                                'tercero' => $pago->persona->num_dc.' - '.$pago->persona->nombre];
                                         }
                                     }
                                 }
@@ -187,11 +212,13 @@ class makeBigBalances extends Command
                                     if (Carbon::parse($compCont->ff)->year == $año ){
                                         if (Carbon::parse($compCont->ff)->month >= $mes1 and
                                             Carbon::parse($compCont->ff)->month <= $mes2){
+                                            $tercero = Persona::find($compCont->persona_id);
                                             $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
                                                 'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $descRet->debito ,
                                                 'credito' =>  $descRet->credito , 'concepto' => $compCont->concepto,
                                                 'cuenta' => $hijo->id, 'from' => 6,
-                                                'padre_id' => $hijo->padre_id];
+                                                'padre_id' => $hijo->padre_id,
+                                                'tercero' => $tercero->num_dc.' - '.$tercero->nombre];
                                         }
                                     }
                                 }
@@ -206,11 +233,13 @@ class makeBigBalances extends Command
                                     if (Carbon::parse($compCont->ff)->year == $año ){
                                         if (Carbon::parse($compCont->ff)->month >= $mes1 and
                                             Carbon::parse($compCont->ff)->month <= $mes2){
+                                            $tercero = Persona::find($compCont->persona_id);
                                             $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
                                                 'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $compBanco->debito ,
                                                 'credito' =>  $compBanco->credito , 'concepto' => $compCont->concepto,
                                                 'cuenta' => $hijo->id, 'from' => 6,
-                                                'padre_id' => $hijo->padre_id];
+                                                'padre_id' => $hijo->padre_id,
+                                                'tercero' => $tercero->num_dc.' - '.$tercero->nombre];
                                         }
                                     }
                                 }
@@ -303,6 +332,8 @@ class makeBigBalances extends Command
                             else $dataBalanceHijo->debito = 0;
                             if ($hijo['credito'] > 0) $dataBalanceHijo->credito = $hijo['credito'];
                             else $dataBalanceHijo->credito = 0;
+
+                            $dataBalanceHijo->tercero = $hijo['tercero'];
 
                             $dataBalanceHijo->save();
                         }
