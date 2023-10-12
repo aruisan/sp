@@ -7,6 +7,7 @@ use App\ComprobanteIngresoTemporal;
 use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresosMov;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Contabilidad\RegistersPuc;
+use App\Model\Administrativo\Impuestos\Muellaje;
 use App\Model\Administrativo\OrdenPago\OrdenPagosPuc;
 use App\Model\Administrativo\Pago\PagoBanks;
 use App\Model\Administrativo\Pago\PagoBanksNew;
@@ -341,8 +342,10 @@ class BancosController extends Controller
                                 $pos = strpos($compCont->comprobante->concepto, '#') + 1;
                                 $tam = strlen($compCont->comprobante->concepto) - $pos;
                                 $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
-                                $impMuellaje = \App\Model\Impuestos\Pagos::find($idImp);
-                                dd($strData, $impMuellaje);
+                                $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                                $muellaje = Muellaje::find($impuesto->entity_id);
+
+                                dd($strData, $muellaje);
                             }
                             if ($compCont->cuenta_banco == $rubroPUC->id) {
                                 $total = $total + $compCont->debito;
