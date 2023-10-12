@@ -39,7 +39,7 @@
             <table style="display: none" class="table table-bordered table-hover" id="tabla">
                 <hr>
                 <thead>
-                <tr><th colspan="6" class="text-center"> <span id="cuentaBanco"></span></th></tr>
+                <tr><th colspan="7" class="text-center"> <span id="cuentaBanco"></span></th></tr>
                 <tr>
                     <th class="text-center">Fecha</th>
                     <th class="text-center">Cuenta</th>

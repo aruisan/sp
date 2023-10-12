@@ -65,7 +65,7 @@ class LibrosController extends Controller
         if($balance){
             $datSavedBalance = BalanceData::where('balance_id', $balance->id)->select('balances_data.fecha',
                 'puc_alcaldia.code', 'puc_alcaldia.concepto AS cuentaConcept', 'balances_data.documento', 'balances_data.concepto',
-                'balances_data.debito', 'balances_data.credito')
+                'balances_data.debito', 'balances_data.credito', 'balances_data.tercero')
                 ->join('puc_alcaldia','balances_data.cuenta_puc_id','=','puc_alcaldia.id')->orderBy('puc_alcaldia.code','ASC')->get();
             $datSavedBalance[] = collect(['fecha' => '', 'code' => '', 'documento' => 'TOTALES', 'concepto' => '',
                 'debito' => $balance->data[count($balance->data) - 1]['debito'],
