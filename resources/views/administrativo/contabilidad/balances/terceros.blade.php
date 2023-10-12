@@ -17,7 +17,7 @@
                         <option value="4/4">Abril</option>
                         <option value="5/5">Mayo</option>
                         <option value="6/6">Junio</option>
-                        <option disabled value="7/7">Julio</option>
+                        <option value="7/7">Julio</option>
                         <option disabled value="8/8">Agosto</option>
                         <option disabled value="9/9">Septiembre</option>
                         <option disabled value="10/10">Octubre</option>
