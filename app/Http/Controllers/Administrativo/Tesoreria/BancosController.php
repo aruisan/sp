@@ -16,6 +16,7 @@ use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancaria;
 use App\Model\Administrativo\Tesoreria\conciliacion\ConciliacionBancariaCuentas;
 use App\Model\Persona;
 use App\Model\User;
+use App\Model\Impuestos\Pagos;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -341,7 +342,8 @@ class BancosController extends Controller
                                 $pos = strpos($compCont->comprobante->concepto, '#') + 1;
                                 $tam = strlen($compCont->comprobante->concepto) - $pos;
                                 $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
-                                dd($strData, $compCont->comprobante->concepto, $pos, $idImp, $tam);
+                                $impMuellaje = Pagos::find($idImp);
+                                dd($strData, $impMuellaje);
                             }
                             if ($compCont->cuenta_banco == $rubroPUC->id) {
                                 $total = $total + $compCont->debito;
