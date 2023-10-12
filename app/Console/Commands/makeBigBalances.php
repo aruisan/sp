@@ -52,8 +52,8 @@ class makeBigBalances extends Command
      */
     public function handle()
     {
-        $mes1 = 3;
-        $mes2 = 3;
+        $mes1 = 4;
+        $mes2 = 4;
         $año = Carbon::today()->year;
 
         $newBal = new Balances();

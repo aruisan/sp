@@ -13,7 +13,7 @@
                         <option value="0">Seleccione el mes</option>
                         <option value="1/1">Enero</option>
                         <option value="2/2">Febrero</option>
-                        <option disabled value="3/3">Marzo</option>
+                        <option value="3/3">Marzo</option>
                         <option disabled value="4/4">Abril</option>
                         <option disabled value="5/5">Mayo</option>
                         <option disabled value="6/6">Junio</option>
