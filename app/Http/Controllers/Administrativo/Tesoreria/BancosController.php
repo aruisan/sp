@@ -344,8 +344,7 @@ class BancosController extends Controller
                                 $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
                                 $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
                                 $muellaje = Muellaje::find($impuesto->entity_id);
-
-                                dd($strData, $muellaje);
+                                $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
                             }
                             if ($compCont->cuenta_banco == $rubroPUC->id) {
                                 $total = $total + $compCont->debito;
