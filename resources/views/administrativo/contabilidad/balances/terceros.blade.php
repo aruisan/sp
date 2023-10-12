@@ -12,20 +12,20 @@
                     <select class="form-control text-center" name="mes" id="mes" onchange="change()">
                         <option value="0">Seleccione el mes</option>
                         <option value="1/1">Enero</option>
-                        <option value="2/2">Febrero</option>
-                        <option value="3/3">Marzo</option>
-                        <option value="4/4">Abril</option>
-                        <option value="5/5">Mayo</option>
-                        <option value="6/6">Junio</option>
-                        <option value="7/7">Julio</option>
-                        <option value="8/8">Agosto</option>
-                        <option value="9/9">Septiembre</option>
+                        <option disabled value="2/2">Febrero</option>
+                        <option disabled value="3/3">Marzo</option>
+                        <option disabled value="4/4">Abril</option>
+                        <option disabled value="5/5">Mayo</option>
+                        <option disabled value="6/6">Junio</option>
+                        <option disabled value="7/7">Julio</option>
+                        <option disabled value="8/8">Agosto</option>
+                        <option disabled value="9/9">Septiembre</option>
                         <option disabled value="10/10">Octubre</option>
                         <option disabled value="11/11">Noviembre</option>
                         <option disabled value="12/12">Diciembre</option>
-                        <option value="1/3">Enero - Marzo</option>
-                        <option value="1/6">Enero - Junio</option>
-                        <option value="1/9">Enero - Septiembre</option>
+                        <option disabled value="1/3">Enero - Marzo</option>
+                        <option disabled value="1/6">Enero - Junio</option>
+                        <option disabled value="1/9">Enero - Septiembre</option>
                         <option disabled value="1/12">Enero - Diciembre</option>
                     </select>
                     </b></h4>
