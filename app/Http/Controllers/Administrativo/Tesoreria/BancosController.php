@@ -338,9 +338,9 @@ class BancosController extends Controller
                             }
                             $strData = substr($compCont->comprobante->concepto, 0,8);
                             if ($strData == "MUELLAJE") {
-                                $pos = strpos($compCont->comprobante->concepto, '#');
+                                $pos = strpos($compCont->comprobante->concepto, '#') + 1;
                                 $tam = strlen($compCont->comprobante->concepto) - $pos;
-                                $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                                $idImp = substr($compCont->comprobante->concepto, $pos, $tam - 1);
                                 dd($strData, $compCont->comprobante->concepto, $pos, $idImp, $tam);
                             }
                             if ($compCont->cuenta_banco == $rubroPUC->id) {
