@@ -234,12 +234,22 @@ class makeBigBalances extends Command
                                         if (Carbon::parse($compCont->ff)->month >= $mes1 and
                                             Carbon::parse($compCont->ff)->month <= $mes2){
                                             $tercero = Persona::find($compCont->persona_id);
-                                            $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                                'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $compBanco->debito ,
-                                                'credito' =>  $compBanco->credito , 'concepto' => $compCont->concepto,
-                                                'cuenta' => $hijo->id, 'from' => 6,
-                                                'padre_id' => $hijo->padre_id,
-                                                'tercero' => $tercero->num_dc.' - '.$tercero->nombre];
+                                            if ($tercero){
+                                                $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                                    'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $compBanco->debito ,
+                                                    'credito' =>  $compBanco->credito , 'concepto' => $compCont->concepto,
+                                                    'cuenta' => $hijo->id, 'from' => 6,
+                                                    'padre_id' => $hijo->padre_id,
+                                                    'tercero' => $tercero->num_dc.' - '.$tercero->nombre];
+                                            } else{
+                                                $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
+                                                    'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $compBanco->debito ,
+                                                    'credito' =>  $compBanco->credito , 'concepto' => $compCont->concepto,
+                                                    'cuenta' => $hijo->id, 'from' => 6,
+                                                    'padre_id' => $hijo->padre_id,
+                                                    'tercero' => ''];
+                                            }
+                                            
                                         }
                                     }
                                 }
