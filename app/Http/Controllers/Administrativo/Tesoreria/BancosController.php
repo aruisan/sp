@@ -457,16 +457,14 @@ class BancosController extends Controller
                                     $user = User::find($compCont->comprobante->persona_id);
                                     $tercero = $user->name;
                                     $numIdent = $user->email;
-
-                                    $strData = substr($compCont->comprobante->concepto, 0,8);
-                                    dd($strData, $compCont->comprobante->concepto);
-
                                 } else {
                                     $persona = Persona::find($compCont->comprobante->persona_id);
                                     $tercero = $persona->nombre;
                                     $numIdent = $persona->num_dc;
                                 }
                                 if ($compCont->cuenta_banco == $rubroPUC->id) {
+                                    $strData = substr($compCont->comprobante->concepto, 0,8);
+                                    dd($strData, $compCont->comprobante->concepto);
                                     $total = $total + $compCont->debito;
                                     $total = $total - $compCont->credito;
                                     $result[] = collect(['fecha' => Carbon::parse($compCont->fechaComp)->format('d-m-Y'),
