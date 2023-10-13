@@ -337,6 +337,7 @@ class BancosController extends Controller
                                 $tercero = $persona->nombre;
                                 $numIdent = $persona->num_dc;
                             }
+                            //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
                             $strData = substr($compCont->comprobante->concepto, 0,8);
                             if ($strData == "MUELLAJE") {
                                 $pos = strpos($compCont->comprobante->concepto, '#') + 1;
@@ -472,7 +473,16 @@ class BancosController extends Controller
                                     $tercero = $persona->nombre;
                                     $numIdent = $persona->num_dc;
                                 }
-
+                                //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
+                                $strData = substr($compCont->comprobante->concepto, 0,8);
+                                if ($strData == "MUELLAJE") {
+                                    $pos = strpos($compCont->comprobante->concepto, '#') + 1;
+                                    $tam = strlen($compCont->comprobante->concepto) - $pos;
+                                    $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                                    $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                                    $muellaje = Muellaje::find($impuesto->entity_id);
+                                    $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
+                                }
                                 if ($compCont->cuenta_banco == $rubroPUC->id) {
                                     $total = $total + $compCont->debito;
                                     $total = $total - $compCont->credito;
@@ -599,6 +609,16 @@ class BancosController extends Controller
                                         $tercero = $persona->nombre;
                                         $numIdent = $persona->num_dc;
                                     }
+                                    //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
+                                    $strData = substr($compCont->comprobante->concepto, 0,8);
+                                    if ($strData == "MUELLAJE") {
+                                        $pos = strpos($compCont->comprobante->concepto, '#') + 1;
+                                        $tam = strlen($compCont->comprobante->concepto) - $pos;
+                                        $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                                        $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                                        $muellaje = Muellaje::find($impuesto->entity_id);
+                                        $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
+                                    }
                                     if ($compCont->cuenta_banco == $rubroPUC->id) {
                                         $total = $total + $compCont->debito;
                                         $total = $total - $compCont->credito;
@@ -722,6 +742,16 @@ class BancosController extends Controller
                             $persona = Persona::find($compCont->comprobante->persona_id);
                             $tercero = $persona->nombre;
                             $numIdent = $persona->num_dc;
+                        }
+                        //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
+                        $strData = substr($compCont->comprobante->concepto, 0,8);
+                        if ($strData == "MUELLAJE") {
+                            $pos = strpos($compCont->comprobante->concepto, '#') + 1;
+                            $tam = strlen($compCont->comprobante->concepto) - $pos;
+                            $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                            $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                            $muellaje = Muellaje::find($impuesto->entity_id);
+                            $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
                         }
                         if ($compCont->cuenta_banco == $rubroPUC->id){
                             $total = $total + $compCont->debito;
@@ -886,6 +916,16 @@ class BancosController extends Controller
                             $persona = Persona::find($compCont->comprobante->persona_id);
                             $tercero = $persona->nombre;
                             $numIdent = $persona->num_dc;
+                        }
+                        //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
+                        $strData = substr($compCont->comprobante->concepto, 0,8);
+                        if ($strData == "MUELLAJE") {
+                            $pos = strpos($compCont->comprobante->concepto, '#') + 1;
+                            $tam = strlen($compCont->comprobante->concepto) - $pos;
+                            $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                            $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                            $muellaje = Muellaje::find($impuesto->entity_id);
+                            $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
                         }
                         if ($compCont->cuenta_banco == $rubroPUC->id){
                             $total = $total + $compCont->debito;
@@ -1149,6 +1189,16 @@ class BancosController extends Controller
             foreach ($compsCont as $compCont){
                 if (Carbon::parse($compCont->fechaComp)->format('Y') == $añoActual) {
                     if (Carbon::parse($compCont->fechaComp)->format('m') == $mesFind) {
+                        //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
+                        $strData = substr($compCont->comprobante->concepto, 0,8);
+                        if ($strData == "MUELLAJE") {
+                            $pos = strpos($compCont->comprobante->concepto, '#') + 1;
+                            $tam = strlen($compCont->comprobante->concepto) - $pos;
+                            $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                            $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                            $muellaje = Muellaje::find($impuesto->entity_id);
+                            $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
+                        }
                         if ($compCont->cuenta_banco == $rubroPUC->id){
                             $total = $total + $compCont->debito;
                             $total = $total - $compCont->credito;
@@ -1215,6 +1265,16 @@ class BancosController extends Controller
         if (count($compsCont) > 0){
             foreach ($compsCont as $compCont){
                 if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
+                    //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
+                    $strData = substr($compCont->comprobante->concepto, 0,8);
+                    if ($strData == "MUELLAJE") {
+                        $pos = strpos($compCont->comprobante->concepto, '#') + 1;
+                        $tam = strlen($compCont->comprobante->concepto) - $pos;
+                        $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                        $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                        $muellaje = Muellaje::find($impuesto->entity_id);
+                        $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
+                    }
                     if ($compCont->cuenta_banco == $rubroPUC->id){
                         $total = $total + $compCont->debito;
                         $total = $total - $compCont->credito;
