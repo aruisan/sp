@@ -70,7 +70,7 @@ Class PrepEgresosTraits
                     if (count($pagosDB) > 0) $valuePagos[] = $pagosDB->sum('valor');
                     else $valuePagos[] = 0;
 
-                    dd($valuePagos, $valueOrdenPago, $pagosDB );
+                    dd($valuePagos, $valueOrdenPago, $pagosDB[3157] );
 
                     $otherRubs = DB::select("SELECT * from plantilla_cuipos_egresos where code REGEXP CONCAT('^','".$data->code.".')");
                     foreach ($otherRubs as $other) {
