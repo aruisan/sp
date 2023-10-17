@@ -25,7 +25,6 @@
         <th class="text-center">Fuente</th>
         <th class="text-center">Código Producto</th>
         <th class="text-center">Código Indicador Producto</th>
-        <th class="text-center">% Ejecución</th>
     </tr>
     </thead>
     <tbody>
@@ -36,26 +35,25 @@
                 <td>{{ $codigo['nameActiv']}}</td>
                 <td>{{ $codigo['cod'] }}</td>
                 <td>{{ $codigo['name']}}</td>
-                <td>{{ $codigo['p_inicial']}}</td>
+                <td>{{ $codigo['presupuesto_inicial']}}</td>
                 <td>{{ $codigo['adicion']}}</td>
                 <td>{{ $codigo['reduccion']}}</td>
                 <td>{{ $codigo['credito']}}</td>
                 <td>{{ $codigo['ccredito']}}</td>
-                <td>{{ $codigo['p_def']}}</td>
+                <td>{{ $codigo['presupuesto_def']}}</td>
                 <td>{{ $codigo['cdps']}}</td>
-                <td>{{ $codigo['rps']}}</td>
+                <td>{{ $codigo['registros']}}</td>
                 <td>{{ $codigo['saldo_disp']}}</td>
-                <td>{{ $codigo['saldo_cdps']}}</td>
-                <td>{{ $codigo['ops']}}</td>
+                <td>{{ $codigo['saldo_cdp']}}</td>
+                <td>{{ $codigo['ordenes_pago']}}</td>
                 <td>{{ $codigo['pagos']}}</td>
                 <td>{{ $codigo['cuentas_pagar']}}</td>
                 <td>{{ $codigo['reservas']}}</td>
-                <td>{{ $codigo['cod_dep']}}</td>
-                <td>{{ $codigo['name_dep']}}</td>
+                <td>{{ $codigo['codDep']}}</td>
+                <td>{{ $codigo['dep']}}</td>
                 <td>{{ $codigo['fuente']}}</td>
-                <td>{{ $codigo['cod_producto']}}</td>
-                <td>{{ $codigo['cod_indicador']}}</td>
-                <td>{{ $codigo['ejec']}}</td>
+                <td>{{ $codigo['codProd']}}</td>
+                <td>{{ $codigo['codIndProd']}}</td>
             </tr>
         @endforeach
     </tbody>
