@@ -2828,7 +2828,10 @@ class InformeController extends Controller
         $prepTrait = new PrepEgresosTraits();
         $vigens = Vigencia::where('vigencia', Carbon::parse($inicio)->year)->where('tipo', 0)->where('estado', '0')->first();
         $presupuesto = $prepTrait->prepEgresos($vigens, $inicio, $final);
-        
+
+        $final = Carbon::parse($final)->subDays(1);
+        dd($final);
+
         return Excel::download(new InfPrepEgrExcExport($presupuesto),
             'Ejecucion Presupuesto de Egresos '.$inicio.'-'.$final.'.xlsx');
     }
