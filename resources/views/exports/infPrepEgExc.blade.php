@@ -32,30 +32,30 @@
         @foreach($presupuesto as $codigo)
             <tr>
                 <td>{{ $codigo['codBpin']}}</td>
-                <td>{{ $codigo->codActiv}}</td>
-                <td>{{ $codigo->nameActiv}}</td>
-                <td>{{ $codigo->rubro }}</td>
-                <td>{{ $codigo->nombre}}</td>
-                <td>{{ $codigo->p_inicial}}</td>
-                <td>{{ $codigo->adicion}}</td>
-                <td>{{ $codigo->reduccion}}</td>
-                <td>{{ $codigo->credito}}</td>
-                <td>{{ $codigo->ccredito}}</td>
-                <td>{{ $codigo->p_def}}</td>
-                <td>{{ $codigo->cdps}}</td>
-                <td>{{ $codigo->rps}}</td>
-                <td>{{ $codigo->saldo_disp}}</td>
-                <td>{{ $codigo->saldo_cdps}}</td>
-                <td>{{ $codigo->ops}}</td>
-                <td>{{ $codigo->pagos}}</td>
-                <td>{{ $codigo->cuentas_pagar}}</td>
-                <td>{{ $codigo->reservas}}</td>
-                <td>{{ $codigo->cod_dep}}</td>
-                <td>{{ $codigo->name_dep}}</td>
-                <td>{{ $codigo->fuente}}</td>
-                <td>{{ $codigo->cod_producto}}</td>
-                <td>{{ $codigo->cod_indicador}}</td>
-                <td>{{ $codigo->ejec}}</td>
+                <td>{{ $codigo['codActiv']}}</td>
+                <td>{{ $codigo['nameActiv']}}</td>
+                <td>{{ $codigo['rubro'] }}</td>
+                <td>{{ $codigo['nombre']}}</td>
+                <td>{{ $codigo['p_inicial']}}</td>
+                <td>{{ $codigo['adicion']}}</td>
+                <td>{{ $codigo['reduccion']}}</td>
+                <td>{{ $codigo['credito']}}</td>
+                <td>{{ $codigo['ccredito']}}</td>
+                <td>{{ $codigo['p_def']}}</td>
+                <td>{{ $codigo['cdps']}}</td>
+                <td>{{ $codigo['rps']}}</td>
+                <td>{{ $codigo['saldo_disp']}}</td>
+                <td>{{ $codigo['saldo_cdps']}}</td>
+                <td>{{ $codigo['ops']}}</td>
+                <td>{{ $codigo['pagos']}}</td>
+                <td>{{ $codigo['cuentas_pagar']}}</td>
+                <td>{{ $codigo['reservas']}}</td>
+                <td>{{ $codigo['cod_dep']}}</td>
+                <td>{{ $codigo['name_dep']}}</td>
+                <td>{{ $codigo['fuente']}}</td>
+                <td>{{ $codigo['cod_producto']}}</td>
+                <td>{{ $codigo['cod_indicador']}}</td>
+                <td>{{ $codigo['ejec']}}</td>
             </tr>
         @endforeach
     </tbody>
