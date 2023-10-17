@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Hacienda\Presupuesto\Informes;
 use App\BPin;
 use App\bpinVigencias;
 use App\Exports\InfMensualExport;
+use App\Exports\InfPrepEgrExcHistExport;
 use App\Exports\InfPrepIngExcExport;
 use App\Exports\InfPrepEgrExcExport;
 use App\Http\Controllers\Controller;
@@ -2831,7 +2832,7 @@ class InformeController extends Controller
 
         $final = Carbon::parse($final)->subDays(1);
 
-        return Excel::download(new InfPrepEgrExcExport($presupuesto),
+        return Excel::download(new InfPrepEgrExcHistExport($presupuesto),
             'Ejecucion Presupuesto de Egresos '.$inicio.'-'.$final->format('Y-m-d').'.xlsx');
     }
 
