@@ -31,7 +31,7 @@
     <tbody>
         @foreach($presupuesto as $codigo)
             <tr>
-                <td>{{ $codigo->codBpin}}</td>
+                <td>{{ $codigo['codBpin']}}</td>
                 <td>{{ $codigo->codActiv}}</td>
                 <td>{{ $codigo->nameActiv}}</td>
                 <td>{{ $codigo->rubro }}</td>
