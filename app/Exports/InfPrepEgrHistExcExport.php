@@ -5,7 +5,7 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Contracts\View\View;
 
-class InfPrepEgrExcHistExport implements FromView
+class InfPrepEgrHistExcExport implements FromView
 {
     public function __construct($presupuesto){
         $this->presupuesto = $presupuesto;
