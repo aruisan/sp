@@ -2830,10 +2830,9 @@ class InformeController extends Controller
         $presupuesto = $prepTrait->prepEgresos($vigens, $inicio, $final);
 
         $final = Carbon::parse($final)->subDays(1);
-        dd($final);
 
         return Excel::download(new InfPrepEgrExcExport($presupuesto),
-            'Ejecucion Presupuesto de Egresos '.$inicio.'-'.$final.'.xlsx');
+            'Ejecucion Presupuesto de Egresos '.$inicio.'-'.$final->format('Y-m-d').'.xlsx');
     }
 
     public function makeIngresosEXCEL()
