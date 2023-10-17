@@ -55,9 +55,9 @@ Class PrepEgresosTraits
                     else $valueRegistros[] = 0;
 
                     //orden pagos
-                    if ($inicio != null) $ordenesPago = OrdenPagos::where('id','>=',708)->where('estado','1')
+                    if ($inicio != null) $ordenesPago = OrdenPagos::where('estado','1')
                         ->whereBetween('created_at',array($inicio, $final))->get();
-                    else $ordenesPago = OrdenPagos::where('id','>=',708)->where('estado','1')->get();
+                    else $ordenesPago = OrdenPagos::where('estado','1')->get();
 
                     if (count($ordenesPago) > 0) $valueOrdenPago[] = $ordenesPago->sum('valor');
                     else $valueOrdenPago[] = 0;
@@ -70,7 +70,7 @@ Class PrepEgresosTraits
                     if (count($pagosDB) > 0) $valuePagos[] = $pagosDB->sum('valor');
                     else $valuePagos[] = 0;
 
-                    dd($valuePagos, $valueOrdenPago, $pagosDB[3157] );
+                    dd($valuePagos, $valueOrdenPago );
 
                     $otherRubs = DB::select("SELECT * from plantilla_cuipos_egresos where code REGEXP CONCAT('^','".$data->code.".')");
                     foreach ($otherRubs as $other) {
