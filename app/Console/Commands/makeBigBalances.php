@@ -215,15 +215,15 @@ class makeBigBalances extends Command
                                             $tercero = Persona::find($compCont->persona_id);
                                             if ($tercero){
                                                 $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                                    'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $compBanco->debito ,
-                                                    'credito' =>  $compBanco->credito , 'concepto' => $compCont->concepto,
+                                                    'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $descRet->debito ,
+                                                    'credito' =>  $descRet->credito , 'concepto' => $compCont->concepto,
                                                     'cuenta' => $hijo->id, 'from' => 6,
                                                     'padre_id' => $hijo->padre_id,
                                                     'tercero' => $tercero->num_dc.' - '.$tercero->nombre];
                                             } else{
                                                 $hijosResult[] = ['fecha' => Carbon::parse($compCont->ff)->format('d-m-Y'),
-                                                    'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $compBanco->debito ,
-                                                    'credito' =>  $compBanco->credito , 'concepto' => $compCont->concepto,
+                                                    'modulo' => 'Comprobante Contable #'.$compCont->code, 'debito' =>  $descRet->debito ,
+                                                    'credito' =>  $descRet->credito , 'concepto' => $compCont->concepto,
                                                     'cuenta' => $hijo->id, 'from' => 6,
                                                     'padre_id' => $hijo->padre_id,
                                                     'tercero' => ''];
