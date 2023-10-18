@@ -133,6 +133,7 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        <td></td>
                                         <td class="text-center">{{ $desc->porcent }}</td>
                                         <td class="text-center">$<?php echo number_format($desc->base,0) ?></td>
                                         <td class="text-center">$<?php echo number_format($desc->valor,0) ?></td>
