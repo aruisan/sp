@@ -69,7 +69,7 @@
                                     <div class="form-group">
                                         <select name="tipTras" id="tipTras" class="form-control" required onchange="tipoTraslado(this.value)">
                                             <option value="0">Seleccione el tipo de traslado a realizar</option>
-                                            <option hidden value="1">INVERSIÓN</option>
+                                            <option value="1">INVERSIÓN</option>
                                             <option value="2">FUNCIONAMIENTO</option>
                                         </select>
                                     </div>
