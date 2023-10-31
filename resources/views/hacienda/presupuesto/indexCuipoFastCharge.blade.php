@@ -219,47 +219,57 @@
                             <div class="modal" id="myModal">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-
                                         <!-- Modal Header -->
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Nueva Actividad</h4>
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h3 class="modal-title">Nueva Actividad</h3>
                                         </div>
-
                                         <!-- Modal body -->
-                                        <div class="modal-body">
+                                        <div class="modal-body text-center">
                                             <form method="post" action="{{route('bpin.store')}}">
                                                 <div class="row">
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="cod_proyecto" id="input-cod-proyecto">
-                                                    <div class="input-group my-2 col-md-12">
-                                                        <label for="" class="col-sm-5">codigo de Actividad</label>
-                                                        <input type="text" name="cod_actividad" class="form-control col-sm-7">
-                                                    </div>
-                                                    <div class="input-group my-2 col-md-12">
-                                                        <label for="" class= col-sm-5">Nombre de Actividad</label>
-                                                        <textarea name="nombre_actividad" class="form-control col-sm-7" row="3"></textarea>
-                                                    </div>
-                                                    <div class="input-group my-2 col-md-12">
-                                                        <label for="" class="col-sm-5">Propios</label>
-                                                        <input type="text" name="propios" class="form-control col-sm-7">
-                                                    </div>
-                                                    <div class="input-group my-2 col-md-12">
-                                                        <label for="" class="col-sm-5">SGP</label>
-                                                        <input type="text" name="sgp" class="form-control col-sm-7">
-                                                    </div>
-                                                    <div class="input-group my-2 col-md-12">
-                                                        <button class="btn btn-primary" type="submit">Guardar</button>
-                                                    </div>
+                                                    <input type="hidden" name="vigencia_id" id="vigencia_id" value="{{ $V }}">
+                                                    <h4>Codigo de Actividad</h4>
+                                                    <input type="text" name="cod_actividad" class="form-control">
+                                                    <h4>Nombre de Actividad</h4>
+                                                    <textarea name="nombre_actividad" class="form-control" row="3"></textarea>
+                                                    <h4>Propios</h4>
+                                                    <input type="text" name="propios" class="form-control">
+                                                    <h4>SGP</h4>
+                                                    <input type="text" name="sgp" class="form-control">
+                                                    <h4>Rubro</h4>
+                                                    <select name="fontRubEgr" id="fontRubEgr" style="width: 100%" class="selectRubroCC">
+                                                        <option value="0">Seleccione el Rubro de Egresos</option>
+                                                        @foreach($rubrosEgresosAll as $rubro)
+                                                            <option value="{{ $rubro['id'] }}">{{ $rubro['code'] }}
+                                                                {{ $rubro['nombre'] }} - {{ $rubro['fCode'] }} {{ $rubro['fName'] }}
+                                                                - {{ $rubro['dep']['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <h4>Fuente</h4>
+                                                    <select name="fuente" id="fuente" style="width: 100%" class="selectFuente">
+                                                        <option value="0">Seleccione la Fuente</option>
+                                                        @foreach($fuentes as $fuente)
+                                                            <option value="{{ $fuente['id'] }}">{{ $fuente['code'] }} - {{ $fuente['description'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <h4>Dependencia</h4>
+                                                    <select name="dependencia" id="dependencia" style="width: 100%" class="selectDep">
+                                                        <option value="0">Seleccione la Dependencia</option>
+                                                        @foreach($deps as $dep)
+                                                            <option value="{{ $dep['id'] }}">{{ $dep['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
+                                                <br>
+                                                <button class="btn-sm btn-primary text-center" type="submit">Guardar</button>
                                             </form>
                                         </div>
-
                                         <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        <div class="modal-footer text-center">
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -289,6 +299,11 @@
 
     <!-- tabla de proyectos -->
     <script>
+
+        $('.selectRubroCC').select2();
+        $('.selectFuente').select2();
+        $('.selectDep').select2();
+
         var rol = @json(auth()->user()->roles->first()->id)
 
         const vigencia_id = @json($V);

@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Hacienda\Presupuesto\Egresos;
 use App\bpinVigencias;
 use App\Http\Controllers\Controller;
 use App\BPin;
+use App\Model\Admin\Dependencia;
+use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
+use App\Model\Hacienda\Presupuesto\SourceFunding;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -51,13 +54,38 @@ class IndexController extends Controller
         $bpins = BPin::all();
         $rol = auth()->user()->roles->first()->id;
 
+        $presupuestos = Vigencia::where('vigencia', $añoActual)->get();
+        foreach ($presupuestos as $prep){
+            if ($prep->tipo == 0){
+                $rubI = Rubro::where('vigencia_id', $prep->id)->orderBy('cod','ASC')->get();
+                foreach ($rubI as $rub){
+                    foreach ($rub->fontsRubro as $fuente){
+                        $dependencias = DependenciaRubroFont::where('rubro_font_id', $fuente->id)->get();
+                        foreach ($dependencias as $dependencia){
+                            if ($dependencia->saldo > 0){
+                                $rubrosEgresos[] = collect(['id' => $dependencia->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description, 'dep' => $dependencia->dependencias]);
+                                $rubrosEgresosAll[] = collect(['id' => $dependencia->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description, 'dep' => $dependencia->dependencias]);
+                            } else{
+                                $rubrosEgresosAll[] = collect(['id' => $dependencia->id, 'code' => $rub->cod, 'nombre' => $rub->name, 'fCode' =>
+                                    $fuente->sourceFunding->code, 'fName' => $fuente->sourceFunding->description, 'dep' => $dependencia->dependencias]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $fuentes = SourceFunding::all();
+        $deps = Dependencia::all();
 
         if (!$prepSaved) {
             Artisan::call("schedule:run");
             $V = "Vacio";
 
             return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
-                'añoActual', 'mesActual','V','bpins'));
+                'añoActual', 'mesActual','V','bpins','fuentes','deps'));
         } else{
             $V = $prepSaved->vigencia_id;
             $vigencia = Vigencia::find($prepSaved->vigencia_id);
@@ -76,7 +104,7 @@ class IndexController extends Controller
 
             return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
                 'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins','fechaData',
-            'vigencia','rol'));
+            'vigencia','rol','rubrosEgresosAll','fuentes','deps'));
         }
     }
 
