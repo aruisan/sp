@@ -624,6 +624,9 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     Route::post('presupuesto/traslados','Hacienda\Presupuesto\TrasladosController@store');
     Route::get('presupuesto/traslados/show/{id}','Hacienda\Presupuesto\TrasladosController@show');
 
+    //AUTOMATIZAR NOMINA
+    Route::get('nominapre/create/{id}','Hacienda\Presupuesto\PrepNominaController@create');
+
     ////// RUTAS PLAN DE DESARROLLO
 	Route::resource('pdd','Planeacion\Pdd\PdesarrolloController');
 	Route::get('pdd/data/create/{pdd}','Planeacion\Pdd\EjesController@create');
