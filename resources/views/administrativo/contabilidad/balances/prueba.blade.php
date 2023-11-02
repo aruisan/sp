@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('titulo')
-    Balance de Prueba
+    Balance de Prueba dfdsfds
 @stop
 @section('sidebar')@stop
 @section('content')
@@ -20,6 +20,10 @@
                         <li><a href="{{route('balance.pre-prueba', '06')}}">Junio</a></li>
                         <li><a href="{{route('balance.pre-prueba', '07')}}">Julio</a></li>
                         <li><a href="{{route('balance.pre-prueba', '08')}}">Agosto</a></li>
+                        <li><a href="{{route('balance.pre-prueba', '09')}}">Septiembre</a></li>
+                      {{--
+                        <li><a href="{{route('balance.pre-prueba', '10')}}">Octubre</a></li>
+                      --}}
                     </ul>
                 </div>
                 <div class="btn-group">
@@ -79,15 +83,26 @@
                     
                 </thead>
                 <tbody>
+                @php 
+                   $s_debito_total = 0;
+                   $s_credito_total = 0;
+                @endphp
                 @foreach($pucs as $puc)
                     @php 
-                    $s_debito = $puc->puc_alcaldia->naturaleza == "DEBITO" ? $puc->i_debito + $puc->m_debito + $puc->a_debito - $puc->m_credito + $puc->a_credito: 0;
-                    $s_credito = $puc->puc_alcaldia->naturaleza == "CREDITO" ?  $puc->i_credito + $puc->m_credito + $puc->a_credito - $puc->m_debito + $puc->a_debito: 0;
+                    $s_debito = $puc->puc_alcaldia->naturaleza == "DEBITO" ? ($puc->i_debito + $puc->m_debito + $puc->a_debito) - ($puc->m_credito + $puc->a_credito): 0;
+                    $s_credito = $puc->puc_alcaldia->naturaleza == "CREDITO" ?  ($puc->i_credito + $puc->m_credito + $puc->a_credito) - ($puc->m_debito + $puc->a_debito): 0;
+
+                    $s_debito_total += $s_debito; //$puc->m_debito + $puc->a_debito + $puc->i_debito;;
+                    $s_credito_total += $s_credito; //$puc->m_credito + $puc->a_credito + $puc->i_credito; ;
                     @endphp
                     <tr>
                     <td class="text-left">{{is_null($puc->puc_alcaldia) ? "Se Elimino {$puc->id}" : $puc->puc_alcaldia->code}}</td>
                         <td class="text-center">{{is_null($puc->puc_alcaldia) ? "Se Elimino {$puc->id}" : $puc->puc_alcaldia->concepto}}</td>
 
+{{--
+                        <td class="text-right" style="width=200px;">${{number_format($puc->i_debito  ,0,",", ".")}} || ${{number_format($puc->a_debito  ,0,",", ".")}}</td>
+                        <td class="text-right" style="width=200px;">${{number_format($puc->i_credito ,0,",", ".")}} || ${{number_format($puc->a_credito  ,0,",", ".")}}</td>
+--}}
                         <td class="text-right" style="width=200px;">${{number_format($puc->i_debito  ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">${{number_format($puc->i_credito ,0,",", ".")}}</td>
                         <td class="text-right" style="width=200px;">{{$puc->i_debito}}</td>
@@ -128,10 +143,10 @@
                         <td><b>{{$pucs->sum('m_debito')}}</b></td>
                         <td><b>{{$pucs->sum('m_credito')}}</b></td>
 
-                        <td><b>${{number_format($pucs->sum('s_debito')  ,0,",", ".")}}</b></td>
-                        <td><b>${{number_format($pucs->sum('s_credito')  ,0,",", ".")}}</b></td>
-                        <td><b>{{$pucs->sum('s_debito')}}</b></td>
-                        <td><b>{{$pucs->sum('s_credito')}}</b></td>
+                        <td><b>${{number_format($s_credito_total ,0,",", ".")}}</b></td>
+                        <td><b>${{number_format($s_credito_total ,0,",", ".")}}</b></td>
+                        <td><b>{{$s_credito_total}}</b></td>
+                        <td><b>{{$s_credito_total}}</b></td>
                         @if(auth()->id() == 1)
                         <td></td>
                         @endif

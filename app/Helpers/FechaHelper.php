@@ -13,13 +13,48 @@ class FechaHelper {
 
     public static function trimestres_actuales($year){
         $age = date('Y');
-        $trimestre = $year == $age ? ceil(date('n')/3) : 3; 
+        $trimestre = $year == $age ?  intval(floor(date('n')/3))-1: 3; 
         return range(0, $trimestre);
     }
+
+    public static function semestres_actuales($year){
+        $age = date('Y');
+        $trimestre = $year == $age ? intval(floor(date('n')/6))-1 : 1; 
+        return range(0, $trimestre);
+    }
+
 
     public static function years(){
         $year = date('Y');
         return range(2023, $year);
+    }
+
+    public static function periodos(){
+        return ['mensual', 'trimestre', 'semestre', 'anual'];
+    }
+
+    public static function estructura_periodos(){
+        $mensual = [];
+        $trimestral = [];
+        $semestral = [];
+        $anual = [];
+        $years = self::years();
+
+        foreach($years as $y):
+            
+            $mensual[$y] = self::meses($y);
+            $trimestral[$y] = self::trimestres_actuales($y);
+            $semestral[$y] = self::semestres_actuales($y);
+        endforeach; 
+
+        $periodos = [
+            'mensual' => $mensual,
+            'trimestre' => $trimestral,
+            'semestre' => $semestral,
+            'anual' => $years
+        ];
+
+        return $periodos;
     }
 
     public static function bancos_terceros(){

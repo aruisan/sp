@@ -1,14 +1,14 @@
 
 @extends('layouts.balance_general_pdf')
 @section('title')
-    Balance General Periodo 1 de  {{$meses[$mes-1]}} al {{date("t", strtotime("2023-{$mes}-01"))}} del año {{date('Y')}}
+    {{$titulo}}
 @stop
 @section('contenido')
         <table class="table">
             <tr>
                 <td colspan="2">
                 <center>
-                    <h3>Balance General Periodo 1 de  {{$meses[$mes-1]}} al {{date("t", strtotime("2023-{$mes}-01"))}} del año {{date('Y')}}</h3>
+                    <h3>{{$titulo}}</h3>
                 </center> 
                 </td>
             </tr>
@@ -17,11 +17,17 @@
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td><b>{{$activo->puc_alcaldia->codigo_punto}}</b></td>
-                                <td><b>{{$activo->puc_alcaldia->concepto}}</b></td>
+                                <td><b>{{$activo->first()->puc_alcaldia->codigo_punto}}</b></td>
+                                <td><b>{{$activo->first()->puc_alcaldia->concepto}}</b></td>
                                 <td></td>
                             </tr>
-                            {!!$activo->format_hijos_general_pdf!!}
+                            @foreach($activo_h->groupBy('puc_alcaldia_id') as $hijo)
+                            <tr>
+                                <td>{{$hijo->first()->puc_alcaldia->codigo_punto}}</td>
+                                <td>{{$hijo->first()->puc_alcaldia->concepto}}</td>
+                                <td>${{number_format($hijo->sum('s_final') ,0,",", ".")}}</td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </td>
@@ -29,21 +35,33 @@
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td><b>{{$pasivo->puc_alcaldia->codigo_punto}}</b></td>
-                                <td><b>{{$pasivo->puc_alcaldia->concepto}}</b></td>
+                                <td><b>{{$pasivo->first()->puc_alcaldia->codigo_punto}}</b></td>
+                                <td><b>{{$pasivo->first()->puc_alcaldia->concepto}}</b></td>
                                 <td></td>
                             </tr>
-                            {!!$pasivo->format_hijos_general_pdf!!}
+                            @foreach($pasivo_h->groupBy('puc_alcaldia_id') as $hijo)
+                            <tr>
+                                <td>{{$hijo->first()->puc_alcaldia->codigo_punto}}</td>
+                                <td>{{$hijo->first()->puc_alcaldia->concepto}}</td>
+                                <td>${{number_format($hijo->sum('s_final') ,0,",", ".")}}</td>
+                            </tr>
+                            @endforeach
 
                             <tr>
-                                <td><b>{{$patrimonio->puc_alcaldia->codigo_punto}}</b></td>
-                                <td><b>{{$patrimonio->puc_alcaldia->concepto}}</b></td>
+                                <td><b>{{$patrimonio->first()->puc_alcaldia->codigo_punto}}</b></td>
+                                <td><b>{{$patrimonio->first()->puc_alcaldia->concepto}}</b></td>
                                 <td></td>
                             </tr>
-                            {!!$patrimonio->format_hijos_general_pdf!!}
+                            @foreach($patrimonio_h->groupBy('puc_alcaldia_id') as $hijo)
                             <tr>
-                                <td>{{$puc_opcional->puc_alcaldia->codigo_punto}}</td>
-                                <td>{{$puc_opcional->puc_alcaldia->concepto}}</td>
+                                <td>{{$hijo->first()->puc_alcaldia->codigo_punto}}</td>
+                                <td>{{$hijo->first()->puc_alcaldia->concepto}}</td>
+                                <td>${{number_format($hijo->sum('s_final') ,0,",", ".")}}</td>
+                            </tr>
+                            @endforeach
+                            <tr>
+                                <td>{{$puc_opcional->first()->puc_alcaldia->codigo_punto}}</td>
+                                <td>{{$puc_opcional->first()->puc_alcaldia->concepto}}</td>
                                 <td class="text-right">${{number_format($iguales_ingresos_gastos ,0,",", ".")}}</td>
                             </tr>
                         </tbody>
@@ -57,7 +75,7 @@
                             <tr>
                                 <td><b>Sumas Iguales:</b></td>
                                 <td></td>
-                                <td class="text-right"><b>${{number_format($activo->s_final ,0,",", ".")}}</b></td>
+                                <td class="text-right"><b>${{number_format($activo->sum('s_final') ,0,",", ".")}}</b></td>
                             </tr>
                         </tbody>
                     </table>
@@ -68,7 +86,7 @@
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td class="text-right"><b>${{number_format($patrimonio->s_final + $pasivo->s_final + $iguales_ingresos_gastos ,0,",", ".")}}</b></td>
+                                <td class="text-right"><b>${{number_format($patrimonio->sum('s_final') + $pasivo->sum('s_final') + $iguales_ingresos_gastos ,0,",", ".")}}</b></td>
                             </tr>
                         </tbody>
                     </table>

@@ -238,7 +238,6 @@
                <a class="dropdown-item item-menu" href="#" >PUC</a>
                <ul class="dropdown-menu">
                <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/puc/pucIndex')}}">PUC Res. 3832 de 2019</a></li>
-
                   <li><a class="item-menu" tabindex="-1" href="{{url('/administrativo/contabilidad/puc/pucIndexAct')}}">PUC de vigencia</a></li>
                </ul>
             </li> --}}
@@ -248,7 +247,7 @@
                   <li><a class="item-menu" href="{{ url('/administrativo/CIngresos/12') }}">2023</a></li>
                </ul>
             </li>
-            <li><a class="item-menu" tabindex="-1" href="{{route('estado-resultado', [2023, 1, 'vista'])}}">Estado de Resultados</a></li>
+            <li><a class="item-menu" tabindex="-1" href="{{route('estado-resultado', [2023, date('n'), 'mensual', 'vista'])}}">Estado de Resultados</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Notas al Balance</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Estado al cambio del patrimonio</a></li>
             <li><a class="item-menu" tabindex="-1" href="#">Estado de FLujo de Caja</a></li>
@@ -261,7 +260,7 @@
                   <li><a class="item-menu" href="{{route('balance.pre-prueba', '01')}}">Prueba</a></li>
                   <li><a class="item-menu" href="{{route('balance.terceros')}}">Terceros</a></li>
                   {{--<li><a class="item-menu" href="{{url('/administrativo/contabilidad/informes/lvl/1')}}">General</a></li>--}}
-                  <li><a class="item-menu" href="{{route('balance-general.pdf', [2023, 1, 'vista'])}}">General</a></li>
+                  <li><a class="item-menu" href="{{route('balance-general.pdf', [2023, date('n'), 'mensual', 'vista'])}}">General</a></li>
                   <li><a class="item-menu" href="#">Notas al Balance</a></li>
                   <li><a class="item-menu" href="#">Estado de Resultados</a></li>
                   <li><a class="item-menu" href="#">Estado al cambio del patrimonio</a></li>
@@ -284,6 +283,7 @@
 
                   <li><a class="item-menu" href="{{route('chip.pre', [2023, 0])}}">CHIP Contaduria Primer Trimestre</a></li>
                   <li><a class="item-menu" href="{{route('chip.pre', [2023, 1])}}">CHIP Contaduria Segundo Trimestre</a></li>
+                  <li><a class="item-menu" href="{{route('chip.pre', [2023, 2])}}">CHIP Contaduria Tercer Trimestre</a></li>
                   <li><a class="item-menu" target="_blank" href="{{url('/administrativo/impuestos/admin/noPayUsers')}}">Deudores Morosos</a></li>
                   <li><a class="item-menu" href="#">Exogeno</a></li>
                   <li><a class="item-menu" href="#">Reciprocas</a></li>

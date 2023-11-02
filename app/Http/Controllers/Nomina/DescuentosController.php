@@ -15,6 +15,7 @@ use Session, PDF;
 class DescuentosController extends Controller
 {
     private $view = "nomina.descuentos";
+    private $pasar_status = 0;
 
     public function index($tipo){
         $nominas = Nomina::where('tipo', $tipo)->orderBy('id', 'desc')->get();
@@ -189,7 +190,7 @@ class DescuentosController extends Controller
     }
 
     public function pasar(Nomina $nomina_old){
-        if(1){
+        if($this->pasar_status){
             $nomina = Nomina::where('tipo', $nomina_old->tipo)->where('id', '>', $nomina_old->id)->first();
             return view("{$this->view}.pasar-descuentos", compact('nomina_old', 'nomina'));
         }else{
@@ -199,29 +200,32 @@ class DescuentosController extends Controller
     }
 
     public function pasar_store(Nomina $nomina, Request $request){
-        
-        
-        $movimientos = NominaEmpleadoNomina::whereIn('nomina_empleado_id', $request->empleado_id)->where('nomina_id', $nomina->id)->get();
-        foreach($movimientos as $m):
-            $m->descuentos()->delete();
-        endforeach;
-        foreach($request->empleado_id as $k => $empleado_id): 
+        if($this->pasar_status){
+            $movimientos = NominaEmpleadoNomina::whereIn('nomina_empleado_id', $request->empleado_id)->where('nomina_id', $nomina->id)->get();
+            foreach($movimientos as $m):
+                $m->descuentos()->delete();
+            endforeach;
+            foreach($request->empleado_id as $k => $empleado_id): 
 
-            $movimiento = NominaEmpleadoNomina::where('nomina_empleado_id', $empleado_id)->where('nomina_id', $nomina->id)->first();
-            if(!is_null($movimiento)):
-                $desc = new NominaEmpleadoDescuentos;
-                $desc->nombre = $request->nombre[$k];
-                $desc->nomina_empleado_nomina_id = $movimiento->id;
-                $desc->tercero_id = $request->tercero_id[$k];
-                $desc->n_cuotas = $request->n_cuotas[$k];
-                $desc->valor = $request->valor[$k];
-                $desc->valor_total = $request->valor[$k];
-                $desc->save();
-            endif;
-        endforeach;
+                $movimiento = NominaEmpleadoNomina::where('nomina_empleado_id', $empleado_id)->where('nomina_id', $nomina->id)->first();
+                if(!is_null($movimiento)):
+                    $desc = new NominaEmpleadoDescuentos;
+                    $desc->nombre = $request->nombre[$k];
+                    $desc->nomina_empleado_nomina_id = $movimiento->id;
+                    $desc->tercero_id = $request->tercero_id[$k];
+                    $desc->n_cuotas = $request->n_cuotas[$k];
+                    $desc->valor = $request->valor[$k];
+                    $desc->valor_total = $request->valor[$k];
+                    $desc->save();
+                endif;
+            endforeach;
 
-        //Session::flash('success', 'se ha finalizado la nomina de vacaciones.');
-        return redirect()->route('nomina-descuentos.show', $nomina->id);
+            //Session::flash('success', 'se ha finalizado la nomina de vacaciones.');
+            return redirect()->route('nomina-descuentos.show', $nomina->id);
+        }else{
+            Session::flash('warning', 'Función desactivada, comunicarse con soporte.');
+            return back();
+        }
     }
 
 }

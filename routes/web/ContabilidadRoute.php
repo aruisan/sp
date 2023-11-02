@@ -14,7 +14,8 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'administrativo/contabilidad'
     Route::get('/blance-prueba-reload-informe/{informe}','Administrativo\Contabilidad\Balances\PruebaController@reload_informe')->name('balance.prueba-informe-reload');
     Route::get('/puc-data/{puc}','Administrativo\Contabilidad\Balances\PruebaController@puc_data')->name('balance.puc_data');
 
-    Route::get('/blance-general-pdf/{age}/{mes}/{tipo}','Administrativo\Contabilidad\Balances\GeneralController@pdf')->name('balance-general.pdf');
+
+    Route::get('/blance-general-pdf/{age}/{elemento}/{tipo}/{vista}','Administrativo\Contabilidad\Balances\GeneralController@pdf')->name('balance-general.pdf');
 
     Route::get('/chip-pre/{age}/{trimestre}','Administrativo\Contabilidad\Balances\ChipController@pre_informe')->name('chip.pre');
     Route::get('/chip/{informe}/{puc}','Administrativo\Contabilidad\Balances\ChipController@generar_informe')->name('chip.generar');
@@ -30,5 +31,5 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'administrativo/contabilidad'
     Route::get('/chip-contable-ver','Administrativo\Contabilidad\Balances\ChipController@informe_contable_pucs')->name('chip.contable.pucs');
 
 
-    Route::get('/estado-resultado/{age}/{mes}/{tipo}','Administrativo\Contabilidad\EstadoResultadoController@vista')->name('estado-resultado');
+    Route::get('/estado-resultado/{age}/{elemento}/{tipo}/{vista}','Administrativo\Contabilidad\EstadoResultadoController@vista')->name('estado-resultado');
 });

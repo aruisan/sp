@@ -403,7 +403,7 @@ class PucAlcaldia extends Model implements Auditable
     public function getCodigoPuntoAttribute(){
         $secuencia = [1,2,4,6];
         $numero = '';
-        $caracteres_array = $arr1 = str_split($this->code);
+        $caracteres_array = str_split($this->code);
         foreach($caracteres_array as $index => $letra):
             if(in_array($index, $secuencia)){
                 $numero .= ".";
@@ -411,7 +411,7 @@ class PucAlcaldia extends Model implements Auditable
             $numero .= $letra;
         endforeach;
 
-        return $numero;
+        return is_null($this->padre) ? $this->code : $numero;
     }
 
     public function getDebCredTrimestreAttribute(){

@@ -6,31 +6,9 @@
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="col-md-12 align-self-center">
+        <center><h2>{{$titulo}}</h2></center>
         <div class="breadcrumb text-center">
-            
-            <div class="btn-group">
-                <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        Periodo {{$periodos[0]}}<span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            @foreach($periodos as $periodo)
-                                <li><a href="#">{{$periodo}}</a></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                    Balance General Periodo 1 de  {{$meses[$mes-1]}} al {{date("t", strtotime("2023-{$mes}-01"))}} del año {{date('Y')}}<span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        @foreach($meses as $m => $mes_)
-                            <li><a href="{{route('balance-general.pdf', [$age, $m+1, 'vista'])}}">{{$mes_}}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-                <a class="btn btn-danger pull-right" href="{{route('balance-general.pdf', [$age, $mes, 'mostrar_pdf'])}}">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </a>
-            </div>
+            @include('administrativo.contabilidad.components.select')
         </div>
     </div>
     <div class="row">
@@ -39,44 +17,68 @@
                 <tbody>
                     <tr>
                         <td>
-                            <div class="col-md-3"><b>{{$activo->puc_alcaldia->codigo_punto}}</b></div>
-                            <div class="col-md-6"><b>{{$activo->puc_alcaldia->concepto}}</b></div>
+                            <div class="col-md-3"><b>{{$activo->first()->puc_alcaldia->codigo_punto}}</b></div>
+                            <div class="col-md-6"><b>{{$activo->first()->puc_alcaldia->concepto}}</b></div>
                             <div class="col-md-3"><b></b></div>
                         </td>
                     </tr>
-                    {!!$activo->format_hijos_general_vista!!}
+                    @foreach($activo_h->groupBy('puc_alcaldia_id') as $hijo)
+                    <tr>
+                        <td>
+                            <div class="col-md-3">{{$hijo->first()->puc_alcaldia->codigo_punto}}</div>
+                            <div class="col-md-6">{{$hijo->first()->puc_alcaldia->concepto}}</div>
+                            <div class="col-md-3">${{number_format($hijo->sum('s_final') ,0,",", ".")}}</div>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
-        </div>    
+        </div>  
         <div class="col-md-6">
             <table class="table">
                 <tbody>
                     <tr>
                         <td>
-                            <div class="col-md-3"><b>{{$pasivo->puc_alcaldia->codigo_punto}}</b></div>
-                            <div class="col-md-6"><b>{{$pasivo->puc_alcaldia->concepto}}</b></div>
+                            <div class="col-md-3"><b>{{$pasivo->first()->puc_alcaldia->codigo_punto}}</b></div>
+                            <div class="col-md-6"><b>{{$pasivo->first()->puc_alcaldia->concepto}}</b></div>
                             <div class="col-md-3"><b></b></div>
                         </td>
                     </tr>
-                    {!!$pasivo->format_hijos_general_vista!!}
+                    @foreach($pasivo_h->groupBy('puc_alcaldia_id') as $hijo)
                     <tr>
                         <td>
-                            <div class="col-md-3"><b>{{$patrimonio->puc_alcaldia->codigo_punto}}</b></div>
-                            <div class="col-md-6"><b>{{$patrimonio->puc_alcaldia->concepto}}</b></div>
+                            <div class="col-md-3">{{$hijo->first()->puc_alcaldia->codigo_punto}}</div>
+                            <div class="col-md-6">{{$hijo->first()->puc_alcaldia->concepto}}</div>
+                            <div class="col-md-3">${{number_format($hijo->sum('s_final') ,0,",", ".")}}</div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td>
+                            <div class="col-md-3"><b>{{$patrimonio->first()->puc_alcaldia->codigo_punto}}</b></div>
+                            <div class="col-md-6"><b>{{$patrimonio->first()->puc_alcaldia->concepto}}</b></div>
                             <div class="col-md-3"><b></b></div>
                         </td>
                     </tr>
-                    {!!$patrimonio->format_hijos_general_vista!!}
+                    @foreach($patrimonio_h->groupBy('puc_alcaldia_id') as $hijo)
                     <tr>
                         <td>
-                            <div class="col-md-3">{{$puc_opcional->puc_alcaldia->codigo_punto}}</div>
-                            <div class="col-md-6">{{$puc_opcional->puc_alcaldia->concepto}}</div>
+                            <div class="col-md-3">{{$hijo->first()->puc_alcaldia->codigo_punto}}</div>
+                            <div class="col-md-6">{{$hijo->first()->puc_alcaldia->concepto}}</div>
+                            <div class="col-md-3">${{number_format($hijo->sum('s_final') ,0,",", ".")}}</div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td>
+                            <div class="col-md-3">{{$puc_opcional->first()->puc_alcaldia->codigo_punto}}</div>
+                            <div class="col-md-6">{{$puc_opcional->first()->puc_alcaldia->concepto}}</div>
                             <div class="col-md-3 text-right">${{number_format($iguales_ingresos_gastos ,0,",", ".")}}</div>
                         </td>
                     </tr>
                 </tbody>
             </table> 
-        </div>    
+        </div>   
     </div>
     <div class="row">
         <div class="col-md-6">
@@ -86,7 +88,7 @@
                         <td>
                             <div class="col-md-3"><b>Sumas Iguales:</b></div>
                             <div class="col-md-6"><b></b></div>
-                            <div class="col-md-3 text-right"><b>${{number_format($activo->s_final,0,",", ".")}}</b></div>
+                            <div class="col-md-3 text-right"><b>${{number_format($activo->sum('s_final'),0,",", ".")}}</b></div>
                         </td>
                     </tr>
                 </tbody>
@@ -98,7 +100,7 @@
                         <td>
                             <div class="col-md-3"></div>
                             <div class="col-md-6"></div>
-                            <div class="col-md-3 text-right"><b>${{number_format($pasivo->s_final + $patrimonio->s_final + $iguales_ingresos_gastos,0,",", ".")}}</b></div>
+                            <div class="col-md-3 text-right"><b>${{number_format($pasivo->sum('s_final') + $patrimonio->sum('s_final') + $iguales_ingresos_gastos,0,",", ".")}}</b></div>
                         </td>
                     </tr>
                 </tbody>
@@ -146,6 +148,17 @@
             })
         })
 
+        const enviar = vista => {
+            let y = $('#year').val();
+            let p = $('#periodo').val();
+            let e = -1;
+            if(p != 'anual'){
+                e = $('#elementos').val();
+            }
+            location.href =`/administrativo/contabilidad/blance-general-pdf/${y}/${e}/${p}/${vista}`;
+        }
+
 
     </script>
+    @include('administrativo.contabilidad.components.select_js')
 @stop
