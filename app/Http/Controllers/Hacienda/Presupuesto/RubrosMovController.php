@@ -266,9 +266,12 @@ class RubrosMovController extends Controller
 
             } else {
 
-                $depRubroFont = DependenciaRubroFont::find($request->DepFontID);
+                $depRubroFont = DependenciaRubroFont::find($request->fuenteDep);
                 $depRubroFont->saldo = $depRubroFont->saldo + intval($request->valorAdd);
                 $depRubroFont->save();
+
+                $depRubroFont->fontRubro->valor_disp = $depRubroFont->fontRubro->valor_disp + intval($request->valorAdd);
+                $depRubroFont->fontRubro->save();
 
                 $rubroMov = new RubrosMov();
                 $rubroMov->valor = intval($request->valorAdd);
@@ -277,7 +280,7 @@ class RubrosMovController extends Controller
                 $rubroMov->rubro_id = $depRubroFont->fontRubro->rubro_id;
                 $rubroMov->resource_id = 0;
                 $rubroMov->movimiento = '2';
-                $rubroMov->dep_rubro_font_id = $request->DepFontID;
+                $rubroMov->dep_rubro_font_id = $request->fuenteDep;
                 $rubroMov->save();
             }
 

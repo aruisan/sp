@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Hacienda\Presupuesto;
 use App\bpinVigencias;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Hacienda\Presupuesto\Nomina\PrepNomina;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
@@ -32,6 +33,13 @@ class PrepNominaController extends Controller
         $presupuesto = Vigencia::where('vigencia', $año)->where('tipo',0)->first();
 
         return view('hacienda.presupuesto.nomina.create', compact('año','presupuesto'));
+    }
+
+    public function findNomina(Request $request){
+        $nomina = PrepNomina::where('mes', $request->mes)->where('tipo', $request->tipo)->where('año', $request->año)
+            ->where('estado', 0)->first();
+        if ($nomina) return 1;
+        else return 0;
     }
 
     public function depCred(Request $request){
