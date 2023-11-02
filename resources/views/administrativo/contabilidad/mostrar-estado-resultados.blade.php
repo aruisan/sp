@@ -7,23 +7,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
-            <div class="btn-group">
-                <a class="btn btn-danger" href="{{route('estado-resultado', [$age, $mes, 'vista'])}}">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                </a>
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                Estado de Resultados Periodo 1 de  {{$meses[$mes-1]}} al {{date("t", strtotime("2023-{$mes}-01"))}} del año {{date('Y')}}<span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    @foreach($meses as $m => $mes_)
-                        <li><a href="{{route('estado-resultado', [$age, $m+1, 'mostrar_pdf'])}}">{{$mes_}}</a></li>
-                    @endforeach
-                </ul> 
-            </div>
+        @include('administrativo.contabilidad.components.select')
         </div>
     </div>
     <div class="row"> 
     <center>
-    <embed src="{{route('estado-resultado', [$age, $mes, 'pdf'])}}" 
+    <embed src="{{route('estado-resultado', [$age, $elemento, $tipo, 'pdf'])}}" 
                width="1200"
                height="700">
     </center>
@@ -70,6 +59,17 @@
             })
         })
 
+        const enviar = vista => {
+            let y = $('#year').val();
+            let p = $('#periodo').val();
+            let e = -1;
+            if(p != 'anual'){
+                e = $('#elementos').val();
+            }
+            location.href =`/administrativo/contabilidad/estado-resultado/${y}/${e}/${p}/${vista}`;
+        }
+
 
     </script>
+    @include('administrativo.contabilidad.components.select_js')
 @stop

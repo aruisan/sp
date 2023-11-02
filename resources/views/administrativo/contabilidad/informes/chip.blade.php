@@ -44,21 +44,20 @@
                 @foreach($pucs as $puc)
                     <tr>
                         <td class='text-left'>D</td>
-                        <td class='text-center'>{{is_null($puc->puc_alcaldia) ? "no tiene" : $puc->puc_alcaldia->codigo_punto}}</td>
-                        <td class='text-right' style='width=200px;'>${{number_format($puc->valor_inicial)}}</td>
-                        <td class='text-right' style='width=200px;'>{{$puc->valor_inicial}}</td>
-                        <td class='text-right' style='width=200px;'>${{number_format($puc->m_debito)}}</td>
-                        <td class='text-right' style='width=200px;'>${{number_format($puc->m_credito)}}</td>
-                        <td class='text-right' style='width=200px;'>{{$puc->m_debito}}</td>
-                        <td class='text-right' style='width=200px;'>{{$puc->m_credito}}</td>
-                        <td class='text-right' style='width=200px;'>${{number_format($puc->s_final)}}</td>
-                        <td class='text-right' style='width=200px;'>{{$puc->s_final}}</td>
-                        <td class='text-right' style='width=200px;'>${{number_format($puc->corriente)}}</td>
-                        <td class='text-right' style='width=200px;'>${{number_format($puc->no_corriente)}}</td>
-                        <td class='text-right' style='width=200px;'>{{$puc->corriente}}</td>
-                        <td class='text-right' style='width=200px;'>{{$puc->no_corriente}}</td>
+                        <td class='text-center'>{{$puc['code_point']}}</td>
+                        <td class='text-right' style='width=200px;'>${{number_format($puc['v_inicial'])}}</td>
+                        <td class='text-right' style='width=200px;'>{{$puc['v_inicial']}}</td>
+                        <td class='text-right' style='width=200px;'>${{number_format($puc['m_debito'])}}</td>
+                        <td class='text-right' style='width=200px;'>${{number_format($puc['m_credito'])}}</td>
+                        <td class='text-right' style='width=200px;'>{{$puc['m_debito']}}</td>
+                        <td class='text-right' style='width=200px;'>{{$puc['m_credito']}}</td>
+                        <td class='text-right' style='width=200px;'>${{number_format($puc['s_final'])}}</td>
+                        <td class='text-right' style='width=200px;'>{{$puc['s_final']}}</td>
+                        <td class='text-right' style='width=200px;'>${{number_format($puc['corriente'] ? $puc['s_final']:0)}}</td>
+                        <td class='text-right' style='width=200px;'>${{number_format(!$puc['corriente'] ? $puc['s_final']:0)}}</td>
+                        <td class='text-right' style='width=200px;'>{{$puc['corriente'] ? $puc['s_final']:0}}</td>
+                        <td class='text-right' style='width=200px;'>{{!$puc['corriente'] ? $puc['s_final']:0}}</td>
                     </tr>
-                    {!!$puc->formato_hijos!!}
                 @endforeach
                 </tbody>
             </table>

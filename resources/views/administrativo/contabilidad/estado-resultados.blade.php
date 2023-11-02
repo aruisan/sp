@@ -7,20 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="col-md-12 align-self-center">
         <div class="breadcrumb text-center">
-            <div class="btn-group">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                    Estado de Resultados Periodo 1 de  {{$meses[$mes-1]}} al {{date("t", strtotime("2023-{$mes}-01"))}} del año {{date('Y')}}<span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        @foreach($meses as $m => $mes_)
-                            <li><a href="{{route('estado-resultado', [$age, $m+1, 'vista'])}}">{{$mes_}}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-                <a class="btn btn-danger pull-right" href="{{route('estado-resultado', [$age, $mes, 'mostrar_pdf'])}}">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </a>
-            </divingresos
+        @include('administrativo.contabilidad.components.select')
         </div>
     </div>
     <div class="row">
@@ -29,12 +16,20 @@
                 <tbody>
                     <tr>
                         <td>
-                            <div class="col-md-3"><b>{{$ingresos->puc_alcaldia->codigo_punto}}</b></div>
-                            <div class="col-md-6"><b>{{$ingresos->puc_alcaldia->concepto}}</b></div>
+                            <div class="col-md-3"><b>{{$ingresos->first()->puc_alcaldia->codigo_punto}}</b></div>
+                            <div class="col-md-6"><b>{{$ingresos->first()->puc_alcaldia->concepto}}</b></div>
                             <div class="col-md-3"><b></b></div>
                         </td>
                     </tr>
-                    {!!$ingresos->format_hijos_general_vista!!}
+                    @foreach($ingresos_h->groupBy('puc_alcaldia_id') as $hijo)
+                    <tr>
+                        <td>
+                            <div class="col-md-3">{{$hijo->first()->puc_alcaldia->codigo_punto}}</div>
+                            <div class="col-md-6">{{$hijo->first()->puc_alcaldia->concepto}}</div>
+                            <div class="col-md-3">${{number_format($hijo->sum('s_final') ,0,",", ".")}}</div>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>    
@@ -43,12 +38,20 @@
                 <tbody>
                     <tr>
                         <td>
-                            <div class="col-md-3"><b>{{$gastos->puc_alcaldia->codigo_punto}}</b></div>
-                            <div class="col-md-6"><b>{{$gastos->puc_alcaldia->concepto}}</b></div>
+                            <div class="col-md-3"><b>{{$gastos->first()->puc_alcaldia->codigo_punto}}</b></div>
+                            <div class="col-md-6"><b>{{$gastos->first()->puc_alcaldia->concepto}}</b></div>
                             <div class="col-md-3"><b></b></div>
                         </td>
                     </tr>
-                    {!!$gastos->format_hijos_general_vista!!}
+                    @foreach($gastos_h->groupBy('puc_alcaldia_id') as $hijo)
+                    <tr>
+                        <td>
+                            <div class="col-md-3">{{$hijo->first()->puc_alcaldia->codigo_punto}}</div>
+                            <div class="col-md-6">{{$hijo->first()->puc_alcaldia->concepto}}</div>
+                            <div class="col-md-3">${{number_format($hijo->sum('s_final') ,0,",", ".")}}</div>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table> 
         </div>    
@@ -61,7 +64,7 @@
                         <td>
                             <div class="col-md-3"><b>Sumas Iguales:</b></div>
                             <div class="col-md-6"><b></b></div>
-                            <div class="col-md-3 text-right"><b>${{number_format($ingresos->s_final,0,",", ".")}}</b></div>
+                            <div class="col-md-3 text-right"><b>${{number_format($ingresos->sum('s_final'),0,",", ".")}}</b></div>
                         </td>
                     </tr>
                 </tbody>
@@ -73,7 +76,7 @@
                         <td>
                             <div class="col-md-3"></div>
                             <div class="col-md-6"></div>
-                            <div class="col-md-3 text-right"><b>${{number_format($gastos->s_final,0,",", ".")}}</b></div>
+                            <div class="col-md-3 text-right"><b>${{number_format($gastos->sum('s_final'),0,",", ".")}}</b></div>
                         </td>
                     </tr>
                 </tbody>
@@ -123,5 +126,17 @@
         })
 
 
+        const enviar = vista => {
+            let y = $('#year').val();
+            let p = $('#periodo').val();
+            let e = -1;
+            if(p != 'anual'){
+                e = $('#elementos').val();
+            }
+            location.href =`/administrativo/contabilidad/estado-resultado/${y}/${e}/${p}/${vista}`;
+        }
+
+
     </script>
+    @include('administrativo.contabilidad.components.select_js')
 @stop

@@ -694,7 +694,7 @@ class BancosController extends Controller
         }
 
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
-        $pagoBanks = PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->get();
+        $pagoBanks =  PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->get();
         if (count($pagoBanks) > 0){
             foreach ($pagoBanks as $pagoBank){
                 if ($pagoBank->pago->estado == 1){
@@ -856,14 +856,8 @@ class BancosController extends Controller
        // 
        //$conciliacion->cheques_mano()->delete();
        //dd($conciliacion->cheques_mano->count());
-    if($conciliacion->cheques_mano->count() == 0):
+    
         //dd('aca');
-        if($request->mes >= 2) {
-            $newSaldo = $this->validateBeforeMonths(Carbon::today()->format('Y').'-'.$request->mes."-01", $rubroPUC);//2023-2-1
-            $totalLastMonth = $newSaldo['total'];
-            $total = $newSaldo['total'];
-        } else $totalLastMonth = $total;
-
         // SE AÑADEN LOS VALORES DE LOS PAGOS AL LIBRO
         $pagoBanks = PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->get();
         
@@ -959,20 +953,19 @@ class BancosController extends Controller
 
         //dd($result);
 
+    if($conciliacion->cheques_mano->count() !=  count($result)):
+        $conciliacion->cheques_mano()->delete();
         foreach ($result as $r) {
             $fecha = Carbon::parse($r['fecha'])->format('Y-m-d');
-            $conciliacionCuentas = ConciliacionBancariaCuentas::where('conciliacion_id', $conciliacion->id)->where('fecha', $fecha)->first();
-            if(is_null($conciliacionCuentas)):
-                $conciliacionCuentas = new ConciliacionBancariaCuentas();
-                $conciliacionCuentas->conciliacion_id = $conciliacion->id;
-                $conciliacionCuentas->fecha = $fecha;
-                $conciliacionCuentas->referencia = $r['referencia']." - ".$r['CC']." - ".$r['tercero'];
-                $conciliacionCuentas->debito = $r['debito'];
-                $conciliacionCuentas->credito = $r['credito'];
-                $conciliacionCuentas->valor = $r['debito'] == 0 ? $r['credito'] : $r['debito'];
-                $conciliacionCuentas->aprobado = "ON";
-                $conciliacionCuentas->save();
-            endif;
+            $conciliacionCuentas = new ConciliacionBancariaCuentas();
+            $conciliacionCuentas->conciliacion_id = $conciliacion->id;
+            $conciliacionCuentas->fecha = $fecha;
+            $conciliacionCuentas->referencia = $r['referencia']." - ".$r['CC']." - ".$r['tercero'];
+            $conciliacionCuentas->debito = $r['debito'];
+            $conciliacionCuentas->credito = $r['credito'];
+            $conciliacionCuentas->valor = $r['debito'] == 0 ? $r['credito'] : $r['debito'];
+            $conciliacionCuentas->aprobado = "ON";
+            $conciliacionCuentas->save();
         }
     endif;
 

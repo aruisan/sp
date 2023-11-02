@@ -5,7 +5,7 @@
     <tr>
         <td colspan="2">
         <center>
-            <h3>Estado de Resultado Periodo 1 de  {{$meses[$mes-1]}} al {{date("t", strtotime("2023-{$mes}-01"))}} del año {{date('Y')}}</h3>
+            <h3>{{$titulo}}</h3>
         </center> 
         </td>
     </tr>
@@ -14,11 +14,17 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td><b>{{$ingresos->puc_alcaldia->codigo_punto}}</b></td>
-                        <td><b>{{$ingresos->puc_alcaldia->concepto}}</b></td>
+                        <td><b>{{$ingresos->first()->puc_alcaldia->codigo_punto}}</b></td>
+                        <td><b>{{$ingresos->first()->puc_alcaldia->concepto}}</b></td>
                         <td></td>
                     </tr>
-                    {!!$ingresos->format_hijos_general_pdf!!}
+                    @foreach($ingresos_h->groupBy('puc_alcaldia_id') as $hijo)
+                    <tr>
+                        <td>{{$hijo->first()->puc_alcaldia->codigo_punto}}</td>
+                        <td>{{$hijo->first()->puc_alcaldia->concepto}}</td>
+                        <td>${{number_format($hijo->sum('s_final') ,0,",", ".")}}</td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </td>
@@ -26,11 +32,17 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td><b>{{$gastos->puc_alcaldia->codigo_punto}}</b></td>
-                        <td><b>{{$gastos->puc_alcaldia->concepto}}</b></td>
+                        <td><b>{{$gastos->first()->puc_alcaldia->codigo_punto}}</b></td>
+                        <td><b>{{$gastos->first()->puc_alcaldia->concepto}}</b></td>
                         <td></td>
                     </tr>
-                    {!!$gastos->format_hijos_general_pdf!!}
+                    @foreach($gastos_h->groupBy('puc_alcaldia_id') as $hijo)
+                    <tr>
+                        <td>{{$hijo->first()->puc_alcaldia->codigo_punto}}</td>
+                        <td>{{$hijo->first()->puc_alcaldia->concepto}}</td>
+                        <td>${{number_format($hijo->sum('s_final') ,0,",", ".")}}</td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </td>
@@ -42,7 +54,7 @@
                     <tr>
                         <td><b>Sumas Iguales:</b></td>
                         <td></td>
-                        <td class="text-right"><b>${{number_format($ingresos->s_final ,0,",", ".")}}</b></td>
+                        <td class="text-right"><b>${{number_format($ingresos->sum('s_final') ,0,",", ".")}}</b></td>
                     </tr>
                 </tbody>
             </table>
@@ -53,7 +65,7 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td class="text-right"><b>${{number_format($gastos->s_final,0,",", ".")}}</b></td>
+                        <td class="text-right"><b>${{number_format($gastos->sum('s_final'),0,",", ".")}}</b></td>
                     </tr>
                 </tbody>
             </table>

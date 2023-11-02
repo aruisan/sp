@@ -29,6 +29,8 @@ class InformeContableData extends Model
         return $this->belongsTo(InformeContableData::class, 'padre_id');
     }
 
+    ////////////
+
     public function getFormatHijosPruebaAttribute(){
         $grupo_puc = "";
         foreach($this->hijos->sortBy('puc_alcaldia.code') as $item):
@@ -46,7 +48,7 @@ class InformeContableData extends Model
     public function getSFinalAttribute($value){
         return  $this->puc_alcaldia->naturaleza == "DEBITO" 
                 ? $this->i_debito + $this->m_debito + $this->a_debito - $this->m_credito + $this->a_credito
-                : $this->i_credito + $this->m_credito + $this->a_credito - $this->m_debito;
+                : $this->i_credito + $this->m_credito + $this->a_credito - $this->m_debito + $this->a_debito;
     }
 
 

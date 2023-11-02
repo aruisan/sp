@@ -490,8 +490,10 @@ class PruebaController extends Controller
             }
             $puc_informe_contable_mensual_anterior = InformeContableMensualData::where('informe_contable_mensual_id', $informe_anterior->id)->where('puc_alcaldia_id', $puc->id)->first();
             
-            $i_debito = is_null($puc_informe_contable_mensual_anterior) ? 0 :$puc_informe_contable_mensual_anterior->s_debito;
-            $i_credito = is_null($puc_informe_contable_mensual_anterior) ? 0 : $puc_informe_contable_mensual_anterior->s_credito;
+            $puc_almacen_debito = $puc->naturaleza == "DEBITO"  ?  $puc_informe_contable_mensual_anterior->a_debito - $puc_informe_contable_mensual_anterior->a_credito: 0;
+            $puc_almacen_credito = $puc->naturaleza == "CREDITO"  ?  $puc_informe_contable_mensual_anterior->a_credito - $puc_informe_contable_mensual_anterior->s_debito: 0;
+            $i_debito = is_null($puc_informe_contable_mensual_anterior) ? 0 :$puc_informe_contable_mensual_anterior->s_debito + $puc_almacen_debito;
+            $i_credito = is_null($puc_informe_contable_mensual_anterior) ? 0 : $puc_informe_contable_mensual_anterior->s_credito + $puc_almacen_credito;
         }
         
         $balance = Balances::where('mes', $mes)->where('año', 2023)->where('tipo', 'MENSUAL')->first();
