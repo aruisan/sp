@@ -38,7 +38,7 @@ class CdpController extends Controller
 
     public function __construct()
     {
-        $this->fechaFija = '2023-10-19';
+        $this->fechaFija = $_ENV['FECHA_CDPS_RPS'];
     }
 
     /**
@@ -140,13 +140,14 @@ class CdpController extends Controller
         return view('administrativo.cdp.create', compact('dependencia','rubros','id', 'vigencia'));
     }
 
-    public function anular($id, $vigen){
+    public function anular(Request $request,$id, $vigen){
         $cdp = Cdp::findOrFail($id);
         $cdpsRegistro = CdpsRegistro::where('cdp_id','=',$id)->get();
 
         if ($cdp->tipo == "Funcionamiento"){
             $cdp->saldo = 0;
             $cdp->jefe_e = '2';
+            $cdp->observacion = $request->observacion;
             $cdp->save();
 
             $rubrosCdp = RubrosCdpValor::where('cdp_id', $id)->get();
@@ -168,6 +169,7 @@ class CdpController extends Controller
             //ANULAR EL CDP DE INVERSION
             $cdp->saldo = 0;
             $cdp->jefe_e = '2';
+            $cdp->observacion = $request->observacion;
             $cdp->save();
 
             $actividadesCdp = BpinCdpValor::where('cdp_id', $id)->get();

@@ -100,7 +100,6 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                console.log(datos);
                 if(datos == 0) {
                     toastr.warning('YA HAY UNA NOMINA ELABORADA DE ESOS MESES O NO HA SIDO GENERADA.');
                     $("#buttonMake").hide();
@@ -120,6 +119,25 @@
             var mes = document.getElementById('mes').value;
             if (tipo == 1) tipo = "EMPLEADOS";
             else tipo = "MESADAS";
+
+            $.ajax({
+                method: "POST",
+                url: "/nominapre/makeNomina",
+                data: { "tipo": tipo, "año": año, "mes": mes,
+                    "_token": $("meta[name='csrf-token']").attr("content"),
+                }
+            }).done(function(datos) {
+                if(datos == 0) {
+                    toastr.warning('YA HAY UNA NOMINA ELABORADA DE ESOS MESES O NO HA SIDO GENERADA.');
+                    $("#buttonMake").hide();
+                }
+                else $("#buttonMake").show();
+
+                $("#cargando").hide();
+            }).fail(function() {
+                toastr.warning('SE PRESENTO UN ERROR AL ELABORAR LA NOMINA.');
+                $("#cargando").hide();
+            });
 
             console.log(tipo,mes);
         }

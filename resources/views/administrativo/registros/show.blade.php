@@ -758,16 +758,15 @@
                 @elseif($registro->secretaria_e == 3)
                     <br><div class="alert alert-danger"><center>El Registro no tiene ordenes de pago asignadas</center></div><br>
                 @elseif($registro->secretaria_e == 2)
-                    <br><div class="alert alert-danger"><center>El Registro ha sido anulado</center></div><br>
+                    <br><div class="alert alert-danger"><center>El Registro ha sido anulado {{ $registro->observacion }}</center></div><br>
                 @endif
                 @if($ordenesPago->count() == 0 and $rol == 3 and $registro->jefe_e == 3)
-                    <form action="{{url('/administrativo/registros/'.$registro->id.'/anular')}}" method="POST" class="form">
-                        {{method_field('POST')}}
-                        {{ csrf_field() }}
-                        <div class="row text-center">
-                            <button class="btn btn-success text-center" type="submit" title="Al anular el Registro se retorna el dinero al CDP">Anular Registro</button>
-                        </div>
-                    </form>
+                    @include('modal.anularRP')
+                    <center>
+                        <a data-toggle="modal" data-target="#anularRP" class="btn btn-success">
+                            Anular Registro
+                        </a>
+                    </center>
                 @endif
                 @if($registro->jefe_e == 3 and $registro->saldo > 0 and $registro->saldo != $registro->val_total and $rol == 1 and count($registro->cdpRegistroValor) == 1)
                     <form action="{{url('/administrativo/registros/'.$registro->id.'/liberar')}}" method="POST" class="form">
