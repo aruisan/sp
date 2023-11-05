@@ -739,6 +739,8 @@ class OrdenPagosController extends Controller
         $ordenPago->saldo = 0;
         $ordenPago->observacion = $request->observacion;
         $ordenPago->estado = '2';
+        $ordenPago->user_anulacion = auth()->id();
+        $ordenPago->ff_anulacion = today();
         $ordenPago->save();
 
         $registro = Registro::find($ordenPago->registros_id);

@@ -147,6 +147,8 @@ class CdpController extends Controller
         if ($cdp->tipo == "Funcionamiento"){
             $cdp->saldo = 0;
             $cdp->jefe_e = '2';
+            $cdp->user_anulacion = auth()->id();
+            $cdp->ff_anulacion = today();
             $cdp->observacion = $request->observacion;
             $cdp->save();
 
@@ -169,6 +171,8 @@ class CdpController extends Controller
             //ANULAR EL CDP DE INVERSION
             $cdp->saldo = 0;
             $cdp->jefe_e = '2';
+            $cdp->user_anulacion = auth()->id();
+            $cdp->ff_anulacion = today();
             $cdp->observacion = $request->observacion;
             $cdp->save();
 
