@@ -504,6 +504,8 @@ class PagosController extends Controller
         $pago = Pagos::find($id);
         $pago->observacion = $request->observacion;
         $pago->estado = '2';
+        $pago->user_anulacion = auth()->id();
+        $pago->ff_anulacion = today();
         $pago->save();
 
         $ordenPago = OrdenPagos::find($pago->orden_pago_id);

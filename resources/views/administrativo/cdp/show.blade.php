@@ -495,7 +495,7 @@
                                             @if($cdp->jefe_e == "2" and $cdp->secretaria_e == "3")
                                                 <div class="col-md-12 align-self-center">
                                                     <div class="alert alert-danger text-center">
-                                                        El CDP ha sido anulado.
+                                                        El CDP ha sido anulado {{ $cdp->observacion }}.
                                                     </div>
                                                 </div>
                                             @else
@@ -615,15 +615,10 @@
                                     <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
                                 @endif
                                 @if($cdp->jefe_e == "3" and $cdp->secretaria_e == "3" and $cdp->saldo == $cdp->valor and $activateAnul)
-
-                                    <form action="{{url('/administrativo/cdp/'.$cdp->id.'/anular/'.$cdp->vigencia_id)}}" method="POST" class="form">
-                                        {{method_field('POST')}}
-                                        {{ csrf_field() }}
-                                        <div class="row text-center">
-                                            <button class="btn btn-success text-center" type="submit" title="Al anular el CDP se retorna el dinero al rubro">Anular CDP</button>
-                                        </div>
-                                    </form>
-
+                                    @include('modal.anularCDP')
+                                    <center>
+                                        <a data-toggle="modal" data-target="#anularRP" class="btn btn-success">Anular CDP</a>
+                                    </center>
                                 @endif
                                 </div>
                             @else
@@ -808,13 +803,12 @@
                                                 </tbody>
                                             </table>
                                             @if($cdp->jefe_e == "3" and $cdp->secretaria_e == "3" and $cdp->saldo == $cdp->valor and $activateAnul)
-                                                <form action="{{url('/administrativo/cdp/'.$cdp->id.'/anular/'.$cdp->vigencia_id)}}" method="POST" class="form">
-                                                    {{method_field('POST')}}
-                                                    {{ csrf_field() }}
-                                                    <div class="row text-center">
-                                                        <button class="btn btn-success text-center" type="submit" title="Al anular el CDP se retorna el dinero al rubro">Anular CDP</button>
-                                                    </div>
-                                                </form>
+                                                @include('modal.anularCDP')
+                                                <center>
+                                                    <a data-toggle="modal" data-target="#anularRP" class="btn btn-success">
+                                                        Anular CDP
+                                                    </a>
+                                                </center>
                                             @endif
                                             @if($cdp->jefe_e == 3 and $cdp->cdpsRegistro->count() >= 1)
                                                 <br><br>

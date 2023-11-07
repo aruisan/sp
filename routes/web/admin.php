@@ -631,6 +631,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
     //AUTOMATIZAR NOMINA
     Route::get('nominapre/create/{id}','Hacienda\Presupuesto\PrepNominaController@create');
     Route::post('nominapre/findNomina','Hacienda\Presupuesto\PrepNominaController@findNomina');
+    Route::post('nominapre/makeNomina','Hacienda\Presupuesto\PrepNominaController@makeNomina');
 
     ////// RUTAS PLAN DE DESARROLLO
 	Route::resource('pdd','Planeacion\Pdd\PdesarrolloController');
