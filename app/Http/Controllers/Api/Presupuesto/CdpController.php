@@ -43,7 +43,7 @@ class CdpController extends Controller
             });
         }
 
-        if(in_array('Alcalde', $roles)){
+        if(in_array('Alcalde', $roles) || in_array('administrador', $roles)){
             $cdps_new = $cdps->filter(function($c){
                 return  $c['secretaria_e'] == 3 && $c['alcalde_e'] == 0;
             });
