@@ -21,7 +21,7 @@
             <div class="tab-content">
                 <div id="nuevo" class="tab-pane fade in active">
                     <div class="form-validation">
-                        <form class="form-valide" action="{{url('/nominapre')}}" method="POST" enctype="multipart/form-data">
+                        <form class="form-valide" action="{{url('/nominapre/makeNomina')}}" method="POST" enctype="multipart/form-data">
                             <hr>
                             {{ csrf_field() }}
                             <div class="text-center" id="cargando" style="display: none">
@@ -32,7 +32,7 @@
                             <div class="row">
                                 <div class="col-md-12 align-self-center">
                                     <div class="form-group">
-                                        <select name="movEgr" id="movEgr" class="form-control" required onchange="mes(this.value)">
+                                        <select name="mes" id="mes" class="form-control" required onchange="mesFind(this.value)">
                                             <option value="0">Seleccione el mes a elaborar</option>
                                             <option value="1">ENERO</option>
                                             <option value="2">FEBRERO</option>
@@ -42,25 +42,18 @@
                                 </div>
                                 <div class="col-md-12 align-self-center">
                                     <div class="form-group">
-                                        <select name="movEgr" id="movEgr" class="form-control" required onchange="tipoNom(this.value)">
+                                        <select name="tipo" id="tipo" class="form-control" required onchange="tipoNom(this.value)">
                                             <option value="0">Seleccione el tipo de nomina</option>
                                             <option value="1">EMPLEADOS</option>
                                             <option value="2">MESADAS</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12 align-self-center" id="dCC">
-                                    <div class="form-group text-center" id="formGrupCC"></div>
-                                    <div class="form-group">
-                                        <label class="col-lg-4 col-form-label text-right" id="labelDCC"></label>
-                                        <div class="col-lg-6" id="divInput"></div>
-                                    </div>
-                                </div>
                             </div>
                             <center>
-                                <div class="form-group row" id="buttonMake">
+                                <div class="form-group row" id="buttonMake" style="display: none">
                                     <div class="col-lg-12 ml-auto text-center">
-                                       <button type="submit" class="btn btn-primary">Elaborar Nomina</button>
+                                       <a class="btn btn-primary" onclick="elaborarNomina()">Elaborar Nomina</a>
                                     </div>
                                 </div>
                             </center>
@@ -83,81 +76,70 @@
         var año = @json($año);
 
         //tras-add-red
-        function mes(value){
-            console.log(value);
+        function mesFind(value){
+            var tipo = document.getElementById('tipo').value;
+            if(tipo > 0) validateNom();
         }
 
         function tipoNom(value){
-            console.log(value);
+            var mes = document.getElementById('mes').value;
+            if(mes > 0) validateNom();
         }
 
-        function rubroEgr(value){
+        function validateNom(){
             $("#cargando").show();
-            var tipoTras = 1;
+            var tipo = document.getElementById('tipo').value;
+            var mes = document.getElementById('mes').value;
+            if (tipo == 1) tipo = "EMPLEADOS";
+            else tipo = "MESADAS";
 
             $.ajax({
                 method: "POST",
-                url: "/presupuesto/traslados/"+año+"/findDepCred",
-                data: { "id": value, "tipoTras": tipoTras, "año": año,
+                url: "/nominapre/findNomina",
+                data: { "tipo": tipo, "año": año, "mes": mes,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                if(datos == 'SIN SALDO') toastr.warning('EL RUBRO ESCOGIDO NO TIENE DINERO DISPONIBLE.');
-                else {
-                    if(tipoTras == '1'){
-                        var labelCC = document.getElementById('labelDCC');
-                        var divInput = document.getElementById('divInput');
-                        var formGrupCC = document.getElementById('formGrupCC');
-                        labelCC.innerHTML = 'Dinero a CONTRA ACREDITAR <span class="text-danger">*</span>'
-                        divInput.innerHTML = '<input type="number" class="form-control" name="dineroCC" id="dineroCC" value="'+datos[0]+'"' +
-                            'max="'+datos[0]+'" min="1">'
-                        formGrupCC.innerHTML = '<br><h4 class="text-center">'+datos[1]+'</h4><h4 class="text-center">SALDO ACTUAL: '+formatter.format(datos[0])+'</h4>';
-                        $('#rubCredito').show();
-                    }
+                if(datos == 0) {
+                    toastr.warning('YA HAY UNA NOMINA ELABORADA DE ESOS MESES O NO HA SIDO GENERADA.');
+                    $("#buttonMake").hide();
                 }
+                else $("#buttonMake").show();
 
                 $("#cargando").hide();
             }).fail(function() {
-                toastr.warning('SE PRESENTO UN ERROR AL CONSULTAR EL RUBRO.');
+                toastr.warning('SE PRESENTO UN ERROR AL BUSCAR LA NOMINA.');
                 $("#cargando").hide();
             });
         }
 
-        function actividadFind(value){
+        function elaborarNomina(){
             $("#cargando").show();
-            var tipoTras = 1;
+            var tipo = document.getElementById('tipo').value;
+            var mes = document.getElementById('mes').value;
+            if (tipo == 1) tipo = "EMPLEADOS";
+            else tipo = "MESADAS";
 
             $.ajax({
                 method: "POST",
-                url: "/presupuesto/traslados/"+año+"/findActividadCred",
-                data: { "id": value, "tipoTras": tipoTras, "año": año,
+                url: "/nominapre/makeNomina",
+                data: { "tipo": tipo, "año": año, "mes": mes,
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                if(datos[0] == 'SIN SALDO') toastr.warning('LA ACTIVIDAD ESCOGIDA NO TIENE DINERO DISPONIBLE.');
-                else {
-                    if(tipoTras == '1'){
-                        var labelCC = document.getElementById('labelDCC');
-                        var divInput = document.getElementById('divInput');
-                        var formGrupCC = document.getElementById('formGrupCC');
-                        labelCC.innerHTML = 'Dinero a CONTRA ACREDITAR <span class="text-danger">*</span>'
-                        divInput.innerHTML = '<input type="number" class="form-control" name="dineroCC" id="dineroCC" value="'+datos[0]+'"' +
-                            'max="'+datos[0]+'" min="1">'
-                        formGrupCC.innerHTML = '<br><h4 class="text-center">'+datos[1]+'</h4><h4 class="text-center">SALDO ACTUAL: '+formatter.format(datos[0])+'</h4>';
-                        $('#activCredito').show();
-                    }
+                if(datos == 0) {
+                    toastr.warning('YA HAY UNA NOMINA ELABORADA DE ESOS MESES O NO HA SIDO GENERADA.');
+                    $("#buttonMake").hide();
                 }
+                else $("#buttonMake").show();
 
                 $("#cargando").hide();
             }).fail(function() {
-                toastr.warning('SE PRESENTO UN ERROR AL CONSULTAR LA ACTIVIDAD.');
+                toastr.warning('SE PRESENTO UN ERROR AL ELABORAR LA NOMINA.');
                 $("#cargando").hide();
             });
-        }
 
-        function rubroCred(value){
-            if(value != 0) $('#buttonMake').show();
-            else $('#buttonMake').hide();
+            console.log(tipo,mes);
         }
 
         const formatter = new Intl.NumberFormat('en-US', {

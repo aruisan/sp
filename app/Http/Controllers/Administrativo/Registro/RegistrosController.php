@@ -34,7 +34,7 @@ class RegistrosController extends Controller
     public function __construct()
     {
         $this->photos_path = public_path('uploads\Registros');
-        $this->fechaFija = '2023-10-19';
+        $this->fechaFija = $_ENV['FECHA_CDPS_RPS'];
     }
  
     /**
@@ -481,7 +481,7 @@ class RegistrosController extends Controller
         }
     }
 
-    public function anular($id){
+    public function anular(Request $request, $id){
         $registro = Registro::findOrFail($id);
         foreach ($registro->cdpRegistroValor as $valCDPR){
             $valor = $valCDPR->valor;
@@ -495,6 +495,7 @@ class RegistrosController extends Controller
             $registro->saldo = 0;
             $registro->user_anulacion = auth()->id();
             $registro->ff_anulacion = today();
+            $registro->observacion = $request->observacion;
             $registro->save();
 
             $cdp = Cdp::findOrFail($cdp_id);

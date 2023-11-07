@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Hacienda\Presupuesto;
 
 use App\bpinVigencias;
+use App\Http\Controllers\Api\Presupuesto\CdpController;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Administrativo\Cdp\Cdp;
+use App\Model\Hacienda\Presupuesto\Nomina\PrepNomina;
 use App\Model\Hacienda\Presupuesto\Rubro;
 use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\FontsRubro;
@@ -34,12 +37,74 @@ class PrepNominaController extends Controller
         return view('hacienda.presupuesto.nomina.create', compact('año','presupuesto'));
     }
 
-    public function depCred(Request $request){
-        $dependencia = DependenciaRubroFont::find($request->id);
+    public function findNomina(Request $request){
+        $nomina = PrepNomina::where('mes', $request->mes)->where('tipo', $request->tipo)->where('año', $request->año)
+            ->where('estado', 0)->first();
+        if ($nomina) return 1;
+        else return 0;
+    }
 
-        if ($dependencia){
-            if ($dependencia->saldo > 0) return [$dependencia->saldo, $dependencia->fontRubro->rubro->cod.' - '.$dependencia->fontRubro->rubro->name.' - '.$dependencia->fontRubro->sourceFunding->code.' - '.$dependencia->fontRubro->sourceFunding->description.' - '.$dependencia->dependencias->name];
-            else return "SIN SALDO";
+    public function makeNomina(Request $request){
+        $nomina = PrepNomina::where('mes', $request->mes)->where('tipo', $request->tipo)->where('año', $request->año)
+            ->where('estado', 0)->first();
+        $presupuesto = Vigencia::where('vigencia', $request->año)->where('tipo',0)->first();
+
+        $countCdps = Cdp::where('vigencia_id', $presupuesto->id)->orderBy('id')->get()->last();
+
+        if ($countCdps == null) $count = 0;
+        else $count = $countCdps->code;
+
+        $valores = [1,2,3,4,5];
+
+        //ELABORACION AUTOMATICA DE CDPs
+        $cdp = new Cdp();
+        $cdp->code = $countCdps->code + 1;
+        $cdp->name = "Pago Nomina de ".$request->tipo." mes de ".$this->mounth($request->mes);
+        $cdp->fecha = $_ENV['FECHA_CDPS_RPS'];
+        $cdp->tipo = 'Funcionamiento';
+        $cdp->valueControl = array_sum($valores);
+        $cdp->valor = array_sum($valores);
+        $cdp->dependencia_id = 15;
+        $cdp->saldo = 0;
+        $cdp->secretaria_e = 3;
+        $cdp->ff_secretaria_e = $_ENV['FECHA_CDPS_RPS'];
+        $cdp->alcalde_e = 3;
+        $cdp->ff_alcalde_e = $_ENV['FECHA_CDPS_RPS'];
+        $cdp->jefe_e = 3;
+        $cdp->ff_jefe_e = $_ENV['FECHA_CDPS_RPS'];
+        $cdp->vigencia_id = $presupuesto->id;
+        $cdp->created_at = $_ENV['FECHA_CDPS_RPS'].' 12:00:00';
+        $cdp->secretaria_user_id = 4;
+        //$cdp->save();
+        dd($cdp);
+    }
+
+    public function mounth($mes){
+        switch ($mes){
+            case 1:
+                return "ENERO";
+            case 2:
+                return "FEBRERO";
+            case 3:
+                return "MARZO";
+            case 4:
+                return "ABRIL";
+            case 5:
+                return "MAYO";
+            case 6:
+                return "JUNIO";
+            case 7:
+                return "JULIO";
+            case 8:
+                return "AGOSTO";
+            case 9:
+                return "SEPTIEMBRE";
+            case 10:
+                return "OCTUBRE";
+            case 11:
+                return "NOVIEMBRE";
+            case 12:
+                return "DICIEMBRE";
         }
     }
 

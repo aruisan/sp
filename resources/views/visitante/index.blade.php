@@ -17,6 +17,7 @@
   </style>
 @stop
 @section('contenido')
+
       <div>
         <img src="{{asset('img/principal/alcaldia_providencia.jpg')}}" alt="" class="img-responsive">
       </div>
