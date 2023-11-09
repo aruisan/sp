@@ -98,7 +98,7 @@ class feedPresupuesto extends Command
                 }
             }
 
-            if ($porcenEjec){
+            if (isset($porcenEjec)){
                 for ($i = 0; $i < count($porcenEjec); $i++) {
                     if (!isset($newProy)){
                         $newProy[] = $proyectos[$i];
