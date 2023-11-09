@@ -1047,10 +1047,20 @@
         var ciclo1 = JSON.parse('<?php echo json_encode($cdp->rubrosCdp); ?>');
 
         function liberarSaldo(id){
-            console.log(id);
             var opcion = confirm("Esta seguro de liberar el saldo del CDP?");
             if (opcion == true) {
-                console.log("SI");
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/cdp/reversarSaldo",
+                    data: { "cdp": id,
+                        "_token": $("meta[name='csrf-token']").attr("content"),
+                    }
+                }).done(function(datos) {
+                    toastr.success('SALDO LIBERADO EXITOSAMENTE');
+                    console.log(datos);
+                }).fail(function() {
+                    toastr.warning('HUBO UN ERROR AL INTENTAR LIBERAR EL SALDO');
+                });
             }
         }
 
