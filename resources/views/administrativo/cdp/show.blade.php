@@ -882,7 +882,9 @@
                                                 </div>
                                                 @if($user->id == 4)
                                                     <br>
-                                                    <a onclick="liberarSaldo({{$cdp->id}})" class="button-success">Prueba</a>
+                                                    <div class="text-center">
+                                                        <a onclick="liberarSaldo({{$cdp->id}})" class="btn button-success">Prueba</a>
+                                                    </div>
                                                 @endif
                                             @elseif($cdp->jefe_e != "2")
                                                 <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
@@ -1046,6 +1048,10 @@
 
         function liberarSaldo(id){
             console.log(id);
+            var opcion = confirm("Esta seguro de liberar el saldo del CDP?");
+            if (opcion == true) {
+                console.log("SI");
+            }
         }
 
         var visto = null;
