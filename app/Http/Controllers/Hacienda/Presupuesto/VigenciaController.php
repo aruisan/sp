@@ -139,7 +139,6 @@ class VigenciaController extends Controller
                 //Rubros no asignados a alguna actividad
                 $Rubros = Rubro::where('vigencia_id', $id)->get();
                 foreach ($Rubros as $item){
-                    dd($item->fontsRubro);
                     foreach ($item->fontsRubro as $fontRubro){
                         dd($fontRubro->dependenciaFont);
                         $bpin = BPin::where('rubro_id', $item->id)->first();
