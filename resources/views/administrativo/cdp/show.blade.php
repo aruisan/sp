@@ -612,7 +612,7 @@
                                         </table>
                                     </div>
                                     @if($user->id == 4)
-                                        <a href="" class="button-success">Prueba</a>
+                                        <a onclick="liberarSaldo({{$cdp->id}})" class="button-success">Prueba</a>
                                     @endif
                                 @elseif($cdp->jefe_e == 3)
                                     <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
@@ -882,7 +882,7 @@
                                                 </div>
                                                 @if($user->id == 4)
                                                     <br>
-                                                    <a href="" class="button-success">Prueba</a>
+                                                    <a onclick="liberarSaldo({{$cdp->id}})" class="button-success">Prueba</a>
                                                 @endif
                                             @elseif($cdp->jefe_e != "2")
                                                 <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
@@ -1044,7 +1044,9 @@
         var count1 = '<?php echo $cdp->rubrosCdp->count(); ?>';
         var ciclo1 = JSON.parse('<?php echo json_encode($cdp->rubrosCdp); ?>');
 
-        
+        function liberarSaldo(id){
+            console.log(id);
+        }
 
         var visto = null;
         function ver(num) {
