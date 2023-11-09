@@ -59,7 +59,8 @@ class TrasladosController extends Controller
 
         foreach ($bpinsAll as $data){
             if (!isset($data->rubro->fontRubro->sourceFunding)){
-                dd($data, $data->rubro, $data->rubro->fontRubr);
+                $fontRubro = FontsRubro::find($data->rubro->rubro_font_id);
+                dd($data, $data->rubro, $data->rubro->fontRubr, $fontRubro);
             }
         }
 
