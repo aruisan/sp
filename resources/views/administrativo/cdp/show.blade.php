@@ -611,7 +611,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    @if(auth()->user()->id == 4)
+                                    @if($user->id == 4)
                                         <a href="" class="button-success">Prueba</a>
                                     @endif
                                 @elseif($cdp->jefe_e == 3)
