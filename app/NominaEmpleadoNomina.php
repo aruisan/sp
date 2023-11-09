@@ -49,6 +49,8 @@ class NominaEmpleadoNomina extends Model
         return $this->nomina->tipo == 'empleado' ? $this->dias_laborados * $this->v_dia : 30 * $this->v_dia;
     }
 
+
+
     public function getVHorasExtrasAttribute(){
         return  $this->round_up($this->v_hora * 1.25 * $this->horas_extras, 100);
     }
@@ -59,6 +61,10 @@ class NominaEmpleadoNomina extends Model
 
     public function getVHorasExtrasNocturnasAttribute(){
         return  $this->round_up($this->v_hora * 1.35 * $this->horas_extras_nocturnas, 100);
+    }
+
+    public function getVHorasExtrasTotalAttribute(){
+        return $this->v_horas_extras + $this->v_horas_extras_festivos + $this->v_horas_extras_nocturnas + $this->v_recargos_nocturnos;
     }
 
     public function getVRecargosNocturnosAttribute(){
@@ -81,6 +87,7 @@ class NominaEmpleadoNomina extends Model
         return $this->round_up($this->TotalDevengado - $this->v_dias_laborados, 100);
     }
 
+    ///prima servicios
     public function getPrimaAttribute(){
         $meses_prima  = ['Junio', 'Diciembre'];
         $valor = 0;
@@ -99,9 +106,36 @@ class NominaEmpleadoNomina extends Model
         return $this->round_up($valor, 100);           
     }
 
+
+    public function getPrimaNavidadAttribute(){
+        $hh_extras = $this->empleado->movimientos->filter(function($m) {
+            return !is_null($m->nomina);
+        })->filter(function($m) {
+            return $m->nomina->created_at->format('Y') == $m->created_at->format('Y');
+        })->sum('v_horas_Extras_total');
+        /*
+        return [
+            $this->v_dias_laborados , 
+            ($hh_extras/12) , 
+            ($this->prima/12) , 
+            ($this->v_bonificacion_servicios/12) , 
+            ($this->v_prima_antiguedad/12) , 
+            ($this->v_prima_vacaciones/12),
+            $this->v_dias_laborados + ($hh_extras/12) + ($this->prima/12) + ($this->v_bonificacion_servicios/12) + ($this->v_prima_antiguedad/12) + ($this->v_prima_vacaciones/12)
+        ];*/
+
+        return  $this->nomina->mes != 'Diciembre' ? 0 
+                :$this->v_dias_laborados + 
+                ($hh_extras/12) + 
+                ($this->prima/12) + 
+                ($this->v_bonificacion_servicios/12) + 
+                ($this->v_prima_antiguedad/12) + 
+                ($this->v_prima_vacaciones/12);
+    }
+
     public function getVIbcAttribute(){
         return $this->nomina->tipo == 'pensionado' ? $this->sueldo : $this->v_dias_laborados + $this->v_horas_extras + $this->v_horas_extras_festivos + $this->v_horas_extras_nocturnas 
-        + $this->v_recargos_nocturnos + $this->v_bonificacion_servicios + $this->v_prima_antiguedad + $this->retroactivo;//810000
+        + $this->v_recargos_nocturnos + $this->v_bonificacion_servicios + $this->v_prima_antiguedad + $this->retroactivo + $this->prima_navidad;//810000
     }
 
 
@@ -256,5 +290,13 @@ class NominaEmpleadoNomina extends Model
 
         $a = ceil($v/$f);
         return $v != 0 ? $a *$f : 0;
+    }
+
+
+
+    ///scope
+    public function scopeFor_age($query, $age)
+    {
+        return $query->whereYear('created_at', $age);
     }
 }
