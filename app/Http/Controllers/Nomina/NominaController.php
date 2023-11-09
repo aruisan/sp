@@ -256,6 +256,7 @@ class NominaController extends Controller
                 'v_prima_antiguedad' => $e->v_prima_antiguedad,
                 'v_vacaciones' => $e->v_vacaciones,
                 'v_prima_vacaciones' => $e->v_prima_vacaciones,
+                'v_prima_navidad' => $e->prima_navidad,
                 'v_ind' => $e->v_ind,
                 'total_devengado' => $e->total_devengado,
                 'retroactivo' => $e->retroactivo,

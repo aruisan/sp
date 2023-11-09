@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Nomina;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\NominaEmpleado;
+use App\NominaEmpleadoNomina;
 use App\Traits\StorageTraits;
 
 class EmpleadoController extends Controller
@@ -71,11 +72,11 @@ class EmpleadoController extends Controller
     }
 
     public function edit(NominaEmpleado $employee){
+        dd($employee->movimientos->filter(function($m){ return !is_null($m->nomina); })->last()->prima_navidad);
         return view('nomina.empleados.edit', compact('employee'));
     }
 
     public function update(Request $request, NominaEmpleado $employee){
-        dd(6);
 
         $savedEmployeeAptoAdministrativeFile = $request->hasFile('employee_apto_administrative_file') 
                                              ? $this->uploadFile($request->employee_apto_administrative_file, 'empleados/'.$employee->id)
