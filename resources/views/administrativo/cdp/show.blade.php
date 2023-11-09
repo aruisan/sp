@@ -611,6 +611,7 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                {{ $user }}
                                     @if($user->id == 4)
                                         <a href="" class="button-success">Prueba</a>
                                     @endif
