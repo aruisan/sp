@@ -137,11 +137,12 @@ class VigenciaController extends Controller
                 $codeCon = CodeContractuales::all();
 
                 //Rubros no asignados a alguna actividad
-                $Rubros = Rubro::where('vigencia_id', $prepSaved->vigencia_id)->get();
+                $Rubros = Rubro::where('vigencia_id', $id)->get();
                 foreach ($Rubros as $item){
                     $bpin = BPin::where('rubro_id', $item['id_rubro'])->first();
                     if (!$bpin) $rubBPIN[] = collect($item);
                 }
+                dd($Rubros);
 
                 if (!isset($rubBPIN)){
                     $rubBPIN[] = null;
