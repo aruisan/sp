@@ -921,6 +921,7 @@ class CdpController extends Controller
     }
 
     public function reversarSaldo(Request $request){
-        dd($request);
+        $cdp = Cdp::find($request->cdp);
+        dd($cdp);
     }
 }
