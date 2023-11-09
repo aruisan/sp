@@ -93,7 +93,7 @@ class VigenciaController extends Controller
             $bpins = BPin::all();
             $today = Carbon::today();
             $añoActual = $today->year;
-            
+
             if (!$prepSaved) {
                 Artisan::call("schedule:run");
                 $V = "Vacio";
@@ -136,6 +136,18 @@ class VigenciaController extends Controller
                 $fechaData = Carbon::parse($dataPrepSaved->created_at);
                 $codeCon = CodeContractuales::all();
 
+                //Rubros no asignados a alguna actividad
+                $Rubros = Rubro::where('vigencia_id', $prepSaved->vigencia_id)->get();
+                foreach ($Rubros as $item){
+                    $bpin = BPin::where('rubro_id', $item['id_rubro'])->first();
+                    if (!$bpin) $rubBPIN[] = collect($item);
+                }
+
+                if (!isset($rubBPIN)){
+                    $rubBPIN[] = null;
+                    unset($rubBPIN[0]);
+                }
+
                 foreach ($bpins as $bpin){
                     $bpin['rubro'] = "No";
                     if (count($bpin->rubroFind) > 0) {
@@ -145,9 +157,10 @@ class VigenciaController extends Controller
                     }
                 }
 
-                return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
+
+                return view('hacienda.presupuesto.newHistorico', compact( 'prepSaved',
                     'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins','fechaData',
-                    'vigencia','rol','rubrosEgresosAll','fuentes','deps'));
+                    'vigencia','rol','rubrosEgresosAll','fuentes','deps','rubBPIN'));
             }
         } else {
 
