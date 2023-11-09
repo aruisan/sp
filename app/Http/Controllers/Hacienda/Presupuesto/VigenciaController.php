@@ -140,6 +140,8 @@ class VigenciaController extends Controller
                 $Rubros = Rubro::where('vigencia_id', $id)->get();
                 foreach ($Rubros as $item){
                     $bpin = BPin::where('rubro_id', $item['id_rubro'])->first();
+                    dd($item, $bpin);
+
                     if (!$bpin) $rubBPIN[] = collect($item);
                 }
 
@@ -147,8 +149,6 @@ class VigenciaController extends Controller
                     $rubBPIN[] = null;
                     unset($rubBPIN[0]);
                 }
-
-                dd($rubBPIN);                
 
                 foreach ($bpins as $bpin){
                     $bpin['rubro'] = "No";
