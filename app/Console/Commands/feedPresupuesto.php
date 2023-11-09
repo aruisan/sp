@@ -98,16 +98,18 @@ class feedPresupuesto extends Command
                 }
             }
 
-            for ($i = 0; $i < count($porcenEjec); $i++) {
-                if (!isset($newProy)){
-                    $newProy[] = $proyectos[$i];
-                    $valNewProy[] = $porcenEjec[$i];
-                } else{
-                    if (($find = array_search($proyectos[$i], $newProy)) !== FALSE){
-                        $valNewProy[$find] = ($valNewProy[$find] + $porcenEjec[$i])/2;
-                    } else{
+            if (isset($porcenEjec)){
+                for ($i = 0; $i < count($porcenEjec); $i++) {
+                    if (!isset($newProy)){
                         $newProy[] = $proyectos[$i];
                         $valNewProy[] = $porcenEjec[$i];
+                    } else{
+                        if (($find = array_search($proyectos[$i], $newProy)) !== FALSE){
+                            $valNewProy[$find] = ($valNewProy[$find] + $porcenEjec[$i])/2;
+                        } else{
+                            $newProy[] = $proyectos[$i];
+                            $valNewProy[] = $porcenEjec[$i];
+                        }
                     }
                 }
             }
