@@ -30,7 +30,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->only(['email', 'password']);
-        if (! $token = JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             return $this->errorResponse('El correo o la contraseña son incorrectos', Response::HTTP_UNAUTHORIZED);
         }
 

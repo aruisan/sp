@@ -22,7 +22,7 @@
         "scopdrag/laravel-google-chart": "^1.0",
         "spatie/laravel-backup": "^5.0.0",
         "spatie/laravel-permission": "^2.16",
-        "tymon/jwt-auth": "1.0.0-rc.1",
+        "tymon/jwt-auth": "^1.0",
         "villca/numeros-en-letras": "^1.2"
     },
     "require-dev": {

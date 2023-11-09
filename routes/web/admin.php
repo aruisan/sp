@@ -8,6 +8,10 @@ Route::get('/info', function(){
 
 Auth::routes();
 
+Route::get('/demo', function(){
+    return view('visitante.demo');
+});
+
 //Route::get('/home', 'Cobro\HomeController@index')->name('home');
 
 Route::group([ 'middleware' => 'auth'] ,function(){
