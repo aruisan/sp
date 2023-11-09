@@ -919,4 +919,8 @@ class CdpController extends Controller
         $cdp->save();
         return $cdp;
     }
+
+    public function reversarSaldo(Request $request){
+        dd($request);
+    }
 }

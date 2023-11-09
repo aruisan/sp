@@ -611,6 +611,9 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    @if(auth()->user()->id == 4)
+                                        <a href="" class="button-success">Prueba</a>
+                                    @endif
                                 @elseif($cdp->jefe_e == 3)
                                     <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
                                 @endif
