@@ -61,7 +61,7 @@ class TrasladosController extends Controller
             if (!isset($data->rubro->fontRubro->sourceFunding)){
                 $fontRubro = FontsRubro::find($data->rubro->rubro_font_id);
                 $data->rubro->fontRubr = $fontRubro;
-                dd($data, $data->rubro, $data->rubro->fontRubr);
+                dd($data->rubro->fontRubr->sourceFunding);
             }
         }
 
