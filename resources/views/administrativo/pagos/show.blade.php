@@ -113,7 +113,7 @@
                             @if($pago->estado == 2)
                                 <div class="col-lg-12 text-center">
                                     <div class="col-lg-12">
-                                        <br><div class="alert alert-danger"><center>El pago ha sido anulado</center></div><br>
+                                        <br><div class="alert alert-danger"><center>El pago ha sido anulado. Observacion: {{ $pago->observacion }}</center></div><br>
                                     </div>
                                 </div>
                             @endif
