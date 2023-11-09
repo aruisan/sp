@@ -57,7 +57,11 @@ class TrasladosController extends Controller
         $bpins = bpinVigencias::where('vigencia_id', $prepSaved->vigencia_id)->where('saldo','>',0)->get();
         $bpinsAll = bpinVigencias::where('vigencia_id', $prepSaved->vigencia_id)->get();
 
-        dd($bpinsAll[0]);
+        foreach ($bpinsAll as $data){
+            if (!isset($data->rubro->fontRubro->sourceFunding)){
+                dd($data, $data->rubro, $data->rubro->fontRubr);
+            }
+        }
 
         return view('hacienda.presupuesto.traslados.create', compact('año','presupuestos',
             'rubrosEgresos','bpins', 'rubrosEgresosAll', 'bpinsAll'));
