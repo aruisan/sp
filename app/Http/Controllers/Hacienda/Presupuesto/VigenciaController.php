@@ -142,12 +142,13 @@ class VigenciaController extends Controller
                     $bpin = BPin::where('rubro_id', $item['id_rubro'])->first();
                     if (!$bpin) $rubBPIN[] = collect($item);
                 }
-                dd($Rubros);
 
                 if (!isset($rubBPIN)){
                     $rubBPIN[] = null;
                     unset($rubBPIN[0]);
                 }
+
+                dd($rubBPIN);                
 
                 foreach ($bpins as $bpin){
                     $bpin['rubro'] = "No";
