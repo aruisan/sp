@@ -37,21 +37,23 @@
 				</thead>
 				<tbody>
 				@foreach($comprobante->movs as $mov)
-					@if(isset($mov->cuenta_banco))
-						<tr class="text-center">
-							<td>{{ $mov->banco->code}}</td>
-							<td>{{ $mov->banco->concepto}}</td>
-							<td>$ <?php echo number_format($mov->debito,0);?></td>
-							<td>$ <?php echo number_format($mov->credito,0);?></td>
-						</tr>
-					@endif
-					@if(isset($mov->cuenta_puc_id))
-						<tr class="text-center">
-							<td>{{ $mov->puc->code}}</td>
-							<td>{{ $mov->puc->concepto}}</td>
-							<td>$ <?php echo number_format($mov->debito,0);?></td>
-							<td>$ <?php echo number_format($mov->credito,0);?></td>
-						</tr>
+					@if($mov->debito > 0 and $mov->credito > 0)
+						@if(isset($mov->cuenta_banco))
+							<tr class="text-center">
+								<td>{{ $mov->banco->code}}</td>
+								<td>{{ $mov->banco->concepto}}</td>
+								<td>$ <?php echo number_format($mov->debito,0);?></td>
+								<td>$ <?php echo number_format($mov->credito,0);?></td>
+							</tr>
+						@endif
+						@if(isset($mov->cuenta_puc_id))
+							<tr class="text-center">
+								<td>{{ $mov->puc->code}}</td>
+								<td>{{ $mov->puc->concepto}}</td>
+								<td>$ <?php echo number_format($mov->debito,0);?></td>
+								<td>$ <?php echo number_format($mov->credito,0);?></td>
+							</tr>
+						@endif
 					@endif
 				@endforeach
 				</tbody>
@@ -75,12 +77,14 @@
 					<tbody>
 					@foreach($comprobante->movs as $mov)
 						@if(isset($mov->rubro_font_ingresos_id))
-							<tr class="text-center">
-								<td>{{ $mov->fontRubro->rubro->cod}}</td>
-								<td>{{ $mov->fontRubro->rubro->name}}</td>
-								<td>{{ $mov->fontRubro->sourceFunding->code}} - {{$mov->fontRubro->sourceFunding->description}}</td>
-								<td>$ <?php echo number_format($mov->debito,0);?></td>
-							</tr>
+							@if($mov->debito > 0)
+								<tr class="text-center">
+									<td>{{ $mov->fontRubro->rubro->cod}}</td>
+									<td>{{ $mov->fontRubro->rubro->name}}</td>
+									<td>{{ $mov->fontRubro->sourceFunding->code}} - {{$mov->fontRubro->sourceFunding->description}}</td>
+									<td>$ <?php echo number_format($mov->debito,0);?></td>
+								</tr>
+							@endif
 						@endif
 					@endforeach
 					</tbody>
