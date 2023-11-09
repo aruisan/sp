@@ -48,7 +48,7 @@ Class PrepEgresosTraits
 
                     //REGISTROS
                     if ($inicio != null) $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')
-                        ->whereBetween('created_at',array($inicio, $final))->get();
+                        ->whereBetween('created_at',array($inicio, $final))->where('vigencia_id', $vigencia_id)->get();
                     else $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
 
                     if (count($registrosFind) > 0) $valueRegistros[] = $registrosFind->sum('valor');
