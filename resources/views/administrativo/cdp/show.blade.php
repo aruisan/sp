@@ -611,7 +611,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                {{ $user }}
                                     @if($user->id == 4)
                                         <a href="" class="button-success">Prueba</a>
                                     @endif
@@ -881,6 +880,10 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
+                                                @if($user->id == 4)
+                                                    <br>
+                                                    <a href="" class="button-success">Prueba</a>
+                                                @endif
                                             @elseif($cdp->jefe_e != "2")
                                                 <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
                                             @endif
