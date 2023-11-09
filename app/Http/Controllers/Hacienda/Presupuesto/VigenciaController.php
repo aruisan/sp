@@ -140,9 +140,11 @@ class VigenciaController extends Controller
                 $Rubros = Rubro::where('vigencia_id', $id)->get();
                 foreach ($Rubros as $item){
                     foreach ($item->fontsRubro as $fontRubro){
-                        dd($fontRubro->dependenciaFont);
-                        $bpin = BPin::where('rubro_id', $item->id)->first();
-                        if (!$bpin) $rubBPIN[] = collect($item);
+                        foreach ($fontRubro->dependenciaFont as $dependencia){
+                            dd($dependencia, $fontRubro, $item);
+                            $bpin = BPin::where('rubro_id', $item->id)->first();
+                            if (!$bpin) $rubBPIN[] = collect($item);
+                        }
                     }
 
                 }
