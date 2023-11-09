@@ -37,7 +37,7 @@
 				</thead>
 				<tbody>
 				@foreach($comprobante->movs as $mov)
-					@if($mov->debito > 0 and $mov->credito > 0)
+
 						@if(isset($mov->cuenta_banco))
 							<tr class="text-center">
 								<td>{{ $mov->banco->code}}</td>
@@ -54,7 +54,6 @@
 								<td>$ <?php echo number_format($mov->credito,0);?></td>
 							</tr>
 						@endif
-					@endif
 				@endforeach
 				</tbody>
 			</table>
