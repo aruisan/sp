@@ -137,7 +137,7 @@ class VigenciaController extends Controller
                 $codeCon = CodeContractuales::all();
 
                 //Rubros no asignados a alguna actividad
-                $Rubros = Rubro::where('vigencia_id', $id)->get();
+                $Rubros = Rubro::where('vigencia_id', $id)->where('tipo','Inversion')->get();
                 foreach ($Rubros as $item){
                     foreach ($item->fontsRubro as $fontRubro){
                         foreach ($fontRubro->dependenciaFont as $dependencia){
@@ -146,7 +146,6 @@ class VigenciaController extends Controller
                             if (!$bpin) $rubBPIN[] = collect($item);
                         }
                     }
-
                 }
 
                 if (!isset($rubBPIN)){
