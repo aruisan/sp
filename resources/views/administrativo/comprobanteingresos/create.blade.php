@@ -62,6 +62,7 @@
                                                 <option value="SGP Otros sectores">SGP Otros sectores</option>
                                                 <option value="Comprobante de Ingresos">Comprobante de Ingresos</option>
                                                 <option value="Reintegro">Reintegro</option>
+                                                <option value="Legalizacion Viaticos">Legalizacion Viaticos</option>
                                                 <option value="Otro">Otro</option>
                                             </select>
                                             <span style="display: none" id="otroTipo">

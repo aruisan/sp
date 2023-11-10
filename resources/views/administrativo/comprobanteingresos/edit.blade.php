@@ -56,6 +56,7 @@
                                         <option value="SGP Otros sectores" @if($comprobante->tipoCI == 'SGP Otros sectores') selected @endif>SGP Otros sectores</option>
                                         <option value="Comprobante de Ingresos" @if($comprobante->tipoCI == 'Comprobante de Ingresos') selected @endif>Comprobante de Ingresos</option>
                                         <option value="Reintegro" @if($comprobante->tipoCI == 'Reintegro') selected @endif>Reintegro</option>
+                                        <option value="Legalizacion Viaticos" @if($comprobante->tipoCI == 'Legalizacion Viaticos') selected @endif>Legalizacion Viaticos</option>
                                         <option value="Otro" @if($comprobante->tipoCI == 'Otro') selected @endif>Otro</option>
                                     </select>
                                     <span style="display: none" id="otroTipo">

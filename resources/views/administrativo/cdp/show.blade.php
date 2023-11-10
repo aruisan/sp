@@ -611,6 +611,11 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    @if($user->id == 4 and $cdp->saldo > 0)
+                                        <div class="text-center">
+                                            <a onclick="liberarSaldo({{$cdp->id}})" class="btn-sm btn-primary">Liberar Saldo</a>
+                                        </div>
+                                    @endif
                                 @elseif($cdp->jefe_e == 3)
                                     <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
                                 @endif
@@ -877,6 +882,11 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
+                                                @if($user->id == 4 and $cdp->saldo > 0)
+                                                    <div class="text-center">
+                                                        <a onclick="liberarSaldo({{$cdp->id}})" class="btn-sm btn-primary">Liberar Saldo</a>
+                                                    </div>
+                                                @endif
                                             @elseif($cdp->jefe_e != "2")
                                                 <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
                                             @endif
@@ -1037,7 +1047,23 @@
         var count1 = '<?php echo $cdp->rubrosCdp->count(); ?>';
         var ciclo1 = JSON.parse('<?php echo json_encode($cdp->rubrosCdp); ?>');
 
-        
+        function liberarSaldo(id){
+            var opcion = confirm("Esta seguro de liberar el saldo del CDP?");
+            if (opcion == true) {
+                $.ajax({
+                    method: "POST",
+                    url: "/administrativo/cdp/reversarSaldo",
+                    data: { "cdp": id,
+                        "_token": $("meta[name='csrf-token']").attr("content"),
+                    }
+                }).done(function(datos) {
+                    toastr.success('SALDO LIBERADO EXITOSAMENTE');
+                    location.reload();
+                }).fail(function() {
+                    toastr.warning('HUBO UN ERROR AL INTENTAR LIBERAR EL SALDO');
+                });
+            }
+        }
 
         var visto = null;
         function ver(num) {

@@ -259,6 +259,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
         Route::put('cdp/r/{id}/{vigen}', 'Administrativo\Cdp\CdpController@rechazar');
         Route::post('cdp/{id}/anular/{vigen}', 'Administrativo\Cdp\CdpController@anular');
         Route::post('cdp/check', 'Administrativo\Cdp\CdpController@check');
+        Route::post('cdp/reversarSaldo', 'Administrativo\Cdp\CdpController@reversarSaldo');
         //pdf cdp
 		Route::get('cdp/pdf/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdf')->name('cpd-pdf');
 		Route::get('cdp/pdfBorrador/{id}/{vigen}', 'Administrativo\Cdp\CdpController@pdfBorrador')->name('cpd-pdf-borrador');
@@ -527,7 +528,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
 
     //// HISTORICO
-    Route::get('presupuesto/historico/{id}', 'Hacienda\Presupuesto\VigenciaController@historico');
+    Route::get('presupuesto/historico/{mes}/{id}', 'Hacienda\Presupuesto\VigenciaController@historico');
     #Route::get('presupuesto', 'Hacienda\Presupuesto\Egresos\IndexController@index')->name('presupuesto.index');
     Route::get('presupuesto', 'Hacienda\Presupuesto\Egresos\IndexController@newPrepLoad')->name('presupuesto.index');
     Route::post('presupuesto/getPrepSaved', 'Hacienda\Presupuesto\Egresos\IndexController@getPrepSaved');

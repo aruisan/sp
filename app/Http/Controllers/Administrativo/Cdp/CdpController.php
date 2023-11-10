@@ -919,4 +919,67 @@ class CdpController extends Controller
         $cdp->save();
         return $cdp;
     }
+
+    public function reversarSaldo(Request $request){
+        $cdp = Cdp::find($request->cdp);
+        if ($cdp->tipo == "Inversion"){
+            foreach ($cdp->cdpsRegistro as $cdpReg){
+                if ($cdpReg->registro->jefe_e == "3") $totReg[] = $cdpReg->registro->val_total;
+            }
+            $totalReg = array_sum($totReg);
+
+            if ($cdp->valor - $totalReg > 0){
+                $bpin_cdp_valors = BpinCdpValor::where('cdp_id', $cdp->id)->get();
+                foreach ($bpin_cdp_valors as $bpinCdpVal){
+                    //SE AJUSTA BPIN CDP VALOR AL NUEVO VALOR DEL CDP Y SE PONE SU SALDO EN 0
+                    $bpinCdpVal->valor = $totalReg;
+                    $bpinCdpVal->valor_disp = 0;
+                    //SE RETORNA EL SALDO DEL CDP A LA DEP RUBRO FONT
+                    $bpinCdpVal->depRubroFont->saldo = $bpinCdpVal->depRubroFont->saldo + $cdp->saldo;
+                    //SE RETORNA EL SALDO DEL CDP A BPIN VIGENCIAS
+                    $bpinVig = bpinVigencias::where('dep_rubro_id', $bpinCdpVal->depRubroFont->id)->first();
+                    $bpinVig->saldo = $bpinVig->saldo + $cdp->saldo;
+
+                    $bpinVig->save();
+                    $bpinCdpVal->depRubroFont->save();
+                    $bpinCdpVal->save();
+                }
+
+                $cdp->valor = $totalReg;
+                $cdp->saldo = 0;
+                $cdp->save();
+            }
+
+            return "OK";
+        } else {
+            foreach ($cdp->cdpsRegistro as $cdpReg){
+                if ($cdpReg->registro->jefe_e == "3") $totReg[] = $cdpReg->registro->val_total;
+            }
+            $totalReg = array_sum($totReg);
+
+            if ($cdp->valor - $totalReg > 0){
+                foreach ($cdp->rubrosCdpValor as $rubCdpVal){
+                    //SE AJUSTA RUBROS_CDP_VALOR AL NUEVO VALOR DEL CDP Y SE PONE SU SALDO EN 0
+                    $rubCdpVal->valor = $totalReg;
+                    $rubCdpVal->valor_disp = 0;
+                    //SE RETORNA EL SALDO DEL CDP A LA DEP RUBRO FONT
+                    $depRubFont = DependenciaRubroFont::find($rubCdpVal->fontsDep_id);
+                    $depRubFont->saldo = $depRubFont->saldo + $cdp->saldo;
+
+                    //SE RETORNA EL SALDO DEL CDP A FONTS RUBRO
+                    $depRubFont->fontRubro->valor_disp = $depRubFont->fontRubro->valor_disp + $cdp->saldo;
+
+                    $rubCdpVal->save();
+                    $depRubFont->save();
+                    $depRubFont->fontRubro->save();
+                }
+
+                $cdp->valor = $totalReg;
+                $cdp->saldo = 0;
+                $cdp->save();
+            }
+
+            return "OK";
+        }
+    }
 }

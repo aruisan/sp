@@ -318,7 +318,8 @@ class ComprobanteIngresosController extends Controller
      */
     public function destroy($vigen, $id)
     {
-        if (auth()->user()->id == 223){
+        //usuario de JUSTINO y HELEN hellen@admin.com
+        if (auth()->user()->id == 223 or auth()->user()->id == 693) {
             $comprobanteMovs = ComprobanteIngresosMov::where('comp_id', $id)->get();
             foreach ($comprobanteMovs as $mov) $mov->delete();
 
