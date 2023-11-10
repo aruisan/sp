@@ -167,7 +167,7 @@ class VigenciaController extends Controller
 
                 return view('hacienda.presupuesto.newHistorico', compact( 'prepSaved',
                     'añoActual', 'mesActual','V','codeCon','lastDay','actuallyDay','bpins','fechaData',
-                    'vigencia','rol','rubrosEgresosAll','fuentes','deps','rubBPIN'));
+                    'vigencia','rol','rubrosEgresosAll','fuentes','deps','rubBPIN','id'));
             }
         } else {
 
