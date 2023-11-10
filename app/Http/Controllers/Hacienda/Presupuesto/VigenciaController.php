@@ -141,13 +141,15 @@ class VigenciaController extends Controller
                 foreach ($Rubros as $item){
                     foreach ($item->fontsRubro as $fontRubro){
                         foreach ($fontRubro->dependenciaFont as $dependencia){
-                            dd($dependencia, $fontRubro, $item, $dependencia->dependencias);
                             $bpin = BPin::where('rubro_id', $item->id)->first();
                             if (!$bpin) $rubBPIN[] = collect(['depRubID' => $dependencia->id, 'cod' => $item->cod,
-                                'name' => $item->name, 'codDep' => $dependencia]);
+                                'name' => $item->name, 'dep' => $dependencia->dependencias->name,
+                                'presupuesto_inicial' => $saldo]);
                         }
                     }
                 }
+
+                dd($rubBPIN);
 
                 if (!isset($rubBPIN)){
                     $rubBPIN[] = null;
