@@ -13,7 +13,7 @@
                     <h4>Seleccione el rubro correspondiente a la actividad <b><div id="codeActividad"></div><div id="nameActividad"></div></b> </h4>
                     <div id="selectedT"></div>
                     <input type="hidden"  name="actividadCode" id="actividadCode"/>
-                    <input type="hidden"  name="vigencia_id" id="vigencia_id"/>
+                    <input type="hidden"  name="vigencia_id" id="vigencia_id" value="{{$V}}"/>
                     <select class="asignarRubroSelect" style="width: 100%" name="depRubroID" required>
                         @foreach($rubBPIN as $Rubro)
                             <option value="{{$Rubro['depRubID']}}">{{ $Rubro['cod'] }} - {{ $Rubro['name'] }} - {{ $Rubro['dep'] }} - {{ $Rubro['fuente'] }} - $ <?php echo number_format($Rubro['presupuesto_inicial'],0);?></option>
