@@ -13,6 +13,7 @@
             <a class="btn btn-primary" href="{{route('almacen.comprobante.ingreso.create')}}">Nuevo</a>
             <a class="btn btn-primary" href="{{route('almacen.entrada.items')}}">Items</a>
         </div>
+        <br>
         
             <table class="table">
                 <thead>
