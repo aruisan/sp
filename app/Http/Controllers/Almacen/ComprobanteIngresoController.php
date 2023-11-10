@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Model\Persona;
 use App\AlmacenComprobanteIngreso;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
-use App\Notifications\AutorizaconAlmacen;
+use App\Notifications\AutorizacionAlmacen;
+use App\AlmacenArticulo;
 use Session;
 use PDF;
 
@@ -69,5 +70,10 @@ class ComprobanteIngresoController extends Controller
 
     public function import(Request $request){
         
+    }
+
+    public function items(){
+        $items = AlmacenArticulo::all();
+        return view('almacen.ingresos-items', compact('items'));
     }
 }

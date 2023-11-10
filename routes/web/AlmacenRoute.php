@@ -12,14 +12,16 @@ Route::group([ 'middleware' => 'auth', 'prefix' => 'almacen'] ,function(){
     Route::get('/comprobante-ingresos/{ingreso}', "Almacen\ComprobanteIngresoController@show")->name('almacen.ingreso.show');
     Route::get('/comprobante-ingresos/pdf/{ingreso}', "Almacen\ComprobanteIngresoController@pdf")->name('almacen.comprobante.ingreso.pdf');
     Route::post('comprobante-ingreso-import', 'Almacen\ComprobanteIngresoController@import')->name('almacen.entrada.import');
+    Route::get('comprobante-ingreso-items', 'Almacen\ComprobanteIngresoController@items')->name('almacen.entrada.items');
     
-    Route::get('/comprobante-egresos', "Almacen\ComprobanteEgresoController@index")->name('almacen.comprobante.egreso.index');
+    Route::get('/comprobante-egresos-', "Almacen\ComprobanteEgresoController@index")->name('almacen.comprobante.egreso.index');
     Route::get('/comprobante-egresos/create', "Almacen\ComprobanteEgresoController@create")->name('almacen.comprobante.egreso');
     Route::put('/comprobante-egresos/update/{egreso}', "Almacen\ComprobanteEgresoController@update")->name('almacen.egreso.update');
     Route::get('/comprobante-egresos/{egreso}', "Almacen\ComprobanteEgresoController@show")->name('almacen.egreso.show');
     Route::get('/comprobante-egresos/pdf/{egreso}', "Almacen\ComprobanteEgresoController@pdf")->name('almacen.comprobante.egreso.pdf');
     Route::post('/comprobante-egresos/autorizar/{egreso}', "Almacen\ComprobanteEgresoController@autorizar_store")->name('almacen.comprobante.egreso.autorizar');
     Route::get('/comprobante-egreso-dependencia/{egreso}/edit', "Almacen\ComprobanteEgresoController@autorizar")->name('almacen.salida.autorizar.dependencia');
+    Route::get('comprobante-egreso-items', 'Almacen\ComprobanteEgresoController@items')->name('almacen.salida.items');
 
     Route::get('/articulo/mantenimiento/{articulo}', "Almacen\ArticuloMantenimientoController@listar")->name('almacen.articulo.mantenimiento');
     Route::post('/articulo/mantenimiento/{articulo}', "Almacen\ArticuloMantenimientoController@store")->name('almacen.articulo.mantenimiento.store');

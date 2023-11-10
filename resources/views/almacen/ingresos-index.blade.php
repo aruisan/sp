@@ -9,7 +9,11 @@
         </strong>
     </div>
     <div class="row">
-        <a class="btn btn-primary" href="{{route('almacen.comprobante.ingreso.create')}}">Nuevo</a>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a class="btn btn-primary" href="{{route('almacen.comprobante.ingreso.create')}}">Nuevo</a>
+            <a class="btn btn-primary" href="{{route('almacen.entrada.items')}}">Items</a>
+        </div>
+        
             <table class="table">
                 <thead>
                     <th>Entrada</th>
