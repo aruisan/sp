@@ -640,7 +640,7 @@
             $('#tbody-actividades').empty();
             $('#input-cod-proyecto').val(cod_proyecto);
             bpins.filter(r => r.cod_proyecto == cod_proyecto).forEach(e =>{
-                if (e.rubro != "No") var button = e.rubro+`<br> Dinero Asignado: `+e.rubro_find[0].propios.toLocaleString();
+                if (e.rubro != "No") var button = e.rubro+`<br> Dinero Asignado: `+e.rubro_find[0].propios.toLocaleString();+`<br><button onclick="getModalAsignaRubro(${e.cod_actividad})" class="btn btn-primary">Asignar Rubro a la Actividad</button>`;
                 else {
                     //var button = `<b>No hay rubros de inversión disponibles para asignar.</b>`;
                     var button = `<button onclick="getModalAsignaRubro(${e.cod_actividad})" class="btn btn-primary">Asignar Rubro a la Actividad</button>`;
