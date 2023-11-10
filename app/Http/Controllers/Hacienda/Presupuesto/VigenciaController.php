@@ -144,7 +144,7 @@ class VigenciaController extends Controller
                             $bpin = BPin::where('rubro_id', $item->id)->first();
                             if (!$bpin) $rubBPIN[] = collect(['depRubID' => $dependencia->id, 'cod' => $item->cod,
                                 'name' => $item->name, 'dep' => $dependencia->dependencias->name,
-                                'presupuesto_inicial' => $saldo]);
+                                'presupuesto_inicial' => $dependencia->saldo]);
                         }
                     }
                 }
