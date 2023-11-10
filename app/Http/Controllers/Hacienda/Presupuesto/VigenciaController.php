@@ -150,8 +150,6 @@ class VigenciaController extends Controller
                     }
                 }
 
-                dd($rubBPIN);
-
                 if (!isset($rubBPIN)){
                     $rubBPIN[] = null;
                     unset($rubBPIN[0]);
