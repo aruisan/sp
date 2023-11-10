@@ -16,7 +16,12 @@
 
     <div class="tab-content">
         <div id="recientes" class="tab-pane fade in active">
-            <h3>Salidas Recientes  <a class="btn btn-primary" href="{{route('almacen.comprobante.egreso')}}">Nuevo</a></h3> 
+            <h3>Salidas Recientes </h3> 
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <a class="btn btn-primary" href="{{route('almacen.comprobante.egreso')}}">Nuevo</a>
+                <a class="btn btn-primary" href="{{route('almacen.salida.items')}}">Items</a>
+            </div>
+            <br>
             <table class="table">
                 <thead>
                     <th>Salida</th>
