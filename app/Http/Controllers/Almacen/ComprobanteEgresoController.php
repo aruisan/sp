@@ -18,7 +18,6 @@ use PDF;
 
 class ComprobanteEgresoController extends Controller
 {
-
     public function index(){
         $salidas = AlmacenComprobanteEgreso::get()->filter(function($g){ return $g->salidas_pivot->count() > 0; });
         $recientes = $salidas->filter(function($salida){ return $salida->historico ==  FALSE; });
@@ -107,5 +106,10 @@ class ComprobanteEgresoController extends Controller
         $pucs = PucAlcaldia::whereIn('id', $pucs_id)->get();
         $pdf = PDF::loadView('almacen.salida-pdf', compact('egreso', 'pucs'))->setOptions(['images' => true,'isRemoteEnabled' => true]);
         return $pdf->stream();
+    }
+
+    public function items(){
+        $salidas = AlmacenComprobanteEgreso::get();
+        return view('almacen.egresos-items', compact('salidas'));
     }
 }
