@@ -146,7 +146,7 @@ class VigenciaController extends Controller
                             if ($dependencia->saldo > $bpinSelected->sum('propios')) {
                                 $rubBPIN[] = collect(['depRubID' => $dependencia->id, 'cod' => $item->cod,
                                     'name' => $item->name, 'dep' => $dependencia->dependencias->name,
-                                    'presupuesto_inicial' => $dependencia->saldo,
+                                    'presupuesto_inicial' => $dependencia->saldo - $bpinSelected->sum('propios'),
                                     'fuente' => $fontRubro->sourceFunding->code.' - '.$fontRubro->sourceFunding->description]);
                             }
                         }
