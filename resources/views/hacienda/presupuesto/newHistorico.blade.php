@@ -662,8 +662,6 @@
                 document.getElementById("codeActividad").innerHTML = code;
                 document.getElementById("dispActividad").innerHTML = e.saldo;
                 $('#actividadCode').val(code);
-                $('#vigencia_id').val(e.vigencia_id);
-                $('#valueAsignarRubro').val(e.saldo);
                 $(document).on('keyup', '#valueAsignarRubro', function(event) {
                     let max= parseInt(e.saldo);
                     let valor = parseInt(this.value);
