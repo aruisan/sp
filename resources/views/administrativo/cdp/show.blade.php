@@ -611,8 +611,10 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    @if($user->id == 4)
-                                        <a onclick="liberarSaldo({{$cdp->id}})" class="button-success">Prueba</a>
+                                    @if($user->id == 4 and $cdp->saldo > 0)
+                                        <div class="text-center">
+                                            <a onclick="liberarSaldo({{$cdp->id}})" class="btn-sm btn-primary">Liberar Saldo</a>
+                                        </div>
                                     @endif
                                 @elseif($cdp->jefe_e == 3)
                                     <br><div class="alert alert-danger"><center>El CDP no tiene registros asignados</center></div><br>
@@ -880,10 +882,9 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                @if($user->id == 4)
-                                                    <br>
+                                                @if($user->id == 4 and $cdp->saldo > 0)
                                                     <div class="text-center">
-                                                        <a onclick="liberarSaldo({{$cdp->id}})" class="btn button-success">Prueba</a>
+                                                        <a onclick="liberarSaldo({{$cdp->id}})" class="btn-sm btn-primary">Liberar Saldo</a>
                                                     </div>
                                                 @endif
                                             @elseif($cdp->jefe_e != "2")
@@ -1057,7 +1058,7 @@
                     }
                 }).done(function(datos) {
                     toastr.success('SALDO LIBERADO EXITOSAMENTE');
-                    console.log(datos);
+                    location.reload();
                 }).fail(function() {
                     toastr.warning('HUBO UN ERROR AL INTENTAR LIBERAR EL SALDO');
                 });
