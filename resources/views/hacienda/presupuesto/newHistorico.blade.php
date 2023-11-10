@@ -666,8 +666,8 @@
                     let max= parseInt(e.saldo);
                     let valor = parseInt(this.value);
                     if(valor>max){
-                        alert("El Valor no está Permitido")
-                        this.value = max;
+                        //alert("El Valor no está Permitido")
+                        //this.value = max;
                     }
                 });
             });
