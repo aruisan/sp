@@ -143,11 +143,12 @@ class VigenciaController extends Controller
                     foreach ($item->fontsRubro as $fontRubro){
                         foreach ($fontRubro->dependenciaFont as $dependencia){
                             $bpinSelected = bpinVigencias::where('dep_rubro_id', $dependencia->id)->get();
-                            dd($bpinSelected->sum('propios'), $dependencia);
-                            if (!$bpin) $rubBPIN[] = collect(['depRubID' => $dependencia->id, 'cod' => $item->cod,
-                                'name' => $item->name, 'dep' => $dependencia->dependencias->name,
-                                'presupuesto_inicial' => $dependencia->saldo,
-                                'fuente' => $fontRubro->sourceFunding->code.' - '.$fontRubro->sourceFunding->description]);
+                            if ($dependencia->saldo > $bpinSelected->sum('propios')) {
+                                $rubBPIN[] = collect(['depRubID' => $dependencia->id, 'cod' => $item->cod,
+                                    'name' => $item->name, 'dep' => $dependencia->dependencias->name,
+                                    'presupuesto_inicial' => $dependencia->saldo,
+                                    'fuente' => $fontRubro->sourceFunding->code.' - '.$fontRubro->sourceFunding->description]);
+                            }
                         }
                     }
                 }
