@@ -304,6 +304,7 @@
         $('.selectRubroCC').select2();
         $('.selectFuente').select2();
         $('.selectDep').select2();
+        $('.asignarRubroSelect').select2();
 
         var rol = @json(auth()->user()->roles->first()->id)
 
