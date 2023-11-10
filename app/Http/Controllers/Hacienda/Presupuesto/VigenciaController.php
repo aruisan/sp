@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Hacienda\Presupuesto;
 
 use App\BPin;
+use App\bpinVigencias;
 use App\Exports\InfMensualExport;
 use App\Model\Admin\Dependencia;
 use App\Model\Admin\DependenciaRubroFont;
@@ -141,7 +142,8 @@ class VigenciaController extends Controller
                 foreach ($Rubros as $item){
                     foreach ($item->fontsRubro as $fontRubro){
                         foreach ($fontRubro->dependenciaFont as $dependencia){
-                            $bpin = BPin::where('rubro_id', $item->id)->first();
+                            $bpinSelected = bpinVigencias::where('dep_rubro_id', $dependencia->id)->get();
+                            dd($bpinSelected->sum('propios'), $dependencia);
                             if (!$bpin) $rubBPIN[] = collect(['depRubID' => $dependencia->id, 'cod' => $item->cod,
                                 'name' => $item->name, 'dep' => $dependencia->dependencias->name,
                                 'presupuesto_inicial' => $dependencia->saldo,
