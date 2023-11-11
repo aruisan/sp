@@ -49,7 +49,8 @@ Class PrepEgresosTraits
                     //REGISTROS
                     if ($inicio != null) $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')
                         ->whereBetween('created_at',array($inicio, $final))->where('vigencia_id', $vigencia_id)->get();
-                    else $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')->get();
+                    else $registrosFind = Registro::where('id','>=', 778)->where('jefe_e','3')
+                        ->where('vigencia_id', $vigencia_id)->get();
 
                     if (count($registrosFind) > 0) $valueRegistros[] = $registrosFind->sum('valor');
                     else $valueRegistros[] = 0;
@@ -57,7 +58,8 @@ Class PrepEgresosTraits
                     //orden pagos
                     if ($inicio != null) $ordenesPago = OrdenPagos::where('estado','1')
                         ->whereBetween('created_at',array($inicio, $final))->get();
-                    else $ordenesPago = OrdenPagos::where('estado','1')->get();
+                    else $ordenesPago = OrdenPagos::where('estado','1')->where('vigencia_id', $vigencia_id)
+                        ->whereBetween('created_at',array($vigencia->vigencia.'-01-01', $vigencia->vigencia.'-12-31'))->get();
 
                     if (count($ordenesPago) > 0) $valueOrdenPago[] = $ordenesPago->sum('valor');
                     else $valueOrdenPago[] = 0;
