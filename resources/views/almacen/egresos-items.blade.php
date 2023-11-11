@@ -28,13 +28,45 @@
                     <th class="text-center">Total</th>
                     <th class="text-center">ccd</th>
                     <th class="text-center">ccc</th>
-                    <th class="text-center">Comprobante de Salida</th>
                 </tr>
+                <thead>
+                    <th scope="col">@lang('posts.index.columns.index')</th>
+                    <th scope="col">@lang('posts.index.columns.nombre')</th>
+                    <th scope="col">@lang('posts.index.columns.codigo')</th>
+                    <th scope="col">@lang('posts.index.columns.marca')</th>
+                    <th scope="col">@lang('posts.index.columns.presentacion')</th>
+                    <th scope="col">@lang('posts.index.columns.referencia')</th>
+                </thead>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            <input type="text" data-column="1"
+                                class="data-table-search-input-text form-control"
+                                style="width: 100%">
+                        </th>
+                        <th>
+                            <input type="text" data-column="2"
+                                class="data-table-search-input-text form-control"
+                                style="width: 100%">
+                        </th>
+                        <th>
+                            <input type="text" data-column="3"
+                                class="data-table-search-input-text form-control"
+                                style="width: 100%">
+                        </th>
+                        <th>
+                            <input type="text" data-column="4"
+                                class="data-table-search-input-text form-control"
+                                style="width: 100%">
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
                 </thead>
                 <tbody>
-                    @if($salidas->count() > 0)
-                        @foreach($salidas as $salida)
-                            @foreach($salida->salidas_pivot as $item)
+                    @if($items->count() > 0)
+                        @foreach($items as $item)
                             <tr class="text-center">
                                 <td>{{ $item->articulo->index }}</td>
                                 <td>{{ $item->articulo->nombre_articulo}}</td>
@@ -46,10 +78,8 @@
                                 <td>{{ $item->articulo->valor_unitario}}</td>
                                 <td>{{ $item->total}}</td>
                                 <td>{{ $item->articulo->puc_ccd->code}}</td>
-                                <td>{{ $salida->ccd}}</td>
-                                <td><a href="{{ route('almacen.egreso.show', $salida->id)}}" target="_blank">{{ $salida->nombre}}</a></td>
+                                <td>{{ is_null($item->egreso->puc_credito) ? "no tiene" : $item->egreso->puc_credito->code}}</td>
                             </tr>
-                            @endforeach
                         @endforeach
                     @else
                         <tr><td colspan="8" class="text-center">No tiene Salidas</td></tr>
@@ -61,10 +91,32 @@
     </div>
 @stop
 @section('js')
+
     <script>
-        $('.table').DataTable( {
+    $.ajaxSetup ({
+        headers: {
+            'X-CSRF-TOKEN': $ ('meta[name="csrf-token"]').attr ('content')
+        }
+    });
+
+    var postsTable =  $('.table').DataTable( {
             responsive: true,
-            "searching": true,
+            "ordering": true,
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "{{ route('almacen.egresos.items.data') }}",
+                "dataType": "json",
+                "type": "POST"
+            },
+            "columns": [
+                {"data": "checkbox"},
+                {"data": "id"},
+                {"data": "title"},
+                {"data": "description"},
+                {"data": "created_at"},
+                {"data": "options"}
+            ],
             dom: 'Bfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'print'

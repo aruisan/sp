@@ -109,7 +109,9 @@ class ComprobanteEgresoController extends Controller
     }
 
     public function items(){
-        $salidas = AlmacenComprobanteEgreso::get();
-        return view('almacen.egresos-items', compact('salidas'));
+
+        $salidas = AlmacenComprobanteEgreso::get()->pluck('id')->toArray();
+        $items = AlmacenArticuloSalida::whereIn('almacen_comprobante_egreso_id', $salidas)->get();
+        return view('almacen.egresos-items', compact('items'));
     }
 }
