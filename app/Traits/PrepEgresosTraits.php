@@ -67,7 +67,8 @@ Class PrepEgresosTraits
                     //pagos
                     if ($inicio != null) $pagosDB = Pagos::where('id','>=',683)->where('estado','1')
                         ->whereBetween('created_at',array($inicio, $final))->get();
-                    else $pagosDB = Pagos::where('id','>=',683)->where('estado','1')->get();
+                    else $pagosDB = Pagos::where('id','>=',683)->where('estado','1')
+                        ->whereBetween('created_at',array($vigencia->vigencia.'-01-01', $vigencia->vigencia.'-12-31'))->get();
 
                     if (count($pagosDB) > 0) $valuePagos[] = $pagosDB->sum('valor');
                     else $valuePagos[] = 0;
