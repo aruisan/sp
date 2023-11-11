@@ -58,7 +58,7 @@ Class PrepEgresosTraits
                     //orden pagos
                     if ($inicio != null) $ordenesPago = OrdenPagos::where('estado','1')
                         ->whereBetween('created_at',array($inicio, $final))->get();
-                    else $ordenesPago = OrdenPagos::where('estado','1')->where('vigencia_id', $vigencia_id)
+                    else $ordenesPago = OrdenPagos::where('estado','1')
                         ->whereBetween('created_at',array($vigencia->vigencia.'-01-01', $vigencia->vigencia.'-12-31'))->get();
 
                     if (count($ordenesPago) > 0) $valueOrdenPago[] = $ordenesPago->sum('valor');
