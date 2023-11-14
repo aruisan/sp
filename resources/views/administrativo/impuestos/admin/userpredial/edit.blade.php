@@ -118,7 +118,7 @@
                                     <div class="form-group">
                                         <label class="control-label text-right col-md-4" for="mt2">mt2 <span class="text-danger">*</span></label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" required min="0" name="mt2" id="mt2" style="text-align:center" value="{{ $user->metros }}">
+                                            <input type="text" class="form-control" required name="mt2" id="mt2" style="text-align:center" value="{{ $user->metros }}">
                                         </div>
                                     </div>
                                     <br>
