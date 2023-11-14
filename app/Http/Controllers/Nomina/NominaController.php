@@ -27,7 +27,7 @@ class NominaController extends Controller
     }
 
     public function index($tipo){
-        $nominas = Nomina::where('tipo', $tipo)->orderBy('id', 'desc')->get();
+        $nominas = Nomina::where('tipo', $tipo)->orderBy('id', 'desc')->paginate(5);
         return view("{$this->view}.index_{$tipo}", compact('nominas'));
     }
 

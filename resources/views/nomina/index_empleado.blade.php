@@ -85,6 +85,7 @@
 							</tbody>
 						</table>
 					</div>
+					{{ $nominas->links() }}
 				</div>
 			</div>
 		</div>
@@ -99,7 +100,7 @@
 <script>
 	
 
-	$('#example').DataTable( {
+	$('#example1').DataTable( {
 		language: {
 			"lengthMenu": "Mostrar _MENU_ registros",
 			"zeroRecords": "No se encontraron resultados",
