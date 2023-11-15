@@ -203,8 +203,8 @@
                             <thead>
                             <tr>
                                 <th class="text-center">Cuenta PUC</th>
-                                <th class="text-center">Credito</th>
                                 <th class="text-center">Debito</th>
+                                <th class="text-center">Credito</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -219,10 +219,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" required class="form-control" id="credPUC" name="credPUC" min="0" style="text-align:center" value="0">
+                                    <input type="number" required class="form-control" id="debPUC" name="debPUC" min="0" style="text-align:center" value="0">
                                 </td>
                                 <td>
-                                    <input type="number" required class="form-control" id="debPUC" name="debPUC" min="0" style="text-align:center" value="0">
+                                    <input type="number" required class="form-control" id="credPUC" name="credPUC" min="0" style="text-align:center" value="0">
                                 </td>
                             </tr>
                         </table>
@@ -255,12 +255,13 @@
                 alert(`el Número de ${nombre} es obligatorio`);
             }else{
 
-
                 const pagoDeb= document.querySelectorAll('input[name="val[]"]');
                 var pagoTotal = document.getElementById('montoPago').value;
+                var pagoCredPUC = document.getElementById('credPUC').value;
                 pagoTotal = parseInt(pagoTotal);
 
                 let valores = [0]
+                valores.push(parseInt(pagoCredPUC));
                 pagoDeb.forEach((elemento) => {
                     valores.push(parseInt(elemento.value));
                 });
