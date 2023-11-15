@@ -109,6 +109,13 @@
                                 <h4><b>@if($pago->estado != 2) REFERENCIA DE PAGO: @endif</b> {{$pago->referenciaPago}}</h4>
                             </div>
                         @endif
+                        @if($pago->estado == 1)
+                            <div class="col-lg-12 text-center">
+                                <br>
+                                <h4><b>@if($pago->adultoMayor == 1) PAGO DE ADULTO MAYOR @elseif($pago->retefuente == 1) PAGO DE RETENCION EN LA FUENTE
+                                        @elseif($pago->embargo == 1) PAGO DE EMBARGO @endif</b></h4>
+                            </div>
+                        @endif
                         <div class="col-md-12 align-self-center">
                             @if($pago->estado == 2)
                                 <div class="col-lg-12 text-center">
