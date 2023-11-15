@@ -326,7 +326,7 @@
             <div id="movimientos" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 tab-pane">
                 <center><h2>Movimientos del Rubro</h2></center>
                 <br>
-                <div class="col-md-8 align-self-center">
+                <div class="col-md-12 align-self-center">
                     <div class="table-responsive">
                         <table class="table table-bordered" id="tablaMovimientos">
                             <thead>
@@ -422,7 +422,8 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-md-4 align-self-center">
+                <br>
+                <div class="col-md-12 align-self-center">
                     @if($files != 0)
                         <center>
                             <h3>Resoluciones del Rubro</h3>
