@@ -173,16 +173,17 @@ class RubrosController extends Controller
         foreach ($RubrosM as $data){
             if ($data->resource_id == 0){
                 foreach ($data->ResourcesMov as $resource) $files[] = collect(['idResource' => $resource->id , 'ruta' => $resource->ruta, 'mov' => $data->movimiento,
-                    'fecha' => Carbon::parse($data->created_at)->format('d-m-Y')]);
+                    'fecha' => Carbon::parse($data->created_at)->format('d-m-Y'), 'valor' => $data->valor]);
             } else $files[] = collect(['idResource' => $data->resource_id , 'ruta' => $data->Resource->ruta, 'mov' => $data->movimiento,
-                'fecha' => Carbon::parse($data->created_at)->format('d-m-Y')]);
+                'fecha' => Carbon::parse($data->created_at)->format('d-m-Y'), 'valor' => $data->valor]);
         }
         if (!isset($files)){
             foreach ($rubro->fontsRubro as $fr){
                 $RubrosMov = RubrosMov::where([['fonts_rubro_id','=',$fr->id],['valor','>','0']])->get();
                 foreach ($RubrosMov as $data2){
                     $files[] = collect(['idResource' => $data2->resource_id , 'ruta' => $data2->Resource->ruta,
-                        'mov' => $data2->movimiento, 'fecha' => Carbon::parse($data2->created_at)->format('d-m-Y')]);
+                        'mov' => $data2->movimiento, 'fecha' => Carbon::parse($data2->created_at)->format('d-m-Y'),
+                        'valor' => $data2->valor]);
                 }
             }
             if (!isset($files)) $files = 0;

@@ -432,11 +432,11 @@
                             <div class="row text-center">
                                 @foreach($files as $file)
                                     @if($file['mov'] == 1)
-                                        <!-- <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Credito y Contracredito - {{ $file['fecha'] }}</a> -->
+                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Credito y Contracredito - {{ $file['fecha'] }} - $ <?php echo number_format($file['valor'],0);?>.00</a>
                                     @elseif($file['mov'] == 2)
-                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Adición - {{ $file['fecha'] }}</a>
+                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Adición - {{ $file['fecha'] }} - $ <?php echo number_format($file['valor'],0);?>.00</a>
                                     @elseif($file['mov'] == 3)
-                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Reducción - {{ $file['fecha'] }}</a>
+                                        <a href="{{Storage::url($file['ruta'])}}" title="Ver" class="btn btn-success"><i class="fa fa-file-pdf-o"></i>&nbsp; Reducción - {{ $file['fecha'] }} - $ <?php echo number_format($file['valor'],0);?>.00</a>
                                     @endif
                                 @endforeach
                             </div>
