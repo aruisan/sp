@@ -344,6 +344,9 @@ class PagosController extends Controller
         $valR =number_format($valReceived,0);
         $valT = number_format($valTotal,0);
 
+        //SE SUMA EL CREDITO DE LA CUENTA PUC ADICIONAL QUE SE REQUIERE AGREGAR
+        if ($request->credPUC > 0) $valReceived = $valReceived + $request->credPUC;
+
         if ($valReceived == $valTotal){
 
             $OP = OrdenPagos::findOrFail($request->ordenPago_id);
