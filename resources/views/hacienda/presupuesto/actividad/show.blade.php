@@ -198,7 +198,38 @@
             } );
 
             $('#tablaCDPs').DataTable( {
-                responsive: true
+                responsive: true,
+                dom: 'Bfrtilp',
+                buttons:[
+                    {
+                        extend:    'copyHtml5',
+                        text:      '<i class="fa fa-clone"></i> ',
+                        titleAttr: 'Copiar',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'excelHtml5',
+                        text:      '<i class="fa fa-file-excel-o"></i> ',
+                        titleAttr: 'Exportar a Excel',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend:    'pdfHtml5',
+                        text:      '<i class="fa fa-file-pdf-o"></i> ',
+                        titleAttr: 'Exportar a PDF',
+                        message : 'SIEX-Providencia',
+                        header :true,
+                        orientation : 'landscape',
+                        pageSize: 'LEGAL',
+                        className: 'btn btn-primary',
+                    },
+                    {
+                        extend:    'print',
+                        text:      '<i class="fa fa-print"></i> ',
+                        titleAttr: 'Imprimir',
+                        className: 'btn btn-primary'
+                    },
+                ]
             } );
 
             $(document).on('click', '.borrar', function (event) {
