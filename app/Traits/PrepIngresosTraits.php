@@ -53,10 +53,10 @@ Class PrepIngresosTraits
                 $hijos1 = PlantillaCuipoIngresos::where('padre_id', $data->id)->get();
                 if (count($hijos1) > 0){
                     foreach ($hijos1 as $h1){
-                        if ($data->name == 'INGRESOS CORRIENTES' and $h1->id == 48){
-                            dd($prepIng, $h1, $data, $sum);
-                        }
                         $hijos2 = PlantillaCuipoIngresos::where('padre_id', $h1->id)->get();
+                        if ($data->name == 'INGRESOS CORRIENTES' and $h1->id == 48){
+                            dd($prepIng, $h1, $data, $sum, $hijos2);
+                        }
                         if (count($hijos2) > 0){
                             foreach ($hijos2 as $h2){
                                 $hijos3 = PlantillaCuipoIngresos::where('padre_id', $h2->id)->get();
