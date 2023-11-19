@@ -742,6 +742,11 @@ Class PrepIngresosTraits
             }
         }
 
+        foreach ($prepIng as $prep) if ($prep['code'] == '1.1.01' or $prep['code'] == '1.1.02') $recaudado[] = $prep['recaudado'];
+
+        dd($recaudado);
+        
+
         return $prepIng;
     }
 
