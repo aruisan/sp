@@ -52,6 +52,7 @@ Class PrepIngresosTraits
             } else {
                 $hijos1 = PlantillaCuipoIngresos::where('padre_id', $data->id)->get();
                 if (count($hijos1) > 0){
+                    if ($data->name == 'INGRESOS CORRIENTES') dd($prepIng, 'START');
                     foreach ($hijos1 as $h1){
                         $hijos2 = PlantillaCuipoIngresos::where('padre_id', $h1->id)->get();
                         if (count($hijos2) > 0){
@@ -483,7 +484,7 @@ Class PrepIngresosTraits
 
                         if (!isset($descFromOPs)) $descFromOPs[] = 0;
 
-                        if ($data->name == 'INGRESOS CORRIENTES') dd($data, $prepIng, $sum, $compIngValue);
+                        if ($data->name == 'INGRESOS CORRIENTES') dd($prepIng, $sum, $compIngValue);
 
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
