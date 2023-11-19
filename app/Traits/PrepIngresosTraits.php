@@ -854,7 +854,9 @@ Class PrepIngresosTraits
                 }
 
                 if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                else $adicionesH = 0;
                 if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+                else $reduccionesH = 0;
 
                 $sum[] = $rubroRev[0]->fontsRubro->sum('valor');
                 unset($OPDes);
@@ -892,7 +894,9 @@ Class PrepIngresosTraits
                     }
 
                     if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
+                    else $adicionesH = 0;
                     if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
+                    else $reduccionesH = 0;
 
                     $sum[] = $rb->fontsRubro->sum('valor');
                 }
