@@ -70,10 +70,10 @@ Class PrepIngresosTraits
                                                         } else {
                                                             $getDataFunction = $this->getData($vigencia, $h5Rev, $inicio, $final);
                                                             if (count($getDataFunction) > 0){
-                                                                $sum[] = $getDataFunction->sum;
-                                                                $adicionesH[] = $getDataFunction->hijosAdicion;
-                                                                $reduccionesH[] = $getDataFunction->hijosReduccion;
-                                                                $civ[] = $getDataFunction->civ;
+                                                                $sum[] = $getDataFunction['sum'];
+                                                                $adicionesH[] = $getDataFunction['hijosAdicion'];
+                                                                $reduccionesH[] = $getDataFunction['hijosReduccion'];
+                                                                $civ[] = $getDataFunction['civ'];
                                                             }
                                                         }
                                                     }
