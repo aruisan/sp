@@ -833,8 +833,6 @@ Class PrepIngresosTraits
 
             $data = collect(['sum' => array_sum($sum), 'hijosAdicion' => array_sum($adicionesH), 'hijosReduccion' =>
                 array_sum($reduccionesH), 'civ' => $comIngTot]);
-            if ($rubro->code == '1.1.02.03.002') dd($rubro, $rubroRev, $data);
-
             return $data;
         } else return [];
     }
