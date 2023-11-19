@@ -902,7 +902,6 @@ Class PrepIngresosTraits
                 }
             }
             $data = collect(['sum' => $sum, 'hijosAdicion' => $adicionesH, 'hijosReduccion' => $reduccionesH, 'civ' => array_sum($civ)]);
-            dd("FUNCTION",$data, $rubroRev);
             return $data;
         } else return [];
     }
