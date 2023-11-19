@@ -858,7 +858,7 @@ Class PrepIngresosTraits
                 if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
                 else $reduccionesH = 0;
 
-                $sum[] = $rubroRev[0]->fontsRubro->sum('valor');
+                $sum = $rubroRev[0]->fontsRubro->sum('valor');
                 unset($OPDes);
 
             } else {
@@ -898,10 +898,10 @@ Class PrepIngresosTraits
                     if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
                     else $reduccionesH = 0;
 
-                    $sum[] = $rb->fontsRubro->sum('valor');
+                    $sum = $rb->fontsRubro->sum('valor');
                 }
             }
-            $data = collect(['sum' => $sum, 'hijosAdicion' => $adicionesH, 'hijosReduccion' => $reduccionesH, 'civ' => $civ]);
+            $data = collect(['sum' => $sum, 'hijosAdicion' => $adicionesH, 'hijosReduccion' => $reduccionesH, 'civ' => array_sum($civ)]);
             dd("FUNCTION",$data, $rubroRev);
             return $data;
         } else return [];
