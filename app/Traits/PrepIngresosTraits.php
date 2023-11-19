@@ -100,7 +100,13 @@ Class PrepIngresosTraits
                                             }
                                         }
                                     } else {
-                                        if ($hijoRev->name == 'TASAS Y DERECHOS ADMINISTRATIVOS') dd($hijoRev, $h3Rev);
+                                        $getDataFunction = $this->getData($vigencia, $h3Rev, $inicio, $final);
+                                        if (count($getDataFunction) > 0){
+                                            $sum[] = $getDataFunction['sum'];
+                                            $adicionesH[] = $getDataFunction['hijosAdicion'];
+                                            $reduccionesH[] = $getDataFunction['hijosReduccion'];
+                                            $civ[] = $getDataFunction['civ'];
+                                        }
                                     }
                                 }
                             }
