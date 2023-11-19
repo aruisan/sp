@@ -58,6 +58,7 @@ Class PrepIngresosTraits
                             foreach ($hijos2 as $hijoRev){
                                 $hijos3Rev = PlantillaCuipoIngresos::where('padre_id', $hijoRev->id)->get();
                                 foreach ($hijos3Rev as $h3Rev){
+                                    dd($h3Rev);
                                     $hijos4Rev = PlantillaCuipoIngresos::where('padre_id', $h3Rev->id)->get();
                                     if (count($hijos4Rev) > 0){
                                         foreach ($hijos4Rev as $h4Rev) {
