@@ -69,7 +69,9 @@ Class PrepIngresosTraits
                                                             dd("no son");
                                                         } else {
                                                             $getDataFunction = $this->getData($vigencia, $h5Rev, $inicio, $final);
-                                                            dd("result",$getDataFunction);
+                                                            if (count($getDataFunction) > 0){
+                                                                dd("result",$getDataFunction);
+                                                            }
                                                         }
                                                     }
                                                 }
