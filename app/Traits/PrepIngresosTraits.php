@@ -90,7 +90,7 @@ Class PrepIngresosTraits
                                                     }
                                                 }
                                             } else {
-                                                $getDataFunction = $this->getData($vigencia, $h5Rev, $inicio, $final);
+                                                $getDataFunction = $this->getData($vigencia, $h4Rev, $inicio, $final);
                                                 if (count($getDataFunction) > 0){
                                                     $sum[] = $getDataFunction['sum'];
                                                     $adicionesH[] = $getDataFunction['hijosAdicion'];
