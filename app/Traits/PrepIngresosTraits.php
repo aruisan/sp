@@ -31,6 +31,29 @@ Class PrepIngresosTraits
                 }
             }
         }
+
+        //VALIDACION DE LOS DESCUENTOS DE ORDENES DE PAGO QUE AFECTAN PRESUPUESTO DE INGRESOS
+        $ids = [2,3,5];
+        foreach ($ids as $descOP){
+            $OPDes = OrdenPagosDescuentos::where('desc_municipal_id', $descOP)->get();
+            if (isset($OPDes)){
+                foreach ($OPDes as $descuento){
+                    $op = OrdenPagos::find($descuento->orden_pagos_id);
+                    if ($op and $op->estado == '1' and Carbon::parse($op->created_at)->year == $vigencia->vigencia){
+                        if ($inicio != null) {
+                            if (date('Y-m-d', strtotime($op->created_at)) <= $final and date('Y-m-d', strtotime($op->created_at)) >= $inicio) {
+                                $descOPs[] = $descuento->valor;
+                            }
+                        }else $descOPs[] = $descuento->valor;
+                    }
+                }
+                if (isset($descOPs)) {
+                    $totComIng[] = array_sum($descOPs);
+                    unset($descOPs);
+                }
+            }
+        }
+
         if (!isset($totComIng)) $totComIng[] = 0;
         $plantillaIng = PlantillaCuipoIngresos::all();
         foreach ($plantillaIng as $data){
@@ -540,8 +563,6 @@ Class PrepIngresosTraits
                         $definitivo = $adicionesTot - $reduccionesTot + array_sum($sum);
 
                         if (!isset($descFromOPs)) $descFromOPs[] = 0;
-
-                        //if ($data->name == 'INGRESOS CORRIENTES') dd($prepIng, $sum, $compIngValue);
 
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
