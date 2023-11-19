@@ -743,9 +743,12 @@ Class PrepIngresosTraits
         }
 
         foreach ($prepIng as $prep) if ($prep['code'] == '1.1.01' or $prep['code'] == '1.1.02') $recaudado[] = $prep['recaudado'];
-
-        dd($recaudado);
-        
+        foreach ($prepIng as $prep){
+            if ($prep['code'] == '1.1') {
+                $prep['recaudado'] = array_sum($recaudado);
+                $prep['porRecaudar'] = $prep['definitivo'] - array_sum($recaudado);
+            }
+        }
 
         return $prepIng;
     }
