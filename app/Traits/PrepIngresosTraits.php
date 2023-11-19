@@ -564,7 +564,7 @@ Class PrepIngresosTraits
 
                         if (!isset($descFromOPs)) $descFromOPs[] = 0;
 
-                        if ($data->code == '1.1') dd($civ,  array_sum($civ));
+                        if ($data->code == '1.1') dd(array_sum($civ));
 
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
@@ -772,11 +772,13 @@ Class PrepIngresosTraits
 
                     if (count($font->compIng) > 0) {
                         foreach ($font->compIng as $compI){
-                            if ($inicio != null) {
-                                if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
-                                    $civ[] = $compI->debito;
-                                }
-                            }else $civ[] = $compI->debito;
+                            if ($compI->comprobante->estado == '3') {
+                                if ($inicio != null) {
+                                    if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
+                                        $civ[] = $compI->debito;
+                                    }
+                                } else $civ[] = $compI->debito;
+                            }
                         }
                     }
                 }
@@ -840,7 +842,7 @@ Class PrepIngresosTraits
                                             $civ[] = $compI->debito;
                                         }
                                     }else $civ[] = $compI->debito;
-                                } else dd($compI->comprobante);
+                                }
                             }
                         }
                     }
