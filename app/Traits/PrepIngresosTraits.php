@@ -820,7 +820,10 @@ Class PrepIngresosTraits
                     $sum = $rb->fontsRubro->sum('valor');
                 }
             }
-            $data = collect(['sum' => $sum, 'hijosAdicion' => $adicionesH, 'hijosReduccion' => $reduccionesH, 'civ' => array_sum($civ)]);
+            if (isset($civ)) $comIngTot = array_sum($civ);
+            else $comIngTot = 0;
+
+            $data = collect(['sum' => $sum, 'hijosAdicion' => $adicionesH, 'hijosReduccion' => $reduccionesH, 'civ' => $comIngTot]);
             return $data;
         } else return [];
     }
