@@ -56,7 +56,8 @@ Class PrepIngresosTraits
                         $hijos2 = PlantillaCuipoIngresos::where('padre_id', $h1->id)->get();
                         if ($data->name == 'INGRESOS CORRIENTES' and $h1->id == 48){
                             foreach ($hijos2 as $hijoRev){
-                                dd($hijoRev);
+                                $hijos3Rev = PlantillaCuipoIngresos::where('padre_id', $hijoRev->id)->get();
+                                dd($hijoRev, $hijos3Rev);
                             }
                         }
                         if (count($hijos2) > 0){
