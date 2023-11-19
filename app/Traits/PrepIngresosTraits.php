@@ -834,7 +834,7 @@ Class PrepIngresosTraits
 
                         if (count($font->compIng) > 0) {
                             foreach ($font->compIng as $compI){
-                                dd($compI,$font->compIng);
+                                dd($compI->comprobante );
                                 if ($inicio != null) {
                                     if (date('Y-m-d', strtotime($compI->fechaComp)) <= $final and date('Y-m-d', strtotime($compI->fechaComp)) >= $inicio) {
                                         $civ[] = $compI->debito;
