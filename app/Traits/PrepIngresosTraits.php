@@ -725,8 +725,6 @@ Class PrepIngresosTraits
 
     public function getData($vigencia, $rubro, $inicio = null, $final = null){
         $rubroRev = Rubro::where('vigencia_id', $vigencia->id)->where('plantilla_cuipos_id', $rubro->id)->get();
-        if ($rubro->code == '1.1.02.03.002') dd($rubro, $rubroRev);
-
         if (count($rubroRev) > 0) {
             if (count($rubroRev) == 1){
 
@@ -823,17 +821,20 @@ Class PrepIngresosTraits
                     }
 
                     if (isset($hijosAdicion)) $adicionesH[] = array_sum($hijosAdicion);
-                    else $adicionesH = 0;
+                    else $adicionesH[] = 0;
                     if (isset($hijosReduccion)) $reduccionesH[] = array_sum($hijosReduccion);
-                    else $reduccionesH = 0;
+                    else $reduccionesH[] = 0;
 
-                    $sum = $rb->fontsRubro->sum('valor');
+                    $sum[] = $rb->fontsRubro->sum('valor');
                 }
             }
             if (isset($civ)) $comIngTot = array_sum($civ);
             else $comIngTot = 0;
 
-            $data = collect(['sum' => $sum, 'hijosAdicion' => $adicionesH, 'hijosReduccion' => $reduccionesH, 'civ' => $comIngTot]);
+            $data = collect(['sum' => array_sum($sum), 'hijosAdicion' => array_sum($adicionesH), 'hijosReduccion' =>
+                array_sum($reduccionesH), 'civ' => $comIngTot]);
+            if ($rubro->code == '1.1.02.03.002') dd($rubro, $rubroRev, $data);
+
             return $data;
         } else return [];
     }
