@@ -68,8 +68,8 @@ Class PrepIngresosTraits
                                                         if ($h5Rev->hijo == 0){
                                                             dd("no son");
                                                         } else {
-                                                            $getData = $this->getData($vigencia, $h5Rev, $inicio, $final);
-                                                            dd("result",$getData);
+                                                            $getDataFunction = $this->getData($vigencia, $h5Rev, $inicio, $final);
+                                                            dd("result",$getDataFunction);
                                                         }
                                                     }
                                                 }
@@ -796,6 +796,7 @@ Class PrepIngresosTraits
 
     public function getData($vigencia, $rubro, $inicio = null, $final = null){
         $rubroRev = Rubro::where('vigencia_id', $vigencia->id)->where('plantilla_cuipos_id', $rubro->id)->get();
+        dd($rubro, $rubroRev);
         if (count($rubroRev) > 0) {
             if (count($rubroRev) == 1){
 
