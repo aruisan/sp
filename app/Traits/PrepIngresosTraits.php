@@ -66,11 +66,14 @@ Class PrepIngresosTraits
                                                 if (count($hijos5Rev) > 0) {
                                                     foreach ($hijos5Rev as $h5Rev){
                                                         if ($h5Rev->hijo == 0){
-                                                            dd("no son");
+                                                            dd("no son", $h5Rev, $sum);
                                                         } else {
                                                             $getDataFunction = $this->getData($vigencia, $h5Rev, $inicio, $final);
                                                             if (count($getDataFunction) > 0){
-                                                                dd("result",$getDataFunction);
+                                                                $sum[] = $getDataFunction->sum;
+                                                                $adicionesH[] = $getDataFunction->hijosAdicion;
+                                                                $reduccionesH[] = $getDataFunction->hijosReduccion;
+                                                                $civ[] = $getDataFunction->civ;
                                                             }
                                                         }
                                                     }
