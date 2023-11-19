@@ -60,7 +60,6 @@ Class PrepIngresosTraits
                                 foreach ($hijos3Rev as $h3Rev){
                                     $hijos4Rev = PlantillaCuipoIngresos::where('padre_id', $h3Rev->id)->get();
                                     if (count($hijos4Rev) > 0){
-                                        if ($hijoRev->name == 'TASAS Y DERECHOS ADMINISTRATIVOS') dd($hijoRev, $hijos4Rev);
                                         foreach ($hijos4Rev as $h4Rev) {
                                             if ($h4Rev->hijo == 0){
                                                 $hijos5Rev = PlantillaCuipoIngresos::where('padre_id', $h4Rev->id)->get();
@@ -100,6 +99,8 @@ Class PrepIngresosTraits
                                                 }
                                             }
                                         }
+                                    } else {
+                                        if ($hijoRev->name == 'TASAS Y DERECHOS ADMINISTRATIVOS') dd($hijoRev, $h3Rev);
                                     }
                                 }
                             }
