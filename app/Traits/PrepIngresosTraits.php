@@ -483,7 +483,7 @@ Class PrepIngresosTraits
 
                         if (!isset($descFromOPs)) $descFromOPs[] = 0;
 
-                        if ($data->name == 'INGRESOS CORRIENTES') dd($data, $prepIng);
+                        if ($data->name == 'INGRESOS CORRIENTES') dd($data, $prepIng, $sum, $compIngValue);
 
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
