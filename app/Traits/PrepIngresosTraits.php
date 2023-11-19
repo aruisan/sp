@@ -57,8 +57,8 @@ Class PrepIngresosTraits
                         if ($data->name == 'INGRESOS CORRIENTES' and $h1->id == 48){
                             foreach ($hijos2 as $hijoRev){
                                 $hijos3Rev = PlantillaCuipoIngresos::where('padre_id', $hijoRev->id)->get();
+                                if ($hijoRev->code == '1.1.02.03') dd($hijoRev, $hijos3Rev);
                                 foreach ($hijos3Rev as $h3Rev){
-                                    dd($hijoRev, $h3Rev);
                                     $hijos4Rev = PlantillaCuipoIngresos::where('padre_id', $h3Rev->id)->get();
                                     if (count($hijos4Rev) > 0){
                                         foreach ($hijos4Rev as $h4Rev) {
