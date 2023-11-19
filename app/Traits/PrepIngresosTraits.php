@@ -161,7 +161,7 @@ Class PrepIngresosTraits
                                                         $sum[] = $rb->fontsRubro->sum('valor');
                                                     }
                                                 }
-                                                dd($h4Rev, $rubroRev, $sum);
+                                                //dd($h4Rev, $rubroRev, $sum);
                                             }
                                         }
                                     }
