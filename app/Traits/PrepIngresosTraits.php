@@ -61,6 +61,7 @@ Class PrepIngresosTraits
                                     $hijos4Rev = PlantillaCuipoIngresos::where('padre_id', $h3Rev->id)->get();
                                     if (count($hijos4Rev) > 0){
                                         foreach ($hijos4Rev as $h4Rev) {
+                                            dd($h4Rev);
                                             $rubroRev = Rubro::where('vigencia_id', $vigencia_id)->where('plantilla_cuipos_id', $h4Rev->id)->get();
                                             if (count($rubroRev) > 0) {
                                                 if (count($rubroRev) == 1){
