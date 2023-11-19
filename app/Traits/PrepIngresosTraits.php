@@ -564,7 +564,7 @@ Class PrepIngresosTraits
 
                         if (!isset($descFromOPs)) $descFromOPs[] = 0;
 
-                        //if ($data->code == '1.1') dd($data, $sum, $compIngValue);
+                        if ($data->code == '1.1') dd($compIngValue);
 
                         $prepIng[] = collect(['id' => $data->id, 'code' => $data->code, 'name' => $data->name, 'inicial' => array_sum($sum), 'adicion' => $adicionesTot, 'reduccion' => $reduccionesTot,
                             'anulados' => 0, 'recaudado' => $compIngValue, 'porRecaudar' => $definitivo - $compIngValue, 'definitivo' => $definitivo,
