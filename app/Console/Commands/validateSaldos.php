@@ -55,11 +55,10 @@ class validateSaldos extends Command
 
         foreach ($cuentasBanc as $cuenta){
             if ($cuenta->hijo == 1){
-                echo $cuenta->code;
+                $librosTraits = new LibrosTraits();
+                echo $librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31');
+                break;
             }
         }
-
-        $librosTraits = new LibrosTraits();
-        //return $librosTraits->movAccountLibros($request->id, $request->fechaInicial, $request->fechaFinal );
     }
 }
