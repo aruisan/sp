@@ -53,7 +53,9 @@ class validateSaldos extends Command
             foreach ($lv2 as $cuenta) $cuentasBanc[] = $cuenta;
         }
 
-        echo $cuentasBanc;
-        
+        dd($cuentasBanc);
+
+        $librosTraits = new LibrosTraits();
+        //return $librosTraits->movAccountLibros($request->id, $request->fechaInicial, $request->fechaFinal );
     }
 }
