@@ -514,6 +514,19 @@ Class LibrosTraits
         $totDeb = 0;
         $totCred = 0;
 
+
+        $ordenPagosPUC = OrdenPagosPuc::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $lastDate))->get();
+        if (count($ordenPagosPUC) > 0) {
+            foreach ($ordenPagosPUC as $op_puc) {
+                if ($op_puc->ordenPago->estado == '1') {
+                    $total = $total + $op_puc->valor_debito;
+                    $total = $total - $op_puc->valor_credito;
+                    $totDeb = $totDeb + $op_puc->valor_debito;
+                    $totCred = $totCred + $op_puc->valor_credito;
+                }
+            }
+        }
+
         $pagoBanks = PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $lastDate))->get();
         //select * from pago_banks where rubros_puc_id == 28 and created_at >= 2023-01-01 and created_at <= 2023-31-1
         //trae todos los pagos de bancos hechos entre una fecha inicial que seria el primero de enero del año actual a la fecha final
