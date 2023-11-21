@@ -50,7 +50,7 @@ class validateSaldos extends Command
 
         foreach ($allAccounts as $cuenta){
             $librosTraits = new LibrosTraits();
-            $resultFind = $librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31');
+            $resultFind = $librosTraits->validateBeforeMonths($añoActual.'-12-31', $cuenta);
             dd($resultFind);
             if (count($resultFind) > 0){
                 $cuenta->saldo_actual = intval(str_replace(array("$", ","),'', $resultFind[count($resultFind) - 1]['total']));
