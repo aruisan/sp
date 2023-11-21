@@ -50,7 +50,7 @@ class validateSaldos extends Command
             $librosTraits = new LibrosTraits();
             $cuenta->saldo_actual = $librosTraits->saldoActual($cuenta);
             $cuenta->save();
-            echo $cuenta->code.' '.$cuenta->concepto.' SALDO ACTUAL: '.$cuenta->saldo_actual.' \n';
+            echo $cuenta->code.' '.$cuenta->concepto.' SALDO ACTUAL: '.$cuenta->saldo_actual.'<br>';
             break;
         }
     }
