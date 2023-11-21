@@ -165,7 +165,9 @@ Class LibrosTraits
                 }
             }
 
-            return $result;
+            if (isset($result)) return $result;
+            else return [];
+
         }
     }
 
