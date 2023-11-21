@@ -449,4 +449,60 @@ Class LibrosTraits
         else return [];
     }
 
+
+    public function validateBeforeMonths($lastDate, $rubroPUC){
+        $today = Carbon::today();//2023-04-11
+        $lastDate = Carbon::parse($lastDate." 23:59:59");//2023-2-1 23:59:59
+        $fechaIni = Carbon::parse($today->year."-01-01");//2023-01-01
+        $fechaFin = $lastDate->subDays(1);//2023-31-1 23:59:59
+        $total = $rubroPUC->saldo_inicial;
+        $totDeb = 0;
+        $totCred = 0;
+        $mes = $fechaFin->month.'-'.$today->year;//1-2023
+
+        $pagoBanks = PagoBanksNew::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $fechaFin))->get();
+        //select * from pago_banks where rubros_puc_id == 28 and created_at >= 2023-01-01 and created_at <= 2023-31-1
+        //trae todos los pagos de bancos hechos entre una fecha inicial que seria el primero de enero del año actual a la fecha final
+        // que seria el dia que hagan el descargue de el informe
+        if (count($pagoBanks) > 0){
+            foreach ($pagoBanks as $pagoBank){
+                if ($pagoBank->pago->estado == 1){
+                    $total = $total - $pagoBank->credito;
+                    $total = $total + $pagoBank->debito;
+                    $totDeb = $totDeb + $pagoBank->debito;
+                    $totCred = $totCred + $pagoBank->credito;
+                }
+            }
+        }
+
+        //SE AÑADEN LOS VALORES DE LOS COMPROBANTES CONTABLES AL LIBRO
+        $compsCont = ComprobanteIngresosMov::whereBetween('fechaComp',array($fechaIni, $fechaFin))->get();
+        //aca coge todos los movimientos de las cuenta de bancos poara generar los libros y al igual que pahgo de bancos tiene una fecha final y una fecha inicial
+        if (count($compsCont) > 0){
+            foreach ($compsCont as $compCont){
+                if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
+                    //SE HACE LA BUSQUEDA DEL PAGO DEL IMPUESTO PARA LA CORRESPONDIENTE CONVERSION DE USD A COL
+                    $strData = substr($compCont->comprobante->concepto, 0,8);
+                    if ($strData == "MUELLAJE") {
+                        $pos = strpos($compCont->comprobante->concepto, '#') + 1;
+                        $tam = strlen($compCont->comprobante->concepto) - $pos;
+                        $idImp = substr($compCont->comprobante->concepto, $pos, $tam);
+                        $impuesto = \App\Model\Impuestos\Pagos::find($idImp);
+                        $muellaje = Muellaje::find($impuesto->entity_id);
+                        $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
+                    }
+                    if ($compCont->cuenta_banco == $rubroPUC->id){
+                        $total = $total + $compCont->debito;
+                        $total = $total - $compCont->credito;
+                    } else{
+                        $total = $total + $compCont->debito;
+                        $total = $total - $compCont->credito;
+                    }
+                }
+            }
+        }
+
+        return collect(['total' => $total, 'fecha' => $mes]);
+    }
+
 }
