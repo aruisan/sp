@@ -45,19 +45,13 @@ class validateSaldos extends Command
      */
     public function handle()
     {
-        $añoActual = Carbon::now()->year;
         $allAccounts = PucAlcaldia::where('hijo', '1')->get();
-
         foreach ($allAccounts as $cuenta){
             $librosTraits = new LibrosTraits();
-            $resultFind = $librosTraits->saldoActual($cuenta);
-            dd($resultFind, $cuenta);
-            if (count($resultFind) > 0){
-                $cuenta->saldo_actual = intval(str_replace(array("$", ","),'', $resultFind[count($resultFind) - 1]['total']));
-                $cuenta->save();
-                echo $cuenta->code.' '.$cuenta->concepto.' SALDO ACTUAL: '.$cuenta->saldo_actual.' \n';
-                break;
-            }
+            $cuenta->saldo_actual = $librosTraits->saldoActual($cuenta);
+            $cuenta->save();
+            echo $cuenta->code.' '.$cuenta->concepto.' SALDO ACTUAL: '.$cuenta->saldo_actual.' \n';
+            break;
         }
     }
 }
