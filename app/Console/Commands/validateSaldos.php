@@ -56,7 +56,8 @@ class validateSaldos extends Command
         foreach ($cuentasBanc as $cuenta){
             if ($cuenta->hijo == 1){
                 $librosTraits = new LibrosTraits();
-                $resultFind = $librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31');
+                $resultFind = $librosTraits->movAccountLibros(149, $añoActual.'-01-01', $añoActual.'-12-31');
+                dd($resultFind);
                 $puc = PucAlcaldia::find($cuenta->id);
                 $puc->saldo_actual = intval(str_replace(array("$", ","),'', $resultFind[count($resultFind) - 1]['total']));
                 $puc->save();
