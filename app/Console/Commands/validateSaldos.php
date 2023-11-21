@@ -60,7 +60,7 @@ class validateSaldos extends Command
                 $puc = PucAlcaldia::find($cuenta->id);
                 $puc->saldo_actual = intval(str_replace(array("$", ","),'', $resultFind[count($resultFind) - 1]['total']));
                 $puc->save();
-                echo $puc->code.' '.$puc->concepto.' SALDO ACTUAL: '.$puc->saldo_actual.'\n';
+                echo $puc->code.' '.$puc->concepto.' SALDO ACTUAL: '.$puc->saldo_actual.' \n';
                 break;
             }
         }
