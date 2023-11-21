@@ -304,7 +304,8 @@ Class LibrosTraits
                 }
             }
 
-            return $result;
+            if (isset($result)) return $result;
+            else return [];
         }
     }
 
@@ -444,7 +445,8 @@ Class LibrosTraits
             }
         }
 
-        return $result;
+        if (isset($result)) return $result;
+        else return [];
     }
 
 }

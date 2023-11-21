@@ -115,81 +115,89 @@
                     "_token": $("meta[name='csrf-token']").attr("content"),
                 }
             }).done(function(datos) {
-                document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta']+' SALDO INICIAL:'+ formatter.format(datos[0]['inicial']);
-                $("#tabla").show();
-                table.destroy();
-                $("#cargando").hide();
-                table = $('#tabla').DataTable( {
-                    language: {
-                        "lengthMenu": "Mostrar _MENU_ registros",
-                        "zeroRecords": "No se encontraron resultados",
-                        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-                        "sSearch": "Buscar:",
-                        "oPaginate": {
-                            "sFirst": "Primero",
-                            "sLast":"Último",
-                            "sNext":"Siguiente",
-                            "sPrevious": "Anterior"
+                if (datos.length > 0) {
+                    document.getElementById("cuentaBanco").innerHTML = datos[0]['cuenta'] + ' SALDO INICIAL:' + formatter.format(datos[0]['inicial']);
+                    $("#tabla").show();
+                    table.destroy();
+                    $("#cargando").hide();
+                    table = $('#tabla').DataTable({
+                        language: {
+                            "lengthMenu": "Mostrar _MENU_ registros",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                            "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "sSearch": "Buscar:",
+                            "oPaginate": {
+                                "sFirst": "Primero",
+                                "sLast": "Último",
+                                "sNext": "Siguiente",
+                                "sPrevious": "Anterior"
+                            },
+                            "sProcessing": "Procesando...",
                         },
-                        "sProcessing":"Procesando...",
-                    },
-                    "pageLength": 15,
-                    responsive: true,
-                    "searching": true,
-                    ordering: false,
-                    "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
-                    dom: 'Bfrtip',
-                    buttons:[
-                        {
-                            extend:    'copyHtml5',
-                            text:      '<i class="fa fa-clone"></i> ',
-                            titleAttr: 'Copiar',
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            extend:    'excelHtml5',
-                            text:      '<i class="fa fa-file-excel-o"></i> ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'btn btn-primary'
-                        },
-                        {
-                            extend:    'pdfHtml5',
-                            text:      '<i class="fa fa-file-pdf-o"></i> ',
-                            titleAttr: 'Exportar a PDF',
-                            message : 'SIEX-Providencia',
-                            header :true,
-                            orientation : 'landscape',
-                            pageSize: 'LEGAL',
-                            className: 'btn btn-primary',
-                        },
-                        {
-                            extend:    'print',
-                            text:      '<i class="fa fa-print"></i> ',
-                            titleAttr: 'Imprimir',
-                            className: 'btn btn-primary'
-                        },
-                    ],
-                    data: datos,
-                    columns: [
-                        { title: "Fecha", data: "fecha"},
-                        { title: "Cuenta", data: "cuenta"},
-                        { title: "Nombre Documento", data: "modulo"},
-                        { title: "Concepto", data: "concepto"},
-                        { title: "Tercero", data: "tercero"},
-                        { title: "NIT/CC", data: "CC"},
-                        { title: "Debito", data: "debito"},
-                        { title: "Credito", data: "credito"},
-                        { title: "Saldo", data: "total"}
-                    ]
-                } );
+                        "pageLength": 15,
+                        responsive: true,
+                        "searching": true,
+                        ordering: false,
+                        "lengthMenu": [10, 25, 50, 75, 100, "ALL"],
+                        dom: 'Bfrtip',
+                        buttons: [
+                            {
+                                extend: 'copyHtml5',
+                                text: '<i class="fa fa-clone"></i> ',
+                                titleAttr: 'Copiar',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                text: '<i class="fa fa-file-excel-o"></i> ',
+                                titleAttr: 'Exportar a Excel',
+                                className: 'btn btn-primary'
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                text: '<i class="fa fa-file-pdf-o"></i> ',
+                                titleAttr: 'Exportar a PDF',
+                                message: 'SIEX-Providencia',
+                                header: true,
+                                orientation: 'landscape',
+                                pageSize: 'LEGAL',
+                                className: 'btn btn-primary',
+                            },
+                            {
+                                extend: 'print',
+                                text: '<i class="fa fa-print"></i> ',
+                                titleAttr: 'Imprimir',
+                                className: 'btn btn-primary'
+                            },
+                        ],
+                        data: datos,
+                        columns: [
+                            {title: "Fecha", data: "fecha"},
+                            {title: "Cuenta", data: "cuenta"},
+                            {title: "Nombre Documento", data: "modulo"},
+                            {title: "Concepto", data: "concepto"},
+                            {title: "Tercero", data: "tercero"},
+                            {title: "NIT/CC", data: "CC"},
+                            {title: "Debito", data: "debito"},
+                            {title: "Credito", data: "credito"},
+                            {title: "Saldo", data: "total"}
+                        ]
+                    });
 
 
-                //$("#tabla").hide();
-                //table.destroy();
-                //$("#cargando").hide();
-                //toastr.warning('SE ESTAN REALIZANDO AJUSTES. INTENTE NUEVAMENTE MAS TARDE.');
+                    //$("#tabla").hide();
+                    //table.destroy();
+                    //$("#cargando").hide();
+                    //toastr.warning('SE ESTAN REALIZANDO AJUSTES. INTENTE NUEVAMENTE MAS TARDE.');
+                } else {
+                    $("#tabla").hide();
+                    $("#buttonMake").hide();
+                    table.destroy();
+                    $("#cargando").hide();
+                    toastr.warning('NO SE OBTUVIERON DATOS DE ESA CUENTA PARA MOSTRAR');
+                }
             }).fail(function() {
                 $("#tabla").hide();
                 $("#buttonMake").hide();
