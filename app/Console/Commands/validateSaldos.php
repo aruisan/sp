@@ -59,7 +59,8 @@ class validateSaldos extends Command
                 $resultFind = $librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31');
                 $puc = PucAlcaldia::find($cuenta->id);
                 $puc->saldo_actual = intval(str_replace(array("$", ","),'', $resultFind[count($resultFind) - 1]['total']));
-                dd($puc);
+                $puc->save();
+                echo $puc->code.' '.$puc->concepto.' SALDO ACTUAL: '.$puc->saldo_actual.'\n';
                 break;
             }
         }
