@@ -57,7 +57,7 @@ class validateSaldos extends Command
             if ($cuenta->hijo == 1){
                 $librosTraits = new LibrosTraits();
                 $resultFind = $librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31');
-                dd($resultFind[count($resultFind) - 1]->total);
+                dd($resultFind[count($resultFind) - 1]['total']);
                 break;
             }
         }
