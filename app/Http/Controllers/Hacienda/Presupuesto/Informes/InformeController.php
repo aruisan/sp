@@ -2834,7 +2834,7 @@ class InformeController extends Controller
         $final = Carbon::parse($final)->subDays(1);
 
         return Excel::download(new InfPrepEgrHistExcExport($presupuesto),
-            'Ejecucion Presupuesto de Egresos '.$inicio.'-'.$final->format('Y-m-d').'.xlsx');
+            'Ejecucion Presupuesto de Egresos '.$inicio.' '.$final->format('Y-m-d').'.xlsx');
     }
 
     public function makeIngresosEXCEL()
@@ -2858,7 +2858,7 @@ class InformeController extends Controller
         $final = Carbon::parse($final)->subDays(1);
 
         return Excel::download(new InfPrepIngExcExport($presupuesto),
-            'Ejecucion Presupuesto de Ingresos '.$inicio.'-'.$final.'.xlsx');
+            'Ejecucion Presupuesto de Ingresos '.$inicio.' '.$final.'.xlsx');
     }
 
     public function makeEgresosPDF(){
