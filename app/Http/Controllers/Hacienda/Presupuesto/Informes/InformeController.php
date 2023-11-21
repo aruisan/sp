@@ -36,6 +36,7 @@ use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\SourceFunding;
 use App\Model\Hacienda\Presupuesto\Vigencia;
 use App\Traits\PrepEgresosTraits;
+use App\Traits\PrepIngresosTraits;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
@@ -2850,7 +2851,11 @@ class InformeController extends Controller
 
     public function makeIngresosEjecucion(Request $request, $inicio, $final)
     {
-        $presupuesto = $this->prepIngresos($inicio, $final);
+        $prepTrait = new PrepIngresosTraits();
+        $vigens = Vigencia::where('vigencia', Carbon::parse($inicio)->year)->where('tipo', 1)->where('estado', '0')->first();
+        $presupuesto = $prepTrait->prepIngresos($vigens, $inicio, $final);
+
+        $final = Carbon::parse($final)->subDays(1);
 
         return Excel::download(new InfPrepIngExcExport($presupuesto),
             'Ejecucion Presupuesto de Ingresos '.$inicio.'-'.$final.'.xlsx');
