@@ -56,7 +56,8 @@ class validateSaldos extends Command
         foreach ($cuentasBanc as $cuenta){
             if ($cuenta->hijo == 1){
                 $librosTraits = new LibrosTraits();
-                dd($librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31'));
+                $resultFind = $librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31');
+                dd($resultFind[-1], $cuenta);
                 break;
             }
         }
