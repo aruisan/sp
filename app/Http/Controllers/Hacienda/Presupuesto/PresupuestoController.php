@@ -48,7 +48,7 @@ class PresupuestoController extends Controller
 
     public function ingresos(){
         $añoActual = Carbon::now()->year;
-        $mesActual = 10;
+        $mesActual = Carbon::now()->month;
         $prepSaved = PresupuestoSnap::where('mes', $mesActual)->where('año', $añoActual)->where('tipo','INGRESOS')->first();
 
         if (!$prepSaved){
