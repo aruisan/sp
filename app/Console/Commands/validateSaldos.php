@@ -46,24 +46,17 @@ class validateSaldos extends Command
     public function handle()
     {
         $añoActual = Carbon::now()->year;
-        $lv1 = PucAlcaldia::where('padre_id', 7 )->get();
-        foreach ($lv1 as $dato){
-            $cuentasBanc[] = $dato;
-            $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
-            foreach ($lv2 as $cuenta) $cuentasBanc[] = $cuenta;
-        }
+        $allAccounts = PucAlcaldia::where('hijo', 1)->get();
 
-        foreach ($cuentasBanc as $cuenta){
-            if ($cuenta->hijo == 1){
-                $librosTraits = new LibrosTraits();
-                $resultFind = $librosTraits->movAccountLibros(149, $añoActual.'-01-01', $añoActual.'-12-31');
-                if (count($resultFind) > 0){
-                    $puc = PucAlcaldia::find($cuenta->id);
-                    $puc->saldo_actual = intval(str_replace(array("$", ","),'', $resultFind[count($resultFind) - 1]['total']));
-                    $puc->save();
-                    echo $puc->code.' '.$puc->concepto.' SALDO ACTUAL: '.$puc->saldo_actual.' \n';
-                    break;
-                }
+        foreach ($allAccounts as $cuenta){
+            $librosTraits = new LibrosTraits();
+            $resultFind = $librosTraits->movAccountLibros($cuenta->id, $añoActual.'-01-01', $añoActual.'-12-31');
+            if (count($resultFind) > 0){
+                $puc = PucAlcaldia::find($cuenta->id);
+                $puc->saldo_actual = intval(str_replace(array("$", ","),'', $resultFind[count($resultFind) - 1]['total']));
+                $puc->save();
+                echo $puc->code.' '.$puc->concepto.' SALDO ACTUAL: '.$puc->saldo_actual.' \n';
+                break;
             }
         }
     }
