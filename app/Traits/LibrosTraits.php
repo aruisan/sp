@@ -549,6 +549,8 @@ Class LibrosTraits
                 if ($pagoBank->pago->estado == 1){
                     $total = $total - $pagoBank->credito;
                     $total = $total + $pagoBank->debito;
+                    $totCredComp[] = $pagoBank->credito;
+                    $totDebComp[] = $pagoBank->debito;
                     $totDeb = $totDeb + $pagoBank->debito;
                     $totCred = $totCred + $pagoBank->credito;
                 }
@@ -571,8 +573,6 @@ Class LibrosTraits
                         $muellaje = Muellaje::find($impuesto->entity_id);
                         $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
                     }
-                    $totCredComp[] = $compCont->credito;
-                    $totDebComp[] = $compCont->debito;
                     $total = $total + $compCont->debito;
                     $total = $total - $compCont->credito;
                 }
