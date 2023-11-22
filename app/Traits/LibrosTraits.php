@@ -526,6 +526,8 @@ Class LibrosTraits
         $total = $rubroPUC->saldo_inicial;
         $totDeb = 0;
         $totCred = 0;
+        $totCredComp[] = 0;
+        $totDebComp[] = 0;
 
         //SE AGREGAN LOS VALORES DE LAS ORDENES DE PAGO
         $ordenPagosPUC = OrdenPagosPuc::where('rubros_puc_id', $rubroPUC->id)->whereBetween('created_at',array($fechaIni, $lastDate))->get();
