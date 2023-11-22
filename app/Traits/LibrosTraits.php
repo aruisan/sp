@@ -581,7 +581,8 @@ Class LibrosTraits
             }
         }
 
-        return collect(['total' => $total, 'cred' => array_sum($totCredComp), 'deb' => array_sum($totDebComp)]);
+        //return collect(['total' => $total, 'cred' => array_sum($totCredComp), 'deb' => array_sum($totDebComp)]);
+        return $total;
     }
 
 }
