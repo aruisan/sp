@@ -571,7 +571,7 @@ Class LibrosTraits
                         $muellaje = Muellaje::find($impuesto->entity_id);
                         $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
                     }
-                    if ($compCont->cuenta_banco == $rubroPUC->id){
+                    if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
                         $total = $total + $compCont->debito;
                         $total = $total - $compCont->credito;
                     } else{
