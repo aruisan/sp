@@ -173,12 +173,12 @@ class ComprobanteIngresosController extends Controller
             if ($mov->cuenta_banco > 0){
                 if ($mov->debito > 0){
                     $cuentaPuc = PucAlcaldia::find($mov->cuenta_banco);
-                    $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual - $mov->debito;
+                    $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual + $mov->debito;
                     $cuentaPuc->save();
                 }
                 if ($mov->credito > 0){
                     $cuentaPuc = PucAlcaldia::find($mov->cuenta_banco);
-                    $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual + $mov->debito;
+                    $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual - $mov->credito;
                     $cuentaPuc->save();
                 }
             }
@@ -348,7 +348,7 @@ class ComprobanteIngresosController extends Controller
                     }
                     if ($mov->credito > 0){
                         $cuentaPuc = PucAlcaldia::find($mov->cuenta_banco);
-                        $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual + $mov->debito;
+                        $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual + $mov->credito;
                         $cuentaPuc->save();
                     }
 
