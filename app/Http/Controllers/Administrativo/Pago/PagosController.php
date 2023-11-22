@@ -283,7 +283,9 @@ class PagosController extends Controller
             foreach ($lv1 as $dato){
                 $cuentasBanc[] = $dato;
                 $lv2 = PucAlcaldia::where('padre_id', $dato->id )->get();
-                foreach ($lv2 as $cuenta) $cuentasBanc[] = $cuenta;
+                foreach ($lv2 as $cuenta) {
+                    if ($cuenta->saldo_actual > 0) $cuentasBanc[] = $cuenta;
+                }
             }
 
             if (isset($pago->orden_pago->rubros[0]->cdps_registro)) $vigencia_id = $pago->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id;
@@ -294,7 +296,7 @@ class PagosController extends Controller
                 }
             }
 
-            $allPUCS = PucAlcaldia::where('hijo','1')->orderBy('code','ASC')->get();
+            $allPUCS = PucAlcaldia::where('hijo','1')->where('saldo_actual','>',0)->orderBy('code','ASC')->get();
 
             return view('administrativo.pagos.createBanks', compact('pago','PUCS', 'hijosPUC',
             'cuentas', 'personas', 'vigencia_id','cuentasBanc','allPUCS'));
@@ -446,10 +448,6 @@ class PagosController extends Controller
                     }
                 }
 
-                $OP->saldo = $OP->saldo -  $valTotal;
-                $OP->save();
-                $pago->save();
-
                 if ($request->pucAdd != 0){
                     $bankPUC = new PagoBanksNew();
                     $bankPUC->pagos_id = $request->pago_id;
@@ -460,6 +458,18 @@ class PagosController extends Controller
                     $bankPUC->created_at = $pago->created_at;
                     $bankPUC->save();
                 }
+
+                //DESCONTAR AL SALDO DE LA CUENTA EL DINERO RETIRADO
+                $contPago = PagoBanksNew::where('pagos_id', $pago->id)->where('credito','>',0)->get();
+                foreach ($contPago as $cont){
+                    $cuentaPuc = PucAlcaldia::find($cont->rubros_puc_id);
+                    $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual - $cont->credito;
+                    $cuentaPuc->save();
+                }
+
+                $OP->saldo = $OP->saldo -  $valTotal;
+                $OP->save();
+                $pago->save();
 
                 Session::flash('success','El pago se ha finalizado exitosamente');
                 return redirect('/administrativo/pagos/show/'.$pago->id);
@@ -514,6 +524,14 @@ class PagosController extends Controller
         $ordenPago = OrdenPagos::find($pago->orden_pago_id);
         $ordenPago->saldo = $ordenPago->saldo + $pago->valor;
         $ordenPago->save();
+
+        //SUMAR AL SALDO DE LA CUENTA EL DINERO RETIRADO POR EL PAGO
+        $contPago = PagoBanksNew::where('pagos_id', $pago->id)->where('credito','>',0)->get();
+        foreach ($contPago as $cont){
+            $cuentaPuc = PucAlcaldia::find($cont->rubros_puc_id);
+            $cuentaPuc->saldo_actual = $cuentaPuc->saldo_actual + $cont->credito;
+            $cuentaPuc->save();
+        }
 
         Session::flash('error','El pago ha sido anulado');
         return redirect('/administrativo/pagos/show/'.$id);

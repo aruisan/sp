@@ -166,7 +166,7 @@
                         <table class="table table-bordered" id="banks">
                             <thead>
                             <tr>
-                                <th class="text-center">Banco</th>
+                                <th class="text-center">Banco (SI LA CUENTA NO TIENE SALDO NO SALE EN EL LISTADO)</th>
                                 <th class="text-center">Valor</th>
                                 <th class="text-center">Tercero</th>
                                 <th class="text-center"><i class="fa fa-trash-o"></i></th>
@@ -178,7 +178,7 @@
                                 <td>
                                     <select class="form-control" name="banco[]" required>
                                         @foreach($cuentasBanc as $hijo)
-                                            <option @if($hijo->hijo == 0) disabled @endif value="{{ $hijo->id }}">{{ $hijo->code }} - {{ $hijo->concepto }}</option>
+                                            <option @if($hijo->hijo == 0 or $hijo->saldo_actual <= 0 ) disabled @endif value="{{ $hijo->id }}">{{ $hijo->code }} - {{ $hijo->concepto }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -202,7 +202,7 @@
                         <table class="table table-bordered" id="banks">
                             <thead>
                             <tr>
-                                <th class="text-center">Cuenta PUC</th>
+                                <th class="text-center">Cuenta PUC (SI LA CUENTA NO TIENE SALDO NO SALE EN EL LISTADO)</th>
                                 <th class="text-center">Debito</th>
                                 <th class="text-center">Credito</th>
                             </tr>
