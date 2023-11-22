@@ -48,9 +48,10 @@ class validateSaldos extends Command
         $allAccounts = PucAlcaldia::where('hijo', '1')->get();
         foreach ($allAccounts as $cuenta){
             $librosTraits = new LibrosTraits();
-            $cuenta->saldo_actual = $librosTraits->saldoActual($cuenta);
-            $cuenta->save();
-            echo nl2br($cuenta->code.' '.$cuenta->concepto.' SALDO ACTUAL: '.$cuenta->saldo_actual." \n ");
+            if ($cuenta->id == 80 ) dd($librosTraits->saldoActual($cuenta));
+            //$cuenta->saldo_actual = $librosTraits->saldoActual($cuenta);
+            //$cuenta->save();
+            //echo nl2br($cuenta->code.' '.$cuenta->concepto.' SALDO ACTUAL: '.$cuenta->saldo_actual." \n ");
         }
     }
 }

@@ -571,18 +571,15 @@ Class LibrosTraits
                         $muellaje = Muellaje::find($impuesto->entity_id);
                         $compCont->debito = $muellaje->valorDolar * $muellaje->valorPago;
                     }
-                    if ($compCont->cuenta_banco == $rubroPUC->id or $compCont->cuenta_puc_id == $rubroPUC->id){
-                        $total = $total + $compCont->debito;
-                        $total = $total - $compCont->credito;
-                    } else{
-                        $total = $total + $compCont->debito;
-                        $total = $total - $compCont->credito;
-                    }
+                    $totCred[] = $compCont->credito;
+                    $totDeb[] = $compCont->debito;
+                    $total = $total + $compCont->debito;
+                    $total = $total - $compCont->credito;
                 }
             }
         }
 
-        return $total;
+        return collect(['total' => $total, 'cred' => array_sum($totCred), 'deb' => array_sum($totDeb)]);
     }
 
 }
