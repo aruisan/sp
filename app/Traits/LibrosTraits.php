@@ -534,6 +534,8 @@ Class LibrosTraits
                 if ($op_puc->ordenPago->estado == '1') {
                     $total = $total + $op_puc->valor_debito;
                     $total = $total - $op_puc->valor_credito;
+                    $totCredComp[] = $op_puc->credito;
+                    $totDebComp[] = $op_puc->debito;
                     $totDeb = $totDeb + $op_puc->valor_debito;
                     $totCred = $totCred + $op_puc->valor_credito;
                 }
@@ -549,8 +551,6 @@ Class LibrosTraits
                 if ($pagoBank->pago->estado == 1){
                     $total = $total - $pagoBank->credito;
                     $total = $total + $pagoBank->debito;
-                    $totCredComp[] = $pagoBank->credito;
-                    $totDebComp[] = $pagoBank->debito;
                     $totDeb = $totDeb + $pagoBank->debito;
                     $totCred = $totCred + $pagoBank->credito;
                 }
