@@ -50,7 +50,14 @@ class validateSaldosRPs extends Command
         $vigens = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
         $registros = Registro::where('vigencia_id', $vigens->id)->where('jefe_e','3')->get();
         foreach ($registros as $registro){
-            dd($registro, $registro->ordenPagos);
+            if (count($registro->ordenPagos) > 0){
+                foreach ($registro->ordenPagos as $ordenPago){
+                    if ($ordenPago->estado == '1') $ordPagTot[] = $ordenPago->valor;
+                }
+                if (isset($ordPagTot)){
+                    dd($registro, $ordPagTot);
+                }
+            }
         }
     }
 }
