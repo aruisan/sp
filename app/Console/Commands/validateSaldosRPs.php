@@ -51,11 +51,12 @@ class validateSaldosRPs extends Command
         $registros = Registro::where('vigencia_id', $vigens->id)->where('jefe_e','3')->get();
         foreach ($registros as $registro){
             if (count($registro->ordenPagos) > 0){
-                foreach ($registro->ordenPagos as $ordenPago){
-                    if ($ordenPago->estado == '1') $ordPagTot[] = $ordenPago->valor;
-                }
+                foreach ($registro->ordenPagos as $ordenPago) if ($ordenPago->estado == '1') $ordPagTot[] = $ordenPago->valor;
                 if (isset($ordPagTot)){
-                    dd($registro->val_total, $registro->saldo, $ordPagTot, array_sum($ordPagTot));
+                    $saldoReal = $registro->val_total - array_sum($ordPagTot);
+                    if ($registro->saldo != $saldoReal){
+                        dd($registro->val_total, $registro->saldo, $ordPagTot, array_sum($ordPagTot));
+                    }
                 }
             }
         }
