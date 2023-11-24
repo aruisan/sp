@@ -59,6 +59,7 @@ class validateSaldosRPs extends Command
                     }
                 }
             }
+            if (isset($ordPagTot)) unset($ordPagTot);
         }
     }
 }
