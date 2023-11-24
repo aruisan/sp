@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
+use App\Model\Administrativo\Registro\Registro;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -47,6 +48,7 @@ class validateSaldosRPs extends Command
     {
         $año = Carbon::today()->year;
         $vigens = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
-        dd($vigens);
+        $registros = Registro::where('vigencia_id', $vigens->id)->where('jefe_e', 3)->get();
+        dd($registros[0]);
     }
 }
