@@ -55,7 +55,7 @@ class validateSaldosRPs extends Command
                     if ($ordenPago->estado == '1') $ordPagTot[] = $ordenPago->valor;
                 }
                 if (isset($ordPagTot)){
-                    dd($registro, $ordPagTot, array_sum($ordPagTot));
+                    dd($registro->val_total, $registro->saldo, $ordPagTot, array_sum($ordPagTot));
                 }
             }
         }
