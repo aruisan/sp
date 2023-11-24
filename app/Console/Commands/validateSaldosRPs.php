@@ -49,6 +49,8 @@ class validateSaldosRPs extends Command
         $año = Carbon::today()->year;
         $vigens = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
         $registros = Registro::where('vigencia_id', $vigens->id)->where('jefe_e','3')->get();
-        dd($registros[0]);
+        foreach ($registros as $registro){
+            dd($registro, $registro->ordenPagos);
+        }
     }
 }
