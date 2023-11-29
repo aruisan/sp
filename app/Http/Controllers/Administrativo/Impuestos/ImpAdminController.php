@@ -176,6 +176,13 @@ class ImpAdminController extends Controller
                 $pred = Predial::find($item->entity_id);
                 $item->contribuyente = PredialContribuyentes::find($pred->imp_pred_contri_id);
             }
+            if ($item->modulo == 'MUELLAJE'){
+                $muellaje = Muellaje::find($item->entity_id);
+                $item->user->name = $muellaje->name.' - '.$muellaje->bandera;
+                $item->user->email = $muellaje->emailCap;
+                $item->NITNaviera = $muellaje->NITNaviera;
+                dd($item, $muellaje);
+            }
         }
         $fecha = Carbon::today();
         $fecha = $fecha->format('d-m-Y');

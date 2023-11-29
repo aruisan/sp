@@ -29,6 +29,8 @@
                         {{ $item->rit->numDocContri }}
                     @elseif($item->modulo == "PREDIAL")
                         {{ $item->contribuyente->numIdent }}
+                    @elseif($item->modulo == "MUELLAJE")
+                        {{ $item->NITNaviera }}
                     @else
                         0
                     @endif
