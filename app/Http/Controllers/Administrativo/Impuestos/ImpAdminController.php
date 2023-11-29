@@ -181,7 +181,7 @@ class ImpAdminController extends Controller
                 $item->user->name = $muellaje->name.' - '.$muellaje->bandera;
                 $item->user->email = $muellaje->emailCap;
                 $item->NITNaviera = $muellaje->NITNaviera;
-                dd($item, $muellaje);
+                $item->valor = $muellaje->valorDolar * $muellaje->valorPago;
             }
         }
         $fecha = Carbon::today();
