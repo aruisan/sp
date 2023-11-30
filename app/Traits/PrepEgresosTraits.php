@@ -737,9 +737,6 @@ Class PrepEgresosTraits
                             if (count($itemFont->dependenciaFont) > 0){
                                 foreach ($itemFont->dependenciaFont as $depFont){
 
-                                    $value[] = $depFont->value;
-                                    $valueRubrosDisp[] = $depFont->saldo;
-
                                     //VALORES DE CREDITO DE LAS FUENTES DE LAS DEPENDENCIAS
                                     if ($inicio != null) $rubrosCredMov = RubrosMov::where('dep_rubro_font_cred_id', $depFont->id)
                                         ->whereBetween('created_at',array($inicio, $final))->get();
@@ -765,6 +762,10 @@ Class PrepEgresosTraits
 
                                             //AL SER UN RUBRO DE INVERSION SE REALIZA EL LLENADO DE MANERA DISTINTA LOS
                                             //VALORES DE LOS CDPs
+
+                                            $value[] = $bpVigFind->propios;
+                                            $valueRubrosDisp[] = $bpVigFind->saldo;
+
                                             $codBpin = $bpVigFind->bpin->cod_proyecto;
                                             $codActiv = $bpVigFind->bpin->cod_actividad;
                                             $nameActiv = $bpVigFind->bpin->actividad;
@@ -1005,6 +1006,9 @@ Class PrepEgresosTraits
                                             unset($valueOrdenPago);unset($valuePagos);unset($valueRubrosDisp);unset($rubrosCC);unset($valueRubrosAsign);unset($IDRegistros);
                                         }
                                     } else{
+                                        $value[] = $depFont->value;
+                                        $valueRubrosDisp[] = $depFont->saldo;
+
                                         $codBpin = "";
                                         $codActiv = "";
                                         $nameActiv = "";
