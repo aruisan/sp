@@ -761,51 +761,84 @@ Class PrepEgresosTraits
 
                                     if (count($bpinVigen) > 0){
 
-                                        //AL SER UN RUBRO DE INVERSION SE REALIZA EL LLENADO DE MANERA DISTINTA LOS
-                                        //VALORES DE LOS CDPs
-                                        $codBpin = $bpinVigen->first()->bpin->cod_proyecto;
-                                        $codActiv = $bpinVigen->first()->bpin->cod_actividad;
-                                        $nameActiv = $bpinVigen->first()->bpin->actividad;
-                                        $codProd = $bpinVigen->first()->bpin->cod_producto;
-                                        $codIndProd = $bpinVigen->first()->bpin->cod_indicador;
-                                        $codProgMGA = $bpinVigen->first()->bpin->cod_sector;
+                                        foreach ($bpinVigen as $bpVigFind){
 
-                                        if (isset($rubrosCC)){
-                                            foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
-                                        }
+                                            //AL SER UN RUBRO DE INVERSION SE REALIZA EL LLENADO DE MANERA DISTINTA LOS
+                                            //VALORES DE LOS CDPs
+                                            $codBpin = $bpVigFind->bpin->cod_proyecto;
+                                            $codActiv = $bpVigFind->bpin->cod_actividad;
+                                            $nameActiv = $bpVigFind->bpin->actividad;
+                                            $codProd = $bpVigFind->bpin->cod_producto;
+                                            $codIndProd = $bpVigFind->bpin->cod_indicador;
+                                            $codProgMGA = $bpVigFind->bpin->cod_sector;
 
-                                        $bpinCdpValor = BpinCdpValor::where('cod_actividad', $bpinVigen->first()->bpin->cod_actividad)->get();
-                                        if (count($bpinCdpValor) > 0){
-                                            foreach ($bpinCdpValor as $bpinCDP){
-                                                $bpinArray = BPin::where('cod_actividad', $bpinCDP->cod_actividad)->first();
-                                                if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
-                                                    //VALIDACION DE SI LA ACTIVIDAD CORRESPONDE A LA FUENTE DEL RUBRO DE LA DEP
-                                                    if ($bpinCDP->dependencia_rubro_font_id != null){
-                                                        if ($bpinCDP->dependencia_rubro_font_id == $depFont->id) {
+                                            if (isset($rubrosCC)){
+                                                foreach ($rubrosCC as $cc) if ($cc['id'] == $depFont->id) $valueRubrosCCred[] = $cc['value'];
+                                            }
+
+                                            $bpinCdpValor = BpinCdpValor::where('cod_actividad', $bpVigFind->bpin->cod_actividad)->get();
+                                            if (count($bpinCdpValor) > 0){
+                                                foreach ($bpinCdpValor as $bpinCDP){
+                                                    $bpinArray = BPin::where('cod_actividad', $bpinCDP->cod_actividad)->first();
+                                                    if ($bpinCDP->cdp->jefe_e == "3" and  $bpinCDP->cdp->vigencia_id == $vigencia_id){
+                                                        //VALIDACION DE SI LA ACTIVIDAD CORRESPONDE A LA FUENTE DEL RUBRO DE LA DEP
+                                                        if ($bpinCDP->dependencia_rubro_font_id != null){
+                                                            if ($bpinCDP->dependencia_rubro_font_id == $depFont->id) {
+                                                                if ($inicio != null){
+                                                                    if (date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) <= $final and date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) >= $inicio){
+                                                                        $valueCDPs[] = $bpinCDP->valor;
+                                                                    }
+                                                                } else $valueCDPs[] = $bpinCDP->valor;
+                                                            }
+                                                        } else {
                                                             if ($inicio != null){
                                                                 if (date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) <= $final and date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) >= $inicio){
                                                                     $valueCDPs[] = $bpinCDP->valor;
                                                                 }
                                                             } else $valueCDPs[] = $bpinCDP->valor;
                                                         }
-                                                    } else {
-                                                        if ($inicio != null){
-                                                            if (date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) <= $final and date('Y-m-d', strtotime($bpinCDP->cdp->created_at)) >= $inicio){
-                                                                $valueCDPs[] = $bpinCDP->valor;
-                                                            }
-                                                        } else $valueCDPs[] = $bpinCDP->valor;
-                                                    }
-                                                    $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)
-                                                        ->where('bpin_cdp_valor_id', $bpinCDP->id)->get();
-                                                    if (count($cdpsRegValue) > 0){
-                                                        //CONSULTA PARA LOS REGISTROS
-                                                        foreach ($cdpsRegValue as $valueCdpReg){
-                                                            if ($valueCdpReg->valor != 0){
-                                                                if ($valueCdpReg->registro->jefe_e == 3){
-                                                                    if ($itemFont->id == $valueCdpReg->fontsRubro_id){
-                                                                        $validateValuedepFont = BpinCdpValor::find($valueCdpReg->bpin_cdp_valor_id);
-                                                                        if (isset($validateValuedepFont->dependencia_rubro_font_id)){
-                                                                            if ($validateValuedepFont->dependencia_rubro_font_id == $depFont->id){
+                                                        $cdpsRegValue = CdpsRegistroValor::where('cdp_id', $bpinCDP->cdp->id)
+                                                            ->where('bpin_cdp_valor_id', $bpinCDP->id)->get();
+                                                        if (count($cdpsRegValue) > 0){
+                                                            //CONSULTA PARA LOS REGISTROS
+                                                            foreach ($cdpsRegValue as $valueCdpReg){
+                                                                if ($valueCdpReg->valor != 0){
+                                                                    if ($valueCdpReg->registro->jefe_e == 3){
+                                                                        if ($itemFont->id == $valueCdpReg->fontsRubro_id){
+                                                                            $validateValuedepFont = BpinCdpValor::find($valueCdpReg->bpin_cdp_valor_id);
+                                                                            if (isset($validateValuedepFont->dependencia_rubro_font_id)){
+                                                                                if ($validateValuedepFont->dependencia_rubro_font_id == $depFont->id){
+                                                                                    //VALOR REGISTROS
+                                                                                    if ($inicio != null){
+                                                                                        if (date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) <= $final and date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) >= $inicio){
+                                                                                            $valueRegistros[] = $valueCdpReg->valor;
+                                                                                        }
+                                                                                    } else $valueRegistros[] = $valueCdpReg->valor;
+                                                                                    //ID REGISTROS
+                                                                                    $IDRegistros[] = $valueCdpReg->registro_id;
+                                                                                    //VALOR ORDENES DE PAGO
+                                                                                    $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $valueCdpReg->id)->get();
+                                                                                    if (count($ordenPagoRubros) > 0){
+                                                                                        $ordenPagoRubro = $ordenPagoRubros->first();
+                                                                                        if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $valueCdpReg->registro_id){
+                                                                                            if ($inicio != null){
+                                                                                                if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) >= $inicio){
+                                                                                                    $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                                }
+                                                                                            } else $valueOrdenPago[] = $ordenPagoRubro->valor;
+                                                                                            if ($ordenPagoRubro->orden_pago->pago){
+                                                                                                if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
+                                                                                                    if ($inicio != null){
+                                                                                                        if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) >= $inicio){
+                                                                                                            $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                                        }
+                                                                                                    } else $valuePagos[] = $ordenPagoRubro->valor;
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            } else{
                                                                                 //VALOR REGISTROS
                                                                                 if ($inicio != null){
                                                                                     if (date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) <= $final and date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) >= $inicio){
@@ -836,48 +869,141 @@ Class PrepEgresosTraits
                                                                                     }
                                                                                 }
                                                                             }
-                                                                        } else{
-                                                                            //VALOR REGISTROS
-                                                                            if ($inicio != null){
-                                                                                if (date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) <= $final and date('Y-m-d', strtotime($valueCdpReg->registro->created_at)) >= $inicio){
-                                                                                    $valueRegistros[] = $valueCdpReg->valor;
-                                                                                }
-                                                                            } else $valueRegistros[] = $valueCdpReg->valor;
-                                                                            //ID REGISTROS
-                                                                            $IDRegistros[] = $valueCdpReg->registro_id;
-                                                                            //VALOR ORDENES DE PAGO
-                                                                            $ordenPagoRubros = OrdenPagosRubros::where('cdps_registro_valor_id', $valueCdpReg->id)->get();
-                                                                            if (count($ordenPagoRubros) > 0){
-                                                                                $ordenPagoRubro = $ordenPagoRubros->first();
-                                                                                if ($ordenPagoRubro->orden_pago->estado == 1 and $ordenPagoRubro->orden_pago->registros_id == $valueCdpReg->registro_id){
-                                                                                    if ($inicio != null){
-                                                                                        if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->created_at)) >= $inicio){
-                                                                                            $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                                        }
-                                                                                    } else $valueOrdenPago[] = $ordenPagoRubro->valor;
-                                                                                    if ($ordenPagoRubro->orden_pago->pago){
-                                                                                        if ($ordenPagoRubro->orden_pago->pago->estado == 1 ) {
-                                                                                            if ($inicio != null){
-                                                                                                if (date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) <= $final and date('Y-m-d', strtotime($ordenPagoRubro->orden_pago->pago->created_at)) >= $inicio){
-                                                                                                    $valuePagos[] = $ordenPagoRubro->valor;
-                                                                                                }
-                                                                                            } else $valuePagos[] = $ordenPagoRubro->valor;
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
-                                                        }
-                                                    } else $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                                        } else $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                                    }
                                                 }
+
+                                            } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
+                                            $valueRegistros[] = 0; $IDRegistros[] = 0;
+
+
+                                            if (!isset($value)){
+                                                $value[] = null;
+                                                unset($value[0]);
                                             }
 
-                                        } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
-                                        $valueRegistros[] = 0; $IDRegistros[] = 0;
+                                            if (!isset($valueRubrosDisp)){
+                                                $valueRubrosDisp[] = null;
+                                                unset($valueRubrosDisp[0]);
+                                            }
 
+                                            if (!isset($valueRubrosAsign)){
+                                                $valueRubrosAsign[] = null;
+                                                unset($valueRubrosAsign[0]);
+                                            }
+
+                                            if (!isset($valueRubrosAdd)) {
+                                                $valueRubrosAdd[] = null;
+                                                unset($valueRubrosAdd[0]);
+                                            }
+
+                                            if (!isset($valueRubrosRed)) {
+                                                $valueRubrosRed[] = null;
+                                                unset($valueRubrosRed[0]);
+                                            }
+
+                                            if (!isset($valueRubrosCred)) {
+                                                $valueRubrosCred[] = null;
+                                                unset($valueRubrosCred[0]);
+                                            }
+
+                                            if (!isset($valueRubrosCCred)) {
+                                                $valueRubrosCCred[] = null;
+                                                unset($valueRubrosCCred[0]);
+                                            }
+
+                                            if (!isset($rubrosCC)) {
+                                                $rubrosCC[] = null;
+                                                unset($rubrosCC[0]);
+                                            }
+
+                                            if (!isset($valueCDPs)) {
+                                                $valueCDPs[] = null;
+                                                unset($valueCDPs[0]);
+                                            }
+
+                                            if (!isset($valueRegistros)) {
+                                                $valueRegistros[] = null;
+                                                unset($valueRegistros[0]);
+                                            }
+
+                                            if (!isset($valueOrdenPago)) {
+                                                $valueOrdenPago[] = null;
+                                                unset($valueOrdenPago[0]);
+                                            }
+
+                                            if (!isset($valuePagos)) {
+                                                $valuePagos[] = null;
+                                                unset($valuePagos[0]);
+                                            }
+
+                                            if (!isset($IDRegistros)) {
+                                                $IDRegistros[] = null;
+                                                unset($IDRegistros[0]);
+                                            }
+
+                                            //PRESUPUESTO DEFINITIVO
+                                            if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($value) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+                                            else $PDef = array_sum($value) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+                                            $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
+
+
+                                            if ($PDef > 0 or array_sum($value) > 0){
+                                                $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                                $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                    'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                    'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                    'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                    'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                    'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                    'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                    'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+
+                                            } elseif(array_sum($valueRubrosCCred) == array_sum($value)){
+                                                $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                                $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                    'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                    'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                    'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                    'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                    'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                    'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                    'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+
+                                            } elseif(array_sum($valueRubrosCCred) == array_sum($valueRubrosAdd)){
+                                                $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                                $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                    'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                    'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                    'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                    'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                    'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                    'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                    'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+
+                                            } elseif(array_sum($valueRubrosCred) > 0){
+                                                $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                                $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                    'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                    'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                    'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                    'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                    'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                    'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                    'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+                                            }
+
+                                            unset($value);unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
+                                            unset($valueOrdenPago);unset($valuePagos);unset($valueRubrosDisp);unset($rubrosCC);unset($valueRubrosAsign);unset($IDRegistros);
+                                        }
                                     } else{
                                         $codBpin = "";
                                         $codActiv = "";
@@ -943,136 +1069,134 @@ Class PrepEgresosTraits
                                             }
                                         } else $valueCDPs[] = 0; $valueOrdenPago[] = 0; $valuePagos[] = 0;
                                         $valueRegistros[] = 0; $IDRegistros[] = 0;
+
+                                        if (!isset($value)){
+                                            $value[] = null;
+                                            unset($value[0]);
+                                        }
+
+                                        if (!isset($valueRubrosDisp)){
+                                            $valueRubrosDisp[] = null;
+                                            unset($valueRubrosDisp[0]);
+                                        }
+
+                                        if (!isset($valueRubrosAsign)){
+                                            $valueRubrosAsign[] = null;
+                                            unset($valueRubrosAsign[0]);
+                                        }
+
+                                        if (!isset($valueRubrosAdd)) {
+                                            $valueRubrosAdd[] = null;
+                                            unset($valueRubrosAdd[0]);
+                                        }
+
+                                        if (!isset($valueRubrosRed)) {
+                                            $valueRubrosRed[] = null;
+                                            unset($valueRubrosRed[0]);
+                                        }
+
+                                        if (!isset($valueRubrosCred)) {
+                                            $valueRubrosCred[] = null;
+                                            unset($valueRubrosCred[0]);
+                                        }
+
+                                        if (!isset($valueRubrosCCred)) {
+                                            $valueRubrosCCred[] = null;
+                                            unset($valueRubrosCCred[0]);
+                                        }
+
+                                        if (!isset($rubrosCC)) {
+                                            $rubrosCC[] = null;
+                                            unset($rubrosCC[0]);
+                                        }
+
+                                        if (!isset($valueCDPs)) {
+                                            $valueCDPs[] = null;
+                                            unset($valueCDPs[0]);
+                                        }
+
+                                        if (!isset($valueRegistros)) {
+                                            $valueRegistros[] = null;
+                                            unset($valueRegistros[0]);
+                                        }
+
+                                        if (!isset($valueOrdenPago)) {
+                                            $valueOrdenPago[] = null;
+                                            unset($valueOrdenPago[0]);
+                                        }
+
+                                        if (!isset($valuePagos)) {
+                                            $valuePagos[] = null;
+                                            unset($valuePagos[0]);
+                                        }
+
+                                        if (!isset($IDRegistros)) {
+                                            $IDRegistros[] = null;
+                                            unset($IDRegistros[0]);
+                                        }
+
+                                        //PRESUPUESTO DEFINITIVO
+                                        if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($value) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+                                        else $PDef = array_sum($value) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
+                                        $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
+
+
+                                        if ($PDef > 0 or array_sum($value) > 0){
+                                            $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                            $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+
+                                        } elseif(array_sum($valueRubrosCCred) == array_sum($value)){
+                                            $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                            $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+
+                                        } elseif(array_sum($valueRubrosCCred) == array_sum($valueRubrosAdd)){
+                                            $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                            $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+
+                                        } elseif(array_sum($valueRubrosCred) > 0){
+                                            $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
+
+                                            $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
+                                                'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
+                                                'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
+                                                'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
+                                                'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
+                                                'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
+                                                'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
+                                                'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
+                                        }
+
+                                        unset($value);unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
+                                        unset($valueOrdenPago);unset($valuePagos);unset($valueRubrosDisp);unset($rubrosCC);unset($valueRubrosAsign);unset($IDRegistros);
                                     }
-
-                                    if (!isset($value)){
-                                        $value[] = null;
-                                        unset($value[0]);
-                                    }
-
-                                    if (!isset($valueRubrosDisp)){
-                                        $valueRubrosDisp[] = null;
-                                        unset($valueRubrosDisp[0]);
-                                    }
-
-                                    if (!isset($valueRubrosAsign)){
-                                        $valueRubrosAsign[] = null;
-                                        unset($valueRubrosAsign[0]);
-                                    }
-
-                                    if (!isset($valueRubrosAdd)) {
-                                        $valueRubrosAdd[] = null;
-                                        unset($valueRubrosAdd[0]);
-                                    }
-
-                                    if (!isset($valueRubrosRed)) {
-                                        $valueRubrosRed[] = null;
-                                        unset($valueRubrosRed[0]);
-                                    }
-
-                                    if (!isset($valueRubrosCred)) {
-                                        $valueRubrosCred[] = null;
-                                        unset($valueRubrosCred[0]);
-                                    }
-
-                                    if (!isset($valueRubrosCCred)) {
-                                        $valueRubrosCCred[] = null;
-                                        unset($valueRubrosCCred[0]);
-                                    }
-
-                                    if (!isset($rubrosCC)) {
-                                        $rubrosCC[] = null;
-                                        unset($rubrosCC[0]);
-                                    }
-
-                                    if (!isset($valueCDPs)) {
-                                        $valueCDPs[] = null;
-                                        unset($valueCDPs[0]);
-                                    }
-
-                                    if (!isset($valueRegistros)) {
-                                        $valueRegistros[] = null;
-                                        unset($valueRegistros[0]);
-                                    }
-
-                                    if (!isset($valueOrdenPago)) {
-                                        $valueOrdenPago[] = null;
-                                        unset($valueOrdenPago[0]);
-                                    }
-
-                                    if (!isset($valuePagos)) {
-                                        $valuePagos[] = null;
-                                        unset($valuePagos[0]);
-                                    }
-
-                                    if (!isset($IDRegistros)) {
-                                        $IDRegistros[] = null;
-                                        unset($IDRegistros[0]);
-                                    }
-
-                                    //PRESUPUESTO DEFINITIVO
-                                    if (isset($valueRubrosAdd) and isset($valueRubrosRed)) $PDef= array_sum($value) + array_sum($valueRubrosAdd) - array_sum($valueRubrosRed) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
-                                    else $PDef = array_sum($value) + array_sum($valueRubrosCred) - array_sum($valueRubrosCCred);
-                                    $code = $depFont->dependencias->num.'.'.$depFont->dependencias->sec;
-
-
-                                    if ($PDef > 0 or array_sum($value) > 0){
-                                        $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
-
-                                        $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
-                                            'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
-                                            'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
-                                            'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
-                                            'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
-                                            'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
-                                            'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
-                                            'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
-
-                                    } elseif(array_sum($valueRubrosCCred) == array_sum($value)){
-                                        $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
-
-                                        $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
-                                            'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
-                                            'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
-                                            'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
-                                            'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
-                                            'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
-                                            'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
-                                            'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
-
-                                    } elseif(array_sum($valueRubrosCCred) == array_sum($valueRubrosAdd)){
-                                        $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
-
-                                        $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
-                                            'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
-                                            'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
-                                            'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
-                                            'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
-                                            'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
-                                            'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
-                                            'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
-
-                                    } elseif(array_sum($valueRubrosCred) > 0){
-                                        $fuente = $depFont->fontRubro->sourceFunding->code.' - '.$depFont->fontRubro->sourceFunding->description;
-
-                                        $presupuesto[] = ['id_rubro' => $dataRub->id ,'id' => $dataRub->plantilla_cuipos_id, 'cod' => $dataRub->cod, 'name' => $dataRub->name, 'presupuesto_inicial' => array_sum($value),
-                                            'adicion' => array_sum($valueRubrosAdd), 'reduccion' => array_sum($valueRubrosRed), 'credito' => array_sum($valueRubrosCred),
-                                            'ccredito' => array_sum($valueRubrosCCred), 'presupuesto_def' => $PDef, 'cdps' => array_sum($valueCDPs), 'registros' => array_sum($valueRegistros),
-                                            'saldo_disp' => $PDef - array_sum($valueCDPs), 'saldo_cdp' => array_sum($valueCDPs) - array_sum($valueRegistros), 'ordenes_pago' => array_sum($valueOrdenPago),
-                                            'pagos' => array_sum($valuePagos), 'cuentas_pagar' => array_sum($valueOrdenPago) - array_sum($valuePagos), 'reservas' => array_sum($valueRegistros) - array_sum($valueOrdenPago),
-                                            'rubros_disp' => array_sum($valueRubrosDisp), 'codBpin' => $codBpin, 'codActiv' => $codActiv, 'nameActiv' => $nameActiv, 'tipo' => $dataRub->tipo, 'rubros_asign' => array_sum($valueRubrosAsign),
-                                            'codDep' => $code, 'dep' => $depFont->dependencias->name, 'depRubID' => $depFont->id, 'fuente' =>  $fuente, 'padreID' => $plantillaCuipoFind->padre_id,
-                                            'codProd' => $codProd, 'codIndProd' => $codIndProd, 'codProgMGA' => $codProgMGA];
-                                    }
-
-                                    unset($value);unset($valueRubrosAdd);unset($valueRubrosRed);unset($valueRubrosCred);unset($valueRubrosCCred);unset($valueCDPs);unset($valueRegistros);
-                                    unset($valueOrdenPago);unset($valuePagos);unset($valueRubrosDisp);unset($rubrosCC);unset($valueRubrosAsign);unset($IDRegistros);
                                 }
                             } else $value[] = $itemFont->valor; $valueRubrosDisp[] = $itemFont->valor_disp; $valueRubrosAsign[] = $itemFont->valor_disp_asign;
                         }
-
                     }
-
                 } else {
                     $presupuesto[] = ['id_rubro' => $rubro->first()->id ,'id' => $rubro->first()->plantilla_cuipos_id, 'cod' => $rubro[0]->cod, 'name' => $rubro[0]->name, 'presupuesto_inicial' => 0,
                         'adicion' => 0, 'reduccion' => 0, 'credito' => 0, 'ccredito' => 0, 'presupuesto_def' => 0, 'cdps' => 0, 'registros' => 0,

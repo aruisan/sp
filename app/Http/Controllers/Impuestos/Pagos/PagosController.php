@@ -359,6 +359,7 @@ class PagosController extends Controller
         $comprobante->persona_id = $pago->user_id;
         if ($pago->modulo == 'PREDIAL') $comprobante->concepto = "IMPUESTO PREDIAL ".$pago->fechaPago." #".$pago->id;
         elseif ($pago->modulo == 'ICA-Contribuyente') $comprobante->concepto = "IMPUESTO ICA CONTRIBUYENTE ".$pago->fechaPago." #".$pago->id;
+        elseif ($pago->modulo == 'ICA-AgenteRetenedor') $comprobante->concepto = "IMPUESTO ICA AGENTE RETENEDOR ".$pago->fechaPago." #".$pago->id;
         elseif ($pago->modulo == 'MUELLAJE') $comprobante->concepto = "MUELLAJE ".$pago->fechaPago." #".$pago->id;
         $comprobante->save();
 
@@ -579,6 +580,35 @@ class PagosController extends Controller
             } else $comprobanteMov->debito = $ica->interesesMora;
             
             $comprobanteMov->save();
+
+        } elseif ($pago->modulo == 'ICA-AgenteRetenedor'){
+            $ica = IcaRetenedor::find($pago->entity_id);
+
+            //PUCs DEL COMPROBANTE CONTABLE
+            //IMPUESTO INDUSTRIA Y COMERCIO
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->cuenta_puc_id = 959;
+            $comprobanteMov->debito = 0;
+            $comprobanteMov->credito = $ica->pagoTotal;
+
+            $comprobanteMov->save();
+
+            $puc = PucAlcaldia::find(959);
+            $puc->saldo_actual = $puc->saldo_actual + $ica->pagoTotal;
+            $puc->save();
+
+            //RUBROS DEL COMPROBANTE CONTABLE
+            //1.1.01.02.200.01 Impuesto de Industria y comercio - sobre actividades comerciales 1.2.1.0.00 Ingresos Corrientes de Libre Destinación
+            $comprobanteMov = new ComprobanteIngresosMov();
+            $comprobanteMov->comp_id = $comprobante->id;
+            $comprobanteMov->fechaComp = $pago->fechaPago;
+            $comprobanteMov->rubro_font_ingresos_id = 856;
+            $comprobanteMov->debito = $ica->pagoTotal;
+
+            $comprobanteMov->save();
+
         } elseif ($pago->modulo == 'MUELLAJE'){
 
             $muellaje = Muellaje::find($pago->entity_id);
