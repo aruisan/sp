@@ -168,8 +168,16 @@ class ImpAdminController extends Controller
     }
     public function noPay(){
 
-        $noPagos = Pagos::where('estado','Generado')->where('modulo','!=','PREDIAL')->get();
+        $pagosPred = Pagos::where('estado','Pagado')->where('modulo','PREDIAL')->get();
 
+        //SE ALMACENAN LOS NUMEROS CATASTRAL OK DE LOS PAGOS
+        foreach ($pagosPred as $predPay){
+            $predMaked = Predial::find($predPay->entity_id);
+            $contri = PredialContribuyentes::find($predMaked->imp_pred_contri_id);
+            $numCatastralOK[] = $contri->numCatastral;
+        }
+
+        $noPagos = Pagos::where('estado','Generado')->where('modulo','!=','PREDIAL')->get();
         foreach ($noPagos as $item){
             $item->rit = RIT::where('user_id', $item->user->id)->first();
             if ($item->modulo == 'PREDIAL'){
@@ -249,8 +257,10 @@ class ImpAdminController extends Controller
                     }
                     $user->valorDeuda = array_sum($totalAños);
                     unset($totalAños);
-                    $predNoPay[] = collect(['numCatastral' => $user->numCatastral, 'contribuyente' => $user->contribuyente,
-                        'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda]);
+                    if (!in_array($user->numCatastral, $numCatastralOK)){
+                        $predNoPay[] = collect(['numCatastral' => $user->numCatastral, 'contribuyente' => $user->contribuyente,
+                            'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda]);
+                    }
                 }
             } else{
                 for($i = 0; $i < 6; $i++){
@@ -275,8 +285,10 @@ class ImpAdminController extends Controller
                 }
                 $user->valorDeuda = array_sum($totalAños);
                 unset($totalAños);
-                $predNoPay[] = collect(['numCatastral' => $user->numCatastral, 'contribuyente' => $user->contribuyente,
-                    'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda]);
+                if (!in_array($user->numCatastral, $numCatastralOK)){
+                    $predNoPay[] = collect(['numCatastral' => $user->numCatastral, 'contribuyente' => $user->contribuyente,
+                        'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda]);
+                }
             }
         }
 
