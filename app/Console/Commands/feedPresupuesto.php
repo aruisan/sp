@@ -44,8 +44,8 @@ class feedPresupuesto extends Command
     public function handle()
     {
         //EGRESOS
-        $añoActual = 2024;
-        $mesActual = 01;
+        $añoActual = Carbon::now()->year;
+        $mesActual = Carbon::now()->month;
 
         $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
 
