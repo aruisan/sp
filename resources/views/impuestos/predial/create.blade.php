@@ -409,7 +409,6 @@
                     document.getElementById('tarifaMilSpan').innerHTML = tarifaxMil;
                     document.getElementById('tarifaMil').value = tarifaxMil;
 
-                    listarAños(datos.deudaYear);
                 }).fail(function() {
                     toastr.warning('OCURRIO UN ERROR AL OBTENER LOS VALORES DEL UVT');
                 });
