@@ -339,6 +339,7 @@
         }
 
         function ShowSelected(){
+            listarAños(2018);
             var idPred = document.getElementById('predio').value;
             $.ajax({
                 method: "POST",
