@@ -339,7 +339,6 @@
         }
 
         function ShowSelected(){
-            listarAños(2018);
             var idPred = document.getElementById('predio').value;
             $.ajax({
                 method: "POST",
@@ -409,6 +408,8 @@
                     //SE ACTUALIZA LA TARIFA POR MIL
                     document.getElementById('tarifaMilSpan').innerHTML = tarifaxMil;
                     document.getElementById('tarifaMil').value = tarifaxMil;
+
+                    listarAños(datos.deudaYear);
                 }).fail(function() {
                     toastr.warning('OCURRIO UN ERROR AL OBTENER LOS VALORES DEL UVT');
                 });
