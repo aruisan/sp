@@ -259,7 +259,8 @@ class ImpAdminController extends Controller
                     unset($totalAños);
                     if (!in_array($user->numCatastral, $numCatastralOK)){
                         $predNoPay[] = collect(['numCatastral' => $user->numCatastral, 'contribuyente' => $user->contribuyente,
-                            'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda]);
+                            'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda,
+                            'numIdent' => $user->numIdent]);
                     }
                 }
             } else{
@@ -287,7 +288,8 @@ class ImpAdminController extends Controller
                 unset($totalAños);
                 if (!in_array($user->numCatastral, $numCatastralOK)){
                     $predNoPay[] = collect(['numCatastral' => $user->numCatastral, 'contribuyente' => $user->contribuyente,
-                        'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda]);
+                        'dir_predio' => $user->dir_predio, 'email' => $user->email, 'valorDeuda' => $user->valorDeuda,
+                        'numIdent' => $user->numIdent]);
                 }
             }
         }

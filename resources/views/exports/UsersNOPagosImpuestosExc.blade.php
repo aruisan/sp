@@ -52,6 +52,7 @@
         <th>CORREO</th>
         <th>LIQUIDACION</th>
         <th>NATURAL O JURIDICO</th>
+        <th>NUM IDENTIDAD</th>
     </tr>
     </thead>
     <tbody>
@@ -64,6 +65,7 @@
                 <td>{{ $item['email']}}</td>
                 <td>{{ $item['valorDeuda']}}</td>
                 <td>1</td>
+                <td>{{ $item['numIdent']}}</td>
             </tr>
         @endif
     @endforeach
