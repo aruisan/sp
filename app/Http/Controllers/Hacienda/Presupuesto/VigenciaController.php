@@ -7,6 +7,8 @@ use App\bpinVigencias;
 use App\Exports\InfMensualExport;
 use App\Model\Admin\Dependencia;
 use App\Model\Admin\DependenciaRubroFont;
+use App\Model\Administrativo\ComprobanteIngresos\ComprobanteIngresos;
+use App\Model\Administrativo\Tesoreria\Pac;
 use App\Model\Hacienda\Presupuesto\Informes\CodeContractuales;
 use App\Model\Administrativo\OrdenPago\OrdenPagosRubros;
 use App\Model\Administrativo\OrdenPago\OrdenPagos;
@@ -96,7 +98,6 @@ class VigenciaController extends Controller
             $añoActual = $today->year;
 
             if (!$prepSaved) {
-                Artisan::call("schedule:run");
                 $V = "Vacio";
 
                 return view('hacienda.presupuesto.indexCuipoFastCharge', compact( 'prepSaved',
@@ -174,458 +175,55 @@ class VigenciaController extends Controller
             }
         } else {
 
-            $V = $vigencia->id;
-            $vigencia_id = $V;
             $añoActual = Carbon::now()->year;
-            $ultimoLevel = Level::where('vigencia_id', $vigencia_id)->get()->last();
-            $registers = Register::where('level_id', $ultimoLevel->id)->get();
-            $registers2 = Register::where('level_id', '<', $ultimoLevel->id)->get();
-            $ultimoLevel2 = Register::where('level_id', '<', $ultimoLevel->id)->get()->last();
-            $fonts = FontsVigencia::where('vigencia_id',$vigencia_id)->get();
-            $rubros = Rubro::where('vigencia_id', $vigencia_id)->get();
-            $fontsRubros = FontsRubro::orderBy('font_vigencia_id')->get();
-            $allRegisters = Register::orderByDesc('level_id')->get();
-            $pagos = Pagos::all();
-            $ordenPagos = OrdenPagos::all();
+            $prepSaved = PresupuestoSnap::where('mes', $mesActual)->where('vigencia_id', $id)->where('tipo','INGRESOS')->first();
 
-            $historico = Vigencia::where('vigencia', '!=', $añoActual)->get();
-            foreach ($historico as $his) {
-                if ($his->tipo == "0"){
-                    $years[] = [ 'info' => $his->vigencia." - Egresos", 'id' => $his->id];
-                }else{
-                    $years[] = [ 'info' => $his->vigencia." - Ingresos", 'id' => $his->id];
+            if (!$prepSaved){
+                //Artisan::call("schedule:run");
+                $V = "Vacio";
+                return view('hacienda.presupuesto.newHistoricoIngresos', compact('V', 'añoActual', 'mesActual'));
+            } else {
+                $V = $prepSaved->vigencia_id;
+                $prepIng = PresupuestoSnapData::where('pre_snap_id', $prepSaved->id)->first();
+                $fechaData = Carbon::parse($prepIng->created_at);
+                $comprobanteIng = ComprobanteIngresos::where('vigencia_id', $prepSaved->vigencia_id)->where('estado', '3')->get();
+
+                //CODE CONTRACTUALES
+                $codeCon = CodeContractuales::all();
+
+                //TOTAL RECAUDO
+                $rubros = Rubro::where('vigencia_id', $prepSaved->vigencia_id)->get();
+                foreach ($rubros as $rubro) {
+                    $totalRecaud[] = collect(['id' => $rubro->id, 'valor' => $rubro->compIng->sum('valor')]);
                 }
-            }
-            asort($years);
 
-            global $lastLevel;
-            $lastLevel = $ultimoLevel->id;
-            $lastLevel2 = $ultimoLevel2->level_id;
-
-            foreach ($fonts as $font){
-                $fuentes[] = collect(['id' => $font->font->id, 'name' => $font->font->name, 'code' => $font->font->code]);
-            }
-
-            foreach ($fontsRubros as $fontsRubro){
-                if ($fontsRubro->fontVigencia->vigencia_id == $vigencia_id){
-                    $fuentesRubros[] = collect(['valor' => $fontsRubro->valor, 'rubro_id' => $fontsRubro->rubro_id, 'font_vigencia_id' => $fontsRubro->font_vigencia_id]);
+                //SALDO POR RECAUDAR
+                foreach ($rubros as $rubro) {
+                    $recaudado = $rubro->compIng->sum('valor');
+                    $valor = $rubro->fontsRubro->sum('valor');
+                    $saldoRecaudo[] = collect(['id' => $rubro->id, 'valor' => $valor - $recaudado]);
                 }
-            }
-            $tamFountsRubros = count($fuentesRubros);
 
-            foreach ($registers2 as $register2) {
-                if ($register2->level->vigencia_id == $vigencia_id) {
-                    global $codigoLast;
-                    if ($register2->register_id == null) {
-                        $codigoEnd = $register2->code;
-                        $codigos[] = collect(['id' => $register2->id, 'codigo' => $codigoEnd, 'name' => $register2->name, 'code' => '', 'V' => $V, 'valor' => '', 'id_rubro' => '', 'register_id' => $register2->register_id]);
-                    } elseif ($codigoLast > 0) {
-                        if ($lastLevel2 == $register2->level_id) {
-                            $codigo = $register2->code;
-                            $codigoEnd = "$codigoLast$codigo";
-                            $codigos[] = collect(['id' => $register2->id, 'codigo' => $codigoEnd, 'name' => $register2->name, 'code' => '', 'V' => $V, 'valor' => '', 'id_rubro' => '', 'register_id' => $register2->register_id]);
-                            foreach ($registers as $register) {
-                                if ($register2->id == $register->register_id) {
-                                    $register_id = $register->code_padre->registers->id;
-                                    $code = $register->code_padre->registers->code . $register->code;
-                                    $ultimo = $register->code_padre->registers->level->level;
 
-                                    while ($ultimo > 1) {
-                                        $registro = Register::findOrFail($register_id);
-                                        $register_id = $registro->code_padre->registers->id;
-                                        $code = $registro->code_padre->registers->code . $code;
-
-                                        $ultimo = $registro->code_padre->registers->level->level;
-                                    }
-                                    $codigos[] = collect(['id' => $register->id, 'codigo' => $code, 'name' => $register->name, 'code' => '', 'V' => $V, 'valor' => '', 'id_rubro' => '', 'register_id' => $register2->register_id]);
-                                    if ($register->level_id == $lastLevel) {
-                                        foreach ($rubros as $rubro) {
-                                            if ($register->id == $rubro->register_id) {
-                                                $newCod = "$code$rubro->cod";
-                                                $fR = $rubro->FontsRubro;
-                                                //dd($newCod, $fR);
-                                                for ($i = 0; $i < $tamFountsRubros; $i++) {
-                                                    $rubrosF = FontsRubro::where('rubro_id', $fuentesRubros[$i]['rubro_id'])->orderBy('font_vigencia_id')->get();
-                                                    $numR = count($rubrosF);
-                                                    $numF = count($fonts);
-                                                    if ($numR == $numF) {
-                                                        if ($fuentesRubros[$i]['rubro_id'] == $rubro->id) {
-                                                            $FRubros[] = collect(['valor' => $fuentesRubros[$i]['valor'], 'rubro_id' => $fuentesRubros[$i]['rubro_id'], 'fount_id' => $fuentesRubros[$i]['font_vigencia_id']]);
-                                                        }
-                                                    } else {
-                                                        foreach ($fonts as $font) {
-                                                            if ($fuentesRubros[$i]['font_vigencia_id'] == $font->id) {
-                                                                $FRubros[] = collect(['valor' => $fuentesRubros[$i]['valor'], 'rubro_id' => $fuentesRubros[$i]['rubro_id'], 'font_vigencia_id' => $font->id]);
-                                                            } else {
-                                                                $findFont = FontsRubro::where('rubro_id', $fuentesRubros[$i]['rubro_id'])->where('font_vigencia_id', $font->id)->get();
-                                                                $numFinds = count($findFont);
-                                                                if ($numFinds >= 1) {
-
-                                                                    $saveRubroF = new FontsRubro();
-
-                                                                    $saveRubroF->valor = 0;
-                                                                    $saveRubroF->valor_disp = 0;
-                                                                    $saveRubroF->rubro_id = $fuentesRubros[$i]['rubro_id'];
-                                                                    $saveRubroF->font_vigencia_id = $font->id + 1;
-
-                                                                    $saveRubroF->save();
-
-                                                                    break;
-                                                                } else {
-
-                                                                    $saveRubroF = new FontsRubro();
-
-                                                                    $saveRubroF->valor = 0;
-                                                                    $saveRubroF->valor_disp = 0;
-                                                                    $saveRubroF->rubro_id = $fuentesRubros[$i]['rubro_id'];
-                                                                    $saveRubroF->font_vigencia_id = $font->id;
-
-                                                                    $saveRubroF->save();
-
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                $valFuent = FontsRubro::where('rubro_id', $rubro->id)->sum('valor');
-                                                $codigos[] = collect(['id_rubro' => $rubro->id, 'id' => '', 'codigo' => $newCod, 'name' => $rubro->name, 'code' => $rubro->code, 'V' => $V, 'valor' => $valFuent, 'register_id' => $register->register_id]);
-                                                $valDisp = FontsRubro::where('rubro_id', $rubro->id)->sum('valor_disp');
-                                                $Rubros[] = collect(['id_rubro' => $rubro->id, 'id' => '', 'codigo' => $newCod, 'name' => $rubro->name, 'code' => $rubro->code, 'V' => $V, 'valor' => $valFuent, 'register_id' => $register->register_id, 'valor_disp' => $valDisp]);
-                                            }
-                                        }
-                                    }
-                                }
+                $items = Pac::all();
+                if ($items->count() >= 1) {
+                    foreach ($items as $item) {
+                        foreach ($rubros as $rubro) {
+                            if ($item->rubro_id == $rubro['id_rubro']) {
+                                $PACdata[] = collect(['id' => $item->id, 'rubro_id' => $rubro['id_rubro'], 'rubro' => $rubro['codigo'], 'name' => $rubro['name'], 'valorD' => $item->distribuir, 'totalD' => $item->total_distri]);
                             }
-                        } else {
-                            $codigo = $register2->code;
-                            $codigoEnd = "$codigoLast$codigo";
-                            $codigoLast = $codigoEnd;
-                            $codigos[] = collect(['id' => $register2->id, 'codigo' => $codigoEnd, 'name' => $register2->name, 'code' => '', 'V' => $V, 'valor' => '', 'id_rubro' => '', 'register_id' => $register2->register_id]);
-                        }
-                    } else {
-                        $codigo = $register2->code;
-                        $newRegisters = Register::findOrFail($register2->register_id);
-                        $codigoNew = $newRegisters->code;
-                        $codigoEnd = "$codigoNew$codigo";
-                        $codigoLast = $codigoEnd;
-                        $codigos[] = collect(['id' => $register2->id, 'codigo' => $codigoEnd, 'name' => $register2->name, 'code' => '', 'V' => $V, 'valor' => '', 'id_rubro' => '', 'register_id' => $register2->register_id]);
-                    }
-                }
-            }
-            //Sumas de los Valores
-            foreach ($allRegisters as $allRegister){
-                if ($allRegister->level->vigencia_id == $vigencia_id) {
-                    if ($allRegister->level_id == $lastLevel) {
-                        $rubrosRegs = Rubro::where('register_id', $allRegister->id)->get();
-                        foreach ($rubrosRegs as $rubrosReg) {
-                            $valFuent = FontsRubro::where('rubro_id', $rubrosReg->id)->sum('valor');
-                            $ArraytotalFR[] = $valFuent;
-                        }
-                        if (isset($ArraytotalFR)) {
-                            $totalFR = array_sum($ArraytotalFR);
-                            $valoresIniciales[] = collect(['id' => $allRegister->id, 'valor' => $totalFR, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($ArraytotalFR);
-                        } else {
-                            $valoresIniciales[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    } else {
-                        for ($i = 0; $i < sizeof($valoresIniciales); $i++) {
-                            if ($valoresIniciales[$i]['register_id'] == $allRegister->id) {
-                                $suma[] = $valoresIniciales[$i]['valor'];
-                            }
-                        }
-                        if (isset($suma)) {
-                            $valSum = array_sum($suma);
-                            $valoresIniciales[] = collect(['id' => $allRegister->id, 'valor' => $valSum, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($suma);
-                        } else {
-                            $valoresIniciales[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
                         }
                     }
                 }
-            }
 
-            //SUMA DE VALOR DISPONIBLE DEL RUBRO - CDP
-
-            foreach ($allRegisters as $allRegister){
-                if ($allRegister->level->vigencia_id == $vigencia_id) {
-                    if ($allRegister->level_id == $lastLevel) {
-                        $rubrosRegs = Rubro::where('register_id', $allRegister->id)->get();
-                        foreach ($rubrosRegs as $rubrosReg) {
-                            $valFuent = FontsRubro::where('rubro_id', $rubrosReg->id)->sum('valor_disp');
-                            $ArraytotalFR[] = $valFuent;
-                        }
-                        if (isset($ArraytotalFR)) {
-                            $totalFR = array_sum($ArraytotalFR);
-                            $valorDisp[] = collect(['id' => $allRegister->id, 'valor' => $totalFR, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($ArraytotalFR);
-                        } else {
-                            $valorDisp[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    } else {
-                        for ($i = 0; $i < sizeof($valorDisp); $i++) {
-                            if ($valorDisp[$i]['register_id'] == $allRegister->id) {
-                                $suma[] = $valorDisp[$i]['valor'];
-                            }
-                        }
-                        if (isset($suma)) {
-                            $valSum = array_sum($suma);
-                            $valorDisp[] = collect(['id' => $allRegister->id, 'valor' => $valSum, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($suma);
-                        } else {
-                            $valorDisp[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    }
+                if (!isset($PACdata)) {
+                    $PACdata[] = null;
+                    unset($PACdata[0]);
                 }
+
+                return view('hacienda.presupuesto.newHistoricoIngresos', compact('V', 'codeCon', 'añoActual',
+                    'mesActual', 'totalRecaud', 'saldoRecaudo', 'comprobanteIng', 'rubros', 'PACdata', 'fechaData', 'prepSaved'));
             }
-
-//ADICION
-            foreach ($rubros as $R2){
-                $ad = RubrosMov::where([['rubro_id', $R2->id],['movimiento', '=', '2']])->get();
-                if ($ad->count() > 0){
-                    $valoresAdd[] = collect(['id' => $R2->id, 'valor' => $ad->sum('valor')]) ;
-                } else{
-                    $valoresAdd[] = collect(['id' => $R2->id, 'valor' => 0]) ;
-                }
-            }
-
-
-            //REDUCCIÓN
-            foreach ($rubros as $R3){
-                $red = RubrosMov::where([['rubro_id', $R3->id],['movimiento', '=', '3']])->get();
-                if ($red->count() > 0){
-                    $valoresRed[] = collect(['id' => $R3->id, 'valor' => $red->sum('valor')]) ;
-                } else{
-                    $valoresRed[] = collect(['id' => $R3->id, 'valor' => 0]) ;
-                }
-            }
-
-
-            //CREDITO
-            foreach ($rubros as $R4){
-                $cred = RubrosMov::where([['rubro_id', $R4->id],['movimiento', '=', '1']])->get();
-                if ($cred->count() > 0){
-                    $valoresCred[] = collect(['id' => $R4->id, 'valor' => $cred->sum('valor')]) ;
-                }else{
-                    $valoresCred[] = collect(['id' => $R4->id, 'valor' => 0]) ;
-                }
-            }
-
-            //CONTRACREDITO
-            foreach ($rubros as $R5){
-                foreach ($R5->fontsRubro as $FR){
-                    foreach ($FR->rubrosMov as $movR) {
-                        if ($movR->movimiento == 1){
-                            $suma[] = $movR->valor;
-                        }
-                    }
-                }
-                if (isset($suma)){
-                    $valoresCcred[] = collect(['id' => $R5->id, 'valor' => array_sum($suma)]);
-                    unset($suma);
-                } else{
-                    $valoresCcred[] = collect(['id' => $R5->id, 'valor' => 0]);
-                }
-            }
-
-            //CREDITO Y CONTRACREDITO
-
-            for ($i=0;$i<sizeof($valoresCcred);$i++){
-                if ($valoresCcred[$i]['id'] == $valoresCred[$i]['id']){
-                    $valoresCyC[] = collect(['id' => $valoresCcred[$i]['id'], 'valorC' => $valoresCred[$i]['valor'], 'valorCC' => $valoresCcred[$i]['valor']]) ;
-                }
-            }
-
-            //PRESUPUESTO DEFINITIVO
-
-            foreach ($allRegisters as $allRegister){
-                if ($allRegister->level->vigencia_id == $vigencia_id) {
-                    if ($allRegister->level_id == $lastLevel) {
-                        $rubrosRegs = Rubro::where('register_id', $allRegister->id)->get();
-                        foreach ($rubrosRegs as $rubrosReg) {
-                            $valFuent = FontsRubro::where('rubro_id', $rubrosReg->id)->sum('valor');
-                            foreach ($valoresAdd as $valAdd) {
-                                if ($rubrosReg->id == $valAdd["id"]) {
-                                    $valAdicion = $valAdd["valor"];
-                                }
-                            }
-                            foreach ($valoresRed as $valRed) {
-                                if ($rubrosReg->id == $valRed["id"]) {
-                                    $valReduccion = $valRed["valor"];
-                                }
-                            }
-                            foreach ($valoresCred as $valCred) {
-                                if ($rubrosReg->id == $valCred["id"]) {
-                                    $valCredito = $valCred["valor"];
-                                }
-                            }
-                            foreach ($valoresCcred as $valCcred) {
-                                if ($rubrosReg->id == $valCcred["id"]) {
-                                    $valCcredito = $valCcred["valor"];
-                                }
-                            }
-                            if (isset($valAdicion) and isset($valReduccion)) {
-                                $ArraytotalFR[] = $valFuent + $valAdicion - $valReduccion + $valCredito - $valCcredito;
-                            } else {
-                                $ArraytotalFR[] = $valFuent + $valCredito - $valCcredito;
-                            }
-
-                        }
-                        if (isset($ArraytotalFR)) {
-                            $totalFR = array_sum($ArraytotalFR);
-                            $valoresDisp[] = collect(['id' => $allRegister->id, 'valor' => $totalFR, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($ArraytotalFR);
-                        } else {
-                            $valoresDisp[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    } else {
-                        for ($i = 0; $i < sizeof($valoresDisp); $i++) {
-                            if ($valoresDisp[$i]['register_id'] == $allRegister->id) {
-                                $suma[] = $valoresDisp[$i]['valor'];
-                            }
-                        }
-                        if (isset($suma)) {
-                            $valSum = array_sum($suma);
-                            $valoresDisp[] = collect(['id' => $allRegister->id, 'valor' => $valSum, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($suma);
-                        } else {
-                            $valoresDisp[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    }
-                }
-            }
-
-            foreach ($codigos as $cod){
-                if ($cod['valor']){
-                    foreach ($valoresAdd as $valores1){
-                        if ($cod['id_rubro'] == $valores1['id']){
-                            $valAd1 = $valores1['valor'];
-                        }
-                    }
-                    foreach ($valoresRed as $valores2){
-                        if ($cod['id_rubro'] == $valores2['id']){
-                            $valRed1 = $valores2['valor'];
-                        }
-                    }
-                    foreach ($valoresCred as $valores3){
-                        if ($cod['id_rubro'] == $valores3['id']){
-                            $valCred1 = $valores3['valor'];
-                        }
-                    }
-                    foreach ($valoresCcred as $valores4){
-                        if ($cod['id_rubro'] == $valores4['id']){
-                            $valCcred1 = $valores4['valor'];
-                        }
-                    }
-                    if (isset($valAd1) and isset($valRed1)){
-                        $AD = $cod['valor'] + $valAd1 - $valRed1 + $valCred1 - $valCcred1;
-                    } else{
-                        $AD = $cod['valor'] + $valCred1 - $valCcred1;
-                    }
-                    $ArrayDispon[] = collect(['id' => $cod['id_rubro'], 'valor' => $AD]);
-                }
-            }
-
-            //ROL
-
-            $roles = auth()->user()->roles;
-            foreach ($roles as $role){
-                $rol= $role->id;
-            }
-
-            //CODE CONTRACTUALES
-
-            $codeCon = CodeContractuales::all();
-
-            //TOTAL RECAUDO
-            foreach ($Rubros as $rubro){
-                $infoR = Rubro::findOrFail($rubro['id_rubro']);
-                $totalRecaud[] = collect(['id' => $infoR->id, 'valor' => $infoR->compIng->sum('valor')]);
-            }
-
-            //TOTAL GENERAL VALOR RECAUDO
-
-            foreach ($allRegisters as $allRegister){
-                if ($allRegister->level->vigencia_id == $vigencia_id) {
-                    if ($allRegister->level_id == $lastLevel) {
-                        $rubrosRegs = Rubro::where('register_id', $allRegister->id)->get();
-                        foreach ($rubrosRegs as $rubrosReg) {
-                            foreach ($rubrosReg->compIng as $Rub){
-                                $compInfo = CIRubros::where('id', $Rub->id)->get();
-                                if ($compInfo->count() > 0 ){
-                                    $ArraytotalRub[] = $Rub->valor;
-                                }
-                            }
-                        }
-                        if (isset($ArraytotalRub)) {
-                            $totalRub = array_sum($ArraytotalRub);
-                            $valoresFinRec[] = collect(['id' => $allRegister->id, 'valor' => $totalRub, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($ArraytotalRub);
-                        } else {
-                            $valoresFinRec[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    } else {
-                        for ($i = 0; $i < sizeof($valoresFinRec); $i++) {
-                            if ($valoresFinRec[$i]['register_id'] == $allRegister->id) {
-                                $suma[] = $valoresFinRec[$i]['valor'];
-                            }
-                        }
-                        if (isset($suma)) {
-                            $valSum = array_sum($suma);
-                            $valoresFinRec[] = collect(['id' => $allRegister->id, 'valor' => $valSum, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($suma);
-                        } else {
-                            $valoresFinRec[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    }
-                }
-            }
-
-            //SALDO POR RECAUDAR
-            foreach ($Rubros as $rubro){
-                $infoR2 = Rubro::findOrFail($rubro['id_rubro']);
-                $recaudado = $infoR->compIng->sum('valor');
-                $valor = $infoR->fontsRubro->sum('valor');
-                $saldoRecaudo[] = collect(['id' => $infoR2->id, 'valor' => $valor - $recaudado]);
-            }
-
-            //TOTAL GENERAL SALDO POR RECAUDAR
-
-            foreach ($allRegisters as $allRegister){
-                if ($allRegister->level->vigencia_id == $vigencia_id) {
-                    if ($allRegister->level_id == $lastLevel) {
-                        $rubrosRegs = Rubro::where('register_id', $allRegister->id)->get();
-                        foreach ($rubrosRegs as $rubrosReg2) {
-                            $recaudado2 = $rubrosReg2->compIng->sum('valor');
-                            $valor2 = $rubrosReg2->fontsRubro->sum('valor');
-                            $ArraytotalSald[] = $valor2 - $recaudado2;
-                        }
-                        if (isset($ArraytotalSald)) {
-                            $totalSald = array_sum($ArraytotalSald);
-                            $valoresFinSald[] = collect(['id' => $allRegister->id, 'valor' => $totalSald, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($ArraytotalSald);
-                        } else {
-                            $valoresFinSald[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    } else {
-                        for ($i = 0; $i < sizeof($valoresFinSald); $i++) {
-                            if ($valoresFinSald[$i]['register_id'] == $allRegister->id) {
-                                $suma[] = $valoresFinSald[$i]['valor'];
-                            }
-                        }
-                        if (isset($suma)) {
-                            $valSum = array_sum($suma);
-                            $valoresFinSald[] = collect(['id' => $allRegister->id, 'valor' => $valSum, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                            unset($suma);
-                        } else {
-                            $valoresFinSald[] = collect(['id' => $allRegister->id, 'valor' => 0, 'level_id' => $allRegister->level_id, 'register_id' => $allRegister->register_id]);
-                        }
-                    }
-                }
-            }
-
-            return view('hacienda.presupuesto.historicoIng', compact('codigos','V','fuentes','FRubros','fuentesRubros','valoresIniciales', 'Rubros','valorDisp','valoresAdd','valoresRed','valoresDisp','ArrayDispon','rol','valoresCred', 'valoresCcred','valoresCyC','ordenPagos','pagos','codeCon','totalRecaud','saldoRecaudo','valoresFinRec','valoresFinSald', 'vigencia','years'));
         }
 
     }
