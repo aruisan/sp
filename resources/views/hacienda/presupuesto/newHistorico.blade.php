@@ -27,57 +27,12 @@
                 <li class="nav-item principal">
                     <a class="nav-link"  href="#editar"> Presupuesto de Egresos {{ $añoActual }}</a>
                 </li>
-                <li class="nav-item pillPri">
-                    <a class="nav-link "  href="{{ url('/presupuestoIng') }}">Presupuesto de Ingresos {{ $añoActual }}</a>
-                </li>
                 @if($V != "Vacio" and auth()->user()->roles->first()->id == 1)
                     <li class="nav-item pillPri">
                         <a class="nav-link "href="{{ url('/presupuesto/level/create/'.$V) }}" class="btn btn-success">
                             <i class="fa fa-edit"></i><span class="hide-menu">&nbsp;Editar Presupuesto</span>
                         </a>
                     </li>
-                @endif
-                <!-- SE DEBE ACTUALIZAR LA EJECUCIÓN PRESUPUESTAL.
-                <li class="nav-item pillPri">
-                    <a data-toggle="modal" data-target="#ejecucionPresupuestal" class="nav-link" style="cursor: pointer">Ejecución Presupuestal</a>
-                </li>
-                -->
-                @if($V != "Vacio" and auth()->user()->roles->first()->id != 2)
-                    <li class="dropdown">
-                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeInforme()">Generar Informe de Presupuestos</a>
-
-                        <!-- SE COMENTAN LOS REPORTES QUE NO TIENEN ACCESO FUNCIONAL.
-                        <a class="nav-item dropdown-toggle pillPri" href="" data-toggle="dropdown">Informes&nbsp;<i class="fa fa-caret-down"></i></a>
-                        <ul class="dropdown-menu ">
-                            <li class="dropdown-submenu">
-                                <a class="test btn btn-drop text-left" href="#">Contractual &nbsp;</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ url('/presupuesto/informes/contractual/homologar/'.$V) }}" class="btn btn-drop text-left">Homologar</a></li>
-                                    <li><a data-toggle="modal" data-target="#reporteHomologar" class="btn btn-drop text-left">Reporte</a></li>
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="#" class="btn btn-drop text-left">FUT </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/presupuesto/informes/lvl/1') }}" class="btn btn-drop text-left">Niveles</a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn btn-drop text-left">Comparativo (Ingresos - Gastos)</a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn btn-drop text-left">Fuentes</a>
-                            </li>
-
-
-                        </ul>
-                        -->
-                    </li>
-                    <li class="dropdown">
-                        <a class="nav-item dropdown-toggle pillPri" style="cursor: pointer" onclick="getModalToMakeCHIP()">Informes CHIP</a>
-                    </li>
-
                 @endif
                 @if($V == "Vacio")
                     <li class="nav-item pillPri">
