@@ -81,15 +81,6 @@
             <li class="nav-item active">
                 <a class="nav-link" data-toggle="pill" href="#tabHome"><i class="fa fa-home"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="pill"  href="@can('fuentes-list') #tabFuente @endcan">Comprobantes de Contabilidad</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="@can('rubros-list') #tabRubros @endcan">Rubros</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="@can('pac-list') #tabPAC @endcan">PAC</a>
-            </li>
         </ul>
         <div class="tab-content" style="background-color: white">
             <div id="tabHome" class="tab-pane active"><br>
@@ -107,9 +98,7 @@
                         <h4>Se envió la solicitud de actualización del presupuesto exitosamente, en unos minutos
                             actualice la pagina para visualizar el estado actual del presupuesto.</h4>
                     </div>
-                    <div class="text-center" id="infoPrep" style="display: none">
-                        <h4>{{ $fechaData }}</h4>
-                    </div>
+                    <div class="text-center" id="infoPrep" style="display: none"></div>
                     <table class="table table-hover table-bordered" align="100%" id="tabla" style="text-align: center">
                         <thead>
                         <tr>
@@ -346,11 +335,6 @@
                         extend:    'print',
                         text:      '<i class="fa fa-print"></i> ',
                         titleAttr: 'Imprimir',
-                        className: 'btn btn-primary'
-                    },
-                    {
-                        text: '<i class="fa fa-refresh"  onclick="refreshPrep()"></i>',
-                        titleAttr: 'Actualizar Presupuesto',
                         className: 'btn btn-primary'
                     },
                 ],

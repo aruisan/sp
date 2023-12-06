@@ -98,17 +98,6 @@
                 </div>
                 <ul class="nav nav-pills">
                     <li class="nav-item active"><a class="nav-link" data-toggle="pill" href="#tabHome" onclick="findPrep()"><i class="fa fa-home"></i></a></li>
-                    <li class="nav-item"><a class="nav-link" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/radCuentas/'.$V) }}">Radicación de Cuentas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/ordenPagos/'.$V) }}">Orden de Pago</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/pagos/'.$V) }}">Pagos</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#tab_proyectos" onclick="show_bpins()">Proyectos</a></li>
-                    @if($rol == 3)
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('presupuesto/traslados/'.$vigencia->vigencia) }}">Movimientos</a>
-                        </li>
-                    @endif
                 </ul>
                 <hr>
                 <!-- TABLA DE PRESUPUESTO -->
@@ -127,9 +116,7 @@
                             <div class="text-center" id="refresPrepOK" style="display: none">
                                 <h4>Presupuesto actualizado exitosamente, actualice la pagina para visualizar el estado actual del presupuesto.</h4>
                             </div>
-                            <div class="text-center" id="infoPrep" style="display: none">
-                                <h4>{{ $fechaData }}</h4>
-                            </div>
+                            <div class="text-center" id="infoPrep" style="display: none"></div>
                             <table id="tabla" class="table table-hover table-bordered table-striped " style="display: none">
                                 <thead>
                                     <th class="text-center">Codigo BPIN</th>
@@ -490,11 +477,6 @@
                                 extend:    'print',
                                 text:      '<i class="fa fa-print"></i> ',
                                 titleAttr: 'Imprimir',
-                                className: 'btn btn-primary'
-                            },
-                            {
-                                text: '<i class="fa fa-refresh"  onclick="refreshPrep()"></i>',
-                                titleAttr: 'Actualizar Presupuesto',
                                 className: 'btn btn-primary'
                             },
                         ],
