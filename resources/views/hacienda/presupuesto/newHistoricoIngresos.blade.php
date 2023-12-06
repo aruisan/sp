@@ -13,7 +13,7 @@
                 <a class="nav-link"  href="#editar"> Presupuesto de Ingresos {{ $añoActual + 1 }}</a>
             </li>
             <li class="nav-item pillPri">
-                <a class="nav-link "  href="{{ url('/presupuesto') }}">Presupuesto de Egresos {{ $añoActual - 1 }}</a>
+                <a class="nav-link "  href="{{ url('/presupuesto') }}">Presupuesto de Egresos {{ $añoActual }}</a>
             </li>
     @if($V != "Vacio")
         {{--
@@ -66,7 +66,7 @@
         <div class="row" >
             <div class="breadcrumb col-md-12 text-center" >
                 <strong>
-                    <h4><b>Presupuesto de Ingresos {{ $añoActual }}</b></h4>
+                    <h4><b>Presupuesto de Ingresos {{ $añoActual + 1 }}</b></h4>
                 </strong>
             </div>
         </div>
