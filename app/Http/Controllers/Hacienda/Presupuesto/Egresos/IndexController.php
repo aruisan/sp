@@ -46,7 +46,7 @@ class IndexController extends Controller
         if (auth()->user()->roles->first()->id == 4) return redirect('/impuestos');
 
         $today = Carbon::today();
-        $añoActual = $today->year;
+        $añoActual = Carbon::parse( $_ENV['FECHA_CDPS_RPS'].' 00:00:00')->year;
         $mesActual = $today->month;
         $prepSaved = PresupuestoSnap::where('mes', $mesActual)->where('año', $añoActual)->where('tipo','EGRESOS')->first();
         $lastDay = Carbon::now()->subDay()->toDateString();

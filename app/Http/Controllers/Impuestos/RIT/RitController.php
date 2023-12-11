@@ -185,6 +185,7 @@ class RitController extends Controller
             $RIT->emailRepLegal2 = $request->emailRepLegal2;
             $RIT->telRepLegal2 = $request->telRepLegal2;
             $RIT->radicacion = Carbon::today();
+            $RIT->save();
 
             if ($request->hasFile('fileRUT')){
                 if ($RIT->ResourceRUT){
@@ -196,6 +197,7 @@ class RitController extends Controller
                 $file = new ResourceTraits;
                 $RUT = $file->resource($request->fileRUT, 'public/RIT');
                 $RIT->rut_resource_id = $RUT;
+                $RIT->save();
             }
 
             if($request->hasFile('fileCC')) {
@@ -208,8 +210,8 @@ class RitController extends Controller
                 $file = new ResourceTraits;
                 $CC = $file->resource($request->fileCC, 'public/RIT');
                 $RIT->cc_resource_id = $CC;
+                $RIT->save();
             }
-            $RIT->save();
 
             //TABLA IV. DATOS DE ESTABLECIMIENTOS DE COMERCIO UBICADOS EN PROVIDENCIA
             if ($request->nombre){
