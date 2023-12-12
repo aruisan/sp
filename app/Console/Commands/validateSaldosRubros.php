@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\bpinVigencias;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Registro\Registro;
 use App\Model\Hacienda\Presupuesto\Rubro;
@@ -49,7 +50,7 @@ class validateSaldosRubros extends Command
     {
         $año = Carbon::today()->year;
         $vigens = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
-        $rubros = Rubro::where('vigencia_id', $vigens->id)->get();
-        dd($rubros);
+        $actividades = bpinVigencias::where('vigencia_id', $vigens->id)->get();
+        dd($actividades);
     }
 }
