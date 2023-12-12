@@ -51,6 +51,8 @@ class validateSaldosRubros extends Command
         $año = Carbon::today()->year;
         $vigens = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
         $actividades = bpinVigencias::where('vigencia_id', $vigens->id)->get();
-        dd($actividades);
+        foreach ($actividades as $actividad){
+            dd($actividad);
+        }
     }
 }
