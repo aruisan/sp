@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\bpinVigencias;
+use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Registro\Registro;
 use App\Model\Hacienda\Presupuesto\Rubro;
@@ -52,7 +53,10 @@ class validateSaldosRubros extends Command
         $vigens = Vigencia::where('vigencia', $año)->where('tipo', 0)->where('estado', '0')->first();
         $actividades = bpinVigencias::where('vigencia_id', $vigens->id)->get();
         foreach ($actividades as $actividad){
-            dd($actividad);
+            $bpinCdpValors = BpinCdpValor::where('dependencia_rubro_font_id', $actividad->dep_rubro_id)->get();
+            if (count($bpinCdpValors) > 0){
+                dd($bpinCdpValors, $actividad);
+            }
         }
     }
 }
