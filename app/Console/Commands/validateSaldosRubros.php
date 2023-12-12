@@ -56,7 +56,9 @@ class validateSaldosRubros extends Command
             $bpinCdpValors = BpinCdpValor::where('dependencia_rubro_font_id', $actividad->dep_rubro_id)->get();
             if (count($bpinCdpValors) > 0){
                 foreach ($bpinCdpValors as $bpinCdpValor){
-                    dd($bpinCdpValor, $actividad);
+                    if ($bpinCdpValor->cdp->jefe_e == '3'){
+                        dd($bpinCdpValor, $actividad, $bpinCdpValor->cdp);
+                    }
                 }
             }
         }
