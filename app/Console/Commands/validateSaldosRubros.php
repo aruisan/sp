@@ -57,9 +57,10 @@ class validateSaldosRubros extends Command
             if (count($bpinCdpValors) > 0){
                 foreach ($bpinCdpValors as $bpinCdpValor){
                     if ($bpinCdpValor->cdp->jefe_e == '3'){
-                        dd($bpinCdpValor, $actividad, $bpinCdpValor->cdp);
+                        $valueCdps[] = $bpinCdpValor->valor;
                     }
                 }
+                dd($bpinCdpValors, $actividad, $valueCdps);
             }
         }
     }
