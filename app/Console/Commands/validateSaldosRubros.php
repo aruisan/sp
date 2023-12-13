@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\bpinVigencias;
+use App\Model\Admin\DependenciaRubroFont;
 use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Registro\Registro;
@@ -74,8 +75,21 @@ class validateSaldosRubros extends Command
                     $actividad->propios = $actividad->propios + $cred->sum('valor');
                     $actividad->propios = $actividad->propios - $ccred->sum('valor');
 
+                    if ($actividad->propios - array_sum($valueCdps) < 0) dd("FALLO",$actividad->id, $actividad->dep_rubro_id, array_sum($valueCdps), $actividad->bpin->cod_actividad, $actividad->propios - array_sum($valueCdps));
+
                     if ($actividad->propios - array_sum($valueCdps) != $actividad->saldo){
-                        dd($actividad->id, $actividad->dep_rubro_id, array_sum($valueCdps), $actividad->bpin->cod_actividad, $actividad->propios - array_sum($valueCdps));
+                        $actividad->saldo = $actividad->propios - array_sum($valueCdps);
+                        //$actividad->save();
+
+                        $depRubFont = DependenciaRubroFont::find($actividad->dep_rubro_id);
+                        if ($depRubFont){
+                            if ($depRubFont->value == $actividad->propios){
+                                $depRubFont->saldo = $actividad->propios - array_sum($valueCdps);
+                                //$depRubFont->save();
+                            }
+                        }
+
+                        echo nl2br($actividad->id.' '.$actividad->dep_rubro_id.' '. array_sum($valueCdps).' '. $actividad->bpin->cod_actividad.' '. $actividad->propios - array_sum($valueCdps)." \n ");
                     } else unset($valueCdps);
                 }
             }
