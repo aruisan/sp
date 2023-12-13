@@ -95,6 +95,7 @@ class validateSaldosRubros extends Command
                         $saldoReal = $actividad->propios - array_sum($valueCdps);
 
                         echo nl2br($actividad->id.' '.$actividad->dep_rubro_id.' '. array_sum($valueCdps).' '. $actividad->bpin->cod_actividad.' '.$saldoReal." \n ");
+                        unset($valueCdps);
                     } else unset($valueCdps);
                 }
             }
