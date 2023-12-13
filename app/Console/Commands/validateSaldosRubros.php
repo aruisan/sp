@@ -66,9 +66,9 @@ class validateSaldosRubros extends Command
                 }
                 if (isset($valueCdps)){
                     //ADICIONES
-                    $add = RubrosMov::where('dep_rubro_font_id', $actividad->dep_rubro_id)->where('movimiento',2)->get();
+                    $add = RubrosMov::where('dep_rubro_font_id', $actividad->dep_rubro_id)->where('movimiento','2')->get();
                     //REDUCCIONES
-                    $red = RubrosMov::where('dep_rubro_font_id', $actividad->dep_rubro_id)->where('movimiento',3)->get();
+                    $red = RubrosMov::where('dep_rubro_font_id', $actividad->dep_rubro_id)->where('movimiento','3')->get();
                     //CRED
                     $cred = RubrosMov::where('dep_rubro_font_cred_id', $actividad->dep_rubro_id)->get();
                     //CCRED
