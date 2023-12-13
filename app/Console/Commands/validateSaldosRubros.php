@@ -88,8 +88,9 @@ class validateSaldosRubros extends Command
                                 //$depRubFont->save();
                             }
                         }
+                        $saldoReal = $actividad->propios - array_sum($valueCdps);
 
-                        echo nl2br($actividad->id.' '.$actividad->dep_rubro_id.' '. array_sum($valueCdps).' '. $actividad->bpin->cod_actividad.' '. $actividad->propios - array_sum($valueCdps)." \n ");
+                        echo nl2br($actividad->id.' '.$actividad->dep_rubro_id.' '. array_sum($valueCdps).' '. $actividad->bpin->cod_actividad.' '.$saldoReal." \n ");
                     } else unset($valueCdps);
                 }
             }
