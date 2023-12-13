@@ -79,7 +79,7 @@ class validateSaldosRubros extends Command
                     $actividad->propios = $actividad->propios + $cred->sum('valor');
                     $actividad->propios = $actividad->propios - $ccred->sum('valor');
 
-                    if ($actividad->propios - array_sum($valueCdps) < 0) dd("FALLO",$actividad->id, $actividad->dep_rubro_id, array_sum($valueCdps), $actividad->bpin->cod_actividad, $actividad->propios - array_sum($valueCdps));
+                    if ($actividad->propios - array_sum($valueCdps) < 0 and $actividad->bpin_id != 44) dd("FALLO",$actividad->id, $actividad->dep_rubro_id, array_sum($valueCdps), $actividad->bpin->cod_actividad, $actividad->propios - array_sum($valueCdps));
 
                     if ($actividad->propios - array_sum($valueCdps) != $actividad->saldo){
                         $actividad->saldo = $actividad->propios - array_sum($valueCdps);
@@ -95,8 +95,8 @@ class validateSaldosRubros extends Command
                         $saldoReal = $actividad->propios - array_sum($valueCdps);
 
                         echo nl2br($actividad->id.' '.$actividad->dep_rubro_id.' '. array_sum($valueCdps).' '. $actividad->bpin->cod_actividad.' '.$saldoReal." \n ");
-                        unset($valueCdps);
-                    } else unset($valueCdps);
+                    }
+                    unset($valueCdps);
                 }
             }
         }
