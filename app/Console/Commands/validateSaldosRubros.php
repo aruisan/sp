@@ -7,6 +7,7 @@ use App\Model\Administrativo\Cdp\BpinCdpValor;
 use App\Model\Administrativo\Contabilidad\PucAlcaldia;
 use App\Model\Administrativo\Registro\Registro;
 use App\Model\Hacienda\Presupuesto\Rubro;
+use App\Model\Hacienda\Presupuesto\RubrosMov;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnapData;
 use App\Model\Hacienda\Presupuesto\Snap\PresupuestoSnap;
 use App\Model\Hacienda\Presupuesto\Vigencia;
@@ -59,8 +60,24 @@ class validateSaldosRubros extends Command
                     if ($bpinCdpValor->cdp->jefe_e == '3') $valueCdps[] = $bpinCdpValor->valor;
                 }
                 if (isset($valueCdps)){
+                    //ADICIONES
+                    $add = RubrosMov::where('dep_rubro_font_id', $actividad->dep_rubro_id)->where('movimiento',2)->get();
+                    //REDUCCIONES
+                    $red = RubrosMov::where('dep_rubro_font_id', $actividad->dep_rubro_id)->where('movimiento',3)->get();
+                    //CRED
+                    $cred = RubrosMov::where('dep_rubro_font_cred_id', $actividad->dep_rubro_id)->get();
+                    //CCRED
+                    $ccred = RubrosMov::where('dep_rubro_font_cc_id', $actividad->dep_rubro_id)->get();
+
+                    $actividad->propios = $actividad->propios + $add->sum('valor');
+                    $actividad->propios = $actividad->propios - $red->sum('valor');
+                    $actividad->propios = $actividad->propios + $cred->sum('valor');
+                    $actividad->propios = $actividad->propios - $ccred->sum('valor');
+
+                    dd($actividad);
+
                     if ($actividad->propios - array_sum($valueCdps) != $actividad->saldo){
-                        dd($bpinCdpValors, $actividad, array_sum($valueCdps));
+                        dd($actividad, array_sum($valueCdps));
                     } else unset($valueCdps);
                 }
             }
