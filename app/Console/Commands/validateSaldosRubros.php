@@ -75,7 +75,7 @@ class validateSaldosRubros extends Command
                     $actividad->propios = $actividad->propios - $ccred->sum('valor');
 
                     if ($actividad->propios - array_sum($valueCdps) != $actividad->saldo){
-                        dd($actividad, array_sum($valueCdps), $actividad->bpin->cod_actividad, $actividad->propios - array_sum($valueCdps));
+                        dd($actividad->id, $actividad->dep_rubro_id, array_sum($valueCdps), $actividad->bpin->cod_actividad, $actividad->propios - array_sum($valueCdps));
                     } else unset($valueCdps);
                 }
             }
