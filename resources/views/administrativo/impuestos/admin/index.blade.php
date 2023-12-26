@@ -43,7 +43,7 @@
                             <th class="text-center">Contribuyente</th>
                             <th class="text-center">Dirección Predio</th>
                             <th class="text-center">Email</th>
-                            <th class="text-center">Avaluo Actual</th>
+                            <th class="text-center">Avaluo 2023</th>
                             <th class="text-center">Editar</th>
                         </tr>
                         </thead>
@@ -55,7 +55,7 @@
                                 <td class="text-center">{{ $predUser->contribuyente }}</td>
                                 <td class="text-center">{{ $predUser->dir_predio }}</td>
                                 <td class="text-center">{{ $predUser->email }}</td>
-                                <td class="text-center">{{ $predUser->a2023 }}</td>
+                                <td class="text-center">$<?php echo number_format($predUser->a2023,2) ?></td>
                                 <td class="text-center">
                                     <a href="{{ url('administrativo/impuestos/admin/predial/user/edit/'.$predUser->id) }}" title="Editar Usuario" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                 </td>
