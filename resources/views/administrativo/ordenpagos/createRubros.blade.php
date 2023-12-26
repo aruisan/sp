@@ -66,7 +66,11 @@
                                    <tr>
                                        <td class="text-center">{{ $rubros->cdps_registro->cdps->id }}</td>
                                        <td class="text-center">{{ $rubros->cdps_registro->cdps->name}}</td>
-                                       <td class="text-center">{{ $rubros->cdps_registro->cdps->rubrosCdp[0]->rubros->name}}</td>
+                                       <td class="text-center">
+                                           @if(isset($rubros->cdps_registro->cdps->rubrosCdp[0]))
+                                               {{ $rubros->cdps_registro->cdps->rubrosCdp[0]->rubros->name}}
+                                           @endif
+                                       </td>
                                        <td class="text-center">$<?php echo number_format($rubros->valor,0) ?></td>
                                    </tr>
                                @endif
