@@ -94,6 +94,8 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Concepto</th>
+                            <th class="text-center">Tercero</th>
+                            <th class="text-center">Num Ident Tercero</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
                             <th class="text-center">Estado</th>
@@ -105,6 +107,20 @@
                             <tr class="text-center">
                                 <td>{{ $ordenPago['code'] }}</td>
                                 <td>{{ $ordenPago['nombre'] }}</td>
+                                <td>
+                                    @if(isset($ordenPago->registros->cdpsRegistro))
+                                        {{ $ordenPago->registros->persona->nombre }}
+                                    @else
+                                        DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(isset($ordenPago->registros->cdpsRegistro))
+                                        {{ $ordenPago->registros->persona->num_dc }}
+                                    @else
+                                        800197268
+                                    @endif
+                                </td>
                                 <td>$<?php echo number_format($ordenPago['valor'],0) ?></td>
                                 <td>$<?php echo number_format($ordenPago['saldo'],0) ?></td>
                                 <td>
