@@ -103,23 +103,23 @@
                         <tbody>
                         @foreach($pagos as $pago)
                             <tr class="text-center">
-                                <td>{{ $pago['info']->code }}</td>
+                                <td>{{ $pago->code }}</td>
                                 <td>
-                                    @if($pago['info']->reteFuente == "1")
-                                        <a href="{{ url('administrativo/ordenPagos/pdf/'.$pago['info']->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success" target="_blank"><i class="fa fa-eye"></i></a>
+                                    @if($pago->reteFuente == "1")
+                                        <a href="{{ url('administrativo/ordenPagos/pdf/'.$pago->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success" target="_blank"><i class="fa fa-eye"></i></a>
                                     @else
-                                        <a href="{{ url('administrativo/ordenPagos/show/'.$pago['info']->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ url('administrativo/ordenPagos/show/'.$pago->orden_pago_id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
                                     @endif
                                 </td>
-                                <td>{{ $pago['info']->concepto }}</td>
-                                <td>$<?php echo number_format($pago['info']->valor,0) ?></td>
-                                <td>{{ $pago['info']->persona->num_dc }}</td>
-                                <td>{{ $pago['info']->persona->nombre }}</td>
+                                <td>{{ $pago->concepto }}</td>
+                                <td>$<?php echo number_format($pago->valor,0) ?></td>
+                                <td>{{ $pago->persona->num_dc }}</td>
+                                <td>{{ $pago->persona->nombre }}</td>
                                 <td>
                                     <span class="badge badge-pill badge-danger">
-                                        @if($pago['info']->estado == "0")
+                                        @if($pago->estado == "0")
                                             Pendiente
-                                        @elseif($pago['info']->estado == "1")
+                                        @elseif($pago->estado == "1")
                                             Finalizado
                                         @else
                                             Anulado
@@ -127,12 +127,12 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ url('administrativo/pagos/show/'.$pago['info']->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
-                                    @if($pago['info']->estado == "1")
-                                        <a href="{{ url('/administrativo/egresos/pdf/'.$pago['info']->id) }}" title="Comprobante de Egresos" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
-                                        @if($pago['info']->type_pay == 'CHEQUE')
-                                            <a href="{{ url('administrativo/pago/'.$pago['info']->id.'/cheque') }}" title="Descargar Cheque" class="btn-sm btn-success" target="_blank"><i class="fa fa-print"></i></a>
-                                            <a onclick="showFormCheque({{ $pago['info']->id }}, {{ $pago['info']->code }},'{{ $pago['info']->num }}')" title="Editar Cheque" class="btn-sm btn-success"><i class="fa fa-edit"></i></a>
+                                    <a href="{{ url('administrativo/pagos/show/'.$pago->id) }}" title="Ver Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                    @if($pago->estado == "1")
+                                        <a href="{{ url('/administrativo/egresos/pdf/'.$pago->id) }}" title="Comprobante de Egresos" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+                                        @if($pago->type_pay == 'CHEQUE')
+                                            <a href="{{ url('administrativo/pago/'.$pago->id.'/cheque') }}" title="Descargar Cheque" class="btn-sm btn-success" target="_blank"><i class="fa fa-print"></i></a>
+                                            <a onclick="showFormCheque({{ $pago->id }}, {{ $pago->code }},'{{ $pago->num }}')" title="Editar Cheque" class="btn-sm btn-success"><i class="fa fa-edit"></i></a>
                                         @endif
                                     @endif
                                 </td>

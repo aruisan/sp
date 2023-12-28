@@ -48,22 +48,7 @@ class PagosController extends Controller
             }
         }
 
-        $p = Pagos::where('estado','!=', '0')->get();
-        foreach ($p as $data){
-            if (isset($data->orden_pago->registros)){
-                if ($data->orden_pago->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                    $pagos[] = collect(['info' => $data]);
-                }
-            } else{
-                $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $data->orden_pago_id)->first();
-                if ($tesoreriaRetefuentePago){
-                    if ($tesoreriaRetefuentePago->vigencia_id == $id){
-                        $pagos[] = collect(['info' => $data]);
-                    }
-                }
-            }
-
-        }
+        $pagos = Pagos::where('estado','!=', '0')->where('vigencia_id', $id )->get();
         if (!isset($pagosTarea)){
             $pagosTarea[] = null;
             unset($pagosTarea[0]);
@@ -163,6 +148,7 @@ class PagosController extends Controller
             $Pago->orden_pago_id = $request->IdOP;
             $Pago->valor = $request->Monto;
             $Pago->estado = "0";
+            $Pago->vigencia_id = $request->vigencia_id;
             $Pago->responsable_id = auth()->user()->id;
             //$Pago->created_at = '2023-06-30 12:00:00';
             $Pago->save();
