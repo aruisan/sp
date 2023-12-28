@@ -48,29 +48,29 @@
                         <tbody>
                         @foreach($ordenPagoTarea as $ordenPagoT)
                             <tr class="text-center">
-                                <td>{{ $ordenPagoT['info']->code }}</td>
-                                <td>{{ $ordenPagoT['info']->nombre }}</td>
-                                <td>$<?php echo number_format($ordenPagoT['info']->valor,0) ?></td>
+                                <td>{{ $ordenPagoT->code }}</td>
+                                <td>{{ $ordenPagoT->nombre }}</td>
+                                <td>$<?php echo number_format($ordenPagoT->valor,0) ?></td>
                                 <td>
                                     <span class="badge badge-pill badge-danger">
-                                        @if($ordenPagoT['info']->estado == "0")
+                                        @if($ordenPagoT->estado == "0")
                                             Pendiente
-                                        @elseif($ordenPagoT['info']->estado == "1")
+                                        @elseif($ordenPagoT->estado == "1")
                                             Finalizado
                                         @else
                                             Anulado
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center">{{ $ordenPagoT['info']->registros->objeto }}</td>
-                                <td class="text-center">{{ $ordenPagoT['persona'] }}</td>
-                                <td class="text-center">{{ $ordenPagoT['cc'] }}</td>
+                                <td class="text-center">{{ $ordenPagoT->registros->objeto }}</td>
+                                <td class="text-center">{{ $ordenPagoT->registros->persona->nombre }}</td>
+                                <td class="text-center">{{ $ordenPagoT->registros->persona->num_dc }}</td>
                                 <td>
-                                    <a href="{{ url('administrativo/ordenPagos/'.$ordenPagoT['info']->id.'/edit') }}" title="Editar" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                    <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPagoT['info']->id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
-                                    <a href="{{ url('administrativo/ordenPagos/monto/create/'.$ordenPagoT['info']->id) }}" title="Asignación de Monto" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
-                                    <a href="{{ url('administrativo/ordenPagos/descuento/create/'.$ordenPagoT['info']->id) }}" title="Descuentos" class="btn-sm btn-success"><i class="fa fa-usd"></i><i class="fa fa-arrow-down"></i></a>
-                                    <a href="{{ url('administrativo/ordenPagos/liquidacion/create/'.$ordenPagoT['info']->id) }}" title="Contabilización" class="btn-sm btn-primary"><i class="fa fa-calculator"></i></a>
+                                    <a href="{{ url('administrativo/ordenPagos/'.$ordenPagoT->id.'/edit') }}" title="Editar" class="btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                    <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPagoT->id) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                    <a href="{{ url('administrativo/ordenPagos/monto/create/'.$ordenPagoT->id) }}" title="Asignación de Monto" class="btn-sm btn-primary"><i class="fa fa-usd"></i></a>
+                                    <a href="{{ url('administrativo/ordenPagos/descuento/create/'.$ordenPagoT->id) }}" title="Descuentos" class="btn-sm btn-success"><i class="fa fa-usd"></i><i class="fa fa-arrow-down"></i></a>
+                                    <a href="{{ url('administrativo/ordenPagos/liquidacion/create/'.$ordenPagoT->id) }}" title="Contabilización" class="btn-sm btn-primary"><i class="fa fa-calculator"></i></a>
                                 </td>
                             </tr>
                         @endforeach

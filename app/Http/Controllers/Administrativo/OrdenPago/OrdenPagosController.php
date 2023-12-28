@@ -50,19 +50,12 @@ class OrdenPagosController extends Controller
             $vigens = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->where('estado', '0')->first();
             $id = $vigens->id;
         }
-        $oPT = OrdenPagos::where('estado', '0')->get();
-        foreach ($oPT as $data){
-            if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id){
-                $ordenPagoTarea[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre,
-                    'cc' => $data->registros->persona->num_dc]);
-            }
-        }
-        $oPH = OrdenPagos::where('estado','!=', '0')->orderBy('code','DESC')->paginate(500);
+        $ordenPagoTarea = OrdenPagos::where('estado', '0')->where('vigencia_id', $id )->get();
+        $oPH = OrdenPagos::where('estado','!=', '0')->where('vigencia_id', $id )->orderBy('code','DESC')->paginate(500);
         if (!isset($ordenPagoTarea)){
             $ordenPagoTarea[] = null;
             unset($ordenPagoTarea[0]);
         }
-
 
         return view('administrativo.ordenpagos.index', compact('oPH','ordenPagoTarea','id'));
     }
