@@ -140,6 +140,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                    {{ $pagos->links() }}
                 @else
                     <br><br>
                     <div class="alert alert-danger">

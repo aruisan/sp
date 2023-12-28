@@ -48,7 +48,7 @@ class PagosController extends Controller
             }
         }
 
-        $pagos = Pagos::where('estado','!=', '0')->where('vigencia_id', $id )->get();
+        $pagos = Pagos::where('estado','!=', '0')->where('vigencia_id', $id )->orderBy('code','DESC')->paginate(500);
         if (!isset($pagosTarea)){
             $pagosTarea[] = null;
             unset($pagosTarea[0]);
