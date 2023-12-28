@@ -57,8 +57,7 @@ class OrdenPagosController extends Controller
                     'cc' => $data->registros->persona->num_dc]);
             }
         }
-        $oPH = OrdenPagos::where('estado','!=', '0')->paginate(500);
-
+        $oPH = OrdenPagos::where('estado','!=', '0')->orderBy('code','DESC')->paginate(500);
         if (!isset($ordenPagoTarea)){
             $ordenPagoTarea[] = null;
             unset($ordenPagoTarea[0]);
