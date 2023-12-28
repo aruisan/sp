@@ -80,21 +80,7 @@ class OrdenPagosController extends Controller
                 $Registros[] = collect(['info' => $reg]);
             }
         }
-        $oP = OrdenPagos::orderBy('code','ASC')->get();
-        foreach ($oP as $data){
-            if (isset($data->registros->cdpsRegistro)) {
-                if ($data->registros->cdpsRegistro[0]->cdp->vigencia_id == $id) {
-                    $ordenPago[] = collect(['info' => $data, 'persona' => $data->registros->persona->nombre]);
-                }
-            } else $ordenPago[] = collect(['info' => $data, 'persona' => 'DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN	']);
-        }
         $PUCs = Puc::all();
-        if (isset($ordenPago)){
-            $last = array_last($ordenPago);
-            $numOP = $last['info']->code;
-        }else{
-            $numOP = 0;
-        }
 
         $radCuentas = RadCuentas::where('estado_elabor','1')->where('estado_rev','1')->where('saldo','>',0)->where('vigencia_id', $id)->with('persona')->get();
         if (!isset($Registros)) {
@@ -104,7 +90,7 @@ class OrdenPagosController extends Controller
             Session::flash('warning', 'No hay un PUC alamcenado en el software o finalizado, debe disponer de uno para poder realizar una orden de pago. ');
             return redirect('/administrativo/ordenPagos');
         }else{
-            return view('administrativo.ordenpagos.create', compact('Registros','numOP','id','radCuentas'));
+            return view('administrativo.ordenpagos.create', compact('Registros','id','radCuentas'));
         }
     }
 

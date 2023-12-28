@@ -173,20 +173,8 @@
                             <br>
                             <h2 class="text-center formularioOrdenTitulo">Orden de Pago</h2>
                             <hr>
-                            <div class="row">
-                                <div class="col-md-6 ">
-                                    <br>
-                                    <h4 class="formularioOrdenLabel"><b>Orden de Pago No:</b></h4>
-                                </div>
-                            <div class="col-md-6">
-                                <br>
-                                <input type="number" style="text-align: center" class="form-control formularioOrdenLabel" value="{{ $numOP + 1 }}" disabled name="num_OP">
-                                <input type="hidden"  class="form-control" name="next" value="{{ $numOP + 1 }}">
-                                <input type="hidden"  class="form-control" name="IdR" id="IdR" value="0">
-                                <input type="hidden"  class="form-control" name="IdRadCuenta" id="IdRadCuenta">
-                            </div>
-                            </div>
-
+                            <input type="hidden"  class="form-control" name="IdR" id="IdR" value="0">
+                            <input type="hidden"  class="form-control" name="IdRadCuenta" id="IdRadCuenta">
                             <br> <br>
                             <div class="row">
                                 <div class="col-md-3">

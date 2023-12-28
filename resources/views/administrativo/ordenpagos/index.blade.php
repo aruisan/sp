@@ -89,7 +89,6 @@
         <div id="tabHistorico" class="tab-pane fade"><br>
             <div class="table-responsive">
                 @if(count($oPH) > 0)
-                    {{ $oPH->links() }}
                     <table class="table table-bordered" id="tabla_Historico">
                         <thead>
                         <tr>
