@@ -88,14 +88,13 @@
         </div>
         <div id="tabHistorico" class="tab-pane fade"><br>
             <div class="table-responsive">
-                @if(count($ordenPagos) > 0)
+                @if(count($oPH) > 0)
+                    {{ $oPH->links() }}
                     <table class="table table-bordered" id="tabla_Historico">
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
                             <th class="text-center">Concepto</th>
-                            <th class="text-center">Tercero</th>
-                            <th class="text-center">Num Ident Tercero</th>
                             <th class="text-center">Valor</th>
                             <th class="text-center">Saldo</th>
                             <th class="text-center">Estado</th>
@@ -103,19 +102,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($ordenPagos as $ordenPago)
+                        @foreach($oPH as $ordenPago)
                             <tr class="text-center">
-                                <td>{{ $ordenPago['info']['code'] }}</td>
-                                <td>{{ $ordenPago['info']['nombre'] }}</td>
-                                <td>{{ $ordenPago['tercero'] }}</td>
-                                <td>{{ $ordenPago['ccH'] }}</td>
-                                <td>$<?php echo number_format($ordenPago['info']['valor'],0) ?></td>
-                                <td>$<?php echo number_format($ordenPago['info']['saldo'],0) ?></td>
+                                <td>{{ $ordenPago['code'] }}</td>
+                                <td>{{ $ordenPago['nombre'] }}</td>
+                                <td>$<?php echo number_format($ordenPago['valor'],0) ?></td>
+                                <td>$<?php echo number_format($ordenPago['saldo'],0) ?></td>
                                 <td>
                                     <span class="badge badge-pill badge-danger">
-                                        @if($ordenPago['info']['estado'] == "0")
+                                        @if($ordenPago['estado'] == "0")
                                             Pendiente
-                                        @elseif($ordenPago['info']['estado'] == "1")
+                                        @elseif($ordenPago['estado'] == "1")
                                             Finalizada
                                         @else
                                             Anulada
@@ -123,18 +120,19 @@
                                     </span>
                                 </td>
                                 <td>
-                                    @if(isset($ordenPago['info']->registros->cdpsRegistro))
-                                        <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPago['info']['id']) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                    @if(isset($ordenPago->registros->cdpsRegistro))
+                                        <a href="{{ url('administrativo/ordenPagos/show/'.$ordenPago['id']) }}" title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>
                                     @endif
-                                    @if($ordenPago['info']['estado'] == "1")
-                                        <a href="{{ url('administrativo/ordenPagos/'.$ordenPago['info']->id.'/edit') }}" title="Editar" class="btn-sm btn-success"><i class="fa fa-edit"></i></a>
-                                        <a href="{{ url('administrativo/ordenPagos/pdf/'.$ordenPago['info']['id']) }}" title="Orden de Pago" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+                                    @if($ordenPago['estado'] == "1")
+                                        <a href="{{ url('administrativo/ordenPagos/'.$ordenPago->id.'/edit') }}" title="Editar" class="btn-sm btn-success"><i class="fa fa-edit"></i></a>
+                                        <a href="{{ url('administrativo/ordenPagos/pdf/'.$ordenPago['id']) }}" title="Orden de Pago" class="btn-sm btn-success" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
                                     @endif
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                    {{ $oPH->links() }}
                 @else
                     <br><br>
                     <div class="alert alert-danger">
