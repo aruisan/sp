@@ -150,7 +150,7 @@ class PagosController extends Controller
             $Pago->estado = "0";
             $Pago->vigencia_id = $request->vigencia_id;
             $Pago->responsable_id = auth()->user()->id;
-            //$Pago->created_at = '2023-06-30 12:00:00';
+            $Pago->created_at = '2023-12-29 12:00:00';
             $Pago->save();
 
             //BUSQUEDA DEL ID DEL RUBRO
@@ -353,8 +353,8 @@ class PagosController extends Controller
                 if (isset($request->embargo) and $request->embargo == "1") $pago->embargo = '1';
 
                 $pago->estado = "1";
-                $pago->ff_fin = today()->format("Y-m-d");
-                //$pago->ff_fin = "2023-06-30";
+                //$pago->ff_fin = today()->format("Y-m-d");
+                $pago->ff_fin = "2023-12-29";
 
                 $tesoreriaRetefuentePago = TesoreriaRetefuentePago::where('orden_pago_id', $pago->orden_pago_id)->first();
 
