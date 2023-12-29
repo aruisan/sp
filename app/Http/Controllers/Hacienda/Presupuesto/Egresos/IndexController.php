@@ -47,7 +47,7 @@ class IndexController extends Controller
 
         $today = Carbon::today();
         $añoActual = Carbon::parse( $_ENV['FECHA_CDPS_RPS'].' 00:00:00')->year;
-        $mesActual = $today->month;
+        $mesActual = Carbon::parse( $_ENV['FECHA_CDPS_RPS'].' 00:00:00')->month;
         $prepSaved = PresupuestoSnap::where('mes', $mesActual)->where('año', $añoActual)->where('tipo','EGRESOS')->first();
         $lastDay = Carbon::now()->subDay()->toDateString();
         $actuallyDay = Carbon::now()->toDateString();
