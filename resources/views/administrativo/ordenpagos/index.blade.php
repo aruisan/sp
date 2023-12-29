@@ -3,6 +3,7 @@
     Ordenes de Pago
 @stop
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="breadcrumb text-center">
         <strong>
             <h4><b>Ordenes de Pago</b></h4>
@@ -89,7 +90,18 @@
         <div id="tabHistorico" class="tab-pane fade"><br>
             <div class="table-responsive">
                 @if(count($oPH) > 0)
+                    <select name="terceroFind" id="terceroFind" class="terceroFindClass" style="width: 100%" onchange="findTercero()">
+                        <option value="0">BUSQUEDA POR TERCERO</option>
+                        @foreach($personas as $persona)
+                            <option value="{{$persona->id}}">{{ $persona->num_dc }} - {{ $persona->nombre }}</option>
+                        @endforeach
+                    </select>
+                    <br>
                     <table class="table table-bordered" id="tabla_Historico">
+                        <br>
+                        <div class="text-center" id="cargando" style="display: none">
+                            <br><br><h4>Buscando informacion del tercero...</h4>
+                        </div>
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
@@ -161,6 +173,8 @@
         @stop
         @section('js')
             <script>
+                $('.terceroFindClass').select2();
+
                 $('#tabla_CDP').DataTable( {
                     responsive: true,
                     "searching": true,
@@ -234,6 +248,103 @@
                         },
                     ]
                 } );
+
+                function findTercero(){
+                    idTercero = document.getElementById("terceroFind").value;
+
+                    $("#cargando").show();
+                    var table = $('#tabla_Historico').DataTable();
+                    $.ajax({
+                        method: "POST",
+                        url: "/administrativo/ordenPagos/findTercero",
+                        data: { "id": idTercero, "vigencia_id": {{$id}},
+                            "_token": $("meta[name='csrf-token']").attr("content"),
+                        }
+                    }).done(function(datos) {
+                        if (datos.length > 0){
+                            console.log(datos);
+                            $("#tabla_Historico").show();
+                            table.destroy();
+                            $("#cargando").hide();
+                            table = $('#tabla_Historico').DataTable( {
+                                language: {
+                                    "lengthMenu": "Mostrar _MENU_ registros",
+                                    "zeroRecords": "No se encontraron resultados",
+                                    "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                                    "sSearch": "Buscar:",
+                                    "oPaginate": {
+                                        "sFirst": "Primero",
+                                        "sLast":"Último",
+                                        "sNext":"Siguiente",
+                                        "sPrevious": "Anterior"
+                                    },
+                                    "sProcessing":"Procesando...",
+                                },
+                                "pageLength": 15,
+                                responsive: true,
+                                "searching": true,
+                                ordering: false,
+                                "lengthMenu": [ 10, 25, 50, 75, 100, "ALL" ],
+                                dom: 'Bfrtip',
+                                buttons:[
+                                    {
+                                        extend:    'copyHtml5',
+                                        text:      '<i class="fa fa-clone"></i> ',
+                                        titleAttr: 'Copiar',
+                                        className: 'btn btn-primary'
+                                    },
+                                    {
+                                        extend:    'excelHtml5',
+                                        text:      '<i class="fa fa-file-excel-o"></i> ',
+                                        titleAttr: 'Exportar a Excel',
+                                        className: 'btn btn-primary'
+                                    },
+                                    {
+                                        extend:    'pdfHtml5',
+                                        text:      '<i class="fa fa-file-pdf-o"></i> ',
+                                        titleAttr: 'Exportar a PDF',
+                                        message : 'SIEX-Providencia',
+                                        header :true,
+                                        orientation : 'landscape',
+                                        pageSize: 'LEGAL',
+                                        className: 'btn btn-primary',
+                                    },
+                                    {
+                                        extend:    'print',
+                                        text:      '<i class="fa fa-print"></i> ',
+                                        titleAttr: 'Imprimir',
+                                        className: 'btn btn-primary'
+                                    },
+                                ],
+                                data: datos,
+                                columns: [
+                                    { title: "#", data: "code"},
+                                    { title: "Concepto", data: "nombre"},
+                                    { title: "Tercero", data: "nombreTer"},
+                                    { title: "Num Ident Tercero", data: "ccTer"},
+                                    { title: "Valor", data: "valor"},
+                                    { title: "Saldo", data: "saldo"},
+                                    { title: "Estado", data: "estadoSpan"},
+                                    { title: "Acciones", data: "acciones"},
+                                ]
+                            } );
+
+                        } else {
+                            $("#tabla_Historico").hide();
+                            table.destroy();
+                            $("#cargando").hide();
+                            toastr.warning('NO SE OBTUVIERON DATOS DE ESE TERCERO, INTENTE NUEVAMENTE CON OTRO');
+                        }
+                    }).fail(function() {
+                        $("#tabla_Historico").hide();
+                        table.destroy();
+                        $("#cargando").hide();
+                        toastr.warning('NO SE OBTUVIERON DATOS DE ESA CUENTA');
+                    });
+                    console.log(idTercero);
+                }
 
             </script>
 @stop

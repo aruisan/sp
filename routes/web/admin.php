@@ -313,6 +313,7 @@ Route::group([ 'middleware' => 'auth'] ,function(){
 
         Route::get('ordenPagos/{id}','Administrativo\OrdenPago\OrdenPagosController@index');
         Route::get('ordenPagos/show/{id}','Administrativo\OrdenPago\OrdenPagosController@show');
+        Route::post('ordenPagos/findTercero','Administrativo\OrdenPago\OrdenPagosController@findTercero');
         Route::get('ordenPagos/create/{id}','Administrativo\OrdenPago\OrdenPagosController@create');
         Route::resource('ordenPagos','Administrativo\OrdenPago\OrdenPagosController');
         Route::get('ordenPagos/liquidacion/create/{id}','Administrativo\OrdenPago\OrdenPagosController@liquidacion');

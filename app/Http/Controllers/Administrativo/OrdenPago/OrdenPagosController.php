@@ -56,8 +56,36 @@ class OrdenPagosController extends Controller
             $ordenPagoTarea[] = null;
             unset($ordenPagoTarea[0]);
         }
+        $personas = Persona::all();
 
-        return view('administrativo.ordenpagos.index', compact('oPH','ordenPagoTarea','id'));
+        return view('administrativo.ordenpagos.index', compact('oPH','ordenPagoTarea','id','personas'));
+    }
+
+    public function findTercero(Request $request)
+    {
+        $registrosTer = Registro::where('jefe_e', '3')->where('vigencia_id',$request->vigencia_id )->where('persona_id', $request->id )->get();
+        if (count($registrosTer) > 0){
+            foreach ($registrosTer as $registro){
+                foreach ($registro->ordenPagos as $ordenPago){
+                    $ordenPago->valor = '$'.number_format($ordenPago->valor,0);
+                    $ordenPago->saldo = '$'.number_format($ordenPago->saldo,0);
+                    if(isset($ordenPago->registros->cdpsRegistro)) {
+                        $ordenPago->nombreTer = $ordenPago->registros->persona->nombre;
+                        $ordenPago->ccTer = $ordenPago->registros->persona->num_dc;
+                    } else {
+                        $ordenPago->nombreTer = "DIRECCIÓN DE IMPUESTOS Y ADUANAS DIAN";
+                        $ordenPago->ccTer = "800197268";
+                    }
+                    if ($ordenPago->estado == '0') $ordenPago->estadoSpan = '<span class="badge badge-pill badge-danger">Pendiente</span>';
+                    elseif ($ordenPago->estado == '1') $ordenPago->estadoSpan = '<span class="badge badge-pill badge-danger">Finalizada</span>';
+                    else $ordenPago->estadoSpan = '<span class="badge badge-pill badge-danger">Anulada</span>';
+
+                    $ordenPago->acciones = '<a href="/administrativo/ordenPagos/show/'.$ordenPago->id.'") " title="Ver Orden de Pago" class="btn-sm btn-success"><i class="fa fa-eye"></i></a>';
+                    $ordenPagoFind[] = collect($ordenPago);
+                }
+            }
+            return $ordenPagoFind;
+        } else return $registrosTer;
     }
 
     /**
