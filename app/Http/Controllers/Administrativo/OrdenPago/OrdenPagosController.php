@@ -51,7 +51,7 @@ class OrdenPagosController extends Controller
             $id = $vigens->id;
         }
         $ordenPagoTarea = OrdenPagos::where('estado', '0')->where('vigencia_id', $id )->get();
-        $oPH = OrdenPagos::where('estado','!=', '0')->where('vigencia_id', $id )->orderBy('code','DESC')->paginate(2000);
+        $oPH = OrdenPagos::where('estado','!=', '0')->where('vigencia_id', $id )->orderBy('code','DESC')->paginate(3000);
         if (!isset($ordenPagoTarea)){
             $ordenPagoTarea[] = null;
             unset($ordenPagoTarea[0]);
