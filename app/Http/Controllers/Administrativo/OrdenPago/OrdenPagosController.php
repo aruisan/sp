@@ -189,6 +189,7 @@ class OrdenPagosController extends Controller
                 $ordenPago->estado = $request->estado;
                 $ordenPago->registros_id = $request->IdR;
                 $ordenPago->user_id = auth()->user()->id;
+                $ordenPago->vigencia_id = $request->vigencia;
                 $ordenPago->created_at = '2023-12-29 12:00:00';
                 $ordenPago->save();
 
