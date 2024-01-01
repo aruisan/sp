@@ -64,7 +64,7 @@
                            @foreach($ordenPago->rubros as $rubros)
                                @if($rubros->valor > 0)
                                    <tr>
-                                       <td class="text-center">{{ $rubros->cdps_registro->cdps->id }}</td>
+                                       <td class="text-center">{{ $rubros->cdps_registro->cdps->code }}</td>
                                        <td class="text-center">{{ $rubros->cdps_registro->cdps->name}}</td>
                                        <td class="text-center">
                                            @if(isset($rubros->cdps_registro->cdps->rubrosCdp[0]))
