@@ -53,6 +53,11 @@
                 </div>
                 <ul class="nav nav-pills">
                     <li class="nav-item active"><a class="nav-link" data-toggle="pill" href="#tabHome" onclick="findPrep()"><i class="fa fa-home"></i></a></li>
+                    <li class="nav-item"><a class="nav-link" href="@can('cdps-list') {{ url('administrativo/cdp/'.$V) }} @endcan">CDP's</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@can('registros-list') {{ url('administrativo/registros/'.$V) }} @endcan">Registros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/radCuentas/'.$V) }}">Radicación de Cuentas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/ordenPagos/'.$V) }}">Orden de Pago</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('administrativo/pagos/'.$V) }}">Pagos</a></li>
                 </ul>
                 <hr>
                 <!-- TABLA DE PRESUPUESTO -->
