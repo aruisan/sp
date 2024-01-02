@@ -41,7 +41,9 @@ class ImpuestosController extends Controller
         $numComunicados = $comunicados->count();
         $rit = $user->rit;
         $contribuyente = PredialContribuyentes::where('email',$user->email)->get();
-        $añoActual = Carbon::today()->format('Y');
+        //SE FIJA EL AÑO 2023
+        //$añoActual = Carbon::today()->format('Y');
+        $añoActual = 2023;
         $uvt = ImpUVT::where('año', $añoActual)->first();
         $sml = ImpSalarioMin::whereBetween('fecha',array($añoActual.'-01-01', $añoActual.'-12-31'))->first();
 
