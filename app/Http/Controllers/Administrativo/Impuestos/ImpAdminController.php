@@ -57,7 +57,9 @@ class ImpAdminController extends Controller
         $comunicados = Comunicado::all();
         $result = PucAlcaldia::where('id', 82 )->orWhere('id', 84)->get();
 
-        $año = Carbon::today()->year;
+        //SE FIJA EL AÑO 2023
+        #$año = Carbon::today()->year;
+        $año = 2023;
         $uvts = ImpUVT::all();
         $usds = ImpUSD::orderBy('id', 'desc')->get();
         $smls = ImpSalarioMin::all();
