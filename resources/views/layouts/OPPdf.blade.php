@@ -54,7 +54,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-4 s7">
-				<img src="https://www.siex-concejoprovidenciaislas.com.co/img/escudoIslas.png"  height="60">
+				<img src="https://167.71.83.106/img/escudoIslas.png"  height="60">
 			</div>
 			<div class="col-md-4 s57">
 				<p>
@@ -66,7 +66,7 @@
 				</p>
 			</div>
 			<div class="col-md-4 s7">
-				<img src="https://www.siex-concejoprovidenciaislas.com.co/img/masporlasislas.png"  height="60">
+				<img src="https://167.71.83.106/img/masporlasislas.png"  height="60">
 			</div>
 		</div>
 		@yield('contenido')
