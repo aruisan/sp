@@ -41,7 +41,7 @@ class CertificadoController extends Controller
             return response()->download($pathtoFile);
         } else {
             $Descuentos = OrdenPagosDescuentos::where('valor','>',0)->get();
-            $añoActual = Carbon::today()->year;
+            $añoActual = 2023;
             $vigencia = Vigencia::where('vigencia', $añoActual)->where('tipo', 0)->first();
             $persona = Persona::find($request->persona_id);
 
