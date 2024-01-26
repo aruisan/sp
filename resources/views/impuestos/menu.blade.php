@@ -64,10 +64,6 @@
                         </tbody>
                     </table>
                 @endif
-                <h3>Atención Inmediata</h3>
-                <h4>Soporte técnico <i class="fa fa-whatsapp"></i> 3212420644</h4>
-                <h4><i class="fa fa-whatsapp"></i> 3160100288</h4>
-                <hr>
                 <h3>Documentación de Ayuda</h3>
                 <table class="table">
                     <tbody>
